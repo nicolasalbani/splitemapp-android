@@ -1,0 +1,8 @@
+/bin/
+/gen/
+/target/
+/.settings/
+/project.properties
+*.project
+*.classpath
+*.xml
