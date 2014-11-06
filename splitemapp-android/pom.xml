@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.splitemapp.android</groupId>
+	<artifactId>splitemapp-android</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>splitemapp-android</name>
+
+	<packaging>apk</packaging>
+
+	<properties>
+		<!-- Use UTF-8 for everything -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Source code version -->
+		<source.java.version>1.7</source.java.version>
+		<target.java.version>1.7</target.java.version>
+
+		<!-- Android SDK -->
+		<platform.version>4.1.1.4</platform.version>
+		<android-maven-plugin.version>3.9.0-rc.3</android-maven-plugin.version>
+		<android.platform.version>21</android.platform.version>
+		<android.appcompat.version>20.0.0</android.appcompat.version>
+
+		<!-- Dependencies version -->
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<ormlite.version>4.48</ormlite.version>
+	</properties>
+
+	<!-- We need a local repository for appcompat since it's not yet in maven 
+		central -->
+	<repositories>
+		<repository>
+			<id>android-support</id>
+			<url>file://${env.ANDROID_HOME}/extras/android/m2repository</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- android dependencies -->
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>${platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<version>${android.appcompat.version}</version>
+			<type>aar</type>
+		</dependency>
+
+		<!-- ORM Lite dependencies -->
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-core</artifactId>
+			<version>${ormlite.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-android</artifactId>
+			<version>${ormlite.version}</version>
+		</dependency>
+
+		<!-- JPA Dependencies -->
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+
+		<!-- Rest Service Dependencies -->
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>1.0.1.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.4.3</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>${android-maven-plugin.version}</version>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<platform>${android.platform.version}</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${source.java.version}</source>
+					<target>${target.java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
