@@ -1,7 +1,5 @@
 package com.splitemapp.android.fragment;
 
-import java.sql.SQLException;
-
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,10 +14,7 @@ import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
-import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.domain.UserStatus;
 import com.splitemapp.android.domain.dto.response.LoginResponse;
 
 public class LoginFragment extends BaseFragment {
