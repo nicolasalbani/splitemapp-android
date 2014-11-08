@@ -68,14 +68,14 @@ public class LoginFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(LoginResponse loginResponse) {
-			Log.i(TAG,"FirstName		: " +loginResponse.getFirstName());
-			Log.i(TAG,"LastName			: " +loginResponse.getLastName());
-			Log.i(TAG,"SessionToken		: " +loginResponse.getSessionToken());
-			Log.i(TAG,"Username			: " +loginResponse.getUsername());
-			Log.i(TAG,"UserId			: " +loginResponse.getUserId());
-			Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
-			Log.i(TAG,"IsNewDevice		: " +loginResponse.getIsNewDevice());
+			// Logging
+			Log.i(TAG,"Success			: " +loginResponse.getSuccess());
+			if(loginResponse.getSuccess()){
+				Log.i(TAG,"SessionToken		: " +loginResponse.getSessionToken());
+				Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
+			}
 			
+			showToast(loginResponse.getSuccess() ? "Login Successful!" : "Login Failed!");
 			//TODO Evaluate the loginResponse and do stuff
 		}
 	}

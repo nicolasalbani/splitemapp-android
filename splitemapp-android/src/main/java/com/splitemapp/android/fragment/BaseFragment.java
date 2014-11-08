@@ -10,6 +10,7 @@ import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -62,6 +63,11 @@ public abstract class BaseFragment extends Fragment {
         // We make the POST rest service call
         T response = restTemplate.postForObject(url, request, responseType);
         return response;
+	}
+	
+	protected void showToast(String message){
+		Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 }
