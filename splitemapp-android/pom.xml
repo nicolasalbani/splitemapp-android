@@ -7,8 +7,19 @@
 	<artifactId>splitemapp-android</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>splitemapp-android</name>
-
 	<packaging>apk</packaging>
+
+	<developers>
+		<developer>
+			<name>Diego Ghersi</name>
+			<email>diego@ghersi.com.ar</email>
+		</developer>
+		<developer>
+			<name>Nicolas Albani</name>
+			<email>nicolasalbani@gmail.com</email>
+		</developer>
+	</developers>
+
 
 	<properties>
 		<!-- Use UTF-8 for everything -->
@@ -114,7 +125,7 @@
 					<artifactId>android-maven-plugin</artifactId>
 					<version>${android-maven-plugin.version}</version>
 					<configuration>
-<!-- 						<extractDuplicates>true</extractDuplicates> -->
+						<!-- <extractDuplicates>true</extractDuplicates> -->
 					</configuration>
 					<extensions>true</extensions>
 				</plugin>
