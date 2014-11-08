@@ -4,33 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CALL LOGIN" />
-
-    
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="User Name" />
-    
-    <TextView
+    <EditText
         android:id="@+id/user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:inputType="textEmailAddress" 
+        android:text="@string/user_name" />
 
-	<TextView
+    <EditText
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Session Token" />
-    
-    <TextView
-        android:id="@+id/session_token"
-        android:layout_width="match_parent"
+        android:inputType="textPassword" 
+        android:text="@string/password" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:layout_gravity="center"
+        android:text="@string/login" />
 
 </LinearLayout>

@@ -1,8 +1,5 @@
 package com.splitemapp.android.fragment;
 
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,16 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.splitemapp.android.R;
-import com.splitemapp.android.domain.dto.response.LoginResponse;
+import com.splitemapp.android.constants.Constants;
+import com.splitemapp.android.domain.dto.LoginRequest;
+import com.splitemapp.android.domain.dto.LoginResponse;
 
 public class LoginFragment extends BaseFragment {
 
-	private Button mAddSimpleData;
+	private static final String TAG = LoginFragment.class.getSimpleName();
+
+	private Button mLogin;
+	private EditText mUserName;
+	private EditText mPassword;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,63 +33,50 @@ public class LoginFragment extends BaseFragment {
 
 		View v = inflater.inflate(R.layout.fragment_login, container, false);
 
-		mAddSimpleData = (Button) v.findViewById(R.id.add_button);
-		mAddSimpleData.setOnClickListener(new View.OnClickListener() {
-			
+		// We get the references for the user name and password text boxes
+		mUserName = (EditText) v.findViewById(R.id.user_name);
+		mPassword = (EditText) v.findViewById(R.id.password);
+
+		// We get the reference to the login button and implement a OnClickListener
+		mLogin = (Button) v.findViewById(R.id.login_button);
+		mLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new LoginRequestTask().execute();
 			}
-			
-//			@Override
-//			public void onClick(View v) {
-//				// We access the DAO for SimpleData 
-//				Dao<UserStatus, Integer> dao;
-//				try {
-//					Log.i("LoginFragment","Before creating UserStatus");
-//					UserStatus userStatus = new UserStatus();
-//					userStatus.setCod("myCode");
-//					userStatus.setTitle("myTitle");
-//					DatabaseHelper helper = getHelper();
-//					helper.getWritableDatabase();
-//					dao = helper.getUserStatusDao();
-//					dao.create(userStatus);
-//					Log.i("LoginFragment","After creating UserStatus");
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//			}
 		});
-		
+
 		return v;
 	}
-	
+
 	private class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
-	    @Override
-	    protected LoginResponse doInBackground(Void... params) {
-	        try {
-	            final String url = "http://192.168.0.100:8080/splitemapp-service-backend-rest/login";
-	            RestTemplate restTemplate = new RestTemplate();
-	            MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-	            mappingJackson2HttpMessageConverter.getObjectMapper().configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-	            mappingJackson2HttpMessageConverter.getObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, true);
-	            restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
-	            LoginResponse loginResponse = restTemplate.getForObject(url, LoginResponse.class);
-	            return loginResponse;
-	        } catch (Exception e) {
-	            Log.e("MainActivity", e.getMessage(), e);
-	        }
 
-	        return null;
-	    }
+		@Override
+		protected LoginResponse doInBackground(Void... params) {
+			try {
+				LoginRequest loginRequest = new LoginRequest();
+				loginRequest.setDevice(Constants.DEVICE);
+				loginRequest.setUsername(mUserName.getText().toString());
+				loginRequest.setPassword(mPassword.getText().toString());
+				return callRestService(Constants.LOGIN_SERVICE, loginRequest, LoginResponse.class);
+			} catch (Exception e) {
+				Log.e(TAG, e.getMessage(), e);
+			}
 
-	    @Override
-	    protected void onPostExecute(LoginResponse loginResponse) {
-	        TextView greetingIdText = (TextView) getActivity().findViewById(R.id.user_name);
-	        TextView greetingContentText = (TextView) getActivity().findViewById(R.id.session_token);
-	        greetingIdText.setText(loginResponse.getFirstName() +" "+ loginResponse.getLastName());
-	        greetingContentText.setText(loginResponse.getSessionToken());
-	    }
+			return null;
+		}
 
+		@Override
+		protected void onPostExecute(LoginResponse loginResponse) {
+			Log.i(TAG,"FirstName		: " +loginResponse.getFirstName());
+			Log.i(TAG,"LastName			: " +loginResponse.getLastName());
+			Log.i(TAG,"SessionToken		: " +loginResponse.getSessionToken());
+			Log.i(TAG,"Username			: " +loginResponse.getUsername());
+			Log.i(TAG,"UserId			: " +loginResponse.getUserId());
+			Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
+			Log.i(TAG,"IsNewDevice		: " +loginResponse.getIsNewDevice());
+			
+			//TODO Evaluate the loginResponse and do stuff
+		}
 	}
 }

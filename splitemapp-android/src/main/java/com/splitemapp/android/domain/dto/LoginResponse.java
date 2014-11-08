@@ -1,4 +1,4 @@
-package com.splitemapp.android.domain.dto.response;
+package com.splitemapp.android.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 

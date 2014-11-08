@@ -2,5 +2,8 @@
 <resources>
 
     <string name="app_name">SplitemApp</string>
+    <string name="user_name">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
 
 </resources>
