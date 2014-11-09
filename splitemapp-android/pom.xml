@@ -36,6 +36,9 @@
 		<android.platform.version>21</android.platform.version>
 		<android.appcompat.version>20.0.0</android.appcompat.version>
 
+		<!-- SplitemApp Common Domain Model -->
+		<common.domain.version>0.0.1-SNAPSHOT</common.domain.version>
+
 		<!-- Dependencies version -->
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<ormlite.version>4.48</ormlite.version>
@@ -113,6 +116,13 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Common Domain Model dependencies -->
+		<dependency>
+			<groupId>com.splitemapp</groupId>
+			<artifactId>common-domain-model</artifactId>
+			<version>${common.domain.version}</version>
 		</dependency>
 	</dependencies>
 

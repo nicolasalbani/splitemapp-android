@@ -15,22 +15,22 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
-import com.splitemapp.android.domain.ExpenseCategory;
-import com.splitemapp.android.domain.Group;
-import com.splitemapp.android.domain.GroupStatus;
-import com.splitemapp.android.domain.InviteStatus;
-import com.splitemapp.android.domain.Project;
-import com.splitemapp.android.domain.ProjectStatus;
-import com.splitemapp.android.domain.ProjectType;
-import com.splitemapp.android.domain.User;
-import com.splitemapp.android.domain.UserContactData;
-import com.splitemapp.android.domain.UserExpenses;
-import com.splitemapp.android.domain.UserInvite;
-import com.splitemapp.android.domain.UserStatus;
-import com.splitemapp.android.domain.UserToGroup;
-import com.splitemapp.android.domain.UserToGroupStatus;
-import com.splitemapp.android.domain.UserToProject;
-import com.splitemapp.android.domain.UserToProjectStatus;
+import com.splitemapp.domainmodel.domain.ExpenseCategory;
+import com.splitemapp.domainmodel.domain.Group;
+import com.splitemapp.domainmodel.domain.GroupStatus;
+import com.splitemapp.domainmodel.domain.InviteStatus;
+import com.splitemapp.domainmodel.domain.Project;
+import com.splitemapp.domainmodel.domain.ProjectStatus;
+import com.splitemapp.domainmodel.domain.ProjectType;
+import com.splitemapp.domainmodel.domain.User;
+import com.splitemapp.domainmodel.domain.UserContactData;
+import com.splitemapp.domainmodel.domain.UserExpenses;
+import com.splitemapp.domainmodel.domain.UserInvite;
+import com.splitemapp.domainmodel.domain.UserStatus;
+import com.splitemapp.domainmodel.domain.UserToGroup;
+import com.splitemapp.domainmodel.domain.UserToGroupStatus;
+import com.splitemapp.domainmodel.domain.UserToProject;
+import com.splitemapp.domainmodel.domain.UserToProjectStatus;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
