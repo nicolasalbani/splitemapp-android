@@ -121,7 +121,7 @@
 		<!-- Common Domain Model dependencies -->
 		<dependency>
 			<groupId>com.splitemapp</groupId>
-			<artifactId>common-domain-model</artifactId>
+			<artifactId>splitemapp-common-domain-model</artifactId>
 			<version>${common.domain.version}</version>
 		</dependency>
 	</dependencies>
