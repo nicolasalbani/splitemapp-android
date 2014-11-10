@@ -24,7 +24,7 @@ import com.splitemapp.domainmodel.domain.ProjectStatus;
 import com.splitemapp.domainmodel.domain.ProjectType;
 import com.splitemapp.domainmodel.domain.User;
 import com.splitemapp.domainmodel.domain.UserContactData;
-import com.splitemapp.domainmodel.domain.UserExpenses;
+import com.splitemapp.domainmodel.domain.UserExpense;
 import com.splitemapp.domainmodel.domain.UserInvite;
 import com.splitemapp.domainmodel.domain.UserStatus;
 import com.splitemapp.domainmodel.domain.UserToGroup;
@@ -62,7 +62,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<User, Integer> userDao = null;
 	private Dao<Group, Integer> groupDao = null;
 	private Dao<UserContactData, Integer> userContactDataDao = null;
-	private Dao<UserExpenses, Integer> userExpensesDao = null;
+	private Dao<UserExpense, Integer> userExpensesDao = null;
 	private Dao<UserToGroup, Integer> userToGroupDao = null;
 	private Dao<UserToProject, Integer> userToProjectDao = null;
 	private Dao<UserInvite, Integer> userInviteDao = null;
@@ -94,7 +94,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, User.class);
 			TableUtils.createTable(connectionSource, Group.class);
 			TableUtils.createTable(connectionSource, UserContactData.class);
-			TableUtils.createTable(connectionSource, UserExpenses.class);
+			TableUtils.createTable(connectionSource, UserExpense.class);
 			TableUtils.createTable(connectionSource, UserToGroup.class);
 			TableUtils.createTable(connectionSource, UserToProject.class);
 			TableUtils.createTable(connectionSource, UserInvite.class);
@@ -130,7 +130,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, User.class, true);
 			TableUtils.dropTable(connectionSource, Group.class, true);
 			TableUtils.dropTable(connectionSource, UserContactData.class, true);
-			TableUtils.dropTable(connectionSource, UserExpenses.class, true);
+			TableUtils.dropTable(connectionSource, UserExpense.class, true);
 			TableUtils.dropTable(connectionSource, UserToGroup.class, true);
 			TableUtils.dropTable(connectionSource, UserToProject.class, true);
 			TableUtils.dropTable(connectionSource, UserInvite.class, true);
@@ -300,9 +300,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserExpenses class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserExpenses, Integer> getUserExpensesDao() throws SQLException {
+	public Dao<UserExpense, Integer> getUserExpensesDao() throws SQLException {
 		if (userExpensesDao == null) {
-			userExpensesDao = getDao(UserExpenses.class);
+			userExpensesDao = getDao(UserExpense.class);
 		}
 		return userExpensesDao;
 	}
