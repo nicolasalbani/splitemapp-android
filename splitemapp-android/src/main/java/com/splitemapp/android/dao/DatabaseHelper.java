@@ -26,6 +26,7 @@ import com.splitemapp.domainmodel.domain.User;
 import com.splitemapp.domainmodel.domain.UserContactData;
 import com.splitemapp.domainmodel.domain.UserExpense;
 import com.splitemapp.domainmodel.domain.UserInvite;
+import com.splitemapp.domainmodel.domain.UserSession;
 import com.splitemapp.domainmodel.domain.UserStatus;
 import com.splitemapp.domainmodel.domain.UserToGroup;
 import com.splitemapp.domainmodel.domain.UserToGroupStatus;
@@ -66,6 +67,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<UserToGroup, Integer> userToGroupDao = null;
 	private Dao<UserToProject, Integer> userToProjectDao = null;
 	private Dao<UserInvite, Integer> userInviteDao = null;
+	private Dao<UserSession, Integer> userSessionDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -98,6 +100,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, UserToGroup.class);
 			TableUtils.createTable(connectionSource, UserToProject.class);
 			TableUtils.createTable(connectionSource, UserInvite.class);
+			TableUtils.createTable(connectionSource, UserSession.class);
 
 			// We insert initial data
 			insertInitialData(db);
@@ -134,6 +137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, UserToGroup.class, true);
 			TableUtils.dropTable(connectionSource, UserToProject.class, true);
 			TableUtils.dropTable(connectionSource, UserInvite.class, true);
+			TableUtils.dropTable(connectionSource, UserSession.class, true);
 
 			// We create the new ones
 			onCreate(db, connectionSource);
@@ -339,6 +343,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return userInviteDao;
 	}
+	
+	/**
+	 * Returns the Database Access Object (DAO) for the UserSession class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<UserSession, Integer> getUserSessionDao() throws SQLException {
+		if (userSessionDao == null) {
+			userSessionDao = getDao(UserSession.class);
+		}
+		return userSessionDao;
+	}
 
 	/**
 	 * Close the database connections and clear any cached DAOs.
@@ -362,5 +377,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		userToGroupDao = null;
 		userToProjectDao = null;
 		userInviteDao = null;
+		userSessionDao = null;
 	}
 }
