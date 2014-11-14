@@ -7,7 +7,7 @@ public class Constants {
 	public static final String DEVICE=Build.MANUFACTURER+" "+Build.MODEL;
 	
 	// Backend constants
-	public static final String BACKEND_HOST="192.168.0.100";
+	public static final String BACKEND_HOST="192.168.1.30";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-service-backend-rest";
 	

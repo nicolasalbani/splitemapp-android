@@ -13,6 +13,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.domain.dto.LoginRequest;
 import com.splitemapp.android.domain.dto.LoginResponse;
+import com.splitemapp.commons.utils.Utils;
 
 public class LoginFragment extends BaseFragment {
 
@@ -57,7 +58,7 @@ public class LoginFragment extends BaseFragment {
 				LoginRequest loginRequest = new LoginRequest();
 				loginRequest.setDevice(Constants.DEVICE);
 				loginRequest.setUsername(mUserName.getText().toString());
-				loginRequest.setPassword(mPassword.getText().toString());
+				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
 				return callRestService(Constants.LOGIN_SERVICE, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage(), e);
