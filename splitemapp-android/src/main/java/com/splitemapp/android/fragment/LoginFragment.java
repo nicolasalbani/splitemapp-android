@@ -57,6 +57,7 @@ public class LoginFragment extends BaseFragment {
 			try {
 				LoginRequest loginRequest = new LoginRequest();
 				loginRequest.setDevice(Constants.DEVICE);
+				loginRequest.setOsVersion(Constants.OS_VERSION);
 				loginRequest.setUsername(mUserName.getText().toString());
 				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
 				return callRestService(Constants.LOGIN_SERVICE, loginRequest, LoginResponse.class);
@@ -69,14 +70,17 @@ public class LoginFragment extends BaseFragment {
 
 		@Override
 		protected void onPostExecute(LoginResponse loginResponse) {
-			// Logging
-			Log.i(TAG,"Success			: " +loginResponse.getSuccess());
-			if(loginResponse.getSuccess()){
-				Log.i(TAG,"SessionToken		: " +loginResponse.getSessionToken());
-				Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
+			boolean loginSuccess = false;
+			if(loginResponse != null){
+				loginSuccess = loginResponse.getSuccess();
+				// Logging
+				Log.i(TAG,"Success			: " +loginResponse.getSuccess());
+				if(loginResponse.getSuccess()){
+					Log.i(TAG,"SessionToken		: " +loginResponse.getUserSessionDTO().getToken());
+					Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
+				}
 			}
-			
-			showToast(loginResponse.getSuccess() ? "Login Successful!" : "Login Failed!");
+			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
 			//TODO Evaluate the loginResponse and do stuff
 		}
 	}
