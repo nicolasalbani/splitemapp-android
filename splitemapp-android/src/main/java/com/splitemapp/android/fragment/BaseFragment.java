@@ -1,5 +1,6 @@
 package com.splitemapp.android.fragment;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -59,6 +60,9 @@ public abstract class BaseFragment extends Fragment {
         mappingJackson2HttpMessageConverter.getObjectMapper().configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
         mappingJackson2HttpMessageConverter.getObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, true);
         restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
+        
+        // We use old version of request factory that uses HTTPClient instead of HttpURLConnection to avoid bugs
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());  
         
         // We make the POST rest service call
         T response = restTemplate.postForObject(url, request, responseType);

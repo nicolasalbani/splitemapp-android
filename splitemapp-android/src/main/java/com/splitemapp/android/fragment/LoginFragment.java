@@ -1,5 +1,7 @@
 package com.splitemapp.android.fragment;
 
+import java.sql.SQLException;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,9 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.domain.dto.LoginRequest;
 import com.splitemapp.android.domain.dto.LoginResponse;
+import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserSession;
+import com.splitemapp.commons.domain.UserStatus;
 import com.splitemapp.commons.utils.Utils;
 
 public class LoginFragment extends BaseFragment {
@@ -80,8 +85,25 @@ public class LoginFragment extends BaseFragment {
 					Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
 				}
 			}
+			
 			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
-			//TODO Evaluate the loginResponse and do stuff
+			
+			try {
+				// We reconstruct the user status object
+				UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
+				getHelper().getUserStatusDao().createOrUpdate(userStatus);
+				
+				// We reconstruct the user object
+				User user = new User(userStatus, loginResponse.getUserDTO());
+				getHelper().getUserDao().createOrUpdate(user);
+				
+				// We reconstruct the user session object
+				UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
+				getHelper().getUserSessionDao().createOrUpdate(userSession);
+			} catch (SQLException e) {
+				Log.e(TAG, "SQLException caught while getting UserSession", e);
+			}
+			
 		}
 	}
 }
