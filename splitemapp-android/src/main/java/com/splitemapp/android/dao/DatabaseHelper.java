@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +14,7 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
@@ -22,6 +25,7 @@ import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
+import com.splitemapp.commons.domain.SyncStatus;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserExpense;
@@ -32,6 +36,7 @@ import com.splitemapp.commons.domain.UserToGroup;
 import com.splitemapp.commons.domain.UserToGroupStatus;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
+import com.splitemapp.commons.utils.Utils;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
@@ -68,6 +73,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<UserToProject, Integer> userToProjectDao = null;
 	private Dao<UserInvite, Integer> userInviteDao = null;
 	private Dao<UserSession, Integer> userSessionDao = null;
+	private Dao<SyncStatus, Integer> syncStatusDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -101,6 +107,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, UserToProject.class);
 			TableUtils.createTable(connectionSource, UserInvite.class);
 			TableUtils.createTable(connectionSource, UserSession.class);
+			TableUtils.createTable(connectionSource, SyncStatus.class);
 
 			// We insert initial data
 			insertInitialData(db);
@@ -138,6 +145,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, UserToProject.class, true);
 			TableUtils.dropTable(connectionSource, UserInvite.class, true);
 			TableUtils.dropTable(connectionSource, UserSession.class, true);
+			TableUtils.dropTable(connectionSource, SyncStatus.class, true);
 
 			// We create the new ones
 			onCreate(db, connectionSource);
@@ -343,7 +351,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return userInviteDao;
 	}
-	
+
 	/**
 	 * Returns the Database Access Object (DAO) for the UserSession class. It will create it or just give the cached
 	 * value.
@@ -353,6 +361,45 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			userSessionDao = getDao(UserSession.class);
 		}
 		return userSessionDao;
+	}
+
+	/**
+	 * Returns the Database Access Object (DAO) for the SyncStatus class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<SyncStatus, Integer> getSyncStatusDao() throws SQLException {
+		if (syncStatusDao == null) {
+			syncStatusDao = getDao(SyncStatus.class);
+		}
+		return syncStatusDao;
+	}
+
+	public <T extends java.io.Serializable> void updateSyncPullAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
+		// If a record was created or updated we update the sync_status table
+		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
+			// We get the proper record from the sync_status table
+			Dao<SyncStatus,Integer> syncStatusDao = getSyncStatusDao();
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+
+			// We update the "last_pull_at" field in the sync_status table
+			SyncStatus syncStatus = queryResult.get(0);
+			syncStatus.setLastPullAt(new Date());
+			syncStatusDao.update(syncStatus);
+		}
+	}
+
+	public <T extends java.io.Serializable> void updateSyncPushAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
+		// If a record was created or updated we update the sync_status table
+		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
+			// We get the proper record from the sync_status table
+			Dao<SyncStatus,Integer> syncStatusDao = getSyncStatusDao();
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+
+			// We update the "last_push_at" field in the sync_status table
+			SyncStatus syncStatus = queryResult.get(0);
+			syncStatus.setLastPushAt(new Date());
+			syncStatusDao.update(syncStatus);
+		}
 	}
 
 	/**
@@ -378,5 +425,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		userToProjectDao = null;
 		userInviteDao = null;
 		userSessionDao = null;
+		syncStatusDao = null;
 	}
 }
