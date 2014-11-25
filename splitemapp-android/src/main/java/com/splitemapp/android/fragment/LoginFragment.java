@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.domain.dto.LoginRequest;
@@ -60,11 +61,14 @@ public class LoginFragment extends BaseFragment {
 		@Override
 		protected LoginResponse doInBackground(Void... params) {
 			try {
+				// We create the login request
 				LoginRequest loginRequest = new LoginRequest();
 				loginRequest.setDevice(Constants.DEVICE);
 				loginRequest.setOsVersion(Constants.OS_VERSION);
 				loginRequest.setUsername(mUserName.getText().toString());
 				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
+				
+				// We call the rest service and send back the login response
 				return callRestService(Constants.LOGIN_SERVICE, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage(), e);
@@ -76,34 +80,34 @@ public class LoginFragment extends BaseFragment {
 		@Override
 		protected void onPostExecute(LoginResponse loginResponse) {
 			boolean loginSuccess = false;
+			
+			// We validate the response
 			if(loginResponse != null){
 				loginSuccess = loginResponse.getSuccess();
-				// Logging
-				Log.i(TAG,"Success			: " +loginResponse.getSuccess());
-				if(loginResponse.getSuccess()){
-					Log.i(TAG,"SessionToken		: " +loginResponse.getUserSessionDTO().getToken());
-					Log.i(TAG,"ChangePassword	: " +loginResponse.getChangePassword());
-				}
 			}
 			
+			// We show the status toast
 			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
 			
-			try {
-				// We reconstruct the user status object
-				UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
-				getHelper().getUserStatusDao().createOrUpdate(userStatus);
-				
-				// We reconstruct the user object
-				User user = new User(userStatus, loginResponse.getUserDTO());
-				getHelper().getUserDao().createOrUpdate(user);
-				
-				// We reconstruct the user session object
-				UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
-				getHelper().getUserSessionDao().createOrUpdate(userSession);
-			} catch (SQLException e) {
-				Log.e(TAG, "SQLException caught while getting UserSession", e);
+			// We save the user and session information returned by the backend
+			if(loginSuccess){
+				try {
+					// We reconstruct the user status object
+					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
+					
+					// We reconstruct the user object
+					User user = new User(userStatus, loginResponse.getUserDTO());
+					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
+					getHelper().updateSyncPullAt(User.class, createOrUpdate);
+					
+					// We reconstruct the user session object
+					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
+					getHelper().getUserSessionDao().createOrUpdate(userSession);
+					getHelper().updateSyncPullAt(UserSession.class, createOrUpdate);
+				} catch (SQLException e) {
+					Log.e(TAG, "SQLException caught while getting UserSession", e);
+				}
 			}
-			
 		}
 	}
 }
