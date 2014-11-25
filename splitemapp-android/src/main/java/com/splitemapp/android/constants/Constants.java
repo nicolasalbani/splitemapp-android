@@ -8,7 +8,7 @@ public class Constants {
 	public static final String OS_VERSION="Android " +Build.VERSION.CODENAME+"-"+Build.VERSION.RELEASE+ " SDK-" +Build.VERSION.SDK_INT;
 	
 	// Backend constants
-	public static final String BACKEND_HOST="192.168.0.103";
+	public static final String BACKEND_HOST="192.168.0.100";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-service-backend-rest";
 	
