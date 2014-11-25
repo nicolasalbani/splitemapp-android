@@ -33,3 +33,14 @@ insert into invite_status(id,cod,title) values(3,"rejected","Rechazada");
 
 -- Data for expense_category table
 insert into expense_category(id,cod,title) values(1,"car","Automovil");
+
+-- Data for sync_status table
+insert into sync_status(id,table_name) values(1,"group");
+insert into sync_status(id,table_name) values(2,"project");
+insert into sync_status(id,table_name) values(3,"user");
+insert into sync_status(id,table_name) values(4,"user_contact_data");
+insert into sync_status(id,table_name) values(5,"user_expense");
+insert into sync_status(id,table_name) values(6,"user_invite");
+insert into sync_status(id,table_name) values(7,"user_session");
+insert into sync_status(id,table_name) values(8,"user_to_group");
+insert into sync_status(id,table_name) values(9,"user_to_project");
