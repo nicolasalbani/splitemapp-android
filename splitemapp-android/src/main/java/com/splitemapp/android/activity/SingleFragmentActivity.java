@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.view.Window;
 
 
 public abstract class SingleFragmentActivity extends FragmentActivity {
@@ -16,6 +17,10 @@ public abstract class SingleFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Remove title bar
+	    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		//Setting the content view to be the layout for our crime activity
 		setContentView(R.layout.activity_fragment);
 		
