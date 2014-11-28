@@ -1,28 +1,26 @@
-package com.splitemapp.android.activity;
+package com.splitemapp.android.screen;
 
-
-import com.splitemapp.android.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.view.Window;
+import android.support.v7.app.ActionBarActivity;
+
+import com.splitemapp.android.R;
 
 
-public abstract class SingleFragmentActivity extends FragmentActivity {
+public abstract class SingleFragmentActivity extends ActionBarActivity {
 
 	protected abstract Fragment createFragment(); 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		//Remove title bar
-	    this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    super.onCreate(savedInstanceState);
 		
 		//Setting the content view to be the layout for our crime activity
 		setContentView(R.layout.activity_fragment);
+		
+		getSupportActionBar().setTitle(R.string.ca_create_account_button);
 		
 		//Getting the fragment manager
 		FragmentManager fm = getSupportFragmentManager();

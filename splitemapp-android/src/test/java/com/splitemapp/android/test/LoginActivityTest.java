@@ -12,7 +12,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.activity.LoginActivity;
+import com.splitemapp.android.screen.login.LoginActivity;
 
 @Config(emulateSdk = 18) 
 @RunWith(RobolectricTestRunner.class)

@@ -1,7 +1,8 @@
-package com.splitemapp.android.fragment;
+package com.splitemapp.android.screen.login;
 
 import java.sql.SQLException;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.domain.dto.LoginRequest;
 import com.splitemapp.android.domain.dto.LoginResponse;
+import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
+import com.splitemapp.commons.constants.ServicePath;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
@@ -28,6 +33,7 @@ public class LoginFragment extends BaseFragment {
 	private Button mLogin;
 	private EditText mUserName;
 	private EditText mPassword;
+	private TextView mSignUp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,15 +47,25 @@ public class LoginFragment extends BaseFragment {
 		View v = inflater.inflate(R.layout.fragment_login, container, false);
 
 		// We get the references for the user name and password text boxes
-		mUserName = (EditText) v.findViewById(R.id.user_name);
-		mPassword = (EditText) v.findViewById(R.id.password);
+		mUserName = (EditText) v.findViewById(R.id.li_username_editText);
+		mPassword = (EditText) v.findViewById(R.id.li_password_editText);
 
 		// We get the reference to the login button and implement a OnClickListener
-		mLogin = (Button) v.findViewById(R.id.login_button);
+		mLogin = (Button) v.findViewById(R.id.li_login_button);
 		mLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new LoginRequestTask().execute();
+			}
+		});
+		
+		// We get the reference to the sign up button and implement a OnClickListener
+		mSignUp = (TextView) v.findViewById(R.id.li_sign_up_link);
+		mSignUp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), CreateAccountActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -69,7 +85,7 @@ public class LoginFragment extends BaseFragment {
 				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
 				
 				// We call the rest service and send back the login response
-				return callRestService(Constants.LOGIN_SERVICE, loginRequest, LoginResponse.class);
+				return callRestService(ServicePath.LOGIN, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage(), e);
 			}

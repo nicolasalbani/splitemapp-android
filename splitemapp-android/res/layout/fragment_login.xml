@@ -10,10 +10,10 @@
         android:layout_weight="0.5" />
 
     <EditText
-        android:id="@+id/user_name"
+        android:id="@+id/li_username_editText"
         style="@style/LoginEditText"
         android:layout_weight="0.1"
-        android:hint="@string/user_name"
+        android:hint="@string/li_username_hint"
         android:inputType="textEmailAddress" />
 
     <LinearLayout
@@ -36,17 +36,17 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/li_password_editText"
         style="@style/LoginEditText"
         android:layout_weight="0.1"
-        android:hint="@string/password"
+        android:hint="@string/li_password_hint"
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/login_button"
+        android:id="@+id/li_login_button"
         style="@style/LoginButton"
         android:layout_weight="0.1"
-        android:text="@string/log_in" />
+        android:text="@string/li_log_in_button" />
 
     <LinearLayout
         style="@style/ActivityTheme"
@@ -60,14 +60,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/sign_up_question"
+            android:text="@string/li_sign_up_question"
             android:textColor="@color/text" />
 
         <TextView
+            android:id="@+id/li_sign_up_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="@string/sign_up_link"
+            android:text="@string/li_sign_up_link"
             android:padding="10dp"
             android:textColor="@color/green" />
     </LinearLayout>

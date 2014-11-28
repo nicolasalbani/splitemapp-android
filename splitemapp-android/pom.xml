@@ -66,12 +66,13 @@
 			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.android.support</groupId>
-			<artifactId>appcompat-v7</artifactId>
-			<version>${android.appcompat.version}</version>
-			<type>aar</type>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.android.support</groupId> -->
+<!-- 			<artifactId>appcompat-v7</artifactId> -->
+<!-- 			<version>${android.appcompat.version}</version> -->
+<!-- 			<type>aar</type> -->
+<!-- 		</dependency> -->
+
 
 		<!-- ORM Lite dependencies -->
 		<dependency>

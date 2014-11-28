@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<!-- GLOBAL -->
     <string name="app_name">SplitemApp</string>
-    <string name="user_name">   Username or Email</string>
-    <string name="password">   Password</string>
-    <string name="log_in">LOG IN</string>
-    <string name="sign_up_question">Don\'t have an account?</string>
-    <string name="sign_up_link">Sign up</string>
+    
+    <!-- Login Screen -->
+    <string name="li_username_hint">Username or Email</string>
+    <string name="li_password_hint">Password</string>
+    <string name="li_log_in_button">LOG IN</string>
+    <string name="li_sign_up_question">Don\'t have an account?</string>
+    <string name="li_sign_up_link">Sign up</string>
 
+    <!-- Create Account Screen -->
+    <string name="ca_avatar_description">Avatar</string>
+    <string name="ca_username_hint">Username</string>
+    <string name="ca_email_hint">Email</string>
+    <string name="ca_password_hint">Password</string>
+    <string name="ca_create_account_title">Create Account</string>
+    <string name="ca_create_account_button">Create Account</string>
+    <string name="ca_disclamer_1">By creating an account you agree to our</string>
+    <string name="ca_disclamer_2">Privacy Policy and Terms of Use</string>
+    <string name="ca_cancel_action">Cancel</string>
 </resources>
