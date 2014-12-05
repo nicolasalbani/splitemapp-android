@@ -41,6 +41,5 @@ insert into sync_status(id,table_name) values(3,"user");
 insert into sync_status(id,table_name) values(4,"user_contact_data");
 insert into sync_status(id,table_name) values(5,"user_expense");
 insert into sync_status(id,table_name) values(6,"user_invite");
-insert into sync_status(id,table_name) values(7,"user_session");
-insert into sync_status(id,table_name) values(8,"user_to_group");
-insert into sync_status(id,table_name) values(9,"user_to_project");
+insert into sync_status(id,table_name) values(7,"user_to_group");
+insert into sync_status(id,table_name) values(8,"user_to_project");
