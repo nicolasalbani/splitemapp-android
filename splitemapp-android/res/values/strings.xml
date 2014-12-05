@@ -21,4 +21,9 @@
     <string name="ca_disclamer_1">By creating an account you agree to our</string>
     <string name="ca_disclamer_2">Privacy Policy and Terms of Use</string>
     <string name="ca_cancel_action">Cancel</string>
+    
+    <!-- Home Scree -->
+    <string name="h_project_icon_description">ProjectIcon</string>
+    <string name="h_avatar_description">Avatar</string>
+    <string name="h_new_list_button">New list of expenses</string>
 </resources>

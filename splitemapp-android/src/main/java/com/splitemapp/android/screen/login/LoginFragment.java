@@ -20,8 +20,11 @@ import com.splitemapp.android.domain.dto.LoginRequest;
 import com.splitemapp.android.domain.dto.LoginResponse;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
+import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.android.screen.home.HomeFragment;
 import com.splitemapp.commons.constants.ServicePath;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
 import com.splitemapp.commons.utils.Utils;
@@ -118,8 +121,18 @@ public class LoginFragment extends BaseFragment {
 					
 					// We reconstruct the user session object
 					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
-					getHelper().getUserSessionDao().createOrUpdate(userSession);
+					createOrUpdate = getHelper().getUserSessionDao().createOrUpdate(userSession);
 					getHelper().updateSyncPullAt(UserSession.class, createOrUpdate);
+					
+					// We reconstruct the user contact data object
+					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
+					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
+					getHelper().updateSyncPullAt(UserContactData.class, createOrUpdate);
+					
+					// We open the home activity class
+					Intent intent = new Intent(getActivity(), HomeActivity.class);
+					intent.putExtra(HomeFragment.EXTRA_USER_ID, user.getId());
+					startActivity(intent);
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught while getting UserSession", e);
 				}
