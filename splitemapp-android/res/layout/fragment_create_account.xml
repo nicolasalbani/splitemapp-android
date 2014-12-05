@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ActivityTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/ca_avatar_imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_weight="0.2"
+        android:contentDescription="@string/ca_avatar_description"
+        android:gravity="center"
+        android:src="@drawable/avatar_placeholder" />
+
+    <EditText
+        android:id="@+id/ca_username_editText"
+        style="@style/LoginEditText"
+        android:layout_weight="0.1"
+        android:hint="@string/ca_username_hint"
+        android:inputType="textPersonName" />
+
+    <LinearLayout
+        style="@style/ActivityTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="0.05"
+            android:background="@color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="0.95"
+            android:background="@color/text" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/ca_email_editText"
+        style="@style/LoginEditText"
+        android:layout_weight="0.1"
+        android:hint="@string/ca_email_hint"
+        android:inputType="textEmailAddress" />
+
+    <LinearLayout
+        style="@style/ActivityTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="0.05"
+            android:background="@color/white" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_weight="0.95"
+            android:background="@color/text" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/ca_password_editText"
+        style="@style/LoginEditText"
+        android:layout_weight="0.1"
+        android:hint="@string/ca_password_hint"
+        android:inputType="textPassword" />
+
+    <Button
+        android:id="@+id/create_account_create_account_button"
+        style="@style/LoginButton"
+        android:layout_weight="0.1"
+        android:text="@string/ca_create_account_button" />
+
+    <LinearLayout
+        style="@style/ActivityTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.15"
+        android:gravity="center|center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/ca_disclamer_1"
+            android:textColor="@color/text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/ca_disclamer_2"
+            android:textColor="@color/text" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background">#6C8296</color>
+    <color name="white">#FFFFFF</color>
+    <color name="green">#90DD1E</color>
+    <color name="text">#ABBEDD</color>
+    <color name="textbox_background">#FFFFFF</color>
+    <color name="login_background">#379AEA</color>
+
+</resources>
