@@ -22,7 +22,7 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.screen.home.HomeFragment;
-import com.splitemapp.commons.constants.ServicePath;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
@@ -88,7 +88,7 @@ public class LoginFragment extends BaseFragment {
 				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
 				
 				// We call the rest service and send back the login response
-				return callRestService(ServicePath.LOGIN, loginRequest, LoginResponse.class);
+				return callRestService(ServiceConstants.LOGIN_PATH, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage(), e);
 			}
@@ -119,10 +119,14 @@ public class LoginFragment extends BaseFragment {
 					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
 					getHelper().updateSyncPullAt(User.class, createOrUpdate);
 					
+					// We clear all previous session records
+					for(UserSession userSession:getHelper().getUserSessionDao().queryForAll()){
+						getHelper().getUserSessionDao().delete(userSession);
+					}
+					
 					// We reconstruct the user session object
 					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
 					createOrUpdate = getHelper().getUserSessionDao().createOrUpdate(userSession);
-					getHelper().updateSyncPullAt(UserSession.class, createOrUpdate);
 					
 					// We reconstruct the user contact data object
 					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());

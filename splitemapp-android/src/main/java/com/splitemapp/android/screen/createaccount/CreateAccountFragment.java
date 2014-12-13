@@ -21,7 +21,7 @@ import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.domain.dto.CreateAccountRequest;
 import com.splitemapp.android.domain.dto.CreateAccountResponse;
 import com.splitemapp.android.screen.BaseFragment;
-import com.splitemapp.commons.constants.ServicePath;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserStatus;
@@ -111,7 +111,7 @@ public class CreateAccountFragment extends BaseFragment {
 				createAccountRequest.setIpAddress(getIpAddress());
 
 				// We call the rest service and send back the login response
-				return callRestService(ServicePath.CREATE_ACCOUNT, createAccountRequest, CreateAccountResponse.class);
+				return callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage(), e);
 			}

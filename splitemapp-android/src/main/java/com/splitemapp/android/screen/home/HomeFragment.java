@@ -1,8 +1,10 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,20 +19,24 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
+import com.splitemapp.commons.domain.UserSession;
+import com.splitemapp.commons.domain.dto.request.PullAllSyncRequest;
+import com.splitemapp.commons.domain.dto.response.PullAllSyncResponse;
 
 public class HomeFragment extends BaseFragment {
-	
+
 	public static final String EXTRA_USER_ID = "com.splitemapp.android.user_id";
 
 	private static final String TAG = HomeFragment.class.getSimpleName();
-	
+
 	private List<Project> mProjects;
 	private User mUser;
 	private UserContactData mUserContactData;
-	
+
 	private ImageView mAvatar;
 	private TextView mFirstName;
 	private TextView mEmail;
@@ -40,7 +46,7 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle arguments = getActivity().getIntent().getExtras();
 		
 		// We get the user and user contact data instances
@@ -67,7 +73,7 @@ public class HomeFragment extends BaseFragment {
 		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
 		//TODO set this to the actual user avatar!!
 		mAvatar.setImageResource(R.drawable.avatar_placeholder);
-		
+
 		// We get the list of existing projects and create the project list adapter
 		try {
 			mProjects = getHelper().getProjectDao().queryForAll();
@@ -75,7 +81,7 @@ public class HomeFragment extends BaseFragment {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 		ProjectAdapter projectAdapter = new ProjectAdapter(mProjects);
-		
+
 		// We populate the list of projects for this user
 		mProjectsList = (ListView) v.findViewById(R.id.h_projects_listView);
 		mProjectsList.setAdapter(projectAdapter);
@@ -85,7 +91,7 @@ public class HomeFragment extends BaseFragment {
 		mAddNewList.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO open the create new project activity
+				new PullAllSyncTask().execute();
 			}
 		});
 
@@ -123,7 +129,7 @@ public class HomeFragment extends BaseFragment {
 		}
 		return user;
 	}
-	
+
 	private class ProjectAdapter extends ArrayAdapter<Project>{
 
 		public ProjectAdapter(List<Project> projects){
@@ -134,7 +140,7 @@ public class HomeFragment extends BaseFragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			//If we weren't given a view, inflate one
 			if (convertView == null){
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_project, null);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_project, parent, false);
 			}
 
 			//Configure the view for this Project
@@ -144,6 +150,44 @@ public class HomeFragment extends BaseFragment {
 			projectTitleTextView.setText(project.getTitle());
 
 			return convertView;
+		}
+	}
+
+	private class PullAllSyncTask extends AsyncTask<Void, Void, PullAllSyncResponse> {
+
+		@Override
+		protected PullAllSyncResponse doInBackground(Void... params) {
+			try {
+				// We create the login request
+				PullAllSyncRequest pullAllSyncRequest = new PullAllSyncRequest();
+				pullAllSyncRequest.setLastPullSuccessAt(new Date(100));
+				UserSession userSession = getHelper().getUserSessionDao().queryForAll().get(0);
+				pullAllSyncRequest.setToken(userSession.getToken());
+
+				// We call the rest service and send back the login response
+				return callRestService(ServiceConstants.PULL_ALL_SYNC_PATH, pullAllSyncRequest, PullAllSyncResponse.class);
+			} catch (Exception e) {
+				Log.e(TAG, e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(PullAllSyncResponse pullAllSyncResponse) {
+			boolean loginSuccess = false;
+
+			// We validate the response
+			if(pullAllSyncResponse != null){
+				loginSuccess = pullAllSyncResponse.getSuccess();
+			}
+
+			// We show the status toast
+			showToast(loginSuccess ? "PullAllSync Successful!" : "PullAllSync Failed!");
+
+			// We save the user and session information returned by the backend
+			if(loginSuccess){
+			}
 		}
 	}
 
