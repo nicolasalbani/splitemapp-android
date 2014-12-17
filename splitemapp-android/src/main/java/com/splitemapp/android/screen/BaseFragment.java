@@ -23,8 +23,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
@@ -35,6 +33,16 @@ public abstract class BaseFragment extends Fragment {
 
 	static{
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
+		
+		// We initialize logging
+		java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINEST);
+		java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINEST);
+
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
+		System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
+		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
 	}
 
 	/**
@@ -73,8 +81,6 @@ public abstract class BaseFragment extends Fragment {
 		// We get an instance of the spring framework RestTemplate and configure wrapping the root XML element
 		RestTemplate restTemplate = new RestTemplate();
 		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-		mappingJackson2HttpMessageConverter.getObjectMapper().configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
-		mappingJackson2HttpMessageConverter.getObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, true);
 		restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 
 		// We use old version of request factory that uses HTTPClient instead of HttpURLConnection to avoid bugs

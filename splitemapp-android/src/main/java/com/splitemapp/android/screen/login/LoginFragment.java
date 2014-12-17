@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
-import com.splitemapp.android.domain.dto.LoginRequest;
-import com.splitemapp.android.domain.dto.LoginResponse;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
@@ -27,6 +25,8 @@ import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.request.LoginRequest;
+import com.splitemapp.commons.domain.dto.response.LoginResponse;
 import com.splitemapp.commons.utils.Utils;
 
 public class LoginFragment extends BaseFragment {

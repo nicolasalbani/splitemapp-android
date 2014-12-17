@@ -26,6 +26,7 @@ import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.dto.request.PullAllSyncRequest;
 import com.splitemapp.commons.domain.dto.response.PullAllSyncResponse;
+import com.splitemapp.commons.utils.Utils;
 
 public class HomeFragment extends BaseFragment {
 
@@ -46,7 +47,7 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		Bundle arguments = getActivity().getIntent().getExtras();
 		
 		// We get the user and user contact data instances
@@ -160,7 +161,7 @@ public class HomeFragment extends BaseFragment {
 			try {
 				// We create the login request
 				PullAllSyncRequest pullAllSyncRequest = new PullAllSyncRequest();
-				pullAllSyncRequest.setLastPullSuccessAt(new Date(100));
+				pullAllSyncRequest.setLastPullSuccessAt(Utils.dateToString(new Date(100),ServiceConstants.DATE_FORMAT));
 				UserSession userSession = getHelper().getUserSessionDao().queryForAll().get(0);
 				pullAllSyncRequest.setToken(userSession.getToken());
 

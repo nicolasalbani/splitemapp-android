@@ -18,13 +18,13 @@ import android.widget.ImageView;
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
-import com.splitemapp.android.domain.dto.CreateAccountRequest;
-import com.splitemapp.android.domain.dto.CreateAccountResponse;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
+import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
 import com.splitemapp.commons.utils.Utils;
 
 public class CreateAccountFragment extends BaseFragment {
