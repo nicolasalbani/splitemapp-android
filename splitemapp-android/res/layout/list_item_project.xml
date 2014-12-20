@@ -4,21 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:contentDescription="@string/h_project_icon_description"
-        android:src="@drawable/list_item_project" />
-
     <TextView
         android:id="@+id/h_project_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.80"
-        android:textColor="@color/white"
         android:padding="10dp"
-        android:textSize="22sp" />
+        android:drawablePadding="5dp"
+        android:textColor="@color/black"
+        android:textSize="22sp" 
+        android:drawableStart="@drawable/list_item_project"
+        android:drawableLeft="@drawable/list_item_project"/>
 
 </LinearLayout>

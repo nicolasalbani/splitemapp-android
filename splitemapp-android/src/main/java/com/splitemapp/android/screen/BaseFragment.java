@@ -3,7 +3,10 @@ package com.splitemapp.android.screen;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.Set;
 
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -19,13 +22,27 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
+import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.ProjectStatus;
+import com.splitemapp.commons.domain.ProjectType;
+import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserSession;
+import com.splitemapp.commons.domain.UserToProject;
+import com.splitemapp.commons.domain.UserToProjectStatus;
+import com.splitemapp.commons.domain.dto.ProjectDTO;
+import com.splitemapp.commons.domain.dto.UserToProjectDTO;
+import com.splitemapp.commons.domain.dto.request.PullAllSyncRequest;
+import com.splitemapp.commons.domain.dto.response.PullAllSyncResponse;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -44,6 +61,12 @@ public abstract class BaseFragment extends Fragment {
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
 	}
+	
+	/**
+	 * This method returns the desired TAG to be used for logging purposes
+	 * @return
+	 */
+	public abstract String getLoggingTag();
 
 	/**
 	 * This method is called when the fragment is destroyed, releasing the database helper object
@@ -184,6 +207,65 @@ public abstract class BaseFragment extends Fragment {
 	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 	    canvas.drawBitmap(bitmap, rect, rect, paint);
 	    return output;
+	}
+	
+	public class PullAllSyncTask extends AsyncTask<Void, Void, PullAllSyncResponse> {
+		@Override
+		protected PullAllSyncResponse doInBackground(Void... params) {
+			try {
+				// We create the login request
+				PullAllSyncRequest pullAllSyncRequest = new PullAllSyncRequest();
+				pullAllSyncRequest.setLastPullSuccessAt(new Date(100));
+				UserSession userSession = getHelper().getUserSessionDao().queryForAll().get(0);
+				pullAllSyncRequest.setToken(userSession.getToken());
+
+				// We call the rest service and send back the login response
+				return callRestService(ServiceConstants.PULL_ALL_SYNC_PATH, pullAllSyncRequest, PullAllSyncResponse.class);
+			} catch (Exception e) {
+				Log.e(getLoggingTag(), e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(PullAllSyncResponse pullAllSyncResponse) {
+			boolean loginSuccess = false;
+
+			// We validate the response
+			if(pullAllSyncResponse != null){
+				loginSuccess = pullAllSyncResponse.getSuccess();
+			}
+
+			// We show the status toast
+			showToast(loginSuccess ? "PullAllSync Successful!" : "PullAllSync Failed!");
+
+			// We save the user and session information returned by the backend
+			if(loginSuccess){
+				try {
+					// We save all project instances received
+					Set<ProjectDTO> projectDTOs = pullAllSyncResponse.getProjectDTOs();
+					for(ProjectDTO projectDTO:projectDTOs){
+						ProjectStatus projectStatus = getHelper().getProjectStatusDao().queryForId(projectDTO.getProjectStatusId().intValue());
+						ProjectType projectType = getHelper().getProjectTypeDao().queryForId(projectDTO.getProjectTypeId().intValue());
+						Project project = new Project(projectType, projectStatus, projectDTO);
+						getHelper().getProjectDao().createOrUpdate(project);
+					}
+					
+					// We save all user_to_project instances received
+					Set<UserToProjectDTO> userToProjectDTOs = pullAllSyncResponse.getUserToProjectDTOs();
+					for(UserToProjectDTO userToProjectDTO:userToProjectDTOs){
+						User user = getHelper().getUserDao().queryForId(userToProjectDTO.getUserId().intValue());
+						Project project = getHelper().getProjectDao().queryForId(userToProjectDTO.getProjectId().intValue());
+						UserToProjectStatus userToProjectStatus = getHelper().getUserToProjectStatusDao().queryForId(userToProjectDTO.getUserToProjectStatusId().intValue());
+						UserToProject userToProject = new UserToProject(user, project, userToProjectStatus, userToProjectDTO);
+						getHelper().getUserToProjectDao().createOrUpdate(userToProject);
+					}
+				} catch (SQLException e) {
+					Log.e(getLoggingTag(), "SQLException caught while processing PullAllSync response", e);
+				}
+			}
+		}
 	}
 
 }

@@ -152,4 +152,9 @@ public class CreateAccountFragment extends BaseFragment {
 			}
 		}
 	}
+
+	@Override
+	public String getLoggingTag() {
+		return TAG;
+	}
 }

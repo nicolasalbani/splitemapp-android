@@ -143,4 +143,9 @@ public class LoginFragment extends BaseFragment {
 			}
 		}
 	}
+
+	@Override
+	public String getLoggingTag() {
+		return TAG;
+	}
 }

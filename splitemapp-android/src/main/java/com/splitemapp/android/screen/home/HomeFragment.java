@@ -1,10 +1,8 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,14 +17,9 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
-import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
-import com.splitemapp.commons.domain.UserSession;
-import com.splitemapp.commons.domain.dto.request.PullAllSyncRequest;
-import com.splitemapp.commons.domain.dto.response.PullAllSyncResponse;
-import com.splitemapp.commons.utils.Utils;
 
 public class HomeFragment extends BaseFragment {
 
@@ -47,9 +40,9 @@ public class HomeFragment extends BaseFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bundle arguments = getActivity().getIntent().getExtras();
-		
+
 		// We get the user and user contact data instances
 		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
 		mUser = getLoggedUser(userId);
@@ -154,42 +147,9 @@ public class HomeFragment extends BaseFragment {
 		}
 	}
 
-	private class PullAllSyncTask extends AsyncTask<Void, Void, PullAllSyncResponse> {
-
-		@Override
-		protected PullAllSyncResponse doInBackground(Void... params) {
-			try {
-				// We create the login request
-				PullAllSyncRequest pullAllSyncRequest = new PullAllSyncRequest();
-				pullAllSyncRequest.setLastPullSuccessAt(Utils.dateToString(new Date(100),ServiceConstants.DATE_FORMAT));
-				UserSession userSession = getHelper().getUserSessionDao().queryForAll().get(0);
-				pullAllSyncRequest.setToken(userSession.getToken());
-
-				// We call the rest service and send back the login response
-				return callRestService(ServiceConstants.PULL_ALL_SYNC_PATH, pullAllSyncRequest, PullAllSyncResponse.class);
-			} catch (Exception e) {
-				Log.e(TAG, e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(PullAllSyncResponse pullAllSyncResponse) {
-			boolean loginSuccess = false;
-
-			// We validate the response
-			if(pullAllSyncResponse != null){
-				loginSuccess = pullAllSyncResponse.getSuccess();
-			}
-
-			// We show the status toast
-			showToast(loginSuccess ? "PullAllSync Successful!" : "PullAllSync Failed!");
-
-			// We save the user and session information returned by the backend
-			if(loginSuccess){
-			}
-		}
+	@Override
+	public String getLoggingTag() {
+		return TAG;
 	}
 
 }
