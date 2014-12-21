@@ -6,36 +6,36 @@
 
     <TextView
         style="@style/CreateListTextView"
-        android:text="@string/cl_list_name"/>
+        android:text="@string/cl_list_name" />
 
     <EditText
+        android:id="@+id/cl_list_name_editText"
         style="@style/CreateListEditText"
-        android:inputType="text"
-        android:id="@+id/cl_list_name_editText"/>
-    
+        android:inputType="text" />
+
     <TextView
         style="@style/CreateListTextView"
-        android:text="@string/cl_list_type"/>
+        android:text="@string/cl_list_type" />
 
     <Spinner
-        style="@style/CreateListSpinner"
-        android:id="@+id/cl_list_type_spinner"/>
-    
+        android:id="@+id/cl_list_type_spinner"
+        style="@style/CreateListSpinner" />
+
     <TextView
         style="@style/CreateListTextView"
-        android:text="@string/cl_list_budget"/>
+        android:text="@string/cl_list_budget" />
 
     <EditText
-        style="@style/CreateListEditText"
         android:id="@+id/cl_budget_editText"
-        android:inputType="numberDecimal"
+        style="@style/CreateListEditText"
+        android:drawableLeft="@drawable/dollar_sign"
         android:drawablePadding="5dp"
         android:drawableStart="@drawable/dollar_sign"
-        android:drawableLeft="@drawable/dollar_sign"/>
-    
+        android:inputType="numberDecimal" />
+
     <TextView
         style="@style/CreateListTextView"
-        android:text="@string/cl_list_members_list"/>
+        android:text="@string/cl_list_members_list" />
 
     <ListView
         android:id="@+id/cl_users_listView"
@@ -44,13 +44,11 @@
         android:layout_weight="0.60"
         android:background="@color/white" >
     </ListView>
-    
+
     <Button
         android:id="@+id/cl_new_list_button"
-        style="@style/LoginButton"
+        style="@style/Button"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.10"
         android:text="@string/cl_new_list_button" />
 
 </LinearLayout>

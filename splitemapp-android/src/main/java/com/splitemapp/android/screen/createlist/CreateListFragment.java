@@ -73,7 +73,7 @@ public class CreateListFragment extends BaseFragment {
 		try {
 			Dao<ProjectType,Integer> projectTypeDao = getHelper().getProjectTypeDao();
 			List<ProjectType> projectTypes = projectTypeDao.queryForAll();
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item );
+			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner );
 			for(ProjectType projectType:projectTypes){
 				adapter.add(projectType.getCod());
 			}
