@@ -22,8 +22,18 @@
     <string name="ca_disclamer_2">Privacy Policy and Terms of Use</string>
     <string name="ca_cancel_action">Cancel</string>
     
-    <!-- Home Scree -->
+    <!-- Home Screen -->
     <string name="h_project_icon_description">ProjectIcon</string>
     <string name="h_avatar_description">Avatar</string>
     <string name="h_new_list_button">New list of expenses</string>
+    
+    <!-- Create List Screen -->
+    <string name="cl_title">New List</string>
+    <string name="cl_list_name">List Name</string>
+    <string name="cl_list_type">List Type</string>
+    <string name="cl_list_budget">Available budget</string>
+    <string name="cl_list_budget_optional">optional</string>
+    <string name="cl_list_members_list">Member list</string>
+    <string name="cl_new_list_button">Create list</string>
+    <string name="cl_cancel_action">Cancel</string>
 </resources>

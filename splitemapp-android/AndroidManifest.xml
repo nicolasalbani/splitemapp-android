@@ -32,6 +32,10 @@
             android:name="com.splitemapp.android.screen.home.HomeActivity" 
             android:screenOrientation="portrait">
         </activity>
+        <activity 
+            android:name="com.splitemapp.android.screen.createlist.CreateListActivity" 
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

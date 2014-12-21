@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ActivityGrayTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/CreateListTextView"
+        android:text="@string/cl_list_name"/>
+
+    <EditText
+        style="@style/CreateListEditText"
+        android:inputType="text"
+        android:id="@+id/cl_list_name_editText"/>
+    
+    <TextView
+        style="@style/CreateListTextView"
+        android:text="@string/cl_list_type"/>
+
+    <Spinner
+        style="@style/CreateListSpinner"
+        android:id="@+id/cl_list_type_spinner"/>
+    
+    <TextView
+        style="@style/CreateListTextView"
+        android:text="@string/cl_list_budget"/>
+
+    <EditText
+        style="@style/CreateListEditText"
+        android:id="@+id/cl_budget_editText"
+        android:inputType="numberDecimal"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/dollar_sign"
+        android:drawableLeft="@drawable/dollar_sign"/>
+    
+    <TextView
+        style="@style/CreateListTextView"
+        android:text="@string/cl_list_members_list"/>
+
+    <ListView
+        android:id="@+id/cl_users_listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.60"
+        android:background="@color/white" >
+    </ListView>
+    
+    <Button
+        android:id="@+id/cl_new_list_button"
+        style="@style/LoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.10"
+        android:text="@string/cl_new_list_button" />
+
+</LinearLayout>

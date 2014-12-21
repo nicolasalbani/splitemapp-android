@@ -3,6 +3,7 @@ package com.splitemapp.android.screen.home;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.createlist.CreateListActivity;
+import com.splitemapp.android.screen.createlist.CreateListFragment;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -28,7 +31,7 @@ public class HomeFragment extends BaseFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private List<Project> mProjects;
-	private User mUser;
+	private User mCurrentUser;
 	private UserContactData mUserContactData;
 
 	private ImageView mAvatar;
@@ -45,8 +48,8 @@ public class HomeFragment extends BaseFragment {
 
 		// We get the user and user contact data instances
 		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
-		mUser = getLoggedUser(userId);
-		mUserContactData = getLoggedUserCD(mUser);
+		mCurrentUser = getCurrentUser(userId);
+		mUserContactData = getLoggedUserCD(mCurrentUser);
 	}
 
 	@Override
@@ -57,7 +60,7 @@ public class HomeFragment extends BaseFragment {
 
 		// We populate the first name
 		mFirstName = (TextView) v.findViewById(R.id.h_first_name_textView);
-		mFirstName.setText(mUser.getFirstName());
+		mFirstName.setText(mCurrentUser.getFirstName());
 
 		// We populate the email
 		mEmail = (TextView) v.findViewById(R.id.h_email_textView);
@@ -85,7 +88,10 @@ public class HomeFragment extends BaseFragment {
 		mAddNewList.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new PullAllSyncTask().execute();
+				// We move to the project creation screen
+				Intent intent = new Intent(getActivity(), CreateListActivity.class);
+				intent.putExtra(CreateListFragment.EXTRA_USER_ID, mCurrentUser.getId());
+				startActivity(intent);
 			}
 		});
 
@@ -107,21 +113,6 @@ public class HomeFragment extends BaseFragment {
 		}
 
 		return userContactData;
-	}
-
-	private User getLoggedUser(Long userId){
-		User user = null;
-		try {
-			Dao<User,Integer> userDao = getHelper().getUserDao();
-			for(User u:userDao){
-				if(userId.equals(u.getId())){
-					user = u;
-				}
-			}
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-		return user;
 	}
 
 	private class ProjectAdapter extends ArrayAdapter<Project>{

@@ -29,6 +29,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
@@ -190,6 +191,21 @@ public abstract class BaseFragment extends Fragment {
 	    }
 
 	    return inSampleSize;
+	}
+	
+	protected User getCurrentUser(Long userId){
+		User user = null;
+		try {
+			Dao<User,Integer> userDao = getHelper().getUserDao();
+			for(User u:userDao){
+				if(userId.equals(u.getId())){
+					user = u;
+				}
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		return user;
 	}
 	
 	protected Bitmap getCroppedBitmap(Bitmap bitmap) {
