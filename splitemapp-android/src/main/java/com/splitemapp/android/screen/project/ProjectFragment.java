@@ -80,6 +80,7 @@ public class ProjectFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				// We move to the project creation screen
+				//FIXME we need to call a new screen in which we add user expenses
 				Intent intent = new Intent(getActivity(), CreateListActivity.class);
 				intent.putExtra(CreateListFragment.EXTRA_USER_ID, mCurrentUser.getId());
 				startActivity(intent);
