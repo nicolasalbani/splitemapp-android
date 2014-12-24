@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ActivityTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/p_project_title_textView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="10dp"
+        android:gravity="bottom"
+        android:textColor="@color/white"
+        android:textSize="28sp" />
+
+    <ListView
+        android:id="@+id/p_expense_list_listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.60"
+        android:background="@color/white" >
+    </ListView>
+
+    <Button
+        android:id="@+id/p_add_expense_button"
+        style="@style/Button"
+        android:layout_width="match_parent"
+        android:text="@string/p_add_expense_button" />
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<menu xmlns:splitemapp="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/create_list_cancel"
+        android:title="@string/cl_cancel_action"
+        splitemapp:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        splitemapp:showAsAction="always"/>
+
+</menu>

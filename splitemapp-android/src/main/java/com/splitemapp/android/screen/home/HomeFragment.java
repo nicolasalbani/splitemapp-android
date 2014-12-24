@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +22,8 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.createlist.CreateListFragment;
+import com.splitemapp.android.screen.project.ProjectActivity;
+import com.splitemapp.android.screen.project.ProjectFragment;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -82,6 +86,16 @@ public class HomeFragment extends BaseFragment {
 		// We populate the list of projects for this user
 		mProjectsList = (ListView) v.findViewById(R.id.h_projects_listView);
 		mProjectsList.setAdapter(projectAdapter);
+		mProjectsList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// We create an intent to the ProjectActivity sending the information from the clicked project
+				Intent intent = new Intent(getActivity(), ProjectActivity.class);
+				intent.putExtra(ProjectFragment.EXTRA_USER_ID, mCurrentUser.getId());
+				intent.putExtra(ProjectFragment.EXTRA_PROJECT_ID, mProjects.get(position).getId());
+				startActivity(intent);
+			}
+		});
 
 		// We get the reference to the add new list button and implement a OnClickListener
 		mAddNewList = (Button) v.findViewById(R.id.h_new_list_button);
@@ -142,5 +156,4 @@ public class HomeFragment extends BaseFragment {
 	public String getLoggingTag() {
 		return TAG;
 	}
-
 }

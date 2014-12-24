@@ -36,4 +36,12 @@
     <string name="cl_list_members_list">Member list</string>
     <string name="cl_new_list_button">Create list</string>
     <string name="cl_cancel_action">Cancel</string>
+    
+    <!-- Add User Expense Screen -->
+    <string name="ue_icon_description">User Expense Icon</string>
+    <string name="ue_category_placeholder">Category</string>
+    <string name="ue_date_placeholder">13 10 2014</string>
+    <string name="ue_currency">$</string>
+    <string name="ue_amount_placeholder">30,5</string>
+    <string name="p_add_expense_button">Add an expense</string>
 </resources>
