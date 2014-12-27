@@ -44,4 +44,11 @@
     <string name="ue_currency">$</string>
     <string name="ue_amount_placeholder">30,5</string>
     <string name="p_add_expense_button">Add an expense</string>
+    
+    <!-- Expense Screen -->
+    <string name="e_title">Expense</string>
+    <string name="e_cancel_action">Cancel</string>
+    <string name="e_save_action">Save</string>
+    <string name="e_currency">$</string>
+    <string name="e_initial_calc_calue">0</string>
 </resources>

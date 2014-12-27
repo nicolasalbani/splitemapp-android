@@ -8,24 +8,17 @@
         android:id="@+id/ca_cancel_action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0.25"
+        android:layout_gravity="start"
         android:text="@string/ca_cancel_action"
         android:textColor="@color/white"
-        android:textSize="22sp" />
+        android:textSize="18sp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="210dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="0.50"
+        android:gravity="center"
         android:text="@string/ca_create_account_title"
         android:textColor="@color/white"
         android:textSize="22sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25" />
 
 </LinearLayout>

@@ -33,6 +33,14 @@ insert into invite_status(id,cod,title) values(3,"rejected","Rechazada");
 
 -- Data for expense_category table
 insert into expense_category(id,cod,title) values(1,"car","Automovil");
+insert into expense_category(id,cod,title) values(2,"travel","Viajes");
+insert into expense_category(id,cod,title) values(3,"food","Comida y Bebidas");
+insert into expense_category(id,cod,title) values(4,"family","Familia y Personal");
+insert into expense_category(id,cod,title) values(5,"bills","Cuentas");
+insert into expense_category(id,cod,title) values(6,"entertainment","Entretenimiento");
+insert into expense_category(id,cod,title) values(7,"home","Hogar");
+insert into expense_category(id,cod,title) values(8,"utilities","Utilidades");
+insert into expense_category(id,cod,title) values(9,"shopping","Shopping");
 
 -- Data for sync_status table
 insert into sync_status(id,table_name) values(1,"group");
