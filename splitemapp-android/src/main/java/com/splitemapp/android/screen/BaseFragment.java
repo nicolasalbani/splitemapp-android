@@ -1,26 +1,16 @@
 package com.splitemapp.android.screen;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -32,11 +22,15 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
+import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserContactData;
+import com.splitemapp.commons.domain.UserExpense;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
@@ -115,27 +109,20 @@ public abstract class BaseFragment extends Fragment {
 		return response;
 	}
 
+	/**
+	 * Convenience method to show a Toast with a particular message
+	 * @param message String to be shown in the Toast
+	 */
 	protected void showToast(String message){
 		Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
-	protected String getIpAddress() throws SocketException {
-		Enumeration<NetworkInterface> networkInterfaceList = NetworkInterface.getNetworkInterfaces();
-
-		while(networkInterfaceList.hasMoreElements()){
-			Enumeration<InetAddress> inetAddresses = networkInterfaceList.nextElement().getInetAddresses();
-			while(inetAddresses.hasMoreElements()){
-				InetAddress inetAddress = inetAddresses.nextElement();
-				if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress.isSiteLocalAddress()) {
-					return inetAddress.getHostAddress();
-				}
-			}
-		}
-
-		return Constants.LOOPBACK_ADDRESS;
-	}
-
+	/**
+	 * Gets the full path from an image URI
+	 * @param uri URI from the image
+	 * @return String containing the full path to the image
+	 */
 	protected String getImagePath(Uri uri) {
 		// just some safety built in 
 		if( uri == null ) {
@@ -157,74 +144,125 @@ public abstract class BaseFragment extends Fragment {
 		return uri.getPath();
 	}
 	
-	protected Bitmap decodeScaledBitmap(String filePath, int reqWidth, int reqHeight) {
-
-	    // First decode with inJustDecodeBounds=true to check dimensions
-	    final BitmapFactory.Options options = new BitmapFactory.Options();
-	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(filePath, options);
-
-	    // Calculate inSampleSize
-	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-	    // Decode bitmap with inSampleSize set
-	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeFile(filePath, options);
-	}
-
-	private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-	    // Raw height and width of image
-	    final int height = options.outHeight;
-	    final int width = options.outWidth;
-	    int inSampleSize = 1;
-
-	    if (height > reqHeight || width > reqWidth) {
-
-	        // Calculate ratios of height and width to requested height and width
-	        final int heightRatio = Math.round((float) height / (float) reqHeight);
-	        final int widthRatio = Math.round((float) width / (float) reqWidth);
-
-	        // Choose the smallest ratio as inSampleSize value, this will guarantee
-	        // a final image with both dimensions larger than or equal to the
-	        // requested height and width.
-	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-	    }
-
-	    return inSampleSize;
-	}
-	
-	protected User getCurrentUser(Long userId){
+	/**
+	 * Gets the logged user, if any
+	 * @return User instance if logged, null otherwise
+	 */
+	protected User getLoggedUser(){
 		User user = null;
 		try {
-			Dao<User,Integer> userDao = getHelper().getUserDao();
-			for(User u:userDao){
-				if(userId.equals(u.getId())){
-					user = u;
-				}
-			}
+			List<UserSession> userSessionList = getHelper().getUserSessionDao().queryForAll();
+			UserSession userSession = userSessionList.get(userSessionList.size()-1);
+			user = getUserById(userSession.getUser().getId());
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
 		return user;
 	}
 	
-	protected Bitmap getCroppedBitmap(Bitmap bitmap) {
-	    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Config.ARGB_8888);
-	    Canvas canvas = new Canvas(output);
-
-	    final int color = 0xff424242;
-	    final Paint paint = new Paint();
-	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-
-	    paint.setAntiAlias(true);
-	    canvas.drawARGB(0, 0, 0, 0);
-	    paint.setColor(color);
-	    canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-	    canvas.drawBitmap(bitmap, rect, rect, paint);
-	    return output;
+	/**
+	 * Deletes all existing user sessions in the DB
+	 */
+	protected void deleteAllUserSessions(){
+		try {
+			Dao<UserSession, Integer> userSessionDao = getHelper().getUserSessionDao();
+			List<UserSession> userSessionList = userSessionDao.queryForAll();
+			for(UserSession us:userSessionList){
+				userSessionDao.deleteById(us.getId().intValue());
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), e.getMessage(), e);
+		}
 	}
 	
+	/**
+	 * Gets the User object for the userId
+	 * @param userId Long containing the user id in the DB
+	 * @return User instance
+	 */
+	protected User getUserById(Long userId){
+		User user = null;
+		try {
+			user = getHelper().getUserDao().queryForId(userId.intValue());
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		return user;
+	}
+	
+	/**
+	 * Gets the Project object for the projectId
+	 * @param projectId Long containing the project id in the DB
+	 * @return Project instance
+	 */
+	protected Project getProjectById(Long projectId){
+		Project project = null;
+		try {
+			project = getHelper().getProjectDao().queryForId(projectId.intValue());
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		return project;
+	}
+	
+	/**
+	 * Gets the UserExpense instance with its ExpenseCategory instance already loaded
+	 * @param userExpenseId Long containing the user expense id from the DB
+	 * @return UserExpense instance
+	 */
+	protected UserExpense getUserExpenseById(Long userExpenseId){
+		UserExpense userExpense = null;
+		try {
+			// We get the user expense
+			Dao<UserExpense,Integer> userExpensesDao = getHelper().getUserExpensesDao();
+			userExpense = userExpensesDao.queryForId(userExpenseId.intValue());
+
+			// We get the expense category
+			Dao<ExpenseCategory,Integer> expenseCategoryDao = getHelper().getExpenseCategoryDao();
+			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId(userExpense.getExpenseCategory().getId().intValue());
+
+			userExpense.setExpenseCategory(expenseCategory);
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		return userExpense;
+	}
+	
+	/**
+	 * Gets the user contact data from a particular user id
+	 * @param userId Long containing the user id in the DB 
+	 * @return UserContactData instance
+	 */
+	protected UserContactData getUserContactData(Long userId){
+		UserContactData userContactData = null;
+		try {
+			Dao<UserContactData, Integer> userContactDataDao = getHelper().getUserContactDataDao();
+			for(UserContactData ucd:userContactDataDao){
+				if(ucd.getUser().getId().equals(userId)){
+					userContactData = ucd;
+				}
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+
+		return userContactData;
+	}
+	
+	/**
+	 * Starts the Home activity
+	 * @param userId Long containing the user id from the local DB
+	 */
+	protected void startHomeActivity(Long userId){
+		Intent intent = new Intent(getActivity(), HomeActivity.class);
+		intent.putExtra(Constants.EXTRA_USER_ID, userId);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Sync class to pull all data from the remote DB for the last user session
+	 * @author nicolas
+	 */
 	public class PullAllSyncTask extends AsyncTask<Void, Void, PullAllSyncResponse> {
 		@Override
 		protected PullAllSyncResponse doInBackground(Void... params) {

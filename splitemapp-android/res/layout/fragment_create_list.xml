@@ -40,10 +40,32 @@
     <ListView
         android:id="@+id/cl_users_listView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.60"
+        android:layout_height="wrap_content"
         android:background="@color/white" >
     </ListView>
+
+    <include layout="@layout/line_separator" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/plus_sign_white"
+        android:drawablePadding="10dp"
+        android:drawableStart="@drawable/plus_sign_white"
+        android:gravity="center|start"
+        android:paddingEnd="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingStart="20dp"
+        android:text="@string/cl_list_add_people"
+        android:textColor="@color/blue"
+        android:textSize="20sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/cl_new_list_button"

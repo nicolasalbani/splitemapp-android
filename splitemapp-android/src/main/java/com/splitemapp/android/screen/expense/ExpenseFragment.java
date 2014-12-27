@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.commons.domain.ExpenseCategory;
@@ -32,10 +33,6 @@ import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ExpenseFragment extends BaseFragment {
-
-	public static final String EXTRA_PROJECT_ID = "com.splitemapp.android.project_id";
-	public static final String EXTRA_USER_ID = "com.splitemapp.android.user_id";
-	public static final String EXTRA_EXPENSE_ID = "com.splitemapp.android.expense_id";
 
 	private static final String DECIMAL_DELIMITER_KEY = ".";
 	private static final String DELETE_KEY = "<";
@@ -61,15 +58,15 @@ public class ExpenseFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the current user and project instances
-		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
-		mCurrentUser = getCurrentUser(userId);
-		Long projectId = (Long)arguments.getSerializable(EXTRA_PROJECT_ID);
-		mCurrentProject = getCurrentProject(projectId);
+		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
+		mCurrentUser = getUserById(userId);
+		Long projectId = (Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID);
+		mCurrentProject = getProjectById(projectId);
 
 		// If we got an expense id, we are meant to edit that expense
-		Long userExpenseId = (Long)arguments.getSerializable(EXTRA_EXPENSE_ID);
+		Long userExpenseId = (Long)arguments.getSerializable(Constants.EXTRA_EXPENSE_ID);
 		if(userExpenseId != null){
-			mUserExpense = getUserExpense(userExpenseId);
+			mUserExpense = getUserExpenseById(userExpenseId);
 		} else {
 			mUserExpense = new UserExpense();
 		}
@@ -79,7 +76,7 @@ public class ExpenseFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_add_expense, container, false);
+		View v = inflater.inflate(R.layout.fragment_expense, container, false);
 
 		// We populate the expense category grid view
 		mExpenseCategory = (GridView) v.findViewById(R.id.ae_expense_categories_gridView);
@@ -221,34 +218,6 @@ public class ExpenseFragment extends BaseFragment {
 		}
 	}
 
-	private Project getCurrentProject(Long projectId){
-		Project project = null;
-		try {
-			Dao<Project,Integer> projectDao = getHelper().getProjectDao();
-			project = projectDao.queryForId(projectId.intValue());
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught!", e);
-		}
-		return project;
-	}
-
-	private UserExpense getUserExpense(Long userExpenseId){
-		UserExpense userExpense = null;
-		try {
-			// We get the user expense
-			Dao<UserExpense,Integer> userExpensesDao = getHelper().getUserExpensesDao();
-			userExpense = userExpensesDao.queryForId(userExpenseId.intValue());
-
-			// We get the expense category
-			Dao<ExpenseCategory,Integer> expenseCategoryDao = getHelper().getExpenseCategoryDao();
-			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId(userExpense.getExpenseCategory().getId().intValue());
-
-			userExpense.setExpenseCategory(expenseCategory);
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught!", e);
-		}
-		return userExpense;
-	}
 
 	@Override
 	public String getLoggingTag() {

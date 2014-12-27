@@ -19,6 +19,8 @@ import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -90,10 +92,10 @@ public class CreateAccountFragment extends BaseFragment {
 			String imagePath = getImagePath(uri);
 
 			// We decode scaled bitmap to avoid out of memory errors
-			Bitmap scaledBitmap = decodeScaledBitmap(imagePath, Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT);
+			Bitmap scaledBitmap = ImageUtils.decodeScaledBitmap(imagePath, Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT);
 			
 			// We set the avatar image
-			Bitmap croppedBitmap = getCroppedBitmap(scaledBitmap);
+			Bitmap croppedBitmap = ImageUtils.getCroppedBitmap(scaledBitmap);
 			mAvatar.setImageBitmap(croppedBitmap);
 		}
 	}
@@ -108,7 +110,7 @@ public class CreateAccountFragment extends BaseFragment {
 				createAccountRequest.setEmail(mEmail.getText().toString());
 				createAccountRequest.setUsername(mUserName.getText().toString());
 				createAccountRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
-				createAccountRequest.setIpAddress(getIpAddress());
+				createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
 
 				// We call the rest service and send back the login response
 				return callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);

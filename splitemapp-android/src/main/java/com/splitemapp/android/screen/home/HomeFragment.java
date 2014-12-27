@@ -17,20 +17,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
-import com.splitemapp.android.screen.createlist.CreateListFragment;
 import com.splitemapp.android.screen.project.ProjectActivity;
-import com.splitemapp.android.screen.project.ProjectFragment;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
 public class HomeFragment extends BaseFragment {
 
-	public static final String EXTRA_USER_ID = "com.splitemapp.android.user_id";
+	
 
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
@@ -51,9 +49,9 @@ public class HomeFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the user and user contact data instances
-		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
-		mCurrentUser = getCurrentUser(userId);
-		mUserContactData = getLoggedUserCD(mCurrentUser);
+		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
+		mCurrentUser = getUserById(userId);
+		mUserContactData = getUserContactData(userId);
 	}
 
 	@Override
@@ -91,8 +89,8 @@ public class HomeFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
-				intent.putExtra(ProjectFragment.EXTRA_USER_ID, mCurrentUser.getId());
-				intent.putExtra(ProjectFragment.EXTRA_PROJECT_ID, mProjects.get(position).getId());
+				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
+				intent.putExtra(Constants.EXTRA_PROJECT_ID, mProjects.get(position).getId());
 				startActivity(intent);
 			}
 		});
@@ -104,29 +102,12 @@ public class HomeFragment extends BaseFragment {
 			public void onClick(View v) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), CreateListActivity.class);
-				intent.putExtra(CreateListFragment.EXTRA_USER_ID, mCurrentUser.getId());
+				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 				startActivity(intent);
 			}
 		});
 
 		return v;
-	}
-
-	private UserContactData getLoggedUserCD(User loggedUser){
-		UserContactData userContactData = null;
-
-		try {
-			Dao<UserContactData, Integer> userContactDataDao = getHelper().getUserContactDataDao();
-			for(UserContactData ucd:userContactDataDao){
-				if(ucd.getUser().getId().equals(loggedUser.getId())){
-					userContactData = ucd;
-				}
-			}
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-
-		return userContactData;
 	}
 
 	private class ProjectAdapter extends ArrayAdapter<Project>{

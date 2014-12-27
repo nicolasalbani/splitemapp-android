@@ -12,17 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
-import com.splitemapp.android.screen.expense.ExpenseFragment;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
@@ -30,9 +29,6 @@ import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectFragment extends BaseFragment {
-
-	public static final String EXTRA_PROJECT_ID = "com.splitemapp.android.project_id";
-	public static final String EXTRA_USER_ID = "com.splitemapp.android.user_id";
 
 	private static final String TAG = ProjectFragment.class.getSimpleName();
 
@@ -51,10 +47,10 @@ public class ProjectFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the current user and project instances
-		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
-		mCurrentUser = getCurrentUser(userId);
-		Long projectId = (Long)arguments.getSerializable(EXTRA_PROJECT_ID);
-		mCurrentProject = getCurrentProject(projectId);
+		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
+		mCurrentUser = getUserById(userId);
+		Long projectId = (Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID);
+		mCurrentProject = getProjectById(projectId);
 	}
 
 	@Override
@@ -83,9 +79,9 @@ public class ProjectFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(ExpenseFragment.EXTRA_USER_ID, mCurrentUser.getId());
-				intent.putExtra(ExpenseFragment.EXTRA_PROJECT_ID, mCurrentProject.getId());
-				intent.putExtra(ExpenseFragment.EXTRA_EXPENSE_ID, mUserExpenses.get(position).getId());
+				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
+				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
+				intent.putExtra(Constants.EXTRA_EXPENSE_ID, mUserExpenses.get(position).getId());
 				startActivity(intent);
 			}
 		});
@@ -97,8 +93,8 @@ public class ProjectFragment extends BaseFragment {
 			public void onClick(View v) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(ExpenseFragment.EXTRA_USER_ID, mCurrentUser.getId());
-				intent.putExtra(ExpenseFragment.EXTRA_PROJECT_ID, mCurrentProject.getId());
+				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
+				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
 				startActivity(intent);
 			}
 		});
@@ -106,21 +102,6 @@ public class ProjectFragment extends BaseFragment {
 		return v;
 	}
 	
-	private Project getCurrentProject(Long projectId){
-		Project project = null;
-		try {
-			Dao<Project,Integer> projectDao = getHelper().getProjectDao();
-			for(Project u:projectDao){
-				if(projectId.equals(u.getId())){
-					project = u;
-				}
-			}
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught!", e);
-		}
-		return project;
-	}
-
 	private class UserExpenseAdapter extends ArrayAdapter<UserExpense>{
 
 		public UserExpenseAdapter(List<UserExpense> userExpenses){

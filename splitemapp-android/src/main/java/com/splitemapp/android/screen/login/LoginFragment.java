@@ -18,8 +18,6 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
-import com.splitemapp.android.screen.home.HomeActivity;
-import com.splitemapp.android.screen.home.HomeFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -46,7 +44,15 @@ public class LoginFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		
+		// If there is a user logged in already we go directly to the home screen
+		User loggedUser = getLoggedUser();
+		if(loggedUser != null){
+			// We open the home activity class
+			startHomeActivity(loggedUser.getId());
+		}
 
+		// Otherwise, we inflate the login fragment
 		View v = inflater.inflate(R.layout.fragment_login, container, false);
 
 		// We get the references for the user name and password text boxes
@@ -58,10 +64,11 @@ public class LoginFragment extends BaseFragment {
 		mLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				deleteAllUserSessions();
 				new LoginRequestTask().execute();
 			}
 		});
-		
+
 		// We get the reference to the sign up button and implement a OnClickListener
 		mSignUp = (TextView) v.findViewById(R.id.li_sign_up_link);
 		mSignUp.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +81,7 @@ public class LoginFragment extends BaseFragment {
 
 		return v;
 	}
-
+	
 	private class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
 
 		@Override
@@ -86,7 +93,7 @@ public class LoginFragment extends BaseFragment {
 				loginRequest.setOsVersion(Constants.OS_VERSION);
 				loginRequest.setUsername(mUserName.getText().toString());
 				loginRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
-				
+
 				// We call the rest service and send back the login response
 				return callRestService(ServiceConstants.LOGIN_PATH, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
@@ -99,44 +106,42 @@ public class LoginFragment extends BaseFragment {
 		@Override
 		protected void onPostExecute(LoginResponse loginResponse) {
 			boolean loginSuccess = false;
-			
+
 			// We validate the response
 			if(loginResponse != null){
 				loginSuccess = loginResponse.getSuccess();
 			}
-			
+
 			// We show the status toast
 			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
-			
+
 			// We save the user and session information returned by the backend
 			if(loginSuccess){
 				try {
 					// We reconstruct the user status object
 					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
-					
+
 					// We reconstruct the user object
 					User user = new User(userStatus, loginResponse.getUserDTO());
 					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
 					getHelper().updateSyncPullAt(User.class, createOrUpdate);
-					
+
 					// We clear all previous session records
 					for(UserSession userSession:getHelper().getUserSessionDao().queryForAll()){
 						getHelper().getUserSessionDao().delete(userSession);
 					}
-					
+
 					// We reconstruct the user session object
 					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
 					createOrUpdate = getHelper().getUserSessionDao().createOrUpdate(userSession);
-					
+
 					// We reconstruct the user contact data object
 					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncPullAt(UserContactData.class, createOrUpdate);
-					
+
 					// We open the home activity class
-					Intent intent = new Intent(getActivity(), HomeActivity.class);
-					intent.putExtra(HomeFragment.EXTRA_USER_ID, user.getId());
-					startActivity(intent);
+					startHomeActivity(user.getId());
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught while getting UserSession", e);
 				}

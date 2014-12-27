@@ -20,9 +20,9 @@ import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.home.HomeActivity;
-import com.splitemapp.android.screen.home.HomeFragment;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
@@ -31,8 +31,6 @@ import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
 
 public class CreateListFragment extends BaseFragment {
-
-	public static final String EXTRA_USER_ID = "com.splitemapp.android.user_id";
 
 	private static final String TAG = CreateListFragment.class.getSimpleName();
 
@@ -52,8 +50,8 @@ public class CreateListFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the user and user contact data instances
-		Long userId = (Long)arguments.getSerializable(EXTRA_USER_ID);
-		mCurrentUser = getCurrentUser(userId);
+		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
+		mCurrentUser = getUserById(userId);
 	}
 
 	@Override
@@ -119,7 +117,7 @@ public class CreateListFragment extends BaseFragment {
 					
 					// We move back to the home screen
 					Intent intent = new Intent(getActivity(), HomeActivity.class);
-					intent.putExtra(HomeFragment.EXTRA_USER_ID, mCurrentUser.getId());
+					intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 					startActivity(intent);
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);
