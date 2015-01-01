@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,15 +24,13 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
+import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
 public class HomeFragment extends BaseFragment {
-
-	
-
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private List<Project> mProjects;
@@ -47,6 +48,9 @@ public class HomeFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 
 		Bundle arguments = getActivity().getIntent().getExtras();
+		
+		// We inform that the activity hosting this fragment has an options menu
+		setHasOptionsMenu(true);
 
 		// We get the user and user contact data instances
 		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
@@ -108,6 +112,28 @@ public class HomeFragment extends BaseFragment {
 		});
 
 		return v;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_home, menu);
+		super.onCreateOptionsMenu(menu,inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()){
+		case R.id.h_logout : 
+			// We delete all user sessions
+			deleteAllUserSessions();
+			// We move to the login screen
+			Intent intent = new Intent(getActivity(), LoginActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private class ProjectAdapter extends ArrayAdapter<Project>{

@@ -27,6 +27,7 @@
     <string name="h_project_icon_description">ProjectIcon</string>
     <string name="h_avatar_description">Avatar</string>
     <string name="h_new_list_button">New list of expenses</string>
+    <string name="h_logout">Logout</string>
     
     <!-- Create List Screen -->
     <string name="cl_title">New List</string>

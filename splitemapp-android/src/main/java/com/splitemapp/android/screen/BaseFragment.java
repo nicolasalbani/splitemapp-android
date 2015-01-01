@@ -45,7 +45,7 @@ public abstract class BaseFragment extends Fragment {
 
 	static{
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
-		
+
 		// We initialize logging
 		java.util.logging.Logger.getLogger("org.apache.http.wire").setLevel(java.util.logging.Level.FINEST);
 		java.util.logging.Logger.getLogger("org.apache.http.headers").setLevel(java.util.logging.Level.FINEST);
@@ -56,7 +56,7 @@ public abstract class BaseFragment extends Fragment {
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
 	}
-	
+
 	/**
 	 * This method returns the desired TAG to be used for logging purposes
 	 * @return
@@ -128,7 +128,7 @@ public abstract class BaseFragment extends Fragment {
 		if( uri == null ) {
 			return null;
 		}
-		
+
 		// try to retrieve the image from the media store first
 		// this will only work for images selected from gallery
 		String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -143,7 +143,7 @@ public abstract class BaseFragment extends Fragment {
 		// this is our fallback here
 		return uri.getPath();
 	}
-	
+
 	/**
 	 * Gets the logged user, if any
 	 * @return User instance if logged, null otherwise
@@ -152,14 +152,16 @@ public abstract class BaseFragment extends Fragment {
 		User user = null;
 		try {
 			List<UserSession> userSessionList = getHelper().getUserSessionDao().queryForAll();
-			UserSession userSession = userSessionList.get(userSessionList.size()-1);
-			user = getUserById(userSession.getUser().getId());
+			if(userSessionList.size() > 0){
+				UserSession userSession = userSessionList.get(userSessionList.size()-1);
+				user = getUserById(userSession.getUser().getId());
+			}
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
 		return user;
 	}
-	
+
 	/**
 	 * Deletes all existing user sessions in the DB
 	 */
@@ -174,7 +176,7 @@ public abstract class BaseFragment extends Fragment {
 			Log.e(getLoggingTag(), e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * Gets the User object for the userId
 	 * @param userId Long containing the user id in the DB
@@ -189,7 +191,7 @@ public abstract class BaseFragment extends Fragment {
 		}
 		return user;
 	}
-	
+
 	/**
 	 * Gets the Project object for the projectId
 	 * @param projectId Long containing the project id in the DB
@@ -204,7 +206,7 @@ public abstract class BaseFragment extends Fragment {
 		}
 		return project;
 	}
-	
+
 	/**
 	 * Gets the UserExpense instance with its ExpenseCategory instance already loaded
 	 * @param userExpenseId Long containing the user expense id from the DB
@@ -227,7 +229,7 @@ public abstract class BaseFragment extends Fragment {
 		}
 		return userExpense;
 	}
-	
+
 	/**
 	 * Gets the user contact data from a particular user id
 	 * @param userId Long containing the user id in the DB 
@@ -248,7 +250,7 @@ public abstract class BaseFragment extends Fragment {
 
 		return userContactData;
 	}
-	
+
 	/**
 	 * Starts the Home activity
 	 * @param userId Long containing the user id from the local DB
@@ -258,7 +260,7 @@ public abstract class BaseFragment extends Fragment {
 		intent.putExtra(Constants.EXTRA_USER_ID, userId);
 		startActivity(intent);
 	}
-	
+
 	/**
 	 * Sync class to pull all data from the remote DB for the last user session
 	 * @author nicolas
@@ -305,7 +307,7 @@ public abstract class BaseFragment extends Fragment {
 						Project project = new Project(projectType, projectStatus, projectDTO);
 						getHelper().getProjectDao().createOrUpdate(project);
 					}
-					
+
 					// We save all user_to_project instances received
 					Set<UserToProjectDTO> userToProjectDTOs = pullAllSyncResponse.getUserToProjectDTOs();
 					for(UserToProjectDTO userToProjectDTO:userToProjectDTOs){

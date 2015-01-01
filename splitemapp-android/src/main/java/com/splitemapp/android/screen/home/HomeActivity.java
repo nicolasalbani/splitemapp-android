@@ -18,6 +18,6 @@ public class HomeActivity extends SingleFragmentActivity {
 	    super.onCreate(savedInstanceState);
 
 	    // We hide the action bar
-	    getSupportActionBar().hide();;
+	    getSupportActionBar().hide();
 	}
 }
