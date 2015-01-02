@@ -48,7 +48,7 @@ public class HomeFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 
 		Bundle arguments = getActivity().getIntent().getExtras();
-		
+
 		// We inform that the activity hosting this fragment has an options menu
 		setHasOptionsMenu(true);
 
@@ -130,6 +130,10 @@ public class HomeFragment extends BaseFragment {
 			// We move to the login screen
 			Intent intent = new Intent(getActivity(), LoginActivity.class);
 			startActivity(intent);
+			return true;
+		case R.id.h_synchronize : 
+			// We call the pull all sync service
+			new PullAllSyncTask().execute();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

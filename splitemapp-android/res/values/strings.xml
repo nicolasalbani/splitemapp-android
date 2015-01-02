@@ -28,6 +28,7 @@
     <string name="h_avatar_description">Avatar</string>
     <string name="h_new_list_button">New list of expenses</string>
     <string name="h_logout">Logout</string>
+    <string name="h_synchronize">Synchronize</string>
     
     <!-- Create List Screen -->
     <string name="cl_title">New List</string>
