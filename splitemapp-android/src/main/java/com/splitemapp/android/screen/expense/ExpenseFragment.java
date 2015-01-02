@@ -37,6 +37,7 @@ public class ExpenseFragment extends BaseFragment {
 	private static final String DECIMAL_DELIMITER_KEY = ".";
 	private static final String DELETE_KEY = "<";
 	private static final String EXPENSE_AMOUNT_INITIAL_VALUE = "0";
+	private static final Integer MAX_EXPENSE_DECIMALS = 2;
 	private static final String[] CALCULATOR_VALUES = new String[]{"1","2","3","4","5","6","7","8","9",DECIMAL_DELIMITER_KEY,"0",DELETE_KEY};
 
 	private static final String TAG = ExpenseFragment.class.getSimpleName();
@@ -87,7 +88,7 @@ public class ExpenseFragment extends BaseFragment {
 			}
 		});
 		if(mUserExpense.getId() != null){
-			mSelectedCategory = mUserExpense.getId().intValue()-1;
+			mSelectedCategory = mUserExpense.getExpenseCategory().getId().intValue()-1;
 		}
 
 		// We inflate the expense date text view and load todays date by default
@@ -140,7 +141,9 @@ public class ExpenseFragment extends BaseFragment {
 					if(mExpenseAmount.getText().equals(EXPENSE_AMOUNT_INITIAL_VALUE)){
 						mExpenseAmount.setText(pressedKey);
 					} else {
-						mExpenseAmount.setText(mExpenseAmount.getText() + pressedKey);
+						if(!isMaxDecimalsReached(mExpenseAmount.getText().toString())){
+							mExpenseAmount.setText(mExpenseAmount.getText() + pressedKey);
+						}
 					}
 				}
 			}
@@ -188,6 +191,20 @@ public class ExpenseFragment extends BaseFragment {
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 		String date = dateFormat.format(mUserExpense.getExpenseDate());
 		mExpenseDateText.setText(date);
+	}
+	
+	private boolean isMaxDecimalsReached(String expenseAmount){
+		boolean isMaxDecimalsReached = false;
+		
+		if(expenseAmount.contains(DECIMAL_DELIMITER_KEY)){
+			// In case our decimal delimiter is a special character, we add escape sequence first
+			String[] tokens = expenseAmount.split("\\"+DECIMAL_DELIMITER_KEY);
+			if (tokens.length > 1 && tokens[1].length() >= MAX_EXPENSE_DECIMALS){
+				isMaxDecimalsReached = true;
+			}
+		}
+		
+		return isMaxDecimalsReached;
 	}
 
 	private ArrayAdapter<String> getExpenseCalculatorAdapter(){
