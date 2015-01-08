@@ -47,10 +47,12 @@ public class ProjectFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the current user and project instances
-		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
-		mCurrentUser = getUserById(userId);
-		Long projectId = (Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID);
-		mCurrentProject = getProjectById(projectId);
+		try {
+			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
+			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
 	}
 
 	@Override
@@ -101,7 +103,7 @@ public class ProjectFragment extends BaseFragment {
 
 		return v;
 	}
-	
+
 	private class UserExpenseAdapter extends ArrayAdapter<UserExpense>{
 
 		public UserExpenseAdapter(List<UserExpense> userExpenses){
@@ -122,17 +124,17 @@ public class ProjectFragment extends BaseFragment {
 			Short expenseCategoryId = userExpense.getExpenseCategory().getId();
 			ExpenseCategory expenseCategory = null;
 			try {
-				expenseCategory = getHelper().getExpenseCategoryDao().queryForId(expenseCategoryId.intValue());
+				expenseCategory = getHelper().getExpenseCategoryDao().queryForId(expenseCategoryId.shortValue());
 			} catch (SQLException e) {
 				Log.e(getLoggingTag(), "SQLException caught!", e);
 			}
 			expenseCategoryTextView.setText(expenseCategory.getTitle());
-			
+
 			TextView expenseDateTextView = (TextView)convertView.findViewById(R.id.ue_date_textView);
 			DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 			String date = dateFormat.format(userExpense.getExpenseDate());
 			expenseDateTextView.setText(date);
-			
+
 			TextView expenseAmountTextView = (TextView)convertView.findViewById(R.id.ue_amount_textView);
 			expenseAmountTextView.setText(userExpense.getExpense().toString());
 

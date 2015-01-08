@@ -45,7 +45,7 @@ public class ExpenseFragment extends BaseFragment {
 	private User mCurrentUser;
 	private Project mCurrentProject;
 	private UserExpense mUserExpense;
-	private int mSelectedCategory;
+	private short mSelectedCategory;
 
 	private TextView mExpenseAmount;
 	private TextView mExpenseDateText;
@@ -58,18 +58,20 @@ public class ExpenseFragment extends BaseFragment {
 
 		Bundle arguments = getActivity().getIntent().getExtras();
 
-		// We get the current user and project instances
-		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
-		mCurrentUser = getUserById(userId);
-		Long projectId = (Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID);
-		mCurrentProject = getProjectById(projectId);
+		try{
+			// We get the current user and project instances
+			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
+			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
 
-		// If we got an expense id, we are meant to edit that expense
-		Long userExpenseId = (Long)arguments.getSerializable(Constants.EXTRA_EXPENSE_ID);
-		if(userExpenseId != null){
-			mUserExpense = getUserExpenseById(userExpenseId);
-		} else {
-			mUserExpense = new UserExpense();
+			// If we got an expense id, we are meant to edit that expense
+			Long userExpenseId = (Long)arguments.getSerializable(Constants.EXTRA_EXPENSE_ID);
+			if(userExpenseId != null){
+				mUserExpense = getHelper().getUserExpenseById(userExpenseId);
+			} else {
+				mUserExpense = new UserExpense();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "SQLException caught!", e);
 		}
 	}
 
@@ -84,11 +86,11 @@ public class ExpenseFragment extends BaseFragment {
 		mExpenseCategory.setAdapter(getExpenseCategoryAdapter());
 		mExpenseCategory.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				mSelectedCategory = position;
+				mSelectedCategory = (short)position;
 			}
 		});
 		if(mUserExpense.getId() != null){
-			mSelectedCategory = mUserExpense.getExpenseCategory().getId().intValue()-1;
+			mSelectedCategory = (short) (mUserExpense.getExpenseCategory().getId().shortValue()-1);
 		}
 
 		// We inflate the expense date text view and load todays date by default
@@ -154,11 +156,11 @@ public class ExpenseFragment extends BaseFragment {
 	public void saveExpense(){
 		try {
 			// We get an instance of the expense category
-			Dao<ExpenseCategory,Integer> expenseCategoryDao = getHelper().getExpenseCategoryDao();
-			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId(mSelectedCategory+1);
+			Dao<ExpenseCategory,Short> expenseCategoryDao = getHelper().getExpenseCategoryDao();
+			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId((short)(mSelectedCategory+1));
 
 			// We save the user expense to the DB
-			Dao<UserExpense,Integer> userExpensesDao = getHelper().getUserExpensesDao();
+			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpensesDao();
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);
@@ -192,10 +194,10 @@ public class ExpenseFragment extends BaseFragment {
 		String date = dateFormat.format(mUserExpense.getExpenseDate());
 		mExpenseDateText.setText(date);
 	}
-	
+
 	private boolean isMaxDecimalsReached(String expenseAmount){
 		boolean isMaxDecimalsReached = false;
-		
+
 		if(expenseAmount.contains(DECIMAL_DELIMITER_KEY)){
 			// In case our decimal delimiter is a special character, we add escape sequence first
 			String[] tokens = expenseAmount.split("\\"+DECIMAL_DELIMITER_KEY);
@@ -203,7 +205,7 @@ public class ExpenseFragment extends BaseFragment {
 				isMaxDecimalsReached = true;
 			}
 		}
-		
+
 		return isMaxDecimalsReached;
 	}
 

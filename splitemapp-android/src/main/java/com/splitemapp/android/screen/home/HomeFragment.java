@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.SynchronizableFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
@@ -30,7 +30,7 @@ import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends SynchronizableFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private List<Project> mProjects;
@@ -54,8 +54,12 @@ public class HomeFragment extends BaseFragment {
 
 		// We get the user and user contact data instances
 		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
-		mCurrentUser = getUserById(userId);
-		mUserContactData = getUserContactData(userId);
+		try {
+			mCurrentUser = getHelper().getUserById(userId);
+			mUserContactData = getHelper().getUserContactData(userId);
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
 	}
 
 	@Override
@@ -110,7 +114,7 @@ public class HomeFragment extends BaseFragment {
 				startActivity(intent);
 			}
 		});
-
+		
 		return v;
 	}
 
@@ -126,14 +130,19 @@ public class HomeFragment extends BaseFragment {
 		switch (item.getItemId()){
 		case R.id.h_logout : 
 			// We delete all user sessions
-			deleteAllUserSessions();
+			try {
+				getHelper().deleteAllUserSessions();
+			} catch (SQLException e) {
+				Log.e(TAG, "SQLException caught!", e);
+			}
 			// We move to the login screen
 			Intent intent = new Intent(getActivity(), LoginActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.h_synchronize : 
-			// We call the pull all sync service
-			new PullAllSyncTask().execute();
+			// TODO we need to call the new sync intent
+			pullProjects();
+			// We reload the view
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

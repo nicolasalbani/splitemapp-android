@@ -56,24 +56,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
 
 	// The list of DAO object we need to access different tables in the database
-	private Dao<UserStatus, Integer> userStatusDao = null;
-	private Dao<ProjectStatus, Integer> projectStatusDao = null;
-	private Dao<ProjectType, Integer> projectTypeDao = null;
-	private Dao<GroupStatus, Integer> groupStatusDao = null;
-	private Dao<UserToGroupStatus, Integer> userToGroupStatusDao = null;
-	private Dao<UserToProjectStatus, Integer> userToProjectStatusDao = null;
-	private Dao<InviteStatus, Integer> inviteStatusDao = null;
-	private Dao<ExpenseCategory, Integer> expenseCategoryDao = null;
-	private Dao<Project, Integer> projectDao = null;
-	private Dao<User, Integer> userDao = null;
-	private Dao<Group, Integer> groupDao = null;
-	private Dao<UserContactData, Integer> userContactDataDao = null;
-	private Dao<UserExpense, Integer> userExpensesDao = null;
-	private Dao<UserToGroup, Integer> userToGroupDao = null;
-	private Dao<UserToProject, Integer> userToProjectDao = null;
-	private Dao<UserInvite, Integer> userInviteDao = null;
-	private Dao<UserSession, Integer> userSessionDao = null;
-	private Dao<SyncStatus, Integer> syncStatusDao = null;
+	private Dao<UserStatus, Short> userStatusDao = null;
+	private Dao<ProjectStatus, Short> projectStatusDao = null;
+	private Dao<ProjectType, Short> projectTypeDao = null;
+	private Dao<GroupStatus, Short> groupStatusDao = null;
+	private Dao<UserToGroupStatus, Short> userToGroupStatusDao = null;
+	private Dao<UserToProjectStatus, Short> userToProjectStatusDao = null;
+	private Dao<InviteStatus, Short> inviteStatusDao = null;
+	private Dao<ExpenseCategory, Short> expenseCategoryDao = null;
+	private Dao<Project, Long> projectDao = null;
+	private Dao<User, Long> userDao = null;
+	private Dao<Group, Long> groupDao = null;
+	private Dao<UserContactData, Long> userContactDataDao = null;
+	private Dao<UserExpense, Long> userExpensesDao = null;
+	private Dao<UserToGroup, Long> userToGroupDao = null;
+	private Dao<UserToProject, Long> userToProjectDao = null;
+	private Dao<UserInvite, Long> userInviteDao = null;
+	private Dao<UserSession, Long> userSessionDao = null;
+	private Dao<SyncStatus, Short> syncStatusDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -180,7 +180,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserStatus, Integer> getUserStatusDao() throws SQLException {
+	public Dao<UserStatus, Short> getUserStatusDao() throws SQLException {
 		if (userStatusDao == null) {
 			userStatusDao = getDao(UserStatus.class);
 		}
@@ -191,7 +191,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ProjectStatus, Integer> getProjectStatusDao() throws SQLException {
+	public Dao<ProjectStatus, Short> getProjectStatusDao() throws SQLException {
 		if (projectStatusDao == null) {
 			projectStatusDao = getDao(ProjectStatus.class);
 		}
@@ -202,7 +202,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectType class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ProjectType, Integer> getProjectTypeDao() throws SQLException {
+	public Dao<ProjectType, Short> getProjectTypeDao() throws SQLException {
 		if (projectTypeDao == null) {
 			projectTypeDao = getDao(ProjectType.class);
 		}
@@ -213,7 +213,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the GroupStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<GroupStatus, Integer> getGroupStatusDao() throws SQLException {
+	public Dao<GroupStatus, Short> getGroupStatusDao() throws SQLException {
 		if (groupStatusDao == null) {
 			groupStatusDao = getDao(GroupStatus.class);
 		}
@@ -224,7 +224,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToGroupStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToGroupStatus, Integer> getUserToGroupStatusDao() throws SQLException {
+	public Dao<UserToGroupStatus, Short> getUserToGroupStatusDao() throws SQLException {
 		if (userToGroupStatusDao == null) {
 			userToGroupStatusDao = getDao(UserToGroupStatus.class);
 		}
@@ -235,7 +235,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToProjectStatus, Integer> getUserToProjectStatusDao() throws SQLException {
+	public Dao<UserToProjectStatus, Short> getUserToProjectStatusDao() throws SQLException {
 		if (userToProjectStatusDao == null) {
 			userToProjectStatusDao = getDao(UserToProjectStatus.class);
 		}
@@ -246,7 +246,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the InviteStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<InviteStatus, Integer> getInviteStatusDao() throws SQLException {
+	public Dao<InviteStatus, Short> getInviteStatusDao() throws SQLException {
 		if (inviteStatusDao == null) {
 			inviteStatusDao = getDao(InviteStatus.class);
 		}
@@ -257,7 +257,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ExpenseCategory class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ExpenseCategory, Integer> getExpenseCategoryDao() throws SQLException {
+	public Dao<ExpenseCategory, Short> getExpenseCategoryDao() throws SQLException {
 		if (expenseCategoryDao == null) {
 			expenseCategoryDao = getDao(ExpenseCategory.class);
 		}
@@ -268,7 +268,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the Project class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<Project, Integer> getProjectDao() throws SQLException {
+	public Dao<Project, Long> getProjectDao() throws SQLException {
 		if (projectDao == null) {
 			projectDao = getDao(Project.class);
 		}
@@ -279,7 +279,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the User class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<User, Integer> getUserDao() throws SQLException {
+	public Dao<User, Long> getUserDao() throws SQLException {
 		if (userDao == null) {
 			userDao = getDao(User.class);
 		}
@@ -290,7 +290,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the Group class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<Group, Integer> getGroupDao() throws SQLException {
+	public Dao<Group, Long> getGroupDao() throws SQLException {
 		if (groupDao == null) {
 			groupDao = getDao(Group.class);
 		}
@@ -301,7 +301,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserContactData class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserContactData, Integer> getUserContactDataDao() throws SQLException {
+	public Dao<UserContactData, Long> getUserContactDataDao() throws SQLException {
 		if (userContactDataDao == null) {
 			userContactDataDao = getDao(UserContactData.class);
 		}
@@ -312,7 +312,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserExpenses class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserExpense, Integer> getUserExpensesDao() throws SQLException {
+	public Dao<UserExpense, Long> getUserExpensesDao() throws SQLException {
 		if (userExpensesDao == null) {
 			userExpensesDao = getDao(UserExpense.class);
 		}
@@ -323,7 +323,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToGroup class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToGroup, Integer> getUserToGroupDao() throws SQLException {
+	public Dao<UserToGroup, Long> getUserToGroupDao() throws SQLException {
 		if (userToGroupDao == null) {
 			userToGroupDao = getDao(UserToGroup.class);
 		}
@@ -334,7 +334,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProject class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToProject, Integer> getUserToProjectDao() throws SQLException {
+	public Dao<UserToProject, Long> getUserToProjectDao() throws SQLException {
 		if (userToProjectDao == null) {
 			userToProjectDao = getDao(UserToProject.class);
 		}
@@ -345,7 +345,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserInvite class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserInvite, Integer> getUserInviteDao() throws SQLException {
+	public Dao<UserInvite, Long> getUserInviteDao() throws SQLException {
 		if (userInviteDao == null) {
 			userInviteDao = getDao(UserInvite.class);
 		}
@@ -356,7 +356,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserSession class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserSession, Integer> getUserSessionDao() throws SQLException {
+	public Dao<UserSession, Long> getUserSessionDao() throws SQLException {
 		if (userSessionDao == null) {
 			userSessionDao = getDao(UserSession.class);
 		}
@@ -367,39 +367,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the SyncStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<SyncStatus, Integer> getSyncStatusDao() throws SQLException {
+	public Dao<SyncStatus, Short> getSyncStatusDao() throws SQLException {
 		if (syncStatusDao == null) {
 			syncStatusDao = getDao(SyncStatus.class);
 		}
 		return syncStatusDao;
-	}
-
-	public <T extends java.io.Serializable> void updateSyncPullAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
-		// If a record was created or updated we update the sync_status table
-		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
-			// We get the proper record from the sync_status table
-			Dao<SyncStatus,Integer> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
-
-			// We update the "last_pull_at" field in the sync_status table
-			SyncStatus syncStatus = queryResult.get(0);
-			syncStatus.setLastPullAt(new Date());
-			syncStatusDao.update(syncStatus);
-		}
-	}
-
-	public <T extends java.io.Serializable> void updateSyncPushAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
-		// If a record was created or updated we update the sync_status table
-		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
-			// We get the proper record from the sync_status table
-			Dao<SyncStatus,Integer> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
-
-			// We update the "last_push_at" field in the sync_status table
-			SyncStatus syncStatus = queryResult.get(0);
-			syncStatus.setLastPushAt(new Date());
-			syncStatusDao.update(syncStatus);
-		}
 	}
 
 	/**
@@ -426,5 +398,150 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		userInviteDao = null;
 		userSessionDao = null;
 		syncStatusDao = null;
+	}
+
+
+
+
+	/**********************************************************
+	 * CONVENIENCE METHODS
+	 *********************************************************/
+
+	/**
+	 * Convenience method to update the Sync PULL at timestamp
+	 * @param entity
+	 * @param createOrUpdate
+	 * @throws SQLException
+	 */
+	public <T extends java.io.Serializable> void updateSyncStatusPullAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
+		// If a record was created or updated we update the sync_status table
+		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
+			// We get the proper record from the sync_status table
+			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+
+			// We update the "last_pull_at" field in the sync_status table
+			SyncStatus syncStatus = queryResult.get(0);
+			syncStatus.setLastPullAt(new Date());
+			syncStatus.setLastPullSuccessAt(new Date());
+			syncStatusDao.update(syncStatus);
+		}
+	}
+
+	/**
+	 * Convenience method to update the Sync PUSH at timestamp
+	 * @param entity
+	 * @param createOrUpdate
+	 * @throws SQLException
+	 */
+	public <T extends java.io.Serializable> void updateSyncStatusPushAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
+		// If a record was created or updated we update the sync_status table
+		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
+			// We get the proper record from the sync_status table
+			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+
+			// We update the "last_push_at" field in the sync_status table
+			SyncStatus syncStatus = queryResult.get(0);
+			syncStatus.setLastPushAt(new Date());
+			syncStatus.setLastPushSuccessAt(new Date());
+			syncStatusDao.update(syncStatus);
+		}
+	}
+
+	/**
+	 * Gets the user contact data from a particular user id
+	 * @param userId Long containing the user id in the DB 
+	 * @return UserContactData instance
+	 * @throws SQLException 
+	 */
+	public UserContactData getUserContactData(Long userId) throws SQLException{
+		UserContactData userContactData = null;
+
+		Dao<UserContactData, Long> userContactDataDao = getUserContactDataDao();
+		for(UserContactData ucd:userContactDataDao){
+			if(ucd.getUser().getId().equals(userId)){
+				userContactData = ucd;
+			}
+		}
+
+		return userContactData;
+	}
+
+	/**
+	 * Gets the UserExpense instance with its ExpenseCategory instance already loaded
+	 * @param userExpenseId Long containing the user expense id from the DB
+	 * @return UserExpense instance
+	 * @throws SQLException 
+	 */
+	public UserExpense getUserExpenseById(Long userExpenseId) throws SQLException{
+		UserExpense userExpense = null;
+		// We get the user expense
+		Dao<UserExpense,Long> userExpensesDao = getUserExpensesDao();
+		userExpense = userExpensesDao.queryForId(userExpenseId.longValue());
+
+		// We get the expense category
+		Dao<ExpenseCategory,Short> expenseCategoryDao = getExpenseCategoryDao();
+		ExpenseCategory expenseCategory = expenseCategoryDao.queryForId(userExpense.getExpenseCategory().getId().shortValue());
+
+		userExpense.setExpenseCategory(expenseCategory);
+		return userExpense;
+	}
+
+	/**
+	 * Gets the User object for the userId
+	 * @param userId Long containing the user id in the DB
+	 * @return User instance
+	 * @throws SQLException 
+	 */
+	public User getUserById(Long userId) throws SQLException{
+		return getUserDao().queryForId(userId.longValue());
+	}
+
+	/**
+	 * Gets the Project object for the projectId
+	 * @param projectId Long containing the project id in the DB
+	 * @return Project instance
+	 * @throws SQLException 
+	 */
+	public Project getProjectById(Long projectId) throws SQLException{
+		return getProjectDao().queryForId(projectId.longValue());
+	}
+
+	/**
+	 * Gets the logged user, if any
+	 * @return User instance if logged, null otherwise
+	 * @throws SQLException 
+	 */
+	public User getLoggedUser() throws SQLException{
+		User user = null;
+
+		List<UserSession> userSessionList = getUserSessionDao().queryForAll();
+		if(userSessionList.size() > 0){
+			UserSession userSession = userSessionList.get(userSessionList.size()-1);
+			user = getUserById(userSession.getUser().getId());
+		}
+		return user;
+	}
+
+	/**
+	 * Gets the active session token
+	 * @return String containing the active session token
+	 * @throws SQLException
+	 */
+	public String getSessionToken() throws SQLException{
+		return getUserSessionDao().queryForAll().get(0).getToken();
+	} 
+
+	/**
+	 * Deletes all existing user sessions in the DB
+	 * @throws SQLException 
+	 */
+	public void deleteAllUserSessions() throws SQLException{
+		Dao<UserSession, Long> userSessionDao = getUserSessionDao();
+		List<UserSession> userSessionList = userSessionDao.queryForAll();
+		for(UserSession us:userSessionList){
+			userSessionDao.deleteById(us.getId().longValue());
+		}
 	}
 }

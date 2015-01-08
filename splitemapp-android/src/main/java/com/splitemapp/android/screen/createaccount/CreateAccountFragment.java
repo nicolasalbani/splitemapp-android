@@ -1,13 +1,9 @@
 package com.splitemapp.android.screen.createaccount;
 
-import java.sql.SQLException;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,21 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.android.utils.NetworkUtils;
-import com.splitemapp.commons.constants.ServiceConstants;
-import com.splitemapp.commons.domain.User;
-import com.splitemapp.commons.domain.UserContactData;
-import com.splitemapp.commons.domain.UserStatus;
-import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
-import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
-import com.splitemapp.commons.utils.Utils;
 
-public class CreateAccountFragment extends BaseFragment {
+public class CreateAccountFragment extends RestfulFragment {
 
 	private static final String TAG = CreateAccountFragment.class.getSimpleName();
 
@@ -37,8 +24,8 @@ public class CreateAccountFragment extends BaseFragment {
 
 	private ImageView mAvatar;
 	private Button mCreateAccount;
-	private EditText mUserName;
 	private EditText mEmail;
+	private EditText mUserName;
 	private EditText mPassword;
 
 	// The view to inflate
@@ -78,7 +65,7 @@ public class CreateAccountFragment extends BaseFragment {
 		mCreateAccount.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				new CreateAccountRequestTask().execute();
+				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString());
 			}
 		});
 
@@ -93,65 +80,10 @@ public class CreateAccountFragment extends BaseFragment {
 
 			// We decode scaled bitmap to avoid out of memory errors
 			Bitmap scaledBitmap = ImageUtils.decodeScaledBitmap(imagePath, Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT);
-			
+
 			// We set the avatar image
 			Bitmap croppedBitmap = ImageUtils.getCroppedBitmap(scaledBitmap);
 			mAvatar.setImageBitmap(croppedBitmap);
-		}
-	}
-
-	private class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccountResponse> {
-
-		@Override
-		protected CreateAccountResponse doInBackground(Void... params) {
-			try {
-				// We create the login request
-				CreateAccountRequest createAccountRequest = new CreateAccountRequest();
-				createAccountRequest.setEmail(mEmail.getText().toString());
-				createAccountRequest.setUsername(mUserName.getText().toString());
-				createAccountRequest.setPassword(Utils.hashPassword(mPassword.getText().toString()));
-				createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
-
-				// We call the rest service and send back the login response
-				return callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);
-			} catch (Exception e) {
-				Log.e(TAG, e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(CreateAccountResponse createAccountResponse) {
-			boolean createAccountSuccess = false;
-
-			// We validate the response
-			if(createAccountResponse != null){
-				createAccountSuccess = createAccountResponse.getSuccess();
-			}
-
-			// We show the status toast
-			showToast(createAccountSuccess ? "Create Account Successful!" : "Create Account Failed!");
-
-			// We save the user and session information returned by the backend
-			if(createAccountSuccess){
-				try {
-					// We reconstruct the user status object
-					UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
-
-					// We reconstruct the user object
-					User user = new User(userStatus, createAccountResponse.getUserDTO());
-					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
-					getHelper().updateSyncPullAt(User.class, createOrUpdate);
-
-					// We reconstruct the user contact data object
-					UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
-					getHelper().getUserContactDataDao().createOrUpdate(userContactData);
-					getHelper().updateSyncPullAt(UserContactData.class, createOrUpdate);
-				} catch (SQLException e) {
-					Log.e(TAG, "SQLException caught while getting UserSession", e);
-				}
-			}
 		}
 	}
 

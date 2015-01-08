@@ -50,8 +50,11 @@ public class CreateListFragment extends BaseFragment {
 		Bundle arguments = getActivity().getIntent().getExtras();
 
 		// We get the user and user contact data instances
-		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
-		mCurrentUser = getUserById(userId);
+		try {
+			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
 	}
 
 	@Override
@@ -69,7 +72,7 @@ public class CreateListFragment extends BaseFragment {
 		// We get and populate the spinner
 		mListType = (Spinner) v.findViewById(R.id.cl_list_type_spinner);
 		try {
-			Dao<ProjectType,Integer> projectTypeDao = getHelper().getProjectTypeDao();
+			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
 			List<ProjectType> projectTypes = projectTypeDao.queryForAll();
 			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner );
 			for(ProjectType projectType:projectTypes){
@@ -97,11 +100,11 @@ public class CreateListFragment extends BaseFragment {
 			public void onClick(View v) {
 				try {
 					// We get the project active status
-					Dao<ProjectStatus,Integer> projectStatusDao = getHelper().getProjectStatusDao();
+					Dao<ProjectStatus,Short> projectStatusDao = getHelper().getProjectStatusDao();
 					ProjectStatus projectActiveStatus = projectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.PROJECT_STATUS_ACTIVE).get(0);
 					
 					// We get the project type
-					Dao<ProjectType,Integer> projectTypeDao = getHelper().getProjectTypeDao();
+					Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
 					ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mListType.getSelectedItem()).get(0);
 					
 					// We create the project instance
@@ -112,7 +115,7 @@ public class CreateListFragment extends BaseFragment {
 					project.setTitle(mListName.getText().toString());
 					
 					// We save the project in the database
-					Dao<Project,Integer> projectDao = getHelper().getProjectDao();
+					Dao<Project,Long> projectDao = getHelper().getProjectDao();
 					projectDao.create(project);
 					
 					// We move back to the home screen
