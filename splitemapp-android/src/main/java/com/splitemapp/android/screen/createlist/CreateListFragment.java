@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.commons.constants.TableField;
@@ -47,11 +46,9 @@ public class CreateListFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle arguments = getActivity().getIntent().getExtras();
-
 		// We get the user and user contact data instances
 		try {
-			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
+			mCurrentUser = getHelper().getLoggedUser();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -120,7 +117,6 @@ public class CreateListFragment extends BaseFragment {
 					
 					// We move back to the home screen
 					Intent intent = new Intent(getActivity(), HomeActivity.class);
-					intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 					startActivity(intent);
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);

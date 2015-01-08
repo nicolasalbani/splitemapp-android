@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
 
@@ -100,7 +99,6 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	protected void startHomeActivity(Long userId){
 		Intent intent = new Intent(getActivity(), HomeActivity.class);
-		intent.putExtra(Constants.EXTRA_USER_ID, userId);
 		startActivity(intent);
 	}
 

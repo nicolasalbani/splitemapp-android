@@ -25,7 +25,6 @@ import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
-import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectFragment extends BaseFragment {
@@ -33,7 +32,6 @@ public class ProjectFragment extends BaseFragment {
 	private static final String TAG = ProjectFragment.class.getSimpleName();
 
 	private List<UserExpense> mUserExpenses;
-	private User mCurrentUser;
 	private Project mCurrentProject;
 
 	private TextView mProjectTitle;
@@ -48,7 +46,6 @@ public class ProjectFragment extends BaseFragment {
 
 		// We get the current user and project instances
 		try {
-			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
 			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
@@ -81,7 +78,6 @@ public class ProjectFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
 				intent.putExtra(Constants.EXTRA_EXPENSE_ID, mUserExpenses.get(position).getId());
 				startActivity(intent);
@@ -95,7 +91,6 @@ public class ProjectFragment extends BaseFragment {
 			public void onClick(View v) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
 				startActivity(intent);
 			}

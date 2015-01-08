@@ -516,12 +516,44 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public User getLoggedUser() throws SQLException{
 		User user = null;
 
+		Long loggedUserId = getLoggedUserId();
+		if(loggedUserId != null){
+			user = getUserById(getLoggedUserId());
+		}
+
+		return user;
+	}
+	
+	/**
+	 * Gets the logged user contact data, if any
+	 * @return User instance if logged, null otherwise
+	 * @throws SQLException 
+	 */
+	public UserContactData getLoggedUserContactData() throws SQLException{
+		UserContactData userContactData = null;
+
+		Long loggedUserId = getLoggedUserId();
+		if(loggedUserId != null){
+			userContactData = getUserContactData(getLoggedUserId());
+		}
+
+		return userContactData;
+	}
+
+	/**
+	 * Gets the logged user id, if any
+	 * @return User instance if logged, null otherwise
+	 * @throws SQLException 
+	 */
+	public Long getLoggedUserId() throws SQLException{
+		Long userId = null;
+
 		List<UserSession> userSessionList = getUserSessionDao().queryForAll();
 		if(userSessionList.size() > 0){
 			UserSession userSession = userSessionList.get(userSessionList.size()-1);
-			user = getUserById(userSession.getUser().getId());
+			userId = userSession.getUser().getId();
 		}
-		return user;
+		return userId;
 	}
 
 	/**

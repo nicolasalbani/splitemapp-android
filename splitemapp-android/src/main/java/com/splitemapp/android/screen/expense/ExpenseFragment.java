@@ -60,7 +60,7 @@ public class ExpenseFragment extends BaseFragment {
 
 		try{
 			// We get the current user and project instances
-			mCurrentUser = getHelper().getUserById((Long)arguments.getSerializable(Constants.EXTRA_USER_ID));
+			mCurrentUser = getHelper().getLoggedUser();
 			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
 
 			// If we got an expense id, we are meant to edit that expense

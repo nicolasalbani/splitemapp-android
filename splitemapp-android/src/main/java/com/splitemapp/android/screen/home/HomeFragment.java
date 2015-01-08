@@ -47,16 +47,13 @@ public class HomeFragment extends SynchronizableFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle arguments = getActivity().getIntent().getExtras();
-
 		// We inform that the activity hosting this fragment has an options menu
 		setHasOptionsMenu(true);
 
 		// We get the user and user contact data instances
-		Long userId = (Long)arguments.getSerializable(Constants.EXTRA_USER_ID);
 		try {
-			mCurrentUser = getHelper().getUserById(userId);
-			mUserContactData = getHelper().getUserContactData(userId);
+			mCurrentUser = getHelper().getLoggedUser();
+			mUserContactData = getHelper().getLoggedUserContactData();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -98,7 +95,6 @@ public class HomeFragment extends SynchronizableFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
-				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 				intent.putExtra(Constants.EXTRA_PROJECT_ID, mProjects.get(position).getId());
 				startActivity(intent);
 			}
@@ -111,7 +107,6 @@ public class HomeFragment extends SynchronizableFragment {
 			public void onClick(View v) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), CreateListActivity.class);
-				intent.putExtra(Constants.EXTRA_USER_ID, mCurrentUser.getId());
 				startActivity(intent);
 			}
 		});
