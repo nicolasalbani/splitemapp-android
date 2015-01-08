@@ -83,6 +83,7 @@ public class HomeFragment extends SynchronizableFragment {
 
 		// We get the list of existing projects and create the project list adapter
 		try {
+			//TODO fix the line below so that we only get the projects in which this user is in
 			mProjects = getHelper().getProjectDao().queryForAll();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
