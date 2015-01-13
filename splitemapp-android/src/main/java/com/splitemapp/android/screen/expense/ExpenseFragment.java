@@ -160,7 +160,7 @@ public class ExpenseFragment extends BaseFragment {
 			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId((short)(mSelectedCategory+1));
 
 			// We save the user expense to the DB
-			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpensesDao();
+			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpenseDao();
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);

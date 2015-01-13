@@ -14,7 +14,7 @@ public class Constants {
 	public static final String LOOPBACK_ADDRESS = "127.0.0.1";
 	
 	// Backend constants
-	public static final String BACKEND_HOST="135.20.205.178";
+	public static final String BACKEND_HOST="192.168.43.69";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-backend-rest";
 	

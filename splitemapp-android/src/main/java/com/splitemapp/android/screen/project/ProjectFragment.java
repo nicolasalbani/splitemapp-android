@@ -64,7 +64,7 @@ public class ProjectFragment extends BaseFragment {
 
 		// We get the list of existing expenses and create the expense list adapter
 		try {
-			mUserExpenses = getHelper().getUserExpensesDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
+			mUserExpenses = getHelper().getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}

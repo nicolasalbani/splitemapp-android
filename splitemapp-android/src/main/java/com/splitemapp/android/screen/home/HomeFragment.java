@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
-import com.splitemapp.android.screen.SynchronizableFragment;
+import com.splitemapp.android.screen.SynchronizerFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
@@ -30,7 +30,7 @@ import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
-public class HomeFragment extends SynchronizableFragment {
+public class HomeFragment extends SynchronizerFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private List<Project> mProjects;
@@ -137,7 +137,15 @@ public class HomeFragment extends SynchronizableFragment {
 			return true;
 		case R.id.h_synchronize : 
 			// TODO we need to call the new sync intent
-			pullProjects();
+			pullUsers();
+//			pullUserContactDatas();
+//			pullProjects();
+//			pullUserToProjects();
+//			pullGroups();
+//			pullUserToGroups();
+//			pullUserInvites();
+//			pullUserExpenses();
+			
 			// We reload the view
 			return true;
 		default:

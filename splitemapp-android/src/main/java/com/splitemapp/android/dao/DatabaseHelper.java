@@ -312,7 +312,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserExpenses class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserExpense, Long> getUserExpensesDao() throws SQLException {
+	public Dao<UserExpense, Long> getUserExpenseDao() throws SQLException {
 		if (userExpensesDao == null) {
 			userExpensesDao = getDao(UserExpense.class);
 		}
@@ -477,7 +477,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public UserExpense getUserExpenseById(Long userExpenseId) throws SQLException{
 		UserExpense userExpense = null;
 		// We get the user expense
-		Dao<UserExpense,Long> userExpensesDao = getUserExpensesDao();
+		Dao<UserExpense,Long> userExpensesDao = getUserExpenseDao();
 		userExpense = userExpensesDao.queryForId(userExpenseId.longValue());
 
 		// We get the expense category
