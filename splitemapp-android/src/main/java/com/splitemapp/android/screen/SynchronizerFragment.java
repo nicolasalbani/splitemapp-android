@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.commons.constants.ServiceConstants;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Group;
@@ -376,8 +375,10 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		protected PullResponse<E> doInBackground(Void... params) {
 			try {
 				// We get the date in which this table was last successfully pulled
-				Date lastPullSuccessAt = getHelper().getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPullSuccessAt();
-
+				//TODO remove the comment in the following line
+//				Date lastPullSuccessAt = getHelper().getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPullSuccessAt();
+				Date lastPullSuccessAt = new Date(100);
+				
 				// We get the session token
 				String sessionToken = getHelper().getSessionToken();
 
