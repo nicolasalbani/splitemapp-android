@@ -35,7 +35,15 @@ import com.splitemapp.commons.domain.dto.UserInviteDTO;
 import com.splitemapp.commons.domain.dto.UserToGroupDTO;
 import com.splitemapp.commons.domain.dto.UserToProjectDTO;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
+import com.splitemapp.commons.domain.dto.response.PullGroupResponse;
+import com.splitemapp.commons.domain.dto.response.PullProjectResponse;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserContactDataResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserExpenseResult;
+import com.splitemapp.commons.domain.dto.response.PullUserInviteResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserToGroupResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserToProjectResponse;
 
 public abstract class SynchronizerFragment extends RestfulFragment{
 
@@ -45,61 +53,61 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	protected void pullUsers(){
 		new PullUsersTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous user_contact_data table pull request
 	 */
 	protected void pullUserContactDatas(){
 		new PullUserContactDatasTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous project table pull request
 	 */
 	protected void pullProjects(){
 		new PullProjectsTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous user_to_project table pull request
 	 */
 	protected void pullUserToProjects(){
 		new PullUserToProjectsTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous group table pull request
 	 */
 	protected void pullGroups(){
 		new PullGroupsTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous user_to_group table pull request
 	 */
 	protected void pullUserToGroups(){
 		new PullUserToGroupsTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous user_invite table pull request
 	 */
 	protected void pullUserInvites(){
 		new PullUserInvitesTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous user_expense table pull request
 	 */
 	protected void pullUserExpenses(){
 		new PullUserExpensesTask().execute();
 	}
-	
+
 	/**
 	 * Sync Task to pull user table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUsersTask extends PullTask<UserDTO> {
+	private class PullUsersTask extends PullTask<UserDTO, PullUserResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER;
@@ -111,25 +119,30 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserDTO> response) throws SQLException {
+		protected void processResult(PullUserResponse response) throws SQLException {
 			Set<UserDTO> userDTOs = response.getItemSet();
 			for(UserDTO userDTO:userDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				UserStatus userStatus = getHelper().getUserStatusDao().queryForId(userDTO.getUserStatusId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				User user = new User(userStatus, userDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
 				getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullUserResponse> getResponseType() {
+			return PullUserResponse.class;
+		}
 	}
-	
+
 	/**
 	 * Sync Task to pull user_contact_data table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUserContactDatasTask extends PullTask<UserContactDataDTO> {
+	private class PullUserContactDatasTask extends PullTask<UserContactDataDTO, PullUserContactDataResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER_CONTACT_DATA;
@@ -141,17 +154,22 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserContactDataDTO> response) throws SQLException {
+		protected void processResult(PullUserContactDataResponse response) throws SQLException {
 			Set<UserContactDataDTO> userContactDataDTOs = response.getItemSet();
 			for(UserContactDataDTO userContactDataDTO:userContactDataDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				User user = getHelper().getUserById(userContactDataDTO.getUserId().longValue());
-				
+
 				// We create the new entity and store it into the local database
 				UserContactData userContactData = new UserContactData(user, userContactDataDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 				getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
 			}
+		}
+
+		@Override
+		protected Class<PullUserContactDataResponse> getResponseType() {
+			return PullUserContactDataResponse.class;
 		}
 	}
 
@@ -159,7 +177,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	 * Sync Task to pull project table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullProjectsTask extends PullTask<ProjectDTO> {
+	private class PullProjectsTask extends PullTask<ProjectDTO, PullProjectResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.PROJECT;
@@ -171,26 +189,31 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<ProjectDTO> response) throws SQLException {
+		protected void processResult(PullProjectResponse response) throws SQLException {
 			Set<ProjectDTO> projectDTOs = response.getItemSet();
 			for(ProjectDTO projectDTO:projectDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				ProjectStatus projectStatus = getHelper().getProjectStatusDao().queryForId(projectDTO.getProjectStatusId().shortValue());
 				ProjectType projectType = getHelper().getProjectTypeDao().queryForId(projectDTO.getProjectTypeId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				Project project = new Project(projectType, projectStatus, projectDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getProjectDao().createOrUpdate(project);
 				getHelper().updateSyncStatusPullAt(Project.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullProjectResponse> getResponseType() {
+			return PullProjectResponse.class;
+		}
 	}
-	
+
 	/**
 	 * Sync Task to pull user_to_project table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUserToProjectsTask extends PullTask<UserToProjectDTO> {
+	private class PullUserToProjectsTask extends PullTask<UserToProjectDTO, PullUserToProjectResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER_TO_PROJECT;
@@ -198,31 +221,36 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 		@Override
 		protected String getServicePath(){
-			return ServiceConstants.PULL_PROJECTS_PATH;
+			return ServiceConstants.PULL_USER_TO_PROJECTS_PATH;
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserToProjectDTO> response) throws SQLException {
+		protected void processResult(PullUserToProjectResponse response) throws SQLException {
 			Set<UserToProjectDTO> userToProjectDTOs = response.getItemSet();
 			for(UserToProjectDTO userToProjectDTO:userToProjectDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				User user = getHelper().getUserDao().queryForId(userToProjectDTO.getUserId().longValue());
 				Project project = getHelper().getProjectDao().queryForId(userToProjectDTO.getProjectId().longValue());
 				UserToProjectStatus userToProjectStatus = getHelper().getUserToProjectStatusDao().queryForId(userToProjectDTO.getUserToProjectStatusId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				UserToProject userToProject = new UserToProject(user, project, userToProjectStatus, userToProjectDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserToProjectDao().createOrUpdate(userToProject);
 				getHelper().updateSyncStatusPullAt(UserToProject.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullUserToProjectResponse> getResponseType() {
+			return PullUserToProjectResponse.class;
+		}
 	}
-	
+
 	/**
 	 * Sync Task to pull group table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullGroupsTask extends PullTask<GroupDTO> {
+	private class PullGroupsTask extends PullTask<GroupDTO, PullGroupResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.GROUP;
@@ -234,25 +262,31 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<GroupDTO> response) throws SQLException {
+		protected void processResult(PullGroupResponse response) throws SQLException {
 			Set<GroupDTO> groupDTOs = response.getItemSet();
 			for(GroupDTO groupDTO:groupDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				GroupStatus groupStatus = getHelper().getGroupStatusDao().queryForId(groupDTO.getGroupStatusId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				Group group = new Group(groupStatus, groupDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getGroupDao().createOrUpdate(group);
 				getHelper().updateSyncStatusPullAt(Group.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullGroupResponse> getResponseType() {
+			return PullGroupResponse.class;
+		}
 	}
-	
+
+
 	/**
 	 * Sync Task to pull user_to_group table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUserToGroupsTask extends PullTask<UserToGroupDTO> {
+	private class PullUserToGroupsTask extends PullTask<UserToGroupDTO, PullUserToGroupResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER_TO_GROUP;
@@ -264,27 +298,33 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserToGroupDTO> response) throws SQLException {
+		protected void processResult(PullUserToGroupResponse response) throws SQLException {
 			Set<UserToGroupDTO> userToGroupDTOs = response.getItemSet();
 			for(UserToGroupDTO userToGroupDTO:userToGroupDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				User user = getHelper().getUserDao().queryForId(userToGroupDTO.getUserId().longValue());
 				Group group = getHelper().getGroupDao().queryForId(userToGroupDTO.getGroupId().longValue());
 				UserToGroupStatus userToGroupStatus = getHelper().getUserToGroupStatusDao().queryForId(userToGroupDTO.getUserToGroupStatusId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				UserToGroup userToGroup = new UserToGroup(user, group, userToGroupStatus, userToGroupDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserToGroupDao().createOrUpdate(userToGroup);
 				getHelper().updateSyncStatusPullAt(UserToGroup.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullUserToGroupResponse> getResponseType() {
+			return PullUserToGroupResponse.class;
+		}
 	}
-	
+
+
 	/**
 	 * Sync Task to pull user_invite table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUserInvitesTask extends PullTask<UserInviteDTO> {
+	private class PullUserInvitesTask extends PullTask<UserInviteDTO, PullUserInviteResponse> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER_INVITE;
@@ -296,27 +336,33 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserInviteDTO> response) throws SQLException {
+		protected void processResult(PullUserInviteResponse response) throws SQLException {
 			Set<UserInviteDTO> userInviteDTOs = response.getItemSet();
 			for(UserInviteDTO userInviteDTO:userInviteDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				User user = getHelper().getUserDao().queryForId(userInviteDTO.getUserId().longValue());
 				Project project = getHelper().getProjectById(userInviteDTO.getProjectId().longValue());
 				InviteStatus inviteStatus = getHelper().getInviteStatusDao().queryForId(userInviteDTO.getInviteStatusId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				UserInvite userInvite = new UserInvite(user, project, inviteStatus, userInviteDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserInviteDao().createOrUpdate(userInvite);
 				getHelper().updateSyncStatusPullAt(UserInvite.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullUserInviteResponse> getResponseType() {
+			return PullUserInviteResponse.class;
+		}
 	}
-	
+
+
 	/**
 	 * Sync Task to pull user_expense table data from the remote DB
 	 * @author nicolas
 	 */
-	private class PullUserExpensesTask extends PullTask<UserExpenseDTO> {
+	private class PullUserExpensesTask extends PullTask<UserExpenseDTO, PullUserExpenseResult> {
 		@Override
 		protected String getTableName(){
 			return TableName.USER_EXPENSE;
@@ -328,21 +374,27 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void processResult(PullResponse<UserExpenseDTO> response) throws SQLException {
+		protected void processResult(PullUserExpenseResult response) throws SQLException {
 			Set<UserExpenseDTO> userExpenseDTOs = response.getItemSet();
 			for(UserExpenseDTO userExpenseDTO:userExpenseDTOs){
 				// We obtain the required parameters for the object creation from the local database
 				User user = getHelper().getUserDao().queryForId(userExpenseDTO.getUserId().longValue());
 				Project project = getHelper().getProjectById(userExpenseDTO.getProjectId().longValue());
 				ExpenseCategory expenseCategory = getHelper().getExpenseCategoryDao().queryForId(userExpenseDTO.getExpenseCategoryId().shortValue());
-				
+
 				// We create the new entity and store it into the local database
 				UserExpense userExpense = new UserExpense(user, project, expenseCategory, userExpenseDTO);
 				CreateOrUpdateStatus createOrUpdate = getHelper().getUserExpenseDao().createOrUpdate(userExpense);
 				getHelper().updateSyncStatusPullAt(UserExpense.class, createOrUpdate);
 			}
 		}
+
+		@Override
+		protected Class<PullUserExpenseResult> getResponseType() {
+			return PullUserExpenseResult.class;
+		}
 	}
+
 
 	/**
 	 * Base Pull task
@@ -350,7 +402,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	 *
 	 * @param <E>
 	 */
-	private abstract class PullTask <E> extends AsyncTask<Void, Void, PullResponse<E>> {
+	private abstract class PullTask <E, R extends PullResponse<E>> extends AsyncTask<Void, Void, R> {
 
 		/**
 		 * Gets the name of the table to pull the data for
@@ -365,20 +417,26 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		protected abstract String getServicePath();
 
 		/**
+		 * Gets the response type
+		 * @return
+		 */
+		protected abstract Class<R> getResponseType();
+
+		/**
 		 * Processes the results coming from the service. This will typically contain DB inserts or updates
 		 * @param response ServiceResponse that contains the list returned by the server
 		 * @throws SQLException
 		 */
-		protected abstract void processResult(PullResponse<E> response) throws SQLException;
+		protected abstract void processResult(R response) throws SQLException;
 
 		@Override
-		protected PullResponse<E> doInBackground(Void... params) {
+		protected R doInBackground(Void... params) {
 			try {
 				// We get the date in which this table was last successfully pulled
 				//TODO remove the comment in the following line
-//				Date lastPullSuccessAt = getHelper().getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPullSuccessAt();
+				//Date lastPullSuccessAt = getHelper().getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPullSuccessAt();
 				Date lastPullSuccessAt = new Date(100);
-				
+
 				// We get the session token
 				String sessionToken = getHelper().getSessionToken();
 
@@ -388,7 +446,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 				pullRequest.setToken(sessionToken);
 
 				// We call the rest service and send back the login response
-				return callRestService(getServicePath(), pullRequest, PullResponse.class);
+				return callRestService(getServicePath(), pullRequest, getResponseType());
 			} catch (Exception e) {
 				Log.e(getLoggingTag(), e.getMessage(), e);
 			}
@@ -397,7 +455,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected void onPostExecute(PullResponse<E> response) {
+		protected void onPostExecute(R response) {
 			boolean pullSuccess = false;
 
 			// We validate the response
