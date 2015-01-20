@@ -110,10 +110,10 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	}
 	
 	/**
-	 * Creates an asynchronous group table push request
+	 * Creates an asynchronous project table push request
 	 */
-	protected void pushGroups(){
-		new PushGroupsTask().execute();
+	protected void pushProjects(){
+		new PushProjectsTask().execute();
 	}
 
 	/**
@@ -496,18 +496,18 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	
 	
 	/**
-	 * Sync Task to pull user_expense table data from the remote DB
+	 * Sync Task to push project table data to the remote DB
 	 * @author nicolas
 	 */
-	private class PushGroupsTask extends PushTask<GroupDTO, Long, PushLongResponse> {
+	private class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongResponse> {
 		@Override
 		protected String getTableName(){
-			return TableName.GROUP;
+			return TableName.PROJECT;
 		}
 
 		@Override
 		protected String getServicePath(){
-			return ServiceConstants.PUSH_GROUPS_PATH;
+			return ServiceConstants.PUSH_PROJECTS_PATH;
 		}
 
 		@Override
@@ -516,17 +516,17 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 		@Override
-		protected List<GroupDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+		protected List<ProjectDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 			//TODO make one raw query that will return only the items updated after lastPushSuccessAt and add that in the DatabaseHelper 
-			// We get all the groups in the database
-			List<Group> groupList = getHelper().getGroupDao().queryForAll();
+			// We get all the project in the database
+			List<Project> projectList = getHelper().getProjectDao().queryForAll();
 			
-			// We add to the group DTO list the ones which were updated after the lastPushSuccessAt date 
-			ArrayList<GroupDTO> groupDTOList = new ArrayList<GroupDTO>();
-			for(Group group:groupList){
-				groupDTOList.add(new GroupDTO(group));
+			// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
+			ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
+			for(Project project:projectList){
+				projectDTOList.add(new ProjectDTO(project));
 			}
-			return groupDTOList;
+			return projectDTOList;
 		}
 
 		@Override
@@ -588,6 +588,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 				// We create the push request
 				PushRequest<F> pushRequest = new PushRequest<F>();
 				pushRequest.setToken(sessionToken);
+				pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
 				pushRequest.setItemList(getRequestItemList(lastPushSuccessAt));
 
 				// We call the rest service and send back the login response

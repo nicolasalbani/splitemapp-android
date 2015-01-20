@@ -137,14 +137,15 @@ public class HomeFragment extends SynchronizerFragment {
 			return true;
 		case R.id.h_synchronize : 
 			// TODO we need to call the new sync intent
-			pullUsers();
-			pullUserContactDatas();
-			pullProjects();
-			pullUserToProjects();
-			pullGroups();
-			pullUserToGroups();
-			pullUserInvites();
-			pullUserExpenses();
+			pushProjects();
+//			pullUsers();
+//			pullUserContactDatas();
+//			pullProjects();
+//			pullUserToProjects();
+//			pullGroups();
+//			pullUserToGroups();
+//			pullUserInvites();
+//			pullUserExpenses();
 			
 			// We reload the view
 			return true;
