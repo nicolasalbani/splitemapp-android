@@ -50,6 +50,8 @@ import com.splitemapp.commons.domain.dto.response.PullUserToGroupResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserToProjectResponse;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
+import com.splitemapp.commons.domain.id.IdReference;
+import com.splitemapp.commons.domain.id.IdUpdate;
 
 public abstract class SynchronizerFragment extends RestfulFragment{
 
@@ -531,7 +533,18 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 		@Override
 		protected void processResult(PushLongResponse response) throws SQLException {
-			//TODO still need to implement the updateRecordId method that will update the required id references
+			List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
+			
+			// We create the ID reference list to be updated
+			List<IdReference> idReferenceList = new ArrayList<IdReference>();
+			idReferenceList.add(new IdReference(TableName.PROJECT, TableField.PROJECT_ID));
+			idReferenceList.add(new IdReference(TableName.USER_TO_PROJECT, TableField.USER_TO_PROJECT_PROJECT_ID));
+			idReferenceList.add(new IdReference(TableName.USER_EXPENSE, TableField.USER_EXPENSE_PROJECT_ID));
+			
+			//We update all references to this ID
+			for(IdUpdate<Long> idUpdate:idUpdateList){
+				getHelper().updateIdReferences(getHelper().getProjectDao(), idUpdate, idReferenceList);
+			}
 		}
 	}
 	

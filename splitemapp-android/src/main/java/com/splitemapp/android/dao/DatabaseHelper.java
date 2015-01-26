@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,8 @@ import com.splitemapp.commons.domain.UserToGroup;
 import com.splitemapp.commons.domain.UserToGroupStatus;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
+import com.splitemapp.commons.domain.id.IdReference;
+import com.splitemapp.commons.domain.id.IdUpdate;
 import com.splitemapp.commons.utils.Utils;
 
 /**
@@ -574,6 +577,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		List<UserSession> userSessionList = userSessionDao.queryForAll();
 		for(UserSession us:userSessionList){
 			userSessionDao.deleteById(us.getId().longValue());
+		}
+	}
+	
+	public <F extends Serializable,E extends Number> void updateIdReferences(Dao<F,E> dao, IdUpdate<E> idUpdate, List<IdReference> idReferenceList) throws SQLException{
+		for(IdReference idReference:idReferenceList){
+			String statement = "UPDATE " +idReference.getTableName()+ " SET " +idReference.getFieldName()+ " = " +idUpdate.getNewId()+ " WHERE " +idReference.getFieldName()+ " = " +idUpdate.getOldId();
+			Log.i(DATABASE_HELPER_TAG, "Executing ID update: " +statement);
+			dao.updateRaw(statement);
 		}
 	}
 }
