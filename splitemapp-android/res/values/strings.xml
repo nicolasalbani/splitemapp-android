@@ -55,4 +55,11 @@
     <string name="e_save_action">Save</string>
     <string name="e_currency">$</string>
     <string name="e_initial_calc_calue">0</string>
+    
+    <!-- Add People Screen -->
+    <string name="ap_title">Add People</string>
+    <string name="ap_back_action">Back</string>
+    <string name="ap_contacts">Contacts</string>
+    <string name="ap_avatar_description">Contact Avatar</string>
+    <string name="ap_status_description">Contact Status Icon</string>
 </resources>

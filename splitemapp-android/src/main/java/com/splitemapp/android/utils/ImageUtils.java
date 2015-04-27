@@ -1,5 +1,6 @@
 package com.splitemapp.android.utils;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
+import android.widget.ImageView;
 
 public class ImageUtils {
 	/**
@@ -79,5 +81,16 @@ public class ImageUtils {
 	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 	    canvas.drawBitmap(bitmap, rect, rect, paint);
 	    return output;
+	}
+	
+	/**
+	 * Returns a boolean indicating whether the image view contains the specified resource
+	 * @param resources
+	 * @param imageView
+	 * @param resource
+	 * @return
+	 */
+	public static boolean imageViewEqualsResource(Resources resources, ImageView imageView, int resource){
+		return imageView.getDrawable().getConstantState().equals(resources.getDrawable(resource).getConstantState());
 	}
 }

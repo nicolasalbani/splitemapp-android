@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -41,6 +42,7 @@ public class CreateListFragment extends BaseFragment {
 	private EditText mListBudget;
 	private ListView mMembersList;
 	private Button mCreateList;
+	private TextView mAddPeople;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,17 @@ public class CreateListFragment extends BaseFragment {
 		// We populate the list of projects for this user
 		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
 		mMembersList.setAdapter(userAdapter);
+		
+		// We get the reference to the add prople text view and implement a OnClickListener
+		mAddPeople = (TextView) v.findViewById(R.id.cl_add_people_textView);
+		mAddPeople.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// We move to the add people screen
+				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+				startActivity(intent);
+			}
+		});
 
 		// We get the reference to the add new list button and implement a OnClickListener
 		mCreateList = (Button) v.findViewById(R.id.cl_new_list_button);

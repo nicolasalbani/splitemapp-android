@@ -1,58 +1,59 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ActivityTheme"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5" />
-
-    <EditText
-        android:id="@+id/li_username_editText"
-        style="@style/LoginEditText"
-        android:layout_weight="0.1"
-        android:hint="@string/li_username_hint"
-        android:inputType="textEmailAddress" />
-
-    <include layout="@layout/line_separator" />
-
-    <EditText
-        android:id="@+id/li_password_editText"
-        style="@style/LoginEditText"
-        android:layout_weight="0.1"
-        android:hint="@string/li_password_hint"
-        android:inputType="textPassword" />
-
-    <Button
-        android:id="@+id/li_login_button"
-        style="@style/Button"
-        android:text="@string/li_log_in_button" />
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         style="@style/ActivityTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/li_sign_up_question"
-            android:textColor="@color/text" />
+            android:layout_width="match_parent"
+            android:layout_height="210dp"/>
 
-        <TextView
-            android:id="@+id/li_sign_up_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-            android:text="@string/li_sign_up_link"
-            android:textColor="@color/green" />
+        <EditText
+            android:id="@+id/li_username_editText"
+            style="@style/LoginEditText"
+            android:hint="@string/li_username_hint"
+            android:inputType="textEmailAddress" />
+
+        <include layout="@layout/line_separator" />
+
+        <EditText
+            android:id="@+id/li_password_editText"
+            style="@style/LoginEditText"
+            android:hint="@string/li_password_hint"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/li_login_button"
+            style="@style/Button"
+            android:text="@string/li_log_in_button" />
+
+        <LinearLayout
+            style="@style/ActivityTheme"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/li_sign_up_question"
+                android:textColor="@color/text" />
+
+            <TextView
+                android:id="@+id/li_sign_up_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="@string/li_sign_up_link"
+                android:textColor="@color/green" />
+        </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

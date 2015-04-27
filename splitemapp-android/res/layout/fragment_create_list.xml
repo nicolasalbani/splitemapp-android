@@ -47,6 +47,7 @@
     <include layout="@layout/line_separator" />
 
     <TextView
+        android:id="@+id/cl_add_people_textView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/white"
