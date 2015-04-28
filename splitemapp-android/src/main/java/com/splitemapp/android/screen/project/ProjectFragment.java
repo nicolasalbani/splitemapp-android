@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -135,6 +136,14 @@ public class ProjectFragment extends BaseFragment {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// Refreshing member list when coming back from the Add People fragment
+		((BaseAdapter) mUserExpensesList.getAdapter()).notifyDataSetChanged(); 
 	}
 
 	@Override

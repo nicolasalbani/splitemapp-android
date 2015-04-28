@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -175,6 +176,14 @@ public class HomeFragment extends SynchronizerFragment {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		// Refreshing member list when coming back from the Add People fragment
+		((BaseAdapter) mProjectsList.getAdapter()).notifyDataSetChanged(); 
 	}
 
 	@Override

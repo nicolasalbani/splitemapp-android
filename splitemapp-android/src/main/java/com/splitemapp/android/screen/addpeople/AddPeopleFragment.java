@@ -17,8 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
-import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 
 public class AddPeopleFragment extends BaseFragment {
@@ -79,10 +79,12 @@ public class AddPeopleFragment extends BaseFragment {
 				if(!isCurrentUser(user)){
 					//Setting the user status icon based on the previous status icon
 					ImageView userStatusIcon = (ImageView)view.findViewById(R.id.ap_user_status_icon);
-					if(ImageUtils.imageViewEqualsResource(getResources(), userStatusIcon, R.drawable.contact_status_active)){
+					if(Globals.getCreateListUserList().contains(user)){
 						userStatusIcon.setImageResource(R.drawable.contact_status_inactive);
+						Globals.getCreateListUserList().remove(user);
 					} else {
 						userStatusIcon.setImageResource(R.drawable.contact_status_active);
+						Globals.getCreateListUserList().add(user);
 					}
 				}
 			}
@@ -118,7 +120,7 @@ public class AddPeopleFragment extends BaseFragment {
 
 			//Setting the user status icon
 			ImageView userStatusIcon = (ImageView)convertView.findViewById(R.id.ap_user_status_icon);
-			if(isCurrentUser(user)){
+			if(Globals.getCreateListUserList().contains(user)){
 				userStatusIcon.setImageResource(R.drawable.contact_status_active);
 			} else {
 				userStatusIcon.setImageResource(R.drawable.contact_status_inactive);

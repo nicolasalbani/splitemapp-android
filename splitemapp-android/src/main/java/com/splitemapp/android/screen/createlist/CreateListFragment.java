@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
@@ -34,7 +36,6 @@ public class CreateListFragment extends BaseFragment {
 
 	private static final String TAG = CreateListFragment.class.getSimpleName();
 
-	private List<User> mUsers;
 	private User mCurrentUser;
 
 	private EditText mListName;
@@ -48,12 +49,18 @@ public class CreateListFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// We initialize a new list
+		Globals.setCreateListUserList(new ArrayList<User>());
+
 		// We get the user and user contact data instances
 		try {
 			mCurrentUser = getHelper().getLoggedUser();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
+
+		// We only add the current user to the users list at first
+		Globals.getCreateListUserList().add(mCurrentUser);	
 	}
 
 	@Override
@@ -82,11 +89,8 @@ public class CreateListFragment extends BaseFragment {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 
-		// We only add the current user to the users list at first
-		mUsers = new ArrayList<User>();
-		mUsers.add(mCurrentUser);
-
-		UserAdapter userAdapter = new UserAdapter(mUsers);
+		// We set the global create list user list to the user adapter
+		UserAdapter userAdapter = new UserAdapter(Globals.getCreateListUserList());
 
 		// We populate the list of projects for this user
 		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
@@ -161,6 +165,14 @@ public class CreateListFragment extends BaseFragment {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		// Refreshing member list when coming back from the Add People fragment
+		((BaseAdapter) mMembersList.getAdapter()).notifyDataSetChanged(); 
 	}
 
 	@Override
