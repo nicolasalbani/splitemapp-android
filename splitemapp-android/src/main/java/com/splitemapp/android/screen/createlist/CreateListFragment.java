@@ -25,12 +25,15 @@ import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserToProject;
+import com.splitemapp.commons.domain.UserToProjectStatus;
 
 public class CreateListFragment extends BaseFragment {
 
@@ -96,7 +99,7 @@ public class CreateListFragment extends BaseFragment {
 		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
 		mMembersList.setAdapter(userAdapter);
 		
-		// We get the reference to the add prople text view and implement a OnClickListener
+		// We get the reference to the add people text view and implement a OnClickListener
 		mAddPeople = (TextView) v.findViewById(R.id.cl_add_people_textView);
 		mAddPeople.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -113,26 +116,37 @@ public class CreateListFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				try {
-					// We get the project active status
+					// Getting the project active status
 					Dao<ProjectStatus,Short> projectStatusDao = getHelper().getProjectStatusDao();
 					ProjectStatus projectActiveStatus = projectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.PROJECT_STATUS_ACTIVE).get(0);
 					
-					// We get the project type
+					// Getting the project type
 					Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
 					ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mListType.getSelectedItem()).get(0);
 					
-					// We create the project instance
+					// Saving the project in the database
 					Project project = new Project();
 					project.setBudget(new BigDecimal(mListBudget.getText().toString()));
 					project.setProjectStatus(projectActiveStatus);
 					project.setProjectType(projectType);
 					project.setTitle(mListName.getText().toString());
+					getHelper().getProjectDao().create(project);
 					
-					// We save the project in the database
-					Dao<Project,Long> projectDao = getHelper().getProjectDao();
-					projectDao.create(project);
+					// Getting the user to project active status
+					Dao<UserToProjectStatus,Short> userToProjectStatusDao = getHelper().getUserToProjectStatusDao();
+					UserToProjectStatus userToProjectActiveStatus = userToProjectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE).get(0);
 					
-					// We move back to the home screen
+					// Saving user to project relationships
+					for(User user:Globals.getCreateListUserList()){
+						UserToProject userToProject = new UserToProject();
+						userToProject.setUserToProjectStatus(userToProjectActiveStatus);
+						userToProject.setProject(project);
+						userToProject.setUser(user);
+						userToProject.setExpensesShare(EconomicUtils.calulateShare(Globals.getCreateListUserList().size()));
+						getHelper().getUserToProjectDao().create(userToProject);
+					}
+					
+					// Moving back to the home screen
 					Intent intent = new Intent(getActivity(), HomeActivity.class);
 					startActivity(intent);
 				} catch (SQLException e) {
