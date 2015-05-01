@@ -26,6 +26,7 @@ import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.SynchronizerFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
+import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
@@ -124,6 +125,7 @@ public class HomeFragment extends SynchronizerFragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent nextIntent = null;
 		// Handle item selection
 		switch (item.getItemId()){
 		case R.id.h_logout : 
@@ -134,8 +136,8 @@ public class HomeFragment extends SynchronizerFragment {
 				Log.e(TAG, "SQLException caught!", e);
 			}
 			// We move to the login screen
-			Intent intent = new Intent(getActivity(), LoginActivity.class);
-			startActivity(intent);
+			nextIntent = new Intent(getActivity(), LoginActivity.class);
+			startActivity(nextIntent);
 			return true;
 		case R.id.h_synchronize : 
 			// TODO we need to call the new sync intent
@@ -150,6 +152,11 @@ public class HomeFragment extends SynchronizerFragment {
 //			pullUserExpenses();
 			
 			// We reload the view
+			return true;
+		case R.id.h_manage_contacts :
+			// We move to the login screen
+			nextIntent = new Intent(getActivity(), ManageContactsActivity.class);
+			startActivity(nextIntent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

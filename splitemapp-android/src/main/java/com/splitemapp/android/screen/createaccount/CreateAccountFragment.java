@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.RestfulFragment;
+import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.utils.ImageUtils;
 
 public class CreateAccountFragment extends RestfulFragment {
@@ -65,7 +67,12 @@ public class CreateAccountFragment extends RestfulFragment {
 		mCreateAccount.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Creating account
 				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString());
+				
+				// Redirecting to login screen
+				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intent);
 			}
 		});
 

@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -13,14 +14,19 @@ import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.UserContactDataDTO;
+import com.splitemapp.commons.domain.dto.UserDTO;
 import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
 import com.splitemapp.commons.domain.dto.request.LoginRequest;
+import com.splitemapp.commons.domain.dto.request.SynchronizeContactsRequest;
 import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
 import com.splitemapp.commons.domain.dto.response.LoginResponse;
+import com.splitemapp.commons.domain.dto.response.SynchronizeContactsResponse;
 import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment{
@@ -54,6 +60,14 @@ public abstract class RestfulFragment extends BaseFragment{
 	 */
 	protected void login(String userName, String password){
 		new LoginRequestTask(userName, password).execute();
+	}
+	
+	/**
+	 * Create an asynchronous synchronize contacts request
+	 * @param contactsEmailAddressList List containing contacts email addresses
+	 */
+	protected void synchronizeContacts(List<String> contactsEmailAddressList){
+		new SynchronizeContactsRequestTask(contactsEmailAddressList).execute();
 	}
 
 	/**
@@ -205,6 +219,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 					// We reconstruct the user object
 					User user = new User(userStatus, loginResponse.getUserDTO());
+					// Replacing user id if user name already exists
+					List<User> existingUserList = getHelper().getUserDao().queryForEq(TableField.USER_USERNAME, user.getUsername());
+					if(!existingUserList.isEmpty()){
+						user.setId(existingUserList.get(0).getId());
+					}
 					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
 					getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
 
@@ -219,6 +238,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 					// We reconstruct the user contact data object
 					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
+					// Replacing user contact data if email already exists
+					List<UserContactData> existingUserContactDataList = getHelper().getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_CONTACT_DATA, userContactData.getContactData());
+					if(!existingUserContactDataList.isEmpty()){
+						userContactData.setId(existingUserContactDataList.get(0).getId());
+					}
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
 
@@ -226,6 +250,75 @@ public abstract class RestfulFragment extends BaseFragment{
 					startHomeActivity(user.getId());
 				} catch (SQLException e) {
 					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Synchronize contacts task which queries the remote server for user information
+	 * @author nicolas
+	 *
+	 */
+	private class SynchronizeContactsRequestTask extends AsyncTask<Void, Void, SynchronizeContactsResponse> {
+		private List<String> contactsEmailAddressList;
+
+		public SynchronizeContactsRequestTask(List<String> contactsEmailAddressList) {
+			this.contactsEmailAddressList = contactsEmailAddressList;
+		}
+
+		@Override
+		protected SynchronizeContactsResponse doInBackground(Void... params) {
+			try {
+				// We create the login request
+				SynchronizeContactsRequest synchronizeContactsRequest = new SynchronizeContactsRequest();
+				synchronizeContactsRequest.setContactsEmailAddressList(contactsEmailAddressList);
+
+				// We call the rest service and send back the synchronize contacts
+				return callRestService(ServiceConstants.SYNCHRONIZE_CONTACTS_PATH, synchronizeContactsRequest, SynchronizeContactsResponse.class);
+			} catch (Exception e) {
+				Log.e(getLoggingTag(), e.getMessage(), e);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(SynchronizeContactsResponse synchronizeContactsResponse) {
+			boolean createAccountSuccess = false;
+
+			// Validating the response
+			if(synchronizeContactsResponse != null){
+				createAccountSuccess = synchronizeContactsResponse.getSuccess();
+			}
+
+			// Showing the status toast
+			showToast(createAccountSuccess ? "Synchronize Contacts Successful!" : "Synchronize Contacts Failed!");
+
+			// Saving the user and user contact data information returned by the backend
+			if(createAccountSuccess){
+				try {
+					for(UserDTO userDTO:synchronizeContactsResponse.getUserDTOList()){
+						// Reconstructing the user status object
+						UserStatus userStatus = getHelper().getUserStatusDao().queryForId(userDTO.getUserStatusId().shortValue());
+						
+						// Reconstructing the user object
+						User user = new User(userStatus, userDTO);
+						CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
+						getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
+						
+						// Reconstructing the user contact data object
+						for(UserContactDataDTO userContactDataDTO:synchronizeContactsResponse.getUserContactDataDTOList()){
+							// Matching the appropriate user contact data
+							if(userDTO.getId() == userContactDataDTO.getUserId()){
+								UserContactData userContactData = new UserContactData(user,userContactDataDTO);
+								createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
+								getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+							}
+						}
+					}
+				} catch (SQLException e) {
+					Log.e(getLoggingTag(), "SQLException caught while synchronizing contacts", e);
 				}
 			}
 		}

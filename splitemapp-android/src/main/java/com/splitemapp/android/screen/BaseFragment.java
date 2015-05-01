@@ -1,8 +1,13 @@
 package com.splitemapp.android.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -102,4 +107,32 @@ public abstract class BaseFragment extends Fragment {
 		startActivity(intent);
 	}
 
+	/**
+	 * Returns a list with all the email addresses from the device contacts 
+	 * @return
+	 */
+	public List<String> getContactsEmailAddressList(){
+		List<String> contactsEmailAddressList = new ArrayList<String>();
+
+		ContentResolver cr = getActivity().getContentResolver();
+		Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
+		if (cur.getCount() > 0) {
+			while (cur.moveToNext()) {
+				String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+				Cursor cur1 = cr.query( ContactsContract.CommonDataKinds.Email.CONTENT_URI, 
+										null, 
+										ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", 
+										new String[]{id}, null); 
+				while (cur1.moveToNext()) { 
+					String email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+					if(email!=null){
+						contactsEmailAddressList.add(email);
+					}
+				} 
+				cur1.close();
+			}
+		}
+
+		return contactsEmailAddressList;
+	}
 }

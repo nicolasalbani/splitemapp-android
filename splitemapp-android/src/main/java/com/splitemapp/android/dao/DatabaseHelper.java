@@ -599,6 +599,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 	}
 	
+	/**
+	 * Updates the specified ID reference with a new ID matching the one in the remote server
+	 * @param dao
+	 * @param idUpdate
+	 * @param idReferenceList
+	 * @throws SQLException
+	 */
 	public <F extends Serializable,E extends Number> void updateIdReferences(Dao<F,E> dao, IdUpdate<E> idUpdate, List<IdReference> idReferenceList) throws SQLException{
 		for(IdReference idReference:idReferenceList){
 			String statement = "UPDATE " +idReference.getTableName()+ " SET " +idReference.getFieldName()+ " = " +idUpdate.getNewId()+ " WHERE " +idReference.getFieldName()+ " = " +idUpdate.getOldId();
@@ -606,4 +613,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			dao.updateRaw(statement);
 		}
 	}
+	
 }

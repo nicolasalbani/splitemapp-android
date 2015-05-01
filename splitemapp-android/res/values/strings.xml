@@ -29,6 +29,7 @@
     <string name="h_new_list_button">New list of expenses</string>
     <string name="h_logout">Logout</string>
     <string name="h_synchronize">Synchronize</string>
+    <string name="h_manage_contacts">Manage Contacts</string>
     
     <!-- Create List Screen -->
     <string name="cl_title">New List</string>
@@ -47,6 +48,8 @@
     <string name="ue_date_placeholder">13 10 2014</string>
     <string name="ue_currency">$</string>
     <string name="ue_amount_placeholder">30,5</string>
+    
+    <!-- Project Screen -->
     <string name="p_add_expense_button">Add an expense</string>
     
     <!-- Expense Screen -->
@@ -62,4 +65,11 @@
     <string name="ap_contacts">Contacts</string>
     <string name="ap_avatar_description">Contact Avatar</string>
     <string name="ap_status_description">Contact Status Icon</string>
+    
+    <!-- Manage Contacts -->
+    <string name="mc_title">Manage Contacts</string>
+    <string name="mc_back_action">Back</string>
+    <string name="mc_contacts">Contacts</string>
+    <string name="mc_synchronize_contacts_button">Synchronize Contacts</string>
+    <string name="mc_avatar_description">Contact Avatar</string>
 </resources>
