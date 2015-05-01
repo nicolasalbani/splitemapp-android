@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
+import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Group;
 import com.splitemapp.commons.domain.GroupStatus;
@@ -509,6 +511,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public Project getProjectById(Long projectId) throws SQLException{
 		return getProjectDao().queryForId(projectId.longValue());
+	}
+	
+	/**
+	 * Gets the list of Projects associated with the currently logged user
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Project> getAllProjectsForLoggedUser() throws SQLException{
+		ArrayList<Project> result = new ArrayList<Project>();
+
+		User loggedUser = getLoggedUser();
+		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_USER_ID, loggedUser.getId());
+		for(UserToProject userToProject:userToProjectList){
+			result.add(getProjectDao().queryForId(userToProject.getProject().getId()));
+		}
+
+		return result;
 	}
 
 	/**

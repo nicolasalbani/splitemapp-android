@@ -22,7 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.SynchronizerFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
@@ -81,8 +81,7 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// We get the list of existing projects and create the project list adapter
 		try {
-			//TODO fix the line below so that we only get the projects in which this user is in
-			mProjects = getHelper().getProjectDao().queryForAll();
+			mProjects = getHelper().getAllProjectsForLoggedUser();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -94,9 +93,11 @@ public class HomeFragment extends SynchronizerFragment {
 		mProjectsList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				//Saving the project ID in a global variable
+				Globals.setExpenseActivityProjectId(mProjects.get(position).getId());
+				
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ProjectActivity.class);
-				intent.putExtra(Constants.EXTRA_PROJECT_ID, mProjects.get(position).getId());
 				startActivity(intent);
 			}
 		});

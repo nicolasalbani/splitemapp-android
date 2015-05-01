@@ -79,12 +79,12 @@ public class AddPeopleFragment extends BaseFragment {
 				if(!isCurrentUser(user)){
 					//Setting the user status icon based on the previous status icon
 					ImageView userStatusIcon = (ImageView)view.findViewById(R.id.ap_user_status_icon);
-					if(Globals.getCreateListUserList().contains(user)){
+					if(Globals.getCreateListActivityUserList().contains(user)){
 						userStatusIcon.setImageResource(R.drawable.contact_status_inactive);
-						Globals.getCreateListUserList().remove(user);
+						Globals.getCreateListActivityUserList().remove(user);
 					} else {
 						userStatusIcon.setImageResource(R.drawable.contact_status_active);
-						Globals.getCreateListUserList().add(user);
+						Globals.getCreateListActivityUserList().add(user);
 					}
 				}
 			}
@@ -120,7 +120,7 @@ public class AddPeopleFragment extends BaseFragment {
 
 			//Setting the user status icon
 			ImageView userStatusIcon = (ImageView)convertView.findViewById(R.id.ap_user_status_icon);
-			if(Globals.getCreateListUserList().contains(user)){
+			if(Globals.getCreateListActivityUserList().contains(user)){
 				userStatusIcon.setImageResource(R.drawable.contact_status_active);
 			} else {
 				userStatusIcon.setImageResource(R.drawable.contact_status_inactive);

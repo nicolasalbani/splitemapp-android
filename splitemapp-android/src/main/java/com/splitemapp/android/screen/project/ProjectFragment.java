@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.commons.constants.TableField;
@@ -43,11 +43,9 @@ public class ProjectFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle arguments = getActivity().getIntent().getExtras();
-
 		// We get the current user and project instances
 		try {
-			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
+			mCurrentProject = getHelper().getProjectById(Globals.getExpenseActivityProjectId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -79,8 +77,8 @@ public class ProjectFragment extends BaseFragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// We create an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
-				intent.putExtra(Constants.EXTRA_EXPENSE_ID, mUserExpenses.get(position).getId());
+				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
+				Globals.setExpenseActivityExpenseId(mUserExpenses.get(position).getId());
 				startActivity(intent);
 			}
 		});
@@ -92,7 +90,7 @@ public class ProjectFragment extends BaseFragment {
 			public void onClick(View v) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				intent.putExtra(Constants.EXTRA_PROJECT_ID, mCurrentProject.getId());
+				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
 				startActivity(intent);
 			}
 		});

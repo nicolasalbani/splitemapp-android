@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.commons.domain.ExpenseCategory;
@@ -56,15 +56,13 @@ public class ExpenseFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Bundle arguments = getActivity().getIntent().getExtras();
-
 		try{
 			// We get the current user and project instances
 			mCurrentUser = getHelper().getLoggedUser();
-			mCurrentProject = getHelper().getProjectById((Long)arguments.getSerializable(Constants.EXTRA_PROJECT_ID));
+			mCurrentProject = getHelper().getProjectById(Globals.getExpenseActivityProjectId());
 
 			// If we got an expense id, we are meant to edit that expense
-			Long userExpenseId = (Long)arguments.getSerializable(Constants.EXTRA_EXPENSE_ID);
+			Long userExpenseId = Globals.getExpenseActivityExpenseId();
 			if(userExpenseId != null){
 				mUserExpense = getHelper().getUserExpenseById(userExpenseId);
 			} else {

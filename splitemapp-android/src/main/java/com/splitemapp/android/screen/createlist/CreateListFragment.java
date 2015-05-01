@@ -53,7 +53,7 @@ public class CreateListFragment extends BaseFragment {
 		super.onCreate(savedInstanceState);
 
 		// We initialize a new list
-		Globals.setCreateListUserList(new ArrayList<User>());
+		Globals.setCreateListActivityUserList(new ArrayList<User>());
 
 		// We get the user and user contact data instances
 		try {
@@ -63,7 +63,7 @@ public class CreateListFragment extends BaseFragment {
 		}
 
 		// We only add the current user to the users list at first
-		Globals.getCreateListUserList().add(mCurrentUser);	
+		Globals.getCreateListActivityUserList().add(mCurrentUser);	
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class CreateListFragment extends BaseFragment {
 		}
 
 		// We set the global create list user list to the user adapter
-		UserAdapter userAdapter = new UserAdapter(Globals.getCreateListUserList());
+		UserAdapter userAdapter = new UserAdapter(Globals.getCreateListActivityUserList());
 
 		// We populate the list of projects for this user
 		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
@@ -137,14 +137,17 @@ public class CreateListFragment extends BaseFragment {
 					UserToProjectStatus userToProjectActiveStatus = userToProjectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE).get(0);
 					
 					// Saving user to project relationships
-					for(User user:Globals.getCreateListUserList()){
+					for(User user:Globals.getCreateListActivityUserList()){
 						UserToProject userToProject = new UserToProject();
 						userToProject.setUserToProjectStatus(userToProjectActiveStatus);
 						userToProject.setProject(project);
 						userToProject.setUser(user);
-						userToProject.setExpensesShare(EconomicUtils.calulateShare(Globals.getCreateListUserList().size()));
+						userToProject.setExpensesShare(EconomicUtils.calulateShare(Globals.getCreateListActivityUserList().size()));
 						getHelper().getUserToProjectDao().create(userToProject);
 					}
+					
+					// Resetting the global create list user list
+					Globals.setCreateListActivityUserList(new ArrayList<User>());
 					
 					// Moving back to the home screen
 					Intent intent = new Intent(getActivity(), HomeActivity.class);

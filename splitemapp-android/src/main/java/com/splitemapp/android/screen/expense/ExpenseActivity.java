@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen.expense;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -8,7 +9,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.SingleFragmentActivity;
+import com.splitemapp.android.screen.project.ProjectActivity;
 
 public class ExpenseActivity extends SingleFragmentActivity {
 	
@@ -37,7 +40,11 @@ public class ExpenseActivity extends SingleFragmentActivity {
 		mCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Going back to calling intent
 				finish();
+				
+				// Cleaning up global expense id
+				Globals.setExpenseActivityExpenseId(null);
 			}
 		});
 		
@@ -45,8 +52,15 @@ public class ExpenseActivity extends SingleFragmentActivity {
 		mAdd.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Saving expense to database
 				((ExpenseFragment)mAddExpenseFragment).saveExpense();
-				finish();
+				
+				// We create an intent to the ProjectActivity sending the information from the clicked project
+				Intent intent = new Intent(getApplicationContext(), ProjectActivity.class);
+				startActivity(intent);
+				
+				// Cleaning up global expense id
+				Globals.setExpenseActivityExpenseId(null);
 			}
 		});
 	}
