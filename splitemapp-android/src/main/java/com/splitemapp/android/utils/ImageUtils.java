@@ -1,5 +1,7 @@
 package com.splitemapp.android.utils;
 
+import java.io.ByteArrayOutputStream;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,9 +11,13 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.ImageView;
 
 public class ImageUtils {
+	
+	private static final int COMPRESSION_QUALITY = 50;
+	
 	/**
 	 * Decodes a Bitmap based on the specified parameters
 	 * @param filePath String containing the full path to the image file
@@ -92,5 +98,37 @@ public class ImageUtils {
 	 */
 	public static boolean imageViewEqualsResource(Resources resources, ImageView imageView, int resource){
 		return imageView.getDrawable().getConstantState().equals(resources.getDrawable(resource).getConstantState());
+	}
+	
+	/**
+	 * Return a byte array matching the Bitmap object provided
+	 * @param image
+	 * @return
+	 */
+	public static byte[] bitmapToByteArray(Bitmap image){
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		image.compress(Bitmap.CompressFormat.JPEG, COMPRESSION_QUALITY, byteArrayOutputStream);
+		byte[] img = byteArrayOutputStream.toByteArray();
+		
+		return img;
+	}
+	
+	/**
+	 * Return a byte array matching the ImageView object provided
+	 * @param imageView
+	 * @return
+	 */
+	public static byte[] imageViewToByteArray(ImageView imageView){
+		Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+		return bitmapToByteArray(bitmap);
+	}
+	
+	/**
+	 * Return a bitmap matching the provided byte array
+	 * @param image
+	 * @return
+	 */
+	public static Bitmap byteArrayToBitmap(byte[] image){
+		return BitmapFactory.decodeByteArray(image , 0, image.length);
 	}
 }

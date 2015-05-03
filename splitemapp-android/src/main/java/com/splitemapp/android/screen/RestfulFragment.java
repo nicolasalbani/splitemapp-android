@@ -49,8 +49,8 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param userName String containing the user name
 	 * @param password String containing the password
 	 */
-	protected void createAccount(String email, String userName, String password){
-		new CreateAccountRequestTask(email, userName, password).execute();
+	protected void createAccount(String email, String userName, String password, byte[] avatar){
+		new CreateAccountRequestTask(email, userName, password, avatar).execute();
 	}
 
 	/**
@@ -106,11 +106,13 @@ public abstract class RestfulFragment extends BaseFragment{
 		private String email;
 		private String userName;
 		private String password;
+		private byte[] avatar;
 
-		public CreateAccountRequestTask(String email, String userName, String password) {
+		public CreateAccountRequestTask(String email, String userName, String password, byte[] avatar) {
 			this.email = email;
 			this.userName = userName;
 			this.password = password;
+			this.avatar = avatar;
 		}
 
 		@Override
@@ -122,6 +124,7 @@ public abstract class RestfulFragment extends BaseFragment{
 				createAccountRequest.setUsername(userName);
 				createAccountRequest.setPassword(Utils.hashPassword(password));
 				createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
+				createAccountRequest.setAvatar(avatar);
 
 				// We call the rest service and send back the login response
 				return callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);

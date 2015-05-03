@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.RestfulFragment;
-import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.utils.ImageUtils;
 
@@ -68,7 +67,7 @@ public class CreateAccountFragment extends RestfulFragment {
 			@Override
 			public void onClick(View v) {
 				// Creating account
-				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString());
+				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar));
 				
 				// Redirecting to login screen
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -81,14 +80,14 @@ public class CreateAccountFragment extends RestfulFragment {
 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == SELECT_PICTURE  && null != data) {
-			// We get the image path
+			// Getting the image path
 			Uri uri = data.getData();
 			String imagePath = getImagePath(uri);
 
-			// We decode scaled bitmap to avoid out of memory errors
+			// Decoding scaled bitmap to avoid out of memory errors
 			Bitmap scaledBitmap = ImageUtils.decodeScaledBitmap(imagePath, Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT);
 
-			// We set the avatar image
+			// Setting the avatar image
 			Bitmap croppedBitmap = ImageUtils.getCroppedBitmap(scaledBitmap);
 			mAvatar.setImageBitmap(croppedBitmap);
 		}

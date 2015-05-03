@@ -28,6 +28,7 @@ import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -77,8 +78,12 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// We set the user avatar
 		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
-		//TODO set this to the actual user avatar!!
-		mAvatar.setImageResource(R.drawable.avatar_placeholder);
+		byte[] avatar = mCurrentUser.getAvatar();
+		if(avatar != null){
+			mAvatar.setImageBitmap(ImageUtils.byteArrayToBitmap(avatar));
+		} else {
+			mAvatar.setImageResource(R.drawable.avatar_placeholder);
+		}
 
 		// We get the list of existing projects and create the project list adapter
 		try {
