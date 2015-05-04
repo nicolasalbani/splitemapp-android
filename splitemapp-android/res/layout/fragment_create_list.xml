@@ -40,7 +40,7 @@
     <ListView
         android:id="@+id/cl_users_listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:background="@color/white" >
     </ListView>
 
@@ -62,11 +62,6 @@
         android:text="@string/cl_list_add_people"
         android:textColor="@color/blue"
         android:textSize="20sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/cl_new_list_button"

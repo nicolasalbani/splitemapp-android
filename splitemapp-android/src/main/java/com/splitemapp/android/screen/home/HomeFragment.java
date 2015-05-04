@@ -80,7 +80,7 @@ public class HomeFragment extends SynchronizerFragment {
 		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
 		byte[] avatar = mCurrentUser.getAvatar();
 		if(avatar != null){
-			mAvatar.setImageBitmap(ImageUtils.byteArrayToBitmap(avatar));
+			mAvatar.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,100)));
 		} else {
 			mAvatar.setImageResource(R.drawable.avatar_placeholder);
 		}

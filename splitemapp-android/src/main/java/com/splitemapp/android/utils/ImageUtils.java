@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 public class ImageUtils {
 	
-	private static final int COMPRESSION_QUALITY = 50;
+	private static final int COMPRESSION_QUALITY = 10;
 	
 	/**
 	 * Decodes a Bitmap based on the specified parameters
@@ -73,17 +73,27 @@ public class ImageUtils {
 	 * @return Bitmap with the circle cropped image
 	 */
 	public static Bitmap getCroppedBitmap(Bitmap bitmap) {
-	    Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(), Config.ARGB_8888);
+		// Making the bitmap a square image
+		int width = bitmap.getWidth();
+		int height = bitmap.getHeight();
+		if(width < height){
+			height = width;
+		} else {
+			width = height;
+		}
+		
+		// Creating the output bitmap
+	    Bitmap output = Bitmap.createBitmap(width,height, Config.ARGB_8888);
 	    Canvas canvas = new Canvas(output);
 
 	    final int color = 0xff424242;
 	    final Paint paint = new Paint();
-	    final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+	    final Rect rect = new Rect(0, 0, width, height);
 
 	    paint.setAntiAlias(true);
 	    canvas.drawARGB(0, 0, 0, 0);
 	    paint.setColor(color);
-	    canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+	    canvas.drawCircle(width/2, height/2, width/2, paint);
 	    paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 	    canvas.drawBitmap(bitmap, rect, rect, paint);
 	    return output;
@@ -125,10 +135,22 @@ public class ImageUtils {
 	
 	/**
 	 * Return a bitmap matching the provided byte array
-	 * @param image
+	 * @param image byte array containing the image information
+	 * @param scale from 1 to 100 percent
 	 * @return
 	 */
-	public static Bitmap byteArrayToBitmap(byte[] image){
-		return BitmapFactory.decodeByteArray(image , 0, image.length);
+	public static Bitmap byteArrayToBitmap(byte[] image, int scale){
+		// Adjusting scale input
+		if(scale < 1){
+			scale = 1;
+		} else if (scale > 100){
+			scale = 100;
+		}
+		
+		// Obtaining scaled image
+		Bitmap bitmap = BitmapFactory.decodeByteArray(image , 0, image.length);
+		bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * scale / 100 , bitmap.getHeight() * scale / 100, true);
+		
+		return bitmap;
 	}
 }

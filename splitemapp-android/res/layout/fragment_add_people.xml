@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ActivityGrayTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        style="@style/CreateListTextView"
+        android:text="@string/ap_contacts" />
+
+    <ListView
+        android:id="@+id/ap_contacts_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:listSelector="@android:color/transparent"
+        android:background="@color/white" >
+    </ListView>
+
+</LinearLayout>
