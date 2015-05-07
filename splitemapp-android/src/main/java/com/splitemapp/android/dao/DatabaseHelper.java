@@ -22,21 +22,18 @@ import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
-import com.splitemapp.commons.domain.Group;
-import com.splitemapp.commons.domain.GroupStatus;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.SyncStatus;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserExpense;
 import com.splitemapp.commons.domain.UserInvite;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
-import com.splitemapp.commons.domain.UserToGroup;
-import com.splitemapp.commons.domain.UserToGroupStatus;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
 import com.splitemapp.commons.domain.id.IdReference;
@@ -64,17 +61,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<UserStatus, Short> userStatusDao = null;
 	private Dao<ProjectStatus, Short> projectStatusDao = null;
 	private Dao<ProjectType, Short> projectTypeDao = null;
-	private Dao<GroupStatus, Short> groupStatusDao = null;
-	private Dao<UserToGroupStatus, Short> userToGroupStatusDao = null;
 	private Dao<UserToProjectStatus, Short> userToProjectStatusDao = null;
 	private Dao<InviteStatus, Short> inviteStatusDao = null;
 	private Dao<ExpenseCategory, Short> expenseCategoryDao = null;
 	private Dao<Project, Long> projectDao = null;
 	private Dao<User, Long> userDao = null;
-	private Dao<Group, Long> groupDao = null;
+	private Dao<UserAvatar, Long> userAvatarDao = null;
 	private Dao<UserContactData, Long> userContactDataDao = null;
 	private Dao<UserExpense, Long> userExpensesDao = null;
-	private Dao<UserToGroup, Long> userToGroupDao = null;
 	private Dao<UserToProject, Long> userToProjectDao = null;
 	private Dao<UserInvite, Long> userInviteDao = null;
 	private Dao<UserSession, Long> userSessionDao = null;
@@ -98,17 +92,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, UserStatus.class);
 			TableUtils.createTable(connectionSource, ProjectStatus.class);
 			TableUtils.createTable(connectionSource, ProjectType.class);
-			TableUtils.createTable(connectionSource, GroupStatus.class);
-			TableUtils.createTable(connectionSource, UserToGroupStatus.class);
 			TableUtils.createTable(connectionSource, UserToProjectStatus.class);
 			TableUtils.createTable(connectionSource, InviteStatus.class);
 			TableUtils.createTable(connectionSource, ExpenseCategory.class);
 			TableUtils.createTable(connectionSource, Project.class);
 			TableUtils.createTable(connectionSource, User.class);
-			TableUtils.createTable(connectionSource, Group.class);
+			TableUtils.createTable(connectionSource, UserAvatar.class);
 			TableUtils.createTable(connectionSource, UserContactData.class);
 			TableUtils.createTable(connectionSource, UserExpense.class);
-			TableUtils.createTable(connectionSource, UserToGroup.class);
 			TableUtils.createTable(connectionSource, UserToProject.class);
 			TableUtils.createTable(connectionSource, UserInvite.class);
 			TableUtils.createTable(connectionSource, UserSession.class);
@@ -136,17 +127,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, UserStatus.class, true);
 			TableUtils.dropTable(connectionSource, ProjectStatus.class, true);
 			TableUtils.dropTable(connectionSource, ProjectType.class, true);
-			TableUtils.dropTable(connectionSource, GroupStatus.class, true);
-			TableUtils.dropTable(connectionSource, UserToGroupStatus.class, true);
 			TableUtils.dropTable(connectionSource, UserToProjectStatus.class, true);
 			TableUtils.dropTable(connectionSource, InviteStatus.class, true);
 			TableUtils.dropTable(connectionSource, ExpenseCategory.class, true);
 			TableUtils.dropTable(connectionSource, Project.class, true);
 			TableUtils.dropTable(connectionSource, User.class, true);
-			TableUtils.dropTable(connectionSource, Group.class, true);
 			TableUtils.dropTable(connectionSource, UserContactData.class, true);
 			TableUtils.dropTable(connectionSource, UserExpense.class, true);
-			TableUtils.dropTable(connectionSource, UserToGroup.class, true);
 			TableUtils.dropTable(connectionSource, UserToProject.class, true);
 			TableUtils.dropTable(connectionSource, UserInvite.class, true);
 			TableUtils.dropTable(connectionSource, UserSession.class, true);
@@ -215,28 +202,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Returns the Database Access Object (DAO) for the GroupStatus class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<GroupStatus, Short> getGroupStatusDao() throws SQLException {
-		if (groupStatusDao == null) {
-			groupStatusDao = getDao(GroupStatus.class);
-		}
-		return groupStatusDao;
-	}
-
-	/**
-	 * Returns the Database Access Object (DAO) for the UserToGroupStatus class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<UserToGroupStatus, Short> getUserToGroupStatusDao() throws SQLException {
-		if (userToGroupStatusDao == null) {
-			userToGroupStatusDao = getDao(UserToGroupStatus.class);
-		}
-		return userToGroupStatusDao;
-	}
-
-	/**
 	 * Returns the Database Access Object (DAO) for the UserToProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
@@ -290,16 +255,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return userDao;
 	}
-
+	
 	/**
-	 * Returns the Database Access Object (DAO) for the Group class. It will create it or just give the cached
+	 * Returns the Database Access Object (DAO) for the UserAvatar class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<Group, Long> getGroupDao() throws SQLException {
-		if (groupDao == null) {
-			groupDao = getDao(Group.class);
+	public Dao<UserAvatar, Long> getUserAvatarDao() throws SQLException {
+		if (userAvatarDao == null) {
+			userAvatarDao = getDao(UserAvatar.class);
 		}
-		return groupDao;
+		return userAvatarDao;
 	}
 
 	/**
@@ -322,17 +287,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			userExpensesDao = getDao(UserExpense.class);
 		}
 		return userExpensesDao;
-	}
-
-	/**
-	 * Returns the Database Access Object (DAO) for the UserToGroup class. It will create it or just give the cached
-	 * value.
-	 */
-	public Dao<UserToGroup, Long> getUserToGroupDao() throws SQLException {
-		if (userToGroupDao == null) {
-			userToGroupDao = getDao(UserToGroup.class);
-		}
-		return userToGroupDao;
 	}
 
 	/**
@@ -388,17 +342,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		userStatusDao = null;
 		projectStatusDao = null;
 		projectTypeDao = null;
-		groupStatusDao = null;
-		userToGroupStatusDao = null;
 		userToProjectStatusDao = null;
 		inviteStatusDao = null;
 		expenseCategoryDao = null;
 		projectDao = null;
 		userDao = null;
-		groupDao = null;
+		userAvatarDao = null;
 		userContactDataDao = null;
 		userExpensesDao = null;
-		userToGroupDao = null;
 		userToProjectDao = null;
 		userInviteDao = null;
 		userSessionDao = null;

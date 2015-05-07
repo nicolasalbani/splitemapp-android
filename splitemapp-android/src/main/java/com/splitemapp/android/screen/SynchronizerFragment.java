@@ -14,8 +14,6 @@ import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
-import com.splitemapp.commons.domain.Group;
-import com.splitemapp.commons.domain.GroupStatus;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
@@ -25,28 +23,22 @@ import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserExpense;
 import com.splitemapp.commons.domain.UserInvite;
 import com.splitemapp.commons.domain.UserStatus;
-import com.splitemapp.commons.domain.UserToGroup;
-import com.splitemapp.commons.domain.UserToGroupStatus;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
-import com.splitemapp.commons.domain.dto.GroupDTO;
 import com.splitemapp.commons.domain.dto.ProjectDTO;
 import com.splitemapp.commons.domain.dto.UserContactDataDTO;
 import com.splitemapp.commons.domain.dto.UserDTO;
 import com.splitemapp.commons.domain.dto.UserExpenseDTO;
 import com.splitemapp.commons.domain.dto.UserInviteDTO;
-import com.splitemapp.commons.domain.dto.UserToGroupDTO;
 import com.splitemapp.commons.domain.dto.UserToProjectDTO;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
-import com.splitemapp.commons.domain.dto.response.PullGroupResponse;
 import com.splitemapp.commons.domain.dto.response.PullProjectResponse;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserContactDataResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserExpenseResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserInviteResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserResponse;
-import com.splitemapp.commons.domain.dto.response.PullUserToGroupResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserToProjectResponse;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
@@ -81,20 +73,6 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	 */
 	protected void pullUserToProjects(){
 		new PullUserToProjectsTask().execute();
-	}
-
-	/**
-	 * Creates an asynchronous group table pull request
-	 */
-	protected void pullGroups(){
-		new PullGroupsTask().execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_to_group table pull request
-	 */
-	protected void pullUserToGroups(){
-		new PullUserToGroupsTask().execute();
 	}
 
 	/**
@@ -261,78 +239,6 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 	}
 
-	/**
-	 * Sync Task to pull group table data from the remote DB
-	 * @author nicolas
-	 */
-	private class PullGroupsTask extends PullTask<GroupDTO, PullGroupResponse> {
-		@Override
-		protected String getTableName(){
-			return TableName.GROUP;
-		}
-
-		@Override
-		protected String getServicePath(){
-			return ServiceConstants.PULL_GROUPS_PATH;
-		}
-
-		@Override
-		protected void processResult(PullGroupResponse response) throws SQLException {
-			Set<GroupDTO> groupDTOs = response.getItemSet();
-			for(GroupDTO groupDTO:groupDTOs){
-				// We obtain the required parameters for the object creation from the local database
-				GroupStatus groupStatus = getHelper().getGroupStatusDao().queryForId(groupDTO.getGroupStatusId().shortValue());
-
-				// We create the new entity and store it into the local database
-				Group group = new Group(groupStatus, groupDTO);
-				CreateOrUpdateStatus createOrUpdate = getHelper().getGroupDao().createOrUpdate(group);
-				getHelper().updateSyncStatusPullAt(Group.class, createOrUpdate);
-			}
-		}
-
-		@Override
-		protected Class<PullGroupResponse> getResponseType() {
-			return PullGroupResponse.class;
-		}
-	}
-
-
-	/**
-	 * Sync Task to pull user_to_group table data from the remote DB
-	 * @author nicolas
-	 */
-	private class PullUserToGroupsTask extends PullTask<UserToGroupDTO, PullUserToGroupResponse> {
-		@Override
-		protected String getTableName(){
-			return TableName.USER_TO_GROUP;
-		}
-
-		@Override
-		protected String getServicePath(){
-			return ServiceConstants.PULL_USER_TO_GROUPS_PATH;
-		}
-
-		@Override
-		protected void processResult(PullUserToGroupResponse response) throws SQLException {
-			Set<UserToGroupDTO> userToGroupDTOs = response.getItemSet();
-			for(UserToGroupDTO userToGroupDTO:userToGroupDTOs){
-				// We obtain the required parameters for the object creation from the local database
-				User user = getHelper().getUserDao().queryForId(userToGroupDTO.getUserId().longValue());
-				Group group = getHelper().getGroupDao().queryForId(userToGroupDTO.getGroupId().longValue());
-				UserToGroupStatus userToGroupStatus = getHelper().getUserToGroupStatusDao().queryForId(userToGroupDTO.getUserToGroupStatusId().shortValue());
-
-				// We create the new entity and store it into the local database
-				UserToGroup userToGroup = new UserToGroup(user, group, userToGroupStatus, userToGroupDTO);
-				CreateOrUpdateStatus createOrUpdate = getHelper().getUserToGroupDao().createOrUpdate(userToGroup);
-				getHelper().updateSyncStatusPullAt(UserToGroup.class, createOrUpdate);
-			}
-		}
-
-		@Override
-		protected Class<PullUserToGroupResponse> getResponseType() {
-			return PullUserToGroupResponse.class;
-		}
-	}
 
 
 	/**

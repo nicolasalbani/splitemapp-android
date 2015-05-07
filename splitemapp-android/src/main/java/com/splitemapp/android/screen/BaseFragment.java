@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +12,16 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.splitemapp.android.R;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.commons.constants.TableField;
+import com.splitemapp.commons.domain.User;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -134,5 +140,22 @@ public abstract class BaseFragment extends Fragment {
 		}
 
 		return contactsEmailAddressList;
+	}
+	
+	public void setUsetAvatar(ImageView userAvatarResource, User user){
+		//Getting the user avatar
+		byte[] avatar = null;
+		try {
+			avatar = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId()).get(0).getAvatarData();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		// Setting the avatar
+		if(avatar != null){
+			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,10)));
+		} else {
+			userAvatarResource.setImageResource(R.drawable.avatar_placeholder);
+		}
 	}
 }

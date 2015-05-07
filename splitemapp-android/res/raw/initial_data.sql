@@ -11,16 +11,6 @@ insert into project_status(id,cod,title) values(2,"closed","Cerrado");
 insert into project_type(id,cod,title) values(1,"monthly","Mensual");
 insert into project_type(id,cod,title) values(2,"one_time","Solo una vez");
 
--- Data for group_status table
-insert into group_status(id,cod,title) values(1,"active","Activo");
-insert into group_status(id,cod,title) values(2,"disabled","Desactivado");
-insert into group_status(id,cod,title) values(3,"deleted","Borrado");
-
--- Data for user_to_group_status table
-insert into user_to_group_status(id,cod,title) values(1,"active","Activo");
-insert into user_to_group_status(id,cod,title) values(2,"removed","Eliminado");
-insert into user_to_group_status(id,cod,title) values(3,"left_group","Dejo el grupo");
-
 -- Data for user_to_project_status table
 insert into user_to_project_status(id,cod,title) values(1,"active","Activo");
 insert into user_to_project_status(id,cod,title) values(2,"removed","Eliminado");

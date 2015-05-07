@@ -16,6 +16,7 @@ import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
@@ -162,6 +163,11 @@ public abstract class RestfulFragment extends BaseFragment{
 					UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+					
+					// We reconstruct the uset avatar data object
+					UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
+					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
+					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
 				} catch (SQLException e) {
 					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 				}
