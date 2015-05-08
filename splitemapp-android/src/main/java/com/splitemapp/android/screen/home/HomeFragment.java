@@ -77,7 +77,7 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// We set the user avatar
 		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
-		setUsetAvatar(mAvatar, mCurrentUser);
+		setUsetAvatar(mAvatar, mCurrentUser, 100);
 
 		// We get the list of existing projects and create the project list adapter
 		try {

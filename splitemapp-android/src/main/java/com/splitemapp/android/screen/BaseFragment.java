@@ -142,7 +142,7 @@ public abstract class BaseFragment extends Fragment {
 		return contactsEmailAddressList;
 	}
 	
-	public void setUsetAvatar(ImageView userAvatarResource, User user){
+	public void setUsetAvatar(ImageView userAvatarResource, User user, int scale){
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {
@@ -153,7 +153,7 @@ public abstract class BaseFragment extends Fragment {
 		
 		// Setting the avatar
 		if(avatar != null){
-			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,10)));
+			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,scale)));
 		} else {
 			userAvatarResource.setImageResource(R.drawable.avatar_placeholder);
 		}

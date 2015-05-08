@@ -111,7 +111,7 @@ public class AddPeopleFragment extends BaseFragment {
 
 			//Setting the user avatar
 			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.ap_user_avatar);
-			setUsetAvatar(userAvatar, user);
+			setUsetAvatar(userAvatar, user, 10);
 
 			//Setting the user first name
 			TextView userFirstName = (TextView)convertView.findViewById(R.id.ap_user_first_name);
