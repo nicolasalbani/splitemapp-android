@@ -192,14 +192,14 @@ public abstract class RestfulFragment extends BaseFragment{
 		@Override
 		protected LoginResponse doInBackground(Void... params) {
 			try {
-				// We create the login request
+				// Creating the login request
 				LoginRequest loginRequest = new LoginRequest();
 				loginRequest.setDevice(Constants.DEVICE);
 				loginRequest.setOsVersion(Constants.OS_VERSION);
 				loginRequest.setUsername(userName);
 				loginRequest.setPassword(Utils.hashPassword(password));
 
-				// We call the rest service and send back the login response
+				// Calling the rest service and send back the login response
 				return callRestService(ServiceConstants.LOGIN_PATH, loginRequest, LoginResponse.class);
 			} catch (Exception e) {
 				Log.e(getLoggingTag(), e.getMessage(), e);
@@ -212,21 +212,21 @@ public abstract class RestfulFragment extends BaseFragment{
 		protected void onPostExecute(LoginResponse loginResponse) {
 			boolean loginSuccess = false;
 
-			// We validate the response
+			// Validating the response
 			if(loginResponse != null){
 				loginSuccess = loginResponse.getSuccess();
 			}
 
-			// We show the status toast
+			// Showing the status toast
 			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
 
-			// We save the user and session information returned by the backend
+			// Saving the user and session information returned by the backend
 			if(loginSuccess){
 				try {
-					// We reconstruct the user status object
+					// Reconstructing the user status object
 					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
 
-					// We reconstruct the user object
+					// Reconstructing the user object
 					User user = new User(userStatus, loginResponse.getUserDTO());
 					// Replacing user id if user name already exists
 					List<User> existingUserList = getHelper().getUserDao().queryForEq(TableField.USER_USERNAME, user.getUsername());
@@ -236,16 +236,16 @@ public abstract class RestfulFragment extends BaseFragment{
 					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
 					getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
 
-					// We clear all previous session records
+					// Clearing all previous session records
 					for(UserSession userSession:getHelper().getUserSessionDao().queryForAll()){
 						getHelper().getUserSessionDao().delete(userSession);
 					}
 
-					// We reconstruct the user session object
+					// Reconstructing the user session object
 					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
 					createOrUpdate = getHelper().getUserSessionDao().createOrUpdate(userSession);
 
-					// We reconstruct the user contact data object
+					// Reconstructing the user contact data object
 					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
 					// Replacing user contact data if email already exists
 					List<UserContactData> existingUserContactDataList = getHelper().getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_CONTACT_DATA, userContactData.getContactData());
@@ -254,8 +254,18 @@ public abstract class RestfulFragment extends BaseFragment{
 					}
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+					
+					// Reconstructing the user avatar object
+					UserAvatar userAvatar = new UserAvatar(user, loginResponse.getUserAvatarDTO());
+					// Replacing user avatar if it already exists
+					List<UserAvatar> existingUserAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
+					if(!existingUserAvatarList.isEmpty()){
+						userAvatar.setId(existingUserAvatarList.get(0).getId());
+					}
+					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
+					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
 
-					// We open the home activity class
+					// Opening the home activity class
 					startHomeActivity(user.getId());
 				} catch (SQLException e) {
 					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);

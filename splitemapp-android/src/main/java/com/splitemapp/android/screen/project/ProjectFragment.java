@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,9 +25,11 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectFragment extends BaseFragment {
@@ -36,6 +40,7 @@ public class ProjectFragment extends BaseFragment {
 	private Project mCurrentProject;
 
 	private TextView mProjectTitle;
+	private ImageView mProjectCoverImage;
 	private ListView mUserExpensesList;
 	private Button mAddNewExpense;
 
@@ -57,11 +62,22 @@ public class ProjectFragment extends BaseFragment {
 
 		View v = inflater.inflate(R.layout.fragment_project, container, false);
 
-		// We populate the project title
+		// Populating the project title
 		mProjectTitle = (TextView) v.findViewById(R.id.p_project_title_textView);
 		mProjectTitle.setText(mCurrentProject.getTitle());
+		
+		// Populating the project cover image
+		mProjectCoverImage = (ImageView) v.findViewById(R.id.p_project_cover_image_imageView);
+		mProjectCoverImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// in onCreate or any event where your want the user to select a file
+				openImageSelector();
+			}
+		});
+		setProjectCoverImage(mProjectCoverImage, mCurrentProject, 100);
 
-		// We get the list of existing expenses and create the expense list adapter
+		// Getting the list of existing expenses and create the expense list adapter
 		try {
 			mUserExpenses = getHelper().getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
 		} catch (SQLException e) {
@@ -69,13 +85,13 @@ public class ProjectFragment extends BaseFragment {
 		}
 		UserExpenseAdapter projectAdapter = new UserExpenseAdapter(mUserExpenses);
 
-		// We populate the list of projects for this user
+		// Populating the list of projects for this user
 		mUserExpensesList = (ListView) v.findViewById(R.id.p_expense_list_listView);
 		mUserExpensesList.setAdapter(projectAdapter);
 		mUserExpensesList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// We create an intent to the ProjectActivity sending the information from the clicked project
+				// Creating an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
 				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
 				Globals.setExpenseActivityExpenseId(mUserExpenses.get(position).getId());
@@ -83,12 +99,12 @@ public class ProjectFragment extends BaseFragment {
 			}
 		});
 
-		// We get the reference to the add new list button and implement a OnClickListener
+		// Getting the reference to the add new list button and implement a OnClickListener
 		mAddNewExpense = (Button) v.findViewById(R.id.p_add_expense_button);
 		mAddNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// We move to the project creation screen
+				// Moving to the project creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
 				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
 				startActivity(intent);
@@ -142,6 +158,23 @@ public class ProjectFragment extends BaseFragment {
 
 		// Refreshing member list when coming back from the Add People fragment
 		((BaseAdapter) mUserExpensesList.getAdapter()).notifyDataSetChanged(); 
+	}
+
+	@Override
+	protected ImageView getImageView() {
+		return mProjectCoverImage;
+	}
+
+	@Override
+	protected void executeOnImageSelection(Bitmap selectedBitmap) {
+		// Persisting selected image to database
+		try {
+			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, mCurrentProject.getId()).get(0);
+			projectCoverImage.setAvatarData(ImageUtils.bitmapToByteArray(selectedBitmap,ImageUtils.IMAGE_QUALITY_MAX));
+			getHelper().getProjectCoverImageDao().createOrUpdate(projectCoverImage);
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
 	}
 
 	@Override

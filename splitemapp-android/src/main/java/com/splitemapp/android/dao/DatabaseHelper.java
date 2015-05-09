@@ -24,6 +24,7 @@ import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.SyncStatus;
@@ -65,6 +66,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private Dao<InviteStatus, Short> inviteStatusDao = null;
 	private Dao<ExpenseCategory, Short> expenseCategoryDao = null;
 	private Dao<Project, Long> projectDao = null;
+	private Dao<ProjectCoverImage, Long> projectCoverImageDao = null;
 	private Dao<User, Long> userDao = null;
 	private Dao<UserAvatar, Long> userAvatarDao = null;
 	private Dao<UserContactData, Long> userContactDataDao = null;
@@ -96,6 +98,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.createTable(connectionSource, InviteStatus.class);
 			TableUtils.createTable(connectionSource, ExpenseCategory.class);
 			TableUtils.createTable(connectionSource, Project.class);
+			TableUtils.createTable(connectionSource, ProjectCoverImage.class);
 			TableUtils.createTable(connectionSource, User.class);
 			TableUtils.createTable(connectionSource, UserAvatar.class);
 			TableUtils.createTable(connectionSource, UserContactData.class);
@@ -131,6 +134,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			TableUtils.dropTable(connectionSource, InviteStatus.class, true);
 			TableUtils.dropTable(connectionSource, ExpenseCategory.class, true);
 			TableUtils.dropTable(connectionSource, Project.class, true);
+			TableUtils.dropTable(connectionSource, ProjectCoverImage.class, true);
 			TableUtils.dropTable(connectionSource, User.class, true);
 			TableUtils.dropTable(connectionSource, UserContactData.class, true);
 			TableUtils.dropTable(connectionSource, UserExpense.class, true);
@@ -244,6 +248,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return projectDao;
 	}
+	
+	/**
+	 * Returns the Database Access Object (DAO) for the ProjectCoverImage class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<ProjectCoverImage, Long> getProjectCoverImageDao() throws SQLException {
+		if (projectCoverImageDao == null) {
+			projectCoverImageDao = getDao(ProjectCoverImage.class);
+		}
+		return projectCoverImageDao;
+	}
 
 	/**
 	 * Returns the Database Access Object (DAO) for the User class. It will create it or just give the cached
@@ -346,6 +361,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		inviteStatusDao = null;
 		expenseCategoryDao = null;
 		projectDao = null;
+		projectCoverImageDao = null;
 		userDao = null;
 		userAvatarDao = null;
 		userContactDataDao = null;

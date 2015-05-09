@@ -4,14 +4,27 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/p_project_title_textView"
+    <RelativeLayout
+        android:id="@+id/imagelayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="10dp"
-        android:gravity="bottom"
-        android:textColor="@color/white"
-        android:textSize="28sp" />
+        android:layout_height="100dp" >
+
+        <ImageView
+            android:id="@+id/p_project_cover_image_imageView"
+            android:contentDescription="@string/p_cover_image_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/p_project_title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/p_project_cover_image_imageView"
+	        android:padding="10dp"
+        	android:textColor="@color/white"
+            android:textSize="28sp" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/p_expense_list_listView"

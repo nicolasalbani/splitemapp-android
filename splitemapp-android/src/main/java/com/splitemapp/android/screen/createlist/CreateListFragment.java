@@ -29,6 +29,7 @@ import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
@@ -131,6 +132,11 @@ public class CreateListFragment extends BaseFragment {
 					project.setProjectType(projectType);
 					project.setTitle(mListName.getText().toString());
 					getHelper().getProjectDao().create(project);
+					
+					// Creating empty project image cover
+					ProjectCoverImage projectCoverImage = new ProjectCoverImage();
+					projectCoverImage.setProject(project);
+					getHelper().getProjectCoverImageDao().create(projectCoverImage);
 					
 					// Getting the user to project active status
 					Dao<UserToProjectStatus,Short> userToProjectStatusDao = getHelper().getUserToProjectStatusDao();

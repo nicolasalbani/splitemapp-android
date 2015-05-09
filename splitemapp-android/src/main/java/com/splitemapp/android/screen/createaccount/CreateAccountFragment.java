@@ -1,8 +1,6 @@
 package com.splitemapp.android.screen.createaccount;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.utils.ImageUtils;
@@ -20,8 +17,6 @@ import com.splitemapp.android.utils.ImageUtils;
 public class CreateAccountFragment extends RestfulFragment {
 
 	private static final String TAG = CreateAccountFragment.class.getSimpleName();
-
-	private static final int SELECT_PICTURE = 1;
 
 	private ImageView mAvatar;
 	private Button mCreateAccount;
@@ -54,10 +49,7 @@ public class CreateAccountFragment extends RestfulFragment {
 			@Override
 			public void onClick(View v) {
 				// in onCreate or any event where your want the user to select a file
-				Intent intent = new Intent();
-				intent.setType("image/*");
-				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+				openImageSelector();
 			}
 		});
 
@@ -67,7 +59,7 @@ public class CreateAccountFragment extends RestfulFragment {
 			@Override
 			public void onClick(View v) {
 				// Creating account
-				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar));
+				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar,ImageUtils.IMAGE_QUALITY_MAX));
 				
 				// Redirecting to login screen
 				Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -78,19 +70,14 @@ public class CreateAccountFragment extends RestfulFragment {
 		return v;
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == SELECT_PICTURE  && null != data) {
-			// Getting the image path
-			Uri uri = data.getData();
-			String imagePath = getImagePath(uri);
-
-			// Decoding scaled bitmap to avoid out of memory errors
-			Bitmap scaledBitmap = ImageUtils.decodeScaledBitmap(imagePath, Constants.AVATAR_WIDTH, Constants.AVATAR_HEIGHT);
-
-			// Setting the avatar image
-			Bitmap croppedBitmap = ImageUtils.getCroppedBitmap(scaledBitmap);
-			mAvatar.setImageBitmap(croppedBitmap);
-		}
+	@Override
+	protected ImageView getImageView() {
+		return mAvatar;
+	}
+	
+	@Override
+	protected boolean getCropImage() {
+		return true;
 	}
 
 	@Override
