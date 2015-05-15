@@ -70,14 +70,15 @@ public abstract class BaseFragment extends Fragment {
 		Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
 		toast.show();
 	}
-	
+
 	/**
 	 * Opens the image 
 	 */
 	protected void openImageSelector(){
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
-		startActivityForResult(intent, Constants.SELECT_PICTURE_REQUEST_CODE);
+		intent.putExtra("crop", "true");
+		startActivityForResult(Intent.createChooser(intent,"Complete action using"), Constants.SELECT_PICTURE_REQUEST_CODE);
 	}
 
 	/**
@@ -195,7 +196,7 @@ public abstract class BaseFragment extends Fragment {
 			projectAvatarResource.setImageBitmap(ImageUtils.byteArrayToBitmap(coverImage,imageQuality));
 		}
 	}
-	
+
 	/**
 	 * Returns the ImageView to set the selected image to. Must be overriden to work.
 	 * @return
@@ -203,7 +204,7 @@ public abstract class BaseFragment extends Fragment {
 	protected ImageView getImageView(){
 		return null;
 	}
-	
+
 	/**
 	 * Returns whether or not the image should be cropped to a circle. False if not overriden.
 	 * @return
@@ -211,32 +212,28 @@ public abstract class BaseFragment extends Fragment {
 	protected boolean getCropImage(){
 		return false;
 	}
-	
+
 	/**
 	 * Executes custom code upon picking an image
 	 */
 	protected void executeOnImageSelection(Bitmap selectedBitmap){}
-	
+
 	/**
 	 * Acts upon image selection
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == Constants.SELECT_PICTURE_REQUEST_CODE  && null != data) {
-			// Getting the image path
-			Uri uri = data.getData();
-			String imagePath = getImagePath(uri);
+			// Getting the image bitmap
+			Bitmap bitmap = data.getExtras().getParcelable("data");
 
-			// Decoding scaled bitmap to avoid out of memory errors
-			Bitmap bitmap = ImageUtils.decodeScaledBitmap(imagePath, getImageView().getWidth(), getImageView().getHeight());
-
-			// Cropping the image if required
+			// Cropping the image if required, otherwise scaling image
 			if(getCropImage()){
 				bitmap = ImageUtils.getCroppedBitmap(bitmap);
 			} else {
 				bitmap = Bitmap.createScaledBitmap(bitmap, getImageView().getWidth(), getImageView().getHeight(), true);
 			}
-			
+
 			// Executing custom code upon picking an image
 			executeOnImageSelection(bitmap);
 
@@ -244,4 +241,5 @@ public abstract class BaseFragment extends Fragment {
 			getImageView().setImageBitmap(bitmap);
 		}
 	}
+
 }

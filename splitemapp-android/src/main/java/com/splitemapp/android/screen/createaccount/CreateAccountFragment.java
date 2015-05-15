@@ -15,7 +15,7 @@ import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.utils.ImageUtils;
 
 public class CreateAccountFragment extends RestfulFragment {
-
+	
 	private static final String TAG = CreateAccountFragment.class.getSimpleName();
 
 	private ImageView mAvatar;
