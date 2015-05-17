@@ -24,7 +24,6 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
-import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -156,8 +155,7 @@ public class CreateListFragment extends BaseFragment {
 					Globals.setCreateListActivityUserList(new ArrayList<User>());
 					
 					// Moving back to the home screen
-					Intent intent = new Intent(getActivity(), HomeActivity.class);
-					startActivity(intent);
+					getActivity().finish();
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);
 				}
