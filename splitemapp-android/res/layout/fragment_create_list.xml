@@ -35,11 +35,17 @@
         android:drawablePadding="5dp"
         android:inputType="numberDecimal" />
 
+     <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/white" />
+    
     <TextView
         style="@style/CreateListTextView"
         android:background="@color/grey"
-        android:textColor="@color/black"
-        android:text="@string/cl_list_members_list" />
+        android:gravity="center_vertical"
+        android:text="@string/cl_list_members_list"
+        android:textColor="@color/black" />
 
     <ListView
         android:id="@+id/cl_users_listView"
@@ -66,11 +72,5 @@
         android:text="@string/cl_list_add_people"
         android:textColor="@color/blue"
         android:textSize="20sp" />
-
-    <!-- <Button -->
-    <!-- android:id="@+id/cl_new_list_button" -->
-    <!-- style="@style/Button" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:text="@string/cl_new_list_button" /> -->
 
 </LinearLayout>
