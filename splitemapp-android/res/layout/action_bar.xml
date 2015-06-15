@@ -1,15 +1,15 @@
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/actionBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/seablue"
-    app:contentInsetStart="0dp" >
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/actionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:background="@color/seablue"
+        app:contentInsetStart="0dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,11 +40,11 @@
                 android:textColor="@color/white"
                 android:textSize="22sp" />
         </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:background="@drawable/toolbar_dropshadow" />
-    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/toolbar_dropshadow" />
 
-</android.support.v7.widget.Toolbar>
+</LinearLayout>
