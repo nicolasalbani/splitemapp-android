@@ -176,8 +176,8 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			//Configure the view for this User
 			User user = getItem(position);
 
-			TextView userFirstName = (TextView)convertView.findViewById(R.id.cl_user_first_name);
-			userFirstName.setText(user.getFirstName());
+			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
+			userName.setText(user.getFirstName() + " " + user.getLastName());
 
 			return convertView;
 		}

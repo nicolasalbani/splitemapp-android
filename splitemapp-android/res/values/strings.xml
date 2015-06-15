@@ -44,6 +44,7 @@
     <string name="cl_list_members_list">Member list</string>
     <string name="cl_list_add_people">Add more people</string>
     <string name="cl_new_list_button">Create list</string>
+    <string name="cl_user_avatar_description">User Avatar</string>
     
     <!-- Add User Expense Screen -->
     <string name="ue_icon_description">User Expense Icon</string>
