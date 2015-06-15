@@ -2,12 +2,14 @@ package com.splitemapp.android.constants;
 
 import java.util.List;
 
+import com.splitemapp.android.screen.createlist.CreateListFragment;
 import com.splitemapp.commons.domain.User;
 
 public class Globals {
 	private static List<User> createListActivityUserList;
 	private static Long expenseActivityExpenseId;
 	private static Long expenseActivityProjectId;
+	private static CreateListFragment createListFragment;
 
 	public static List<User> getCreateListActivityUserList() {
 		return createListActivityUserList;
@@ -33,5 +35,13 @@ public class Globals {
 	public static void setExpenseActivityExpenseId(
 			Long expenseActivityExpenseId) {
 		Globals.expenseActivityExpenseId = expenseActivityExpenseId;
+	}
+
+	public static CreateListFragment getCreateListFragment() {
+		return createListFragment;
+	}
+
+	public static void setCreateListFragment(CreateListFragment createListFragment) {
+		Globals.createListFragment = createListFragment;
 	}
 }

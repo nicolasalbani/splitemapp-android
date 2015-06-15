@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <include layout="@layout/action_bar"/>
+    
     <TextView
         style="@style/CreateListTextView"
         android:text="@string/ap_contacts" />

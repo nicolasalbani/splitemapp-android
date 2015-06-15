@@ -20,8 +20,6 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
 		//Setting the content view to be the layout for our crime activity
 		setContentView(R.layout.activity_fragment);
 		
-		getSupportActionBar().setTitle(R.string.ca_create_account_button);
-		
 		//Getting the fragment manager
 		FragmentManager fm = getSupportFragmentManager();
 		

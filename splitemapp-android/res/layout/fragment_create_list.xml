@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <include layout="@layout/action_bar"/>
+
     <TextView
         style="@style/CreateListTextView"
         android:text="@string/cl_list_name" />
@@ -29,12 +31,14 @@
         android:id="@+id/cl_budget_editText"
         style="@style/CreateListEditText"
         android:drawableLeft="@drawable/dollar_sign"
-        android:drawablePadding="5dp"
         android:drawableStart="@drawable/dollar_sign"
+        android:drawablePadding="5dp"
         android:inputType="numberDecimal" />
 
     <TextView
         style="@style/CreateListTextView"
+        android:background="@color/grey"
+        android:textColor="@color/black"
         android:text="@string/cl_list_members_list" />
 
     <ListView
@@ -63,10 +67,10 @@
         android:textColor="@color/blue"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/cl_new_list_button"
-        style="@style/Button"
-        android:layout_width="match_parent"
-        android:text="@string/cl_new_list_button" />
+    <!-- <Button -->
+    <!-- android:id="@+id/cl_new_list_button" -->
+    <!-- style="@style/Button" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:text="@string/cl_new_list_button" /> -->
 
 </LinearLayout>

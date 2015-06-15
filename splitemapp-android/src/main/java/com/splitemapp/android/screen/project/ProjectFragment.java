@@ -161,12 +161,12 @@ public class ProjectFragment extends BaseFragment {
 	}
 
 	@Override
-	protected ImageView getImageView() {
+	public ImageView getImageView() {
 		return mProjectCoverImage;
 	}
 
 	@Override
-	protected void executeOnImageSelection(Bitmap selectedBitmap) {
+	public void executeOnImageSelection(Bitmap selectedBitmap) {
 		// Persisting selected image to database
 		try {
 			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, mCurrentProject.getId()).get(0);

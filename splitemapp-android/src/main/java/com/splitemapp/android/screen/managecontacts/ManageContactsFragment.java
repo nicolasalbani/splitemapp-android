@@ -19,10 +19,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.screen.RestfulFragment;
+import com.splitemapp.android.screen.RestfulFragmentWithActionbar;
 import com.splitemapp.commons.domain.User;
 
-public class ManageContactsFragment extends RestfulFragment {
+public class ManageContactsFragment extends RestfulFragmentWithActionbar {
 
 	private static final String TAG = ManageContactsFragment.class.getSimpleName();
 
@@ -47,7 +47,7 @@ public class ManageContactsFragment extends RestfulFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_manage_contacts, container, false);
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// We add all the users in the local user database (contacts)
 		List<User> allContacts = null;
@@ -125,5 +125,20 @@ public class ManageContactsFragment extends RestfulFragment {
 	@Override
 	public String getLoggingTag() {
 		return TAG;
+	}
+
+	@Override
+	protected int getFragmentResourceId() {
+		return R.layout.fragment_manage_contacts;
+	}
+
+	@Override
+	protected int getTitleResourceId() {
+		return R.string.mc_title;
+	}
+
+	@Override
+	protected void doneAction() {
+		getActivity().finish();
 	}
 }

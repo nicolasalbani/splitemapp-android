@@ -28,7 +28,7 @@ import com.splitemapp.commons.domain.User;
 
 public abstract class BaseFragment extends Fragment {
 
-	protected DatabaseHelper databaseHelper = null;
+	public DatabaseHelper databaseHelper = null;
 
 	static{
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
@@ -55,7 +55,7 @@ public abstract class BaseFragment extends Fragment {
 	 * This method calls the OpenHelperManager getHelper static method with the proper DatabaseHelper class reference 
 	 * @return DatabaseHelper object which offers DAO for every domain entity
 	 */
-	protected DatabaseHelper getHelper() {
+	public DatabaseHelper getHelper() {
 		if (databaseHelper == null) {
 			databaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
 		}
@@ -66,7 +66,7 @@ public abstract class BaseFragment extends Fragment {
 	 * Convenience method to show a Toast with a particular message
 	 * @param message String to be shown in the Toast
 	 */
-	protected void showToast(String message){
+	public void showToast(String message){
 		Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
 		toast.show();
 	}
@@ -74,7 +74,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Opens the image 
 	 */
-	protected void openImageSelector(){
+	public void openImageSelector(){
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.putExtra("crop", "true");
@@ -86,7 +86,7 @@ public abstract class BaseFragment extends Fragment {
 	 * @param uri URI from the image
 	 * @return String containing the full path to the image
 	 */
-	protected String getImagePath(Uri uri) {
+	public String getImagePath(Uri uri) {
 		// just some safety built in 
 		if( uri == null ) {
 			return null;
@@ -110,7 +110,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Refreshes the fragment you are on
 	 */
-	protected void refreshFragment(){
+	public void refreshFragment(){
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 		transaction.detach(this);
 		transaction.attach(this);
@@ -121,7 +121,7 @@ public abstract class BaseFragment extends Fragment {
 	 * Starts the Home activity
 	 * @param userId Long containing the user id from the local DB
 	 */
-	protected void startHomeActivity(Long userId){
+	public void startHomeActivity(Long userId){
 		Intent intent = new Intent(getActivity(), HomeActivity.class);
 		startActivity(intent);
 	}
@@ -130,7 +130,7 @@ public abstract class BaseFragment extends Fragment {
 	 * Returns a list with all the email addresses from the device contacts 
 	 * @return
 	 */
-	protected List<String> getContactsEmailAddressList(){
+	public List<String> getContactsEmailAddressList(){
 		List<String> contactsEmailAddressList = new ArrayList<String>();
 
 		ContentResolver cr = getActivity().getContentResolver();
@@ -161,7 +161,7 @@ public abstract class BaseFragment extends Fragment {
 	 * @param user
 	 * @param imageQuality
 	 */
-	protected void setUsetAvatar(ImageView userAvatarResource, User user, int imageQuality){
+	public void setUsetAvatar(ImageView userAvatarResource, User user, int imageQuality){
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {
@@ -182,7 +182,7 @@ public abstract class BaseFragment extends Fragment {
 	 * @param user
 	 * @param imageQuality
 	 */
-	protected void setProjectCoverImage(ImageView projectAvatarResource, Project project, int imageQuality){
+	public void setProjectCoverImage(ImageView projectAvatarResource, Project project, int imageQuality){
 		//Getting the project image cover
 		byte[] coverImage = null;
 		try {
@@ -201,7 +201,7 @@ public abstract class BaseFragment extends Fragment {
 	 * Returns the ImageView to set the selected image to. Must be overriden to work.
 	 * @return
 	 */
-	protected ImageView getImageView(){
+	public ImageView getImageView(){
 		return null;
 	}
 
@@ -209,14 +209,14 @@ public abstract class BaseFragment extends Fragment {
 	 * Returns whether or not the image should be cropped to a circle. False if not overriden.
 	 * @return
 	 */
-	protected boolean getCropImage(){
+	public boolean getCropImage(){
 		return false;
 	}
 
 	/**
 	 * Executes custom code upon picking an image
 	 */
-	protected void executeOnImageSelection(Bitmap selectedBitmap){}
+	public void executeOnImageSelection(Bitmap selectedBitmap){}
 
 	/**
 	 * Acts upon image selection

@@ -18,10 +18,10 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.BaseFragmentWithActionbar;
 import com.splitemapp.commons.domain.User;
 
-public class AddPeopleFragment extends BaseFragment {
+public class AddPeopleFragment extends BaseFragmentWithActionbar {
 
 	private static final String TAG = AddPeopleFragment.class.getSimpleName();
 
@@ -46,7 +46,8 @@ public class AddPeopleFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_add_people, container, false);
+		// Inflating the action bar and obtaining the View object
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// We add all the users in the local user database (contacts)
 		List<User> allContacts = null;
@@ -72,7 +73,7 @@ public class AddPeopleFragment extends BaseFragment {
 				if (view == null){
 					view = getActivity().getLayoutInflater().inflate(R.layout.list_item_contact, parent, false);
 				}
-				
+
 				User user = mContacts.get(position);
 
 				//Only users different to current user can be added or removed
@@ -138,4 +139,18 @@ public class AddPeopleFragment extends BaseFragment {
 		return TAG;
 	}
 
+	@Override
+	protected int getFragmentResourceId() {
+		return R.layout.fragment_add_people;
+	}
+
+	@Override
+	protected int getTitleResourceId() {
+		return R.string.ap_title;
+	}
+
+	@Override
+	protected void doneAction() {
+		getActivity().finish();
+	}
 }

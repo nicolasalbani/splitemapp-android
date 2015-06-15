@@ -73,6 +73,13 @@
 		<!-- <type>aar</type> -->
 		<!-- </dependency> -->
 
+		<!-- FAB Compatibility Library -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.github.wangjiegulu</groupId> -->
+<!-- 			<artifactId>RapidFloatingActionButton</artifactId> -->
+<!-- 			<version>1.0.1</version> -->
+<!-- 		</dependency> -->
+
 		<!-- ORM Lite dependencies -->
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>

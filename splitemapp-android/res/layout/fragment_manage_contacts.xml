@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <include layout="@layout/action_bar"/>
+    
     <Button
         android:id="@+id/mc_synchronize_contacts_button"
         style="@style/Button"

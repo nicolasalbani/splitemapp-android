@@ -50,7 +50,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param userName String containing the user name
 	 * @param password String containing the password
 	 */
-	protected void createAccount(String email, String userName, String password, byte[] avatar){
+	public void createAccount(String email, String userName, String password, byte[] avatar){
 		new CreateAccountRequestTask(email, userName, password, avatar).execute();
 	}
 
@@ -59,7 +59,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param userName String containing the user name
 	 * @param password String containing the password
 	 */
-	protected void login(String userName, String password){
+	public void login(String userName, String password){
 		new LoginRequestTask(userName, password).execute();
 	}
 	
@@ -67,7 +67,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Create an asynchronous synchronize contacts request
 	 * @param contactsEmailAddressList List containing contacts email addresses
 	 */
-	protected void synchronizeContacts(List<String> contactsEmailAddressList){
+	public void synchronizeContacts(List<String> contactsEmailAddressList){
 		new SynchronizeContactsRequestTask(contactsEmailAddressList).execute();
 	}
 
@@ -78,7 +78,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param responseType <T> The response class that the rest service call is supposed to return
 	 * @return	<T> An instance of the response type specified as a parameter
 	 */
-	protected <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
+	public <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
 		// We create the url based on the provider serviceName
 		String url = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
 
@@ -117,7 +117,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected CreateAccountResponse doInBackground(Void... params) {
+		public CreateAccountResponse doInBackground(Void... params) {
 			try {
 				// We create the login request
 				CreateAccountRequest createAccountRequest = new CreateAccountRequest();
@@ -137,7 +137,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected void onPostExecute(CreateAccountResponse createAccountResponse) {
+		public void onPostExecute(CreateAccountResponse createAccountResponse) {
 			boolean createAccountSuccess = false;
 
 			// We validate the response
@@ -190,7 +190,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected LoginResponse doInBackground(Void... params) {
+		public LoginResponse doInBackground(Void... params) {
 			try {
 				// Creating the login request
 				LoginRequest loginRequest = new LoginRequest();
@@ -209,7 +209,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected void onPostExecute(LoginResponse loginResponse) {
+		public void onPostExecute(LoginResponse loginResponse) {
 			boolean loginSuccess = false;
 
 			// Validating the response
@@ -287,7 +287,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected SynchronizeContactsResponse doInBackground(Void... params) {
+		public SynchronizeContactsResponse doInBackground(Void... params) {
 			try {
 				// We create the login request
 				SynchronizeContactsRequest synchronizeContactsRequest = new SynchronizeContactsRequest();
@@ -303,7 +303,7 @@ public abstract class RestfulFragment extends BaseFragment{
 		}
 
 		@Override
-		protected void onPostExecute(SynchronizeContactsResponse synchronizeContactsResponse) {
+		public void onPostExecute(SynchronizeContactsResponse synchronizeContactsResponse) {
 			boolean createAccountSuccess = false;
 
 			// Validating the response

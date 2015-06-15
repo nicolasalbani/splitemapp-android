@@ -71,12 +71,12 @@ public class CreateAccountFragment extends RestfulFragment {
 	}
 
 	@Override
-	protected ImageView getImageView() {
+	public ImageView getImageView() {
 		return mAvatar;
 	}
 	
 	@Override
-	protected boolean getCropImage() {
+	public boolean getCropImage() {
 		return true;
 	}
 
