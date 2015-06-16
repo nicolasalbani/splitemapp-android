@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/action_bar"/>
+    <include layout="@layout/action_bar" />
 
     <TextView
         style="@style/CreateListTextView"
@@ -31,46 +31,55 @@
         android:id="@+id/cl_budget_editText"
         style="@style/CreateListEditText"
         android:drawableLeft="@drawable/dollar_sign"
-        android:drawableStart="@drawable/dollar_sign"
         android:drawablePadding="5dp"
+        android:drawableStart="@drawable/dollar_sign"
         android:inputType="numberDecimal" />
 
-     <View
+    <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/white" />
-    
-    <TextView
-        style="@style/CreateListTextView"
-        android:background="@color/grey"
-        android:gravity="center_vertical"
-        android:text="@string/cl_list_members_list"
-        android:textColor="@color/black" />
 
-    <ListView
-        android:id="@+id/cl_users_listView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="@color/white" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-    <include layout="@layout/line_separator" />
+        <TextView
+            android:id="@+id/cl_list_members_textView"
+            style="@style/CreateListTextView"
+            android:layout_alignParentTop="true"
+            android:background="@color/grey"
+            android:text="@string/cl_list_members_list"
+            android:textColor="@color/hard_grey" />
 
-    <TextView
-        android:id="@+id/cl_add_people_textView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/white"
-        android:drawableLeft="@drawable/plus_sign_white"
-        android:drawablePadding="10dp"
-        android:drawableStart="@drawable/plus_sign_white"
-        android:gravity="center|start"
-        android:paddingEnd="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingStart="20dp"
-        android:text="@string/cl_list_add_people"
-        android:textColor="@color/blue"
-        android:textSize="20sp" />
+        <ListView
+            android:id="@+id/cl_users_listView"
+            android:layout_below="@id/cl_list_members_textView"
+            android:layout_above="@id/cl_add_people_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/cl_add_people_textView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:drawableEnd="@drawable/plus_sign_white"
+            android:drawablePadding="10dp"
+            android:drawableRight="@drawable/plus_sign_white"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:text="@string/cl_list_add_people"
+            android:textColor="@color/blue"
+            android:textSize="20sp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

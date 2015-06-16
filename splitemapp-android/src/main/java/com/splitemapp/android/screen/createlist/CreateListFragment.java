@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +33,7 @@ import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
 
@@ -176,9 +179,25 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			//Configure the view for this User
 			User user = getItem(position);
 
+			// Setting the user name
 			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
 			userName.setText(user.getFirstName() + " " + user.getLastName());
+			
+			// Getting the existing user contact data from the user
+			UserContactData userContactData = null;
+			Set<UserContactData> userContactDatas = user.getUserContactDatas();
+			for(UserContactData ucd:userContactDatas){
+				userContactData = ucd;
+			}
+			
+			// Setting the user email
+			TextView userEmail = (TextView)convertView.findViewById(R.id.cl_user_email);
+			userEmail.setText(userContactData.getContactData());
 
+			//Setting the user avatar
+			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cl_user_avatar);
+			setUsetAvatar(userAvatar, user, 10);
+			
 			return convertView;
 		}
 	}
