@@ -56,14 +56,14 @@
         <ListView
             android:id="@+id/cl_users_listView"
             android:layout_below="@id/cl_list_members_textView"
-            android:layout_above="@id/cl_add_people_textView"
+            android:layout_above="@+id/cl_add_people_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white" >
         </ListView>
 
         <TextView
-            android:id="@+id/cl_add_people_textView"
+            android:id="@id/cl_add_people_textView"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
