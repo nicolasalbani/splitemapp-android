@@ -112,7 +112,7 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 
 			//Setting the user avatar
 			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.ap_user_avatar);
-			setUsetAvatar(userAvatar, user, 10);
+			setUsetAvatar(userAvatar, user, 40);
 
 			//Setting the user first name
 			TextView userFirstName = (TextView)convertView.findViewById(R.id.ap_user_first_name);

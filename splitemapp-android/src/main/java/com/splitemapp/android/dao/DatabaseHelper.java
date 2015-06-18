@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -507,7 +509,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		Long loggedUserId = getLoggedUserId();
 		if(loggedUserId != null){
+			// Setting User information
 			user = getUserById(getLoggedUserId());
+			
+			// Setting UserContactData information
+			Set<UserContactData> userContactDatas = new HashSet<UserContactData>();
+			userContactDatas.add(getLoggedUserContactData());
+			user.setUserContactDatas(userContactDatas);
 		}
 
 		return user;
