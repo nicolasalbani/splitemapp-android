@@ -1,64 +1,31 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" 
-    android:background="@color/seablue">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        style="@style/NoActionBarTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <TextView
+        style="@style/LoginTextView"
+        android:text="@string/li_username_hint" />
 
-        <View 
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
-        
-        <TextView
-            style="@style/LoginTextView"
-            android:text="@string/li_username_hint" />
+    <EditText
+        android:id="@+id/li_username_editText"
+        style="@style/LoginEditText"
+        android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/li_username_editText"
-            style="@style/LoginEditText"
-            android:inputType="textEmailAddress" />
+    <TextView
+        style="@style/LoginTextView"
+        android:text="@string/li_password_hint" />
 
-        <TextView
-            style="@style/LoginTextView"
-            android:text="@string/li_password_hint" />
-        
-        <EditText
-            android:id="@+id/li_password_editText"
-            style="@style/LoginEditText"
-            android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/li_password_editText"
+        style="@style/LoginEditText"
+        android:inputType="textPassword" />
 
-        <Button
-            android:id="@+id/li_login_button"
-            style="@style/Button"
-            android:text="@string/li_log_in_button" />
+    <Button
+        android:id="@+id/li_login_button"
+        style="@style/Button"
+        android:layout_marginTop="20dp"
+        android:text="@string/li_log_in_button" />
 
-        <LinearLayout
-            style="@style/ActivityTheme"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/li_sign_up_question"
-                android:textColor="@color/text" />
-
-            <TextView
-                android:id="@+id/li_sign_up_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:text="@string/li_sign_up_link"
-                android:textColor="@color/green" />
-        </LinearLayout>
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

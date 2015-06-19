@@ -12,14 +12,14 @@
     <!-- Login Screen -->
     <string name="li_username_hint">Username or Email</string>
     <string name="li_password_hint">Password</string>
-    <string name="li_log_in_button">LOG IN</string>
+    <string name="li_log_in_button">Login</string>
     <string name="li_sign_up_question">Don\'t have an account?</string>
     <string name="li_sign_up_link">Sign up</string>
 
     <!-- Create Account Screen -->
     <string name="ca_avatar_description">Avatar</string>
-    <string name="ca_username_hint">Username</string>
-    <string name="ca_email_hint">Email</string>
+    <string name="ca_name_hint">Name</string>
+    <string name="ca_email_hint">E-mail</string>
     <string name="ca_password_hint">Password</string>
     <string name="ca_create_account_title">Create Account</string>
     <string name="ca_create_account_button">Create Account</string>
@@ -30,6 +30,8 @@
     <!-- Home Screen -->
     <string name="h_project_icon_description">ProjectIcon</string>
     <string name="h_avatar_description">Avatar</string>
+    <string name="h_name">Name</string>
+    <string name="h_email">E-mail</string>
     <string name="h_new_list_button">New list of expenses</string>
     <string name="h_logout">Logout</string>
     <string name="h_synchronize">Synchronize</string>

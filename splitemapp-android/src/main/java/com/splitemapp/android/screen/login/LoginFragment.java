@@ -2,7 +2,6 @@ package com.splitemapp.android.screen.login;
 
 import java.sql.SQLException;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragment;
-import com.splitemapp.android.screen.createaccount.CreateAccountActivity;
 import com.splitemapp.commons.domain.User;
 
 public class LoginFragment extends RestfulFragment {
@@ -24,7 +21,6 @@ public class LoginFragment extends RestfulFragment {
 	private Button mLogin;
 	private EditText mUserName;
 	private EditText mPassword;
-	private TextView mSignUp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,16 +62,6 @@ public class LoginFragment extends RestfulFragment {
 					Log.e(TAG, "SQLException caught!", e);
 				}
 				login(mUserName.getText().toString(), mPassword.getText().toString());
-			}
-		});
-
-		// We get the reference to the sign up button and implement a OnClickListener
-		mSignUp = (TextView) v.findViewById(R.id.li_sign_up_link);
-		mSignUp.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), CreateAccountActivity.class);
-				startActivity(intent);
 			}
 		});
 

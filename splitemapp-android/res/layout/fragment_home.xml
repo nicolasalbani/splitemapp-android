@@ -1,61 +1,64 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ActivityTheme"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        style="@style/ActivityTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="0.30"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
+    <RelativeLayout
+        android:id="@+id/h_topLayout"
+        style="@style/NoActionBarTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
 
         <ImageView
             android:id="@+id/h_avatar_imageView"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:contentDescription="@string/h_avatar_description"
-            android:paddingEnd="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:paddingStart="20dp"
+            android:padding="10dp"
             android:src="@drawable/avatar_placeholder" />
 
-        <LinearLayout
-            style="@style/ActivityTheme"
+        <TextView
+            android:id="@+id/h_first_name_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_marginTop="25dp"
+            android:layout_toEndOf="@id/h_avatar_imageView"
+            android:layout_toRightOf="@id/h_avatar_imageView"
+            android:text="@string/h_name"
+            android:textColor="@color/black"
+            android:textSize="28sp" />
 
-            <TextView
-                android:id="@+id/h_first_name_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/h_email_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-        </LinearLayout>
-    </LinearLayout>
+        <TextView
+            android:id="@+id/h_email_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/h_first_name_textView"
+            android:layout_toEndOf="@id/h_avatar_imageView"
+            android:layout_toRightOf="@id/h_avatar_imageView"
+            android:text="@string/h_email"
+            android:textColor="@color/grey"
+            android:textSize="20sp" />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/h_projects_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.60"
-        android:background="@color/white" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/h_new_list_button"
+        android:layout_below="@id/h_topLayout" />
 
     <Button
-        android:id="@+id/h_new_list_button"
+        android:id="@id/h_new_list_button"
         style="@style/Button"
-        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="@string/h_new_list_button" />
 
-</LinearLayout>
+</RelativeLayout>

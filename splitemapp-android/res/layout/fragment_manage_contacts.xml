@@ -1,25 +1,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ActivityGrayTheme"
+    style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <include layout="@layout/action_bar"/>
-    
-    <Button
-        android:id="@+id/mc_synchronize_contacts_button"
-        style="@style/Button"
-        android:text="@string/mc_synchronize_contacts_button" />
-    
-    <TextView
-        style="@style/CreateListTextView"
-        android:text="@string/mc_contacts" />
 
-    <ListView
-        android:id="@+id/mc_contacts_listView"
+    <include layout="@layout/action_bar" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white" >
-    </ListView>
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/mc_contacts_textView"
+            style="@style/CreateListTextView"
+            android:layout_alignParentTop="true"
+            android:text="@string/mc_contacts" />
+
+        <ListView
+            android:id="@+id/mc_contacts_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/mc_synchronize_contacts_button"
+            android:layout_below="@id/mc_contacts_textView"
+            android:background="@color/white" >
+        </ListView>
+
+        <Button
+            android:id="@id/mc_synchronize_contacts_button"
+            style="@style/Button"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/mc_synchronize_contacts_button" />
+    </RelativeLayout>
 
 </LinearLayout>

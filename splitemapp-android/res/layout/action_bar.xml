@@ -14,6 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/seablue"
             android:padding="10dp" >
 
             <TextView
@@ -28,6 +29,7 @@
                 android:gravity="start"
                 android:text="@string/ab_title"
                 android:textColor="@color/white"
+                android:background="@color/seablue"
                 android:textSize="22sp" />
 
             <TextView
@@ -38,6 +40,7 @@
                 android:layout_alignParentRight="true"
                 android:text="@string/ab_done"
                 android:textColor="@color/white"
+                android:background="@color/seablue"
                 android:textSize="22sp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
