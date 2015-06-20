@@ -27,14 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.splitemapp.android.screen.login.LoginActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.createaccount.CreateAccountActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="com.splitemapp.android.screen.home.HomeActivity"
             android:screenOrientation="portrait" >
         </activity>

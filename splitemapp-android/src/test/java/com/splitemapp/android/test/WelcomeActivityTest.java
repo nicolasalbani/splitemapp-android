@@ -12,17 +12,17 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.screen.login.LoginActivity;
+import com.splitemapp.android.screen.welcome.WelcomeActivity;
 
 @Config(emulateSdk = 18) 
 @RunWith(RobolectricTestRunner.class)
-public class LoginActivityTest {
+public class WelcomeActivityTest {
 
-	private LoginActivity activity;
+	private WelcomeActivity activity;
 
 	@Before
 	public void setup()  {
-		activity = Robolectric.buildActivity(LoginActivity.class).create().get();
+		activity = Robolectric.buildActivity(WelcomeActivity.class).create().get();
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class LoginActivityTest {
 
 	@Test
 	public void shouldHaveHappySmiles() throws Exception {
-		String hello = new LoginActivity().getResources().getString(R.string.app_name);
+		String hello = new WelcomeActivity().getResources().getString(R.string.app_name);
 		assertThat(hello, equalTo("SplitemApp"));
 	}
 
