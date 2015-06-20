@@ -11,8 +11,7 @@ import android.widget.ImageView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragment;
-import com.splitemapp.android.screen.login.LoginActivity;
-import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.screen.welcome.WelcomeActivity;
 
 public class CreateAccountFragment extends RestfulFragment {
 	
@@ -44,14 +43,14 @@ public class CreateAccountFragment extends RestfulFragment {
 		mPassword = (EditText) v.findViewById(R.id.ca_password_editText);
 
 		// We get the reference to the avatar image
-		mAvatar = (ImageView) v.findViewById(R.id.ca_avatar_imageView);
-		mAvatar.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// in onCreate or any event where your want the user to select a file
-				openImageSelector();
-			}
-		});
+//		mAvatar = (ImageView) v.findViewById(R.id.ca_avatar_imageView);
+//		mAvatar.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				// in onCreate or any event where your want the user to select a file
+//				openImageSelector();
+//			}
+//		});
 
 		// We get the reference to the login button and implement a OnClickListener
 		mCreateAccount = (Button) v.findViewById(R.id.create_account_create_account_button);
@@ -59,10 +58,11 @@ public class CreateAccountFragment extends RestfulFragment {
 			@Override
 			public void onClick(View v) {
 				// Creating account
-				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar,ImageUtils.IMAGE_QUALITY_MAX));
+//				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar,ImageUtils.IMAGE_QUALITY_MAX));
+				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), null);
 				
-				// Redirecting to login screen
-				Intent intent = new Intent(getActivity(), LoginActivity.class);
+				// Redirecting to welcome screen
+				Intent intent = new Intent(getActivity(), WelcomeActivity.class);
 				startActivity(intent);
 			}
 		});

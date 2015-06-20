@@ -22,8 +22,8 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.SynchronizerFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
-import com.splitemapp.android.screen.login.LoginActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
+import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -128,7 +128,7 @@ public class HomeFragment extends SynchronizerFragment {
 				Log.e(TAG, "SQLException caught!", e);
 			}
 			// We move to the login screen
-			nextIntent = new Intent(getActivity(), LoginActivity.class);
+			nextIntent = new Intent(getActivity(), WelcomeActivity.class);
 			startActivity(nextIntent);
 			return true;
 		case R.id.h_synchronize : 

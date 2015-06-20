@@ -441,6 +441,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return userContactData;
 	}
+	
+	/**
+	 * Returns all users in the database with their corresponding UserContactData
+	 * @return
+	 * @throws SQLException 
+	 */
+	public List<User> getAllUsers() throws SQLException{
+		// Getting all users
+		List<User> userList = getUserDao().queryForAll();
+
+		// Setting contact data for all users
+		for(User user:userList){
+			Set<UserContactData> userContactDatas = new HashSet<UserContactData>(); 
+			userContactDatas.add(getUserContactData(user.getId()));
+			user.setUserContactDatas(userContactDatas);
+		}
+
+		return userList;
+	}
 
 	/**
 	 * Gets the UserExpense instance with its ExpenseCategory instance already loaded

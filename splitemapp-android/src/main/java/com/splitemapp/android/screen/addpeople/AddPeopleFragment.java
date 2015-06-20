@@ -52,7 +52,7 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 		// We add all the users in the local user database (contacts)
 		List<User> allContacts = null;
 		try {
-			allContacts = getHelper().getUserDao().queryForAll();
+			allContacts = getHelper().getAllUsers();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}

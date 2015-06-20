@@ -1,60 +1,73 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Theme.AppCompat"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/ue_icon_imageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="5dp"
-        android:layout_gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
         android:contentDescription="@string/ue_icon_description"
+        android:padding="5dp"
         android:src="@drawable/category_placeholder" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/ue_category_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/ue_category_placeholder"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/ue_date_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="@string/ue_date_placeholder"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
-    </LinearLayout>
-
     <TextView
+        android:id="@+id/ue_category_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/ue_icon_imageView"
+        android:layout_toEndOf="@id/ue_icon_imageView"
+        android:text="@string/ue_category_placeholder"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/ue_date_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/ue_icon_imageView"
+        android:layout_toEndOf="@id/ue_icon_imageView"
+        android:layout_below="@id/ue_category_textView"
+        android:text="@string/ue_date_placeholder"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/ue_date_textView"
+        android:layout_toEndOf="@id/ue_icon_imageView"
+        android:layout_toRightOf="@id/ue_icon_imageView"
+        android:background="@color/grey" />
+
+    <TextView
+        android:id="@+id/ue_dollar_sign_textView"
+        android:layout_toLeftOf="@+id/ue_amount_textView"
+        android:layout_toStartOf="@+id/ue_amount_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="@string/ue_currency"
         android:textColor="@color/black"
         android:textSize="22sp" />
 
     <TextView
-        android:id="@+id/ue_amount_textView"
+        android:id="@id/ue_amount_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignBaseline="@+id/ue_dollar_sign_textView"
+        android:padding="5dp"
         android:text="@string/ue_amount_placeholder"
         android:textColor="@color/black"
-        android:textSize="22sp" 
-        android:padding="5dp"/>
+        android:textSize="22sp" />
 
-</LinearLayout>
+</RelativeLayout>

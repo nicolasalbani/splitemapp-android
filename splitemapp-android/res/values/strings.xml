@@ -9,6 +9,10 @@
     <string name="ab_title">Title</string>
     <string name="ab_done">DONE</string>
     
+    <!-- Welcome Screen -->
+    <string name="w_login">LOGIN</string>
+    <string name="w_create_account">CREATE ACCOUNT</string>
+    
     <!-- Login Screen -->
     <string name="li_username_hint">Username or Email</string>
     <string name="li_password_hint">Password</string>
