@@ -4,12 +4,12 @@ package com.splitemapp.android.screen;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.splitemapp.android.R;
 
 
-public abstract class SingleFragmentActivity extends ActionBarActivity {
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
 	protected abstract Fragment createFragment(); 
 	
