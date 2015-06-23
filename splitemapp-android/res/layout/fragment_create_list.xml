@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,31 +56,42 @@
 
         <ListView
             android:id="@+id/cl_users_listView"
-            android:layout_below="@id/cl_list_members_textView"
-            android:layout_above="@+id/cl_add_people_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/cl_list_members_textView"
             android:background="@color/white" >
         </ListView>
 
-        <TextView
-            android:id="@id/cl_add_people_textView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:drawableEnd="@drawable/plus_sign_white"
-            android:drawablePadding="10dp"
-            android:drawableRight="@drawable/plus_sign_white"
-            android:gravity="center_vertical|end"
-            android:paddingEnd="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingStart="20dp"
-            android:text="@string/cl_list_add_people"
-            android:textColor="@color/blue"
-            android:textSize="20sp" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            app:backgroundTint="@color/fabblue"
+            android:src="@drawable/white_plus"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp" />
 
+        <!-- <TextView -->
+        <!-- android:id="@id/cl_add_people_textView" -->
+        <!-- android:layout_width="match_parent" -->
+        <!-- android:layout_height="50dp" -->
+        <!-- android:layout_alignParentBottom="true" -->
+        <!-- android:background="@color/white" -->
+        <!-- android:drawableEnd="@drawable/plus_sign_white" -->
+        <!-- android:drawablePadding="10dp" -->
+        <!-- android:drawableRight="@drawable/plus_sign_white" -->
+        <!-- android:gravity="center_vertical|end" -->
+        <!-- android:paddingEnd="20dp" -->
+        <!-- android:paddingLeft="20dp" -->
+        <!-- android:paddingRight="20dp" -->
+        <!-- android:paddingStart="20dp" -->
+        <!-- android:text="@string/cl_list_add_people" -->
+        <!-- android:textColor="@color/blue" -->
+        <!-- android:textSize="20sp" /> -->
     </RelativeLayout>
 
 </LinearLayout>

@@ -103,15 +103,15 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 		mMembersList.setAdapter(userAdapter);
 
 		// We get the reference to the add people text view and implement a OnClickListener
-		mAddPeople = (TextView) v.findViewById(R.id.cl_add_people_textView);
-		mAddPeople.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// We move to the add people screen
-				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
-				startActivity(intent);
-			}
-		});
+//		mAddPeople = (TextView) v.findViewById(R.id.cl_add_people_textView);
+//		mAddPeople.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				// We move to the add people screen
+//				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+//				startActivity(intent);
+//			}
+//		});
 
 		return v;
 	}
