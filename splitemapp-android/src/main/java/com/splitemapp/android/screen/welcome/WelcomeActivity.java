@@ -2,15 +2,13 @@ package com.splitemapp.android.screen.welcome;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.createaccount.CreateAccountFragment;
@@ -24,41 +22,36 @@ public class WelcomeActivity extends FragmentActivity {
 
 	private CustomPagerAdapter mAdapter;
 	private ViewPager mPager;
-	private TextView login;
-	private TextView createAccount;
+	private TabLayout mTabLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_welcome);
 
-		// Watch for TextView clicks.
-		login = (TextView)findViewById(R.id.w_login_textView);
-		login.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mPager.setCurrentItem(LOGIN_PAGE);
-			}
-		});
-		createAccount = (TextView)findViewById(R.id.w_create_account_textView);
-		createAccount.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				mPager.setCurrentItem(CREATE_ACCOUNT_PAGE);
-			}
-		});
-
 		// Setting the pager adapter
 		mAdapter = new CustomPagerAdapter(getSupportFragmentManager());
 
-		mAdapter.setLogin(login);
-		mAdapter.setCreateAccount(createAccount);
-
 		mPager = (ViewPager)findViewById(R.id.w_viewPager);
 		mPager.setAdapter(mAdapter);
+		
+		mTabLayout = (TabLayout)findViewById(R.id.w_tabLayout);
+		mTabLayout.setTabsFromPagerAdapter(mAdapter);
+		mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabUnselected(Tab tab) {}
+			@Override
+			public void onTabSelected(Tab tab) {
+				mPager.setCurrentItem(tab.getPosition());
+			}
+			@Override
+			public void onTabReselected(Tab tab) {}
+		});
+		
+		mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 	}
 
 	private class CustomPagerAdapter extends FragmentPagerAdapter {
-		private TextView login;
-		private TextView createAccount;
 
 		public CustomPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -67,15 +60,6 @@ public class WelcomeActivity extends FragmentActivity {
 		@Override
 		public int getCount() {
 			return NUMBER_OF_PAGES;
-		}
-
-		@Override
-		public void setPrimaryItem(ViewGroup container, int position, Object object) {
-			// Updating text views
-			updateTextViews(position);
-
-			// Updating the primary item
-			super.setPrimaryItem(container, position, object);
 		}
 
 		@Override
@@ -91,26 +75,17 @@ public class WelcomeActivity extends FragmentActivity {
 			return null;
 		}
 
-		public void setLogin(TextView login) {
-			this.login = login;
-		}
-
-		public void setCreateAccount(TextView createAccount) {
-			this.createAccount = createAccount;
-		}
-
-		private void updateTextViews(int page){
-			switch (page){
+		@Override
+		public CharSequence getPageTitle(int position) {
+			// We define which fragment to return, based on the position
+			switch (position){
 			case LOGIN_PAGE:
-				login.setTextColor(getResources().getColor(R.color.white));
-				createAccount.setTextColor(getResources().getColor(R.color.strongblue));
-				break;
-			case CREATE_ACCOUNT_PAGE:
-				login.setTextColor(getResources().getColor(R.color.strongblue));
-				createAccount.setTextColor(getResources().getColor(R.color.white));
-				break;
+				return getString(R.string.w_login);
+			case CREATE_ACCOUNT_PAGE: 
+				return getString(R.string.w_create_account);
 			}
+			
+			return null;
 		}
 	}
-
 }

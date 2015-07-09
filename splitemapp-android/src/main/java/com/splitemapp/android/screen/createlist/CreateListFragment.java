@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
-import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
 import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
