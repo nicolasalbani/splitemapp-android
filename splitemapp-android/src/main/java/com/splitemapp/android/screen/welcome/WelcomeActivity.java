@@ -45,7 +45,9 @@ public class WelcomeActivity extends FragmentActivity {
 				mPager.setCurrentItem(tab.getPosition());
 			}
 			@Override
-			public void onTabReselected(Tab tab) {}
+			public void onTabReselected(Tab tab) {
+				mPager.setCurrentItem(tab.getPosition());
+			}
 		});
 		
 		mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
