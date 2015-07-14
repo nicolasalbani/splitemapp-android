@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -24,6 +27,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
 import com.splitemapp.android.utils.EconomicUtils;
+import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
@@ -45,7 +49,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 	private Spinner mListType;
 	private EditText mListBudget;
 	private ListView mMembersList;
-	private TextView mAddPeople;
+	private FloatingActionButton mFab;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -93,25 +97,38 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 
-		// We set the global create list user list to the user adapter
+		// Setting the global create list user list to the user adapter
 		UserAdapter userAdapter = new UserAdapter(Globals.getCreateListActivityUserList());
 
-		// We populate the list of projects for this user
+		// Populating the list of projects for this user
 		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
 		mMembersList.setAdapter(userAdapter);
 
-		// We get the reference to the add people text view and implement a OnClickListener
-//		mAddPeople = (TextView) v.findViewById(R.id.cl_add_people_textView);
-//		mAddPeople.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				// We move to the add people screen
-//				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
-//				startActivity(intent);
-//			}
-//		});
+		// Adding action FABs to the main FAB
+		mFab = (FloatingActionButton) v.findViewById(R.id.cl_fab);
+		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
+
+		// Adding add contact FAB
+		customFloatingActionButton.addActionFab(getActivity(), "Add contact", R.drawable.action_fab, new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+			}
+		});
+
+		// Adding add image cover FAB
+		customFloatingActionButton.addActionFab(getActivity(), "Add cover image", R.drawable.action_fab, new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+			}
+		});
 
 		return v;
+	}
+
+	public static int dpToPx(Context context, float dp) {
+		// Reference http://stackoverflow.com/questions/8309354/formula-px-to-dp-dp-to-px-android
+		float scale = context.getResources().getDisplayMetrics().density;
+		return (int) ((dp * scale) + 0.5f);
 	}
 
 	public void createList(){
@@ -180,14 +197,14 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			// Setting the user name
 			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
 			userName.setText(user.getFirstName() + " " + user.getLastName());
-			
+
 			// Getting the existing user contact data from the user
 			UserContactData userContactData = null;
 			Set<UserContactData> userContactDatas = user.getUserContactDatas();
 			for(UserContactData ucd:userContactDatas){
 				userContactData = ucd;
 			}
-			
+
 			// Setting the user email
 			TextView userEmail = (TextView)convertView.findViewById(R.id.cl_user_email);
 			userEmail.setText(userContactData.getContactData());
@@ -195,7 +212,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			//Setting the user avatar
 			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cl_user_avatar);
 			setUsetAvatar(userAvatar, user, 40);
-			
+
 			return convertView;
 		}
 	}

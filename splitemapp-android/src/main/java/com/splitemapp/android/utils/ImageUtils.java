@@ -2,6 +2,7 @@ package com.splitemapp.android.utils;
 
 import java.io.ByteArrayOutputStream;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.Bitmap.Config;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
 public class ImageUtils {
@@ -159,5 +161,17 @@ public class ImageUtils {
 	public static byte[] imageViewToByteArray(ImageView imageView, int imageQuality){
 		Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 		return bitmapToByteArray(bitmap, imageQuality);
+	}
+	
+	/**
+	 * Calculates the provided number into DP units
+	 * @param context
+	 * @param dp
+	 * @return
+	 */
+	public static int calculateDpUnits(Context context, float dp){
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		float fpixels = metrics.density * dp;
+		return (int) (fpixels + 0.5f);
 	}
 }
