@@ -3,3 +3,4 @@
 /res/
 *.project
 /.settings/
+/gen/
