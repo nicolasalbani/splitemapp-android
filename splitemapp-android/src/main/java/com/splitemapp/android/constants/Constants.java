@@ -10,11 +10,15 @@ public class Constants {
 	public static final String LOOPBACK_ADDRESS = "127.0.0.1";
 	
 	// Backend constants
-	public static final String BACKEND_HOST="192.168.0.100";
+	public static final String BACKEND_HOST="135.20.205.179";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-backend-rest";
 	
 	// Request codes
 	public static final int SELECT_PICTURE_REQUEST_CODE = 1;
 	public static final int CROP_PICTURE_REQUEST_CODE = 2;
+	
+	// Parameters
+	public static final String IMAGE_WIDTH = "IMAGE_WIDTH";
+	public static final String IMAGE_HEIGHT = "IMAGE_HEIGTH";
 }

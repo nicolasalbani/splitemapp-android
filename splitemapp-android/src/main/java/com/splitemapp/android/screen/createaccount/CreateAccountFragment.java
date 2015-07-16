@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragment;
@@ -17,7 +16,6 @@ public class CreateAccountFragment extends RestfulFragment {
 	
 	private static final String TAG = CreateAccountFragment.class.getSimpleName();
 
-	private ImageView mAvatar;
 	private Button mCreateAccount;
 	private EditText mEmail;
 	private EditText mUserName;
@@ -42,23 +40,12 @@ public class CreateAccountFragment extends RestfulFragment {
 		mEmail = (EditText) v.findViewById(R.id.ca_email_editText);
 		mPassword = (EditText) v.findViewById(R.id.ca_password_editText);
 
-		// We get the reference to the avatar image
-//		mAvatar = (ImageView) v.findViewById(R.id.ca_avatar_imageView);
-//		mAvatar.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				// in onCreate or any event where your want the user to select a file
-//				openImageSelector();
-//			}
-//		});
-
 		// We get the reference to the login button and implement a OnClickListener
 		mCreateAccount = (Button) v.findViewById(R.id.create_account_create_account_button);
 		mCreateAccount.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// Creating account
-//				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), ImageUtils.imageViewToByteArray(mAvatar,ImageUtils.IMAGE_QUALITY_MAX));
 				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), null);
 				
 				// Redirecting to welcome screen
@@ -68,11 +55,6 @@ public class CreateAccountFragment extends RestfulFragment {
 		});
 
 		return v;
-	}
-
-	@Override
-	public ImageView getImageView() {
-		return mAvatar;
 	}
 	
 	@Override

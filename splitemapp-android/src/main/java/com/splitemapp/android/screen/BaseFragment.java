@@ -29,6 +29,9 @@ import com.splitemapp.commons.domain.User;
 public abstract class BaseFragment extends Fragment {
 
 	public DatabaseHelper databaseHelper = null;
+	
+	private int imageWidth;
+	private int imageHeight;
 
 	static{
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
@@ -74,7 +77,12 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Opens the image 
 	 */
-	public void openImageSelector(){
+	public void openImageSelector(Integer imageWidth, Integer imageHeight){
+		// Setting image size
+		this.imageHeight = imageHeight;
+		this.imageWidth = imageWidth;
+		
+		// Calling intent
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.putExtra("crop", "true");
@@ -198,14 +206,6 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	/**
-	 * Returns the ImageView to set the selected image to. Must be overriden to work.
-	 * @return
-	 */
-	public ImageView getImageView(){
-		return null;
-	}
-
-	/**
 	 * Returns whether or not the image should be cropped to a circle. False if not overriden.
 	 * @return
 	 */
@@ -231,14 +231,11 @@ public abstract class BaseFragment extends Fragment {
 			if(getCropImage()){
 				bitmap = ImageUtils.getCroppedBitmap(bitmap);
 			} else {
-				bitmap = Bitmap.createScaledBitmap(bitmap, getImageView().getWidth(), getImageView().getHeight(), true);
+				bitmap = Bitmap.createScaledBitmap(bitmap, this.imageWidth, this.imageHeight, true);
 			}
 
 			// Executing custom code upon picking an image
 			executeOnImageSelection(bitmap);
-
-			// Setting the image
-			getImageView().setImageBitmap(bitmap);
 		}
 	}
 

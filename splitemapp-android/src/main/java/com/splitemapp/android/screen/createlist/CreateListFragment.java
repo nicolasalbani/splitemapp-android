@@ -127,7 +127,8 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			@Override
 			public void onClick(View arg0) {
 				// Opening image selector
-				openImageSelector();
+				//TODO fix these numbers to be the actual size of the project image
+				openImageSelector(300,100);
 			}
 		});
 

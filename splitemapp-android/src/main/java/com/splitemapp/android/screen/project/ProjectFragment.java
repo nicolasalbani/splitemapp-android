@@ -72,7 +72,7 @@ public class ProjectFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				// in onCreate or any event where your want the user to select a file
-				openImageSelector();
+				openImageSelector(mProjectCoverImage.getWidth(), mProjectCoverImage.getHeight());
 			}
 		});
 		setProjectCoverImage(mProjectCoverImage, mCurrentProject, 100);
@@ -161,12 +161,10 @@ public class ProjectFragment extends BaseFragment {
 	}
 
 	@Override
-	public ImageView getImageView() {
-		return mProjectCoverImage;
-	}
-
-	@Override
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
+		// Updating project image on screen
+		mProjectCoverImage.setImageBitmap(selectedBitmap);
+		
 		// Persisting selected image to database
 		try {
 			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, mCurrentProject.getId()).get(0);
