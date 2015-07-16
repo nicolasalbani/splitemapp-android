@@ -35,7 +35,7 @@
     <Button
         android:id="@+id/create_account_create_account_button"
         style="@style/Button"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="22dp"
         android:text="@string/ca_create_account_button" />
 
 </LinearLayout>
