@@ -41,42 +41,16 @@ public class CustomFloatingActionButton {
 		this.mainFab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// Switching shade view visibility
-				switch(shade.getVisibility()){
-				case View.GONE:
-					shade.setVisibility(View.VISIBLE);
-					break;
-				case View.VISIBLE:
-					shade.setVisibility(View.GONE);
-					break;
-				}
-
-				// Placing all FABs to the front
-				mainFab.bringToFront();
-
-				// Switching FAB and label visibility
-				for(ActionFAB actionFab:actionFabList){
-					// Switching action layout visibility
-					switch(actionFab.getActionLayout().getVisibility()){
-					case View.VISIBLE: {
-						actionFab.getActionLayout().setVisibility(View.GONE);
-						break;
-					}
-					case View.GONE: {
-						actionFab.getActionLayout().bringToFront();
-						actionFab.getActionLayout().setVisibility(View.VISIBLE);
-					}
-					}
-				}
+				toggleVisibility();
 			}
 		});
 
-		// Creating the shade view
+		// Creating the shade view and assigning an On Click Listener
 		shade = new View(context, getAttributeSetFromResource(context, R.drawable.shade));
 		shade.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				// Blocking user input
+				toggleVisibility();
 			}
 		});
 		shade.setVisibility(View.GONE);
@@ -85,7 +59,47 @@ public class CustomFloatingActionButton {
 		RelativeLayout layout = (RelativeLayout)this.mainFab.getParent();
 		layout.addView(shade);
 	}
+	
+	/**
+	 * Toggles FAB visibility
+	 */
+	private void toggleVisibility(){
+		// Switching shade view visibility
+		switch(shade.getVisibility()){
+		case View.GONE:
+			shade.setVisibility(View.VISIBLE);
+			break;
+		case View.VISIBLE:
+			shade.setVisibility(View.GONE);
+			break;
+		}
 
+		// Placing all FABs to the front
+		mainFab.bringToFront();
+
+		// Switching FAB and label visibility
+		for(ActionFAB actionFab:actionFabList){
+			// Switching action layout visibility
+			switch(actionFab.getActionLayout().getVisibility()){
+			case View.VISIBLE: {
+				actionFab.getActionLayout().setVisibility(View.GONE);
+				break;
+			}
+			case View.GONE: {
+				actionFab.getActionLayout().bringToFront();
+				actionFab.getActionLayout().setVisibility(View.VISIBLE);
+			}
+			}
+		}
+	}
+
+	/**
+	 * Adds a new action FAB to the screen
+	 * @param context
+	 * @param labelString
+	 * @param themeResource
+	 * @param onClickListener
+	 */
 	public void addActionFab(Context context, String labelString, int themeResource, OnClickListener onClickListener){
 		// Creating a new FAB
 		FloatingActionButton actionFab = createActionFab(context, themeResource, onClickListener);
@@ -104,6 +118,11 @@ public class CustomFloatingActionButton {
 		layout.addView(actionLayout);
 	}
 
+	/**
+	 * Creates a new action layout in which to place the label and FAB
+	 * @param context
+	 * @return
+	 */
 	private RelativeLayout createActionLayout(Context context){
 		// Adding the actionFab and the label as a child to the new relative layout 
 		RelativeLayout.LayoutParams actionLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -126,6 +145,13 @@ public class CustomFloatingActionButton {
 		return actionLayout;
 	}
 
+	/**
+	 * Creates a new label for the FAB
+	 * @param context
+	 * @param labelString
+	 * @param fabId
+	 * @return
+	 */
 	private TextView createLabel(Context context, String labelString, int fabId){
 		// Creating a new Label
 		TextView label = new TextView(context);
@@ -154,7 +180,14 @@ public class CustomFloatingActionButton {
 		return label;
 	}
 
-	private FloatingActionButton createActionFab(Context context, int themeResource, OnClickListener onClickListener){
+	/**
+	 * Creates a new FAB
+	 * @param context
+	 * @param themeResource
+	 * @param onClickListener
+	 * @return
+	 */
+	private FloatingActionButton createActionFab(Context context, int themeResource, final OnClickListener onClickListener){
 		// Creating new FAB
 		FloatingActionButton actionFab = new FloatingActionButton(context, getAttributeSetFromResource(context, themeResource));
 
@@ -170,11 +203,23 @@ public class CustomFloatingActionButton {
 		actionFab.setLayoutParams(fabLayoutParams);
 
 		// Assigning the provided onClickListener
-		actionFab.setOnClickListener(onClickListener);
+		actionFab.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				toggleVisibility();
+				onClickListener.onClick(arg0);
+			}
+		});
 
 		return actionFab;
 	}
 
+	/**
+	 * Gathers all the attributes from a specified resource
+	 * @param context
+	 * @param themeResource
+	 * @return
+	 */
 	private AttributeSet getAttributeSetFromResource(Context context, int themeResource){
 		// Loading the action FAB attributes from XML
 		XmlResourceParser parser = context.getResources().getXml(themeResource);
@@ -194,6 +239,7 @@ public class CustomFloatingActionButton {
 		return Xml.asAttributeSet(parser);
 	}
 
+	// Getters and setters
 	public FloatingActionButton getMainFab() {
 		return mainFab;
 	}
@@ -206,11 +252,9 @@ public class CustomFloatingActionButton {
 	public void setActionFabList(List<ActionFAB> actionFabList) {
 		this.actionFabList = actionFabList;
 	}
-
 	public View getShade() {
 		return shade;
 	}
-
 	public void setShade(View shade) {
 		this.shade = shade;
 	}

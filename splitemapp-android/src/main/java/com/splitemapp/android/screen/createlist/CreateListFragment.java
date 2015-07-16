@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
@@ -26,7 +27,9 @@ import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
+import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
 import com.splitemapp.android.utils.EconomicUtils;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -44,6 +47,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 	private static final String TAG = CreateListFragment.class.getSimpleName();
 
 	private User mCurrentUser;
+	private byte[] mAvatarData;
 
 	private EditText mListName;
 	private Spinner mListType;
@@ -112,6 +116,9 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 		customFloatingActionButton.addActionFab(getActivity(), "Add contact", R.drawable.action_fab, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				// Opening add people screen
+				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+				startActivity(intent);
 			}
 		});
 
@@ -119,16 +126,17 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 		customFloatingActionButton.addActionFab(getActivity(), "Add cover image", R.drawable.action_fab, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				// Opening image selector
+				openImageSelector();
 			}
 		});
 
 		return v;
 	}
-
-	public static int dpToPx(Context context, float dp) {
-		// Reference http://stackoverflow.com/questions/8309354/formula-px-to-dp-dp-to-px-android
-		float scale = context.getResources().getDisplayMetrics().density;
-		return (int) ((dp * scale) + 0.5f);
+	
+	@Override
+	public void executeOnImageSelection(Bitmap selectedBitmap) {
+		mAvatarData = ImageUtils.bitmapToByteArray(selectedBitmap, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	public void createList(){
@@ -149,9 +157,12 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			project.setTitle(mListName.getText().toString());
 			getHelper().getProjectDao().create(project);
 
-			// Creating empty project image cover
+			// Creating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
 			projectCoverImage.setProject(project);
+			if(mAvatarData != null){
+				projectCoverImage.setAvatarData(mAvatarData);
+			}
 			getHelper().getProjectCoverImageDao().create(projectCoverImage);
 
 			// Getting the user to project active status
@@ -196,7 +207,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 
 			// Setting the user name
 			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
-			userName.setText(user.getFirstName() + " " + user.getLastName());
+			userName.setText(user.getFirstName());
 
 			// Getting the existing user contact data from the user
 			UserContactData userContactData = null;
