@@ -114,9 +114,9 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.ap_user_avatar);
 			setUsetAvatar(userAvatar, user, 40);
 
-			//Setting the user first name
-			TextView userFirstName = (TextView)convertView.findViewById(R.id.ap_user_first_name);
-			userFirstName.setText(user.getFirstName());
+			//Setting the user full name
+			TextView userFullName = (TextView)convertView.findViewById(R.id.ap_user_full_name);
+			userFullName.setText(user.getFullName());
 
 			//Setting the user status icon
 			ImageView userStatusIcon = (ImageView)convertView.findViewById(R.id.ap_user_status_icon);

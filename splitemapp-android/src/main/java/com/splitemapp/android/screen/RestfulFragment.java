@@ -122,7 +122,7 @@ public abstract class RestfulFragment extends BaseFragment{
 				// We create the login request
 				CreateAccountRequest createAccountRequest = new CreateAccountRequest();
 				createAccountRequest.setEmail(email);
-				createAccountRequest.setUsername(userName);
+				createAccountRequest.setFullName(userName);
 				createAccountRequest.setPassword(Utils.hashPassword(password));
 				createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
 				createAccountRequest.setAvatar(avatar);

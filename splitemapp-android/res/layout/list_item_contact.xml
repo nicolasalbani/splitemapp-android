@@ -14,7 +14,7 @@
         android:contentDescription="@string/ap_avatar_description"/>
 
     <TextView
-        android:id="@+id/ap_user_first_name"
+        android:id="@+id/ap_user_full_name"
         android:layout_toEndOf="@id/ap_user_avatar"
         android:layout_toRightOf="@id/ap_user_avatar"
         android:layout_centerVertical="true"

@@ -207,7 +207,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 
 			// Setting the user name
 			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
-			userName.setText(user.getFirstName());
+			userName.setText(user.getFullName());
 
 			// Getting the existing user contact data from the user
 			UserContactData userContactData = null;

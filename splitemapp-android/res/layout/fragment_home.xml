@@ -23,7 +23,7 @@
             android:src="@drawable/avatar_placeholder" />
 
         <TextView
-            android:id="@+id/h_first_name_textView"
+            android:id="@+id/h_full_name_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -37,7 +37,7 @@
             android:id="@+id/h_email_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/h_first_name_textView"
+            android:layout_below="@id/h_full_name_textView"
             android:layout_toEndOf="@id/h_avatar_imageView"
             android:layout_toRightOf="@id/h_avatar_imageView"
             android:text="@string/h_email"

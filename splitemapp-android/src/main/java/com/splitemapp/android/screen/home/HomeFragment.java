@@ -35,7 +35,7 @@ public class HomeFragment extends SynchronizerFragment {
 	private UserContactData mUserContactData;
 
 	private ImageView mAvatar;
-	private TextView mFirstName;
+	private TextView mFullName;
 	private TextView mEmail;
 	private Button mAddNewList;
 
@@ -66,8 +66,8 @@ public class HomeFragment extends SynchronizerFragment {
 		View v = inflater.inflate(R.layout.fragment_home, container, false);
 
 		// We populate the first name
-		mFirstName = (TextView) v.findViewById(R.id.h_first_name_textView);
-		mFirstName.setText(mCurrentUser.getFirstName());
+		mFullName = (TextView) v.findViewById(R.id.h_full_name_textView);
+		mFullName.setText(mCurrentUser.getFullName());
 
 		// We populate the email
 		mEmail = (TextView) v.findViewById(R.id.h_email_textView);
