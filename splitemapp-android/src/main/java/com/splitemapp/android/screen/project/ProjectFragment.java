@@ -72,7 +72,7 @@ public class ProjectFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				// in onCreate or any event where your want the user to select a file
-				openImageSelector(mProjectCoverImage.getWidth(), mProjectCoverImage.getHeight());
+				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
 		});
 		setProjectCoverImage(mProjectCoverImage, mCurrentProject, 100);

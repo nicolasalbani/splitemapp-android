@@ -127,14 +127,13 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			@Override
 			public void onClick(View arg0) {
 				// Opening image selector
-				//TODO fix these numbers to be the actual size of the project image
-				openImageSelector(300,100);
+				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
 		});
 
 		return v;
 	}
-	
+
 	@Override
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
 		mAvatarData = ImageUtils.bitmapToByteArray(selectedBitmap, ImageUtils.IMAGE_QUALITY_MAX);

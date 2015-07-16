@@ -13,11 +13,13 @@ import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
@@ -237,6 +239,40 @@ public abstract class BaseFragment extends Fragment {
 			// Executing custom code upon picking an image
 			executeOnImageSelection(bitmap);
 		}
+	}
+	
+	/**
+	 * Returns the screen width in dp
+	 * @return
+	 */
+	public float getScreenWidth(){
+		DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels / displayMetrics.density;
+	}
+	
+	/**
+	 * Returns the screen heigth in dp
+	 * @return
+	 */
+	public float getScreenHeight(){
+		DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels / displayMetrics.density;
+	}
+	
+	/**
+	 * Returns the project cover image height in dp
+	 * @return
+	 */
+	public int getProjectCoverImageHeight(){
+		return (int) (getResources().getDimension(R.dimen.project_cover_image_height) / getResources().getDisplayMetrics().density);
+	}
+	
+	/**
+	 * Returns the project cover image width in dp
+	 * @return
+	 */
+	public int getProjectCoverImageWidth(){
+		return (int)getScreenWidth();
 	}
 
 }

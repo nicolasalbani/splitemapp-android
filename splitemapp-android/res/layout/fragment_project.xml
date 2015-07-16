@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/imagelayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp" >
+        android:layout_height="@dimen/project_cover_image_height" >
 
         <ImageView
             android:id="@+id/p_project_cover_image_imageView"
