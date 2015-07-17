@@ -101,13 +101,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 
 		// Setting the total value for the project
 		try {
-			float total = 0;
-			List<UserExpense> allUserExpenseForProject = databaseHelper.getAllUserExpenseForProject(mProjects.get(position).getId());
-			if(allUserExpenseForProject != null){
-				for(UserExpense userExpense:allUserExpenseForProject){
-					total += userExpense.getExpense().floatValue();
-				}
-			}
+			float total = databaseHelper.getAllUserExpenseForProject(mProjects.get(position).getId());
 			viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
 		} catch (SQLException e) {
 			Log.e("ProjectsAdapter", "SQLException caught!", e);

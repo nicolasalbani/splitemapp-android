@@ -582,22 +582,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 	
 	/**
-	 * Get all UserExpense items for a particular project
+	 * Gets the sum of all UserExpense items for a particular project
 	 * @param projectId
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<UserExpense> getAllUserExpenseForProject(Long projectId) throws SQLException{
+	public float getAllUserExpenseForProject(Long projectId) throws SQLException{
 		List<UserExpense> userExpenseList = getUserExpenseDao().queryForAll();
 		
-		List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>();
+		float total = 0;
 		for(UserExpense userExpense:userExpenseList){
 			if(userExpense.getProject().getId() == projectId){
-				filteredUserExpenseList.add(userExpense);
+				total = userExpense.getExpense().floatValue();
 			}
 		}
 		
-		return filteredUserExpenseList;
+		return total;
 	}
 
 	/**
