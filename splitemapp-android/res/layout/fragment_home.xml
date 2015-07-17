@@ -8,7 +8,7 @@
         android:id="@+id/h_topLayout"
         style="@style/NoActionBarTheme"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="@dimen/home_image_height"
         android:background="@drawable/home_background"
         android:layout_alignParentTop="true" >
 

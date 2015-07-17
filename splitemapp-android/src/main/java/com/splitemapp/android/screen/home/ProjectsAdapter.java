@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.dao.DatabaseHelper;
+import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.home.ProjectsAdapter.ViewHolder.IProjectClickListener;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.commons.domain.Project;
@@ -22,7 +23,7 @@ import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
 	private List<Project> mProjects;
-	private DatabaseHelper databaseHelper;
+	private BaseFragment baseFragment;
 	private View mView;
 
 	// Provide a reference to the views for each data item
@@ -54,9 +55,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ProjectsAdapter(List<Project> projects, DatabaseHelper databaseHelper) {
+	public ProjectsAdapter(List<Project> projects, BaseFragment baseFragment) {
 		this.mProjects = projects;
-		this.databaseHelper = databaseHelper;
+		this.baseFragment = baseFragment;
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -100,12 +101,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 		viewHolder.mProjectTitleTextView.setText(mProjects.get(position).getTitle());
 
 		// Setting the total value for the project
-		try {
-			float total = databaseHelper.getAllUserExpenseForProject(mProjects.get(position).getId());
-			viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
-		} catch (SQLException e) {
-			Log.e("ProjectsAdapter", "SQLException caught!", e);
-		}
+		float total = this.baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
+		viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserExpense;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -239,6 +240,26 @@ public abstract class BaseFragment extends Fragment {
 			// Executing custom code upon picking an image
 			executeOnImageSelection(bitmap);
 		}
+	}
+	
+	/**
+	 * Returns the total sum of user expenses for a particular project
+	 * @param projectId
+	 * @return
+	 */
+	public float getTotalExpenseForProject(Long projectId){
+		float total = 0;
+		try {
+			for(UserExpense userExpense:getHelper().getAllUserExpenseForProject(projectId)){
+				if(userExpense.getProject().getId() == projectId){
+					total += userExpense.getExpense().floatValue();
+				}
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		
+		return total;
 	}
 	
 	/**

@@ -12,6 +12,7 @@
         <ImageView
             android:id="@+id/p_project_cover_image_imageView"
             android:contentDescription="@string/p_cover_image_description"
+            android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true" />

@@ -78,7 +78,7 @@ public class HomeFragment extends SynchronizerFragment {
 		setUsetAvatar(mAvatar, mCurrentUser, 100);
 
 		// Creating a projects adapter to be used in the recycler view
-		mProjectsAdapter = new ProjectsAdapter(getProjectsList(), getHelper());
+		mProjectsAdapter = new ProjectsAdapter(getProjectsList(), this);
 
 		// We populate the list of projects for this user
 		mProjectsRecycler = (RecyclerView) v.findViewById(R.id.h_projects_recyclerView);
