@@ -579,7 +579,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public String getSessionToken() throws SQLException{
 		return getUserSessionDao().queryForAll().get(0).getToken();
-	} 
+	}
+	
+	/**
+	 * Get all UserExpense items for a particular project
+	 * @param projectId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserExpense> getAllUserExpenseForProject(Long projectId) throws SQLException{
+		List<UserExpense> userExpenseList = getUserExpenseDao().queryForAll();
+		
+		List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>();
+		for(UserExpense userExpense:userExpenseList){
+			if(userExpense.getProject().getId() == projectId){
+				filteredUserExpenseList.add(userExpense);
+			}
+		}
+		
+		return filteredUserExpenseList;
+	}
 
 	/**
 	 * Deletes all existing user sessions in the DB

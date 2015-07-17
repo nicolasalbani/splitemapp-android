@@ -24,15 +24,20 @@
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="CreateListEditText" parent="Theme.AppCompat">
+    <style name="CustomEditText" parent="Theme.AppCompat">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/edittext_background</item>
     </style>
 
-    <style name="CreateListTextView" parent="Theme.AppCompat">
+    <style name="CustomTextView" parent="Theme.AppCompat">
         <item name="android:background">@color/white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -40,27 +45,9 @@
         <item name="android:paddingTop">10dp</item>
         <item name="android:paddingBottom">10dp</item>
         <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingRight">10dp</item>
         <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="LoginEditText" parent="Theme.AppCompat">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">35dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:background">@drawable/edittext_background</item>
-    </style>
-
-    <style name="LoginTextView" parent="Theme.AppCompat">
-        <item name="android:background">@color/white</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:textColor">@color/seablue</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CreateListSpinner" parent="Theme.AppCompat">

@@ -6,30 +6,30 @@
     android:orientation="vertical" >
 
     <TextView
-        style="@style/LoginTextView"
+        style="@style/CustomTextView"
         android:text="@string/ca_name_hint" />
 
     <EditText
         android:id="@+id/ca_username_editText"
-        style="@style/LoginEditText"
+        style="@style/CustomEditText"
         android:inputType="textPersonName" />
 
     <TextView
-        style="@style/LoginTextView"
+        style="@style/CustomTextView"
         android:text="@string/ca_email_hint" />
     
     <EditText
         android:id="@+id/ca_email_editText"
-        style="@style/LoginEditText"
+        style="@style/CustomEditText"
         android:inputType="textEmailAddress" />
 
     <TextView
-        style="@style/LoginTextView"
+        style="@style/CustomTextView"
         android:text="@string/ca_password_hint" />
     
     <EditText
         android:id="@+id/ca_password_editText"
-        style="@style/LoginEditText"
+        style="@style/CustomEditText"
         android:inputType="textPassword" />
 
     <Button

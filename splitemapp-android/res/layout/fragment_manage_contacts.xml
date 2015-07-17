@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/mc_contacts_textView"
-            style="@style/CreateListTextView"
+            style="@style/CustomTextView"
             android:layout_alignParentTop="true"
             android:text="@string/mc_contacts" />
 

@@ -7,7 +7,7 @@
     <include layout="@layout/action_bar"/>
     
     <TextView
-        style="@style/CreateListTextView"
+        style="@style/CustomTextView"
         android:text="@string/ap_contacts" />
 
     <ListView

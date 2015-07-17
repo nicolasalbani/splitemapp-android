@@ -15,16 +15,16 @@
         <include layout="@layout/action_bar" />
 
         <TextView
-            style="@style/CreateListTextView"
+            style="@style/CustomTextView"
             android:text="@string/cl_list_name" />
 
         <EditText
             android:id="@+id/cl_list_name_editText"
-            style="@style/CreateListEditText"
+            style="@style/CustomEditText"
             android:inputType="text" />
 
         <TextView
-            style="@style/CreateListTextView"
+            style="@style/CustomTextView"
             android:text="@string/cl_list_type" />
 
         <Spinner
@@ -32,12 +32,12 @@
             style="@style/CreateListSpinner" />
 
         <TextView
-            style="@style/CreateListTextView"
+            style="@style/CustomTextView"
             android:text="@string/cl_list_budget" />
 
         <EditText
             android:id="@+id/cl_budget_editText"
-            style="@style/CreateListEditText"
+            style="@style/CustomEditText"
             android:drawableLeft="@drawable/dollar_sign"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/dollar_sign"
@@ -51,7 +51,7 @@
 
     <TextView
         android:id="@+id/cl_list_members_textView"
-        style="@style/CreateListTextView"
+        style="@style/CustomTextView"
         android:layout_below="@id/cl_linearLayout"
         android:background="@color/grey"
         android:text="@string/cl_list_members_list"

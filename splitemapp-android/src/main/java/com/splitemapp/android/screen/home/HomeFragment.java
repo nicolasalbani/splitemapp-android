@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,7 +37,7 @@ public class HomeFragment extends SynchronizerFragment {
 	private ImageView mAvatar;
 	private TextView mFullName;
 	private TextView mEmail;
-	private Button mAddNewList;
+	private FloatingActionButton mFab;
 
 	private RecyclerView mProjectsRecycler;
 	private ProjectsAdapter mProjectsAdapter;
@@ -78,7 +78,7 @@ public class HomeFragment extends SynchronizerFragment {
 		setUsetAvatar(mAvatar, mCurrentUser, 100);
 
 		// Creating a projects adapter to be used in the recycler view
-		mProjectsAdapter = new ProjectsAdapter(getProjectsList());
+		mProjectsAdapter = new ProjectsAdapter(getProjectsList(), getHelper());
 
 		// We populate the list of projects for this user
 		mProjectsRecycler = (RecyclerView) v.findViewById(R.id.h_projects_recyclerView);
@@ -95,11 +95,11 @@ public class HomeFragment extends SynchronizerFragment {
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
 
-		// We get the reference to the add new list button and implement a OnClickListener
-		mAddNewList = (Button) v.findViewById(R.id.h_new_list_button);
-		mAddNewList.setOnClickListener(new View.OnClickListener() {
+		// Adding action FABs to the main FAB
+		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
+		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
+			public void onClick(View arg0) {
 				// We move to the project creation screen
 				Intent intent = new Intent(getActivity(), CreateListActivity.class);
 				startActivity(intent);

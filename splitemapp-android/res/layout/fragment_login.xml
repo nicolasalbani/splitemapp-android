@@ -5,21 +5,21 @@
     android:orientation="vertical" >
 
     <TextView
-        style="@style/LoginTextView"
+        style="@style/CustomTextView"
         android:text="@string/li_username_hint" />
 
     <EditText
         android:id="@+id/li_username_editText"
-        style="@style/LoginEditText"
+        style="@style/CustomEditText"
         android:inputType="textEmailAddress" />
 
     <TextView
-        style="@style/LoginTextView"
+        style="@style/CustomTextView"
         android:text="@string/li_password_hint" />
 
     <EditText
         android:id="@+id/li_password_editText"
-        style="@style/LoginEditText"
+        style="@style/CustomEditText"
         android:inputType="textPassword" />
 
     <Button

@@ -32,7 +32,10 @@
     <string name="ca_cancel_action">Cancel</string>
     
     <!-- Home Screen -->
-    <string name="h_project_icon_description">ProjectIcon</string>
+    <string name="h_project_cover_description">ProjectIcon</string>
+    <string name="h_project_title">Title</string>
+    <string name="h_project_total">Total: $</string>
+    <string name="h_project_total_value">200.5</string>
     <string name="h_avatar_description">Avatar</string>
     <string name="h_name">Name</string>
     <string name="h_email">E-mail</string>
