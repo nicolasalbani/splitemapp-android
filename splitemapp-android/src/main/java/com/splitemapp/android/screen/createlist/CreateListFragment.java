@@ -222,7 +222,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 
 			//Setting the user avatar
 			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cl_user_avatar);
-			setUsetAvatar(userAvatar, user, 40);
+			setUsetAvatar(userAvatar, user, ImageUtils.IMAGE_QUALITY_MED);
 
 			return convertView;
 		}

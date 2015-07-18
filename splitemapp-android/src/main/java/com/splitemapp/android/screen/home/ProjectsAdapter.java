@@ -1,25 +1,23 @@
 package com.splitemapp.android.screen.home;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.home.ProjectsAdapter.ViewHolder.IProjectClickListener;
 import com.splitemapp.android.screen.project.ProjectActivity;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
-import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
 	private List<Project> mProjects;
@@ -32,6 +30,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 	public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 		// Each data item is a project
 		public TextView mProjectTitleTextView;
+		public ImageView mProjectCoverImageView;
 		public IProjectClickListener mClickListener;
 		public TextView mProjectTotalValueTextView;
 
@@ -39,6 +38,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 			super(view);
 			mProjectTitleTextView = (TextView)view.findViewById(R.id.h_project_title);
 			mProjectTotalValueTextView = (TextView)view.findViewById(R.id.h_project_total_value);
+			mProjectCoverImageView = (ImageView)view.findViewById(R.id.h_project_cover_imageView);
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
 		}
@@ -99,6 +99,9 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 		// Gets element from the dataset at this position
 		// Replaces the contents of the view with that element
 		viewHolder.mProjectTitleTextView.setText(mProjects.get(position).getTitle());
+		
+		// Setting the project image cover
+		baseFragment.setProjectAvatar(viewHolder.mProjectCoverImageView, mProjects.get(position), ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Setting the total value for the project
 		float total = this.baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());

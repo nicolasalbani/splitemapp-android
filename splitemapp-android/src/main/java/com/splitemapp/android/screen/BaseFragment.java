@@ -32,7 +32,7 @@ import com.splitemapp.commons.domain.UserExpense;
 public abstract class BaseFragment extends Fragment {
 
 	public DatabaseHelper databaseHelper = null;
-	
+
 	private int imageWidth;
 	private int imageHeight;
 
@@ -84,7 +84,7 @@ public abstract class BaseFragment extends Fragment {
 		// Setting image size
 		this.imageHeight = imageHeight;
 		this.imageWidth = imageWidth;
-		
+
 		// Calling intent
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
@@ -188,6 +188,27 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	/**
+	 * Sets the project avatar image to the provided image view and the specified image quality
+	 * @param projectAvatarResource
+	 * @param project
+	 * @param imageQuality
+	 */
+	public void setProjectAvatar(ImageView projectAvatarResource, Project project, int imageQuality){
+		//Getting the project cover
+		byte[] projectAvatar = null;
+		try {
+			projectAvatar = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, project.getId()).get(0).getAvatarData();
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+
+		// Setting the project cover
+		if(projectAvatar != null){
+			projectAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(projectAvatar,imageQuality)));
+		}
+	}
+
+	/**
 	 * Sets the project cover image to the provided image view and the specified image quality
 	 * @param projectAvatarResource
 	 * @param user
@@ -241,7 +262,7 @@ public abstract class BaseFragment extends Fragment {
 			executeOnImageSelection(bitmap);
 		}
 	}
-	
+
 	/**
 	 * Returns the total sum of user expenses for a particular project
 	 * @param projectId
@@ -258,28 +279,28 @@ public abstract class BaseFragment extends Fragment {
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
-		
+
 		return total;
 	}
-	
+
 	/**
 	 * Returns the screen width in dp
 	 * @return
 	 */
 	public float getScreenWidth(){
 		DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        return displayMetrics.widthPixels / displayMetrics.density;
+		return displayMetrics.widthPixels / displayMetrics.density;
 	}
-	
+
 	/**
 	 * Returns the screen heigth in dp
 	 * @return
 	 */
 	public float getScreenHeight(){
 		DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
-        return displayMetrics.heightPixels / displayMetrics.density;
+		return displayMetrics.heightPixels / displayMetrics.density;
 	}
-	
+
 	/**
 	 * Returns the project cover image height in dp
 	 * @return
@@ -287,7 +308,7 @@ public abstract class BaseFragment extends Fragment {
 	public int getProjectCoverImageHeight(){
 		return (int) (getResources().getDimension(R.dimen.project_cover_image_height) / getResources().getDisplayMetrics().density);
 	}
-	
+
 	/**
 	 * Returns the project cover image width in dp
 	 * @return

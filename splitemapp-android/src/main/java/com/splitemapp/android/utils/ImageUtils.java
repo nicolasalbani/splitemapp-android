@@ -18,7 +18,8 @@ import android.widget.ImageView;
 
 public class ImageUtils {
 
-	public static final int IMAGE_QUALITY_MIN = 1;
+	public static final int IMAGE_QUALITY_MIN = 10;
+	public static final int IMAGE_QUALITY_MED = 50;
 	public static final int IMAGE_QUALITY_MAX = 100;
 	public static final float IMAGE_QUALITY_FACTOR = 3;
 

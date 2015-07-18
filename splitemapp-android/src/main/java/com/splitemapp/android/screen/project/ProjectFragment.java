@@ -75,7 +75,7 @@ public class ProjectFragment extends BaseFragment {
 				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
 		});
-		setProjectCoverImage(mProjectCoverImage, mCurrentProject, 100);
+		setProjectCoverImage(mProjectCoverImage, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Getting the list of existing expenses and create the expense list adapter
 		try {

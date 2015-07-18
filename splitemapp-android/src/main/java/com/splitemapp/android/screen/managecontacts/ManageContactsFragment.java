@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragmentWithActionbar;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 
 public class ManageContactsFragment extends RestfulFragmentWithActionbar {
@@ -108,7 +109,7 @@ public class ManageContactsFragment extends RestfulFragmentWithActionbar {
 
 			//Setting the user avatar
 			ImageView userAvatarResource = (ImageView)convertView.findViewById(R.id.mc_user_avatar);
-			setUsetAvatar(userAvatarResource, user, 10);
+			setUsetAvatar(userAvatarResource, user, ImageUtils.IMAGE_QUALITY_MAX);
 
 			//Setting the user full name
 			TextView userFullName = (TextView)convertView.findViewById(R.id.mc_user_full_name);

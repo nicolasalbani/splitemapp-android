@@ -24,6 +24,7 @@ import com.splitemapp.android.screen.SynchronizerFragment;
 import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -75,7 +76,7 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// We set the user avatar
 		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
-		setUsetAvatar(mAvatar, mCurrentUser, 100);
+		setUsetAvatar(mAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a projects adapter to be used in the recycler view
 		mProjectsAdapter = new ProjectsAdapter(getProjectsList(), this);
