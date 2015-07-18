@@ -1,68 +1,51 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
 
     <RelativeLayout
-        android:id="@+id/h_topLayout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/NoActionBarTheme"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/home_image_height"
-        android:background="@drawable/home_background"
-        android:layout_alignParentTop="true" >
+        android:layout_height="match_parent" >
 
-        <ImageView
-            android:id="@+id/h_avatar_imageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp"
-            android:contentDescription="@string/h_avatar_description"
-            android:src="@drawable/avatar_placeholder" />
+        <RelativeLayout
+            android:id="@+id/h_topLayout"
+            style="@style/NoActionBarTheme"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/home_image_height"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/home_background" >
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/h_email_textView"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/h_projects_recyclerView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/h_avatar_imageView"
-            android:layout_toEndOf="@id/h_avatar_imageView"
-            android:layout_toRightOf="@id/h_avatar_imageView"
-            android:text="@string/h_email"
-            android:textColor="@color/grey"
-            android:textSize="12sp" />
-        
-        <TextView
-            android:id="@+id/h_full_name_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/h_email_textView"
-            android:layout_toEndOf="@id/h_avatar_imageView"
-            android:layout_toRightOf="@id/h_avatar_imageView"
-            android:text="@string/h_name"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:layout_below="@id/h_topLayout" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/h_fab"
+            style="@style/MainFAB"
+            android:layout_alignParentBottom="true"
+            app:backgroundTint="@color/fabblue"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/h_projects_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/h_topLayout" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/h_fab"
-        style="@style/MainFAB"
-        android:layout_alignParentBottom="true"
-        app:backgroundTint="@color/fabblue"
-        app:borderWidth="0dp"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/h_navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
         app:elevation="6dp"
-        app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
+        app:itemTextColor="@color/hard_grey"
+        app:headerLayout="@layout/drawer_header_home"
+        app:menu="@menu/drawer_home" />
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

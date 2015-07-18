@@ -6,12 +6,12 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +43,8 @@ public class HomeFragment extends SynchronizerFragment {
 	private RecyclerView mProjectsRecycler;
 	private ProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
+	
+	private NavigationView navigationView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,54 +108,52 @@ public class HomeFragment extends SynchronizerFragment {
 				startActivity(intent);
 			}
 		});
+		
+		// Setting the navigation view listener
+		navigationView = (NavigationView) v.findViewById(R.id.h_navigationView);
+		navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+			@Override
+			public boolean onNavigationItemSelected(MenuItem item) {
+				Intent nextIntent = null;
+				// Handle item selection
+				switch (item.getItemId()){
+				case R.id.h_logout : 
+					// We delete all user sessions
+					try {
+						getHelper().deleteAllUserSessions();
+					} catch (SQLException e) {
+						Log.e(TAG, "SQLException caught!", e);
+					}
+					// We move to the login screen
+					nextIntent = new Intent(getActivity(), WelcomeActivity.class);
+					startActivity(nextIntent);
+					return true;
+				case R.id.h_synchronize : 
+					// TODO we need to call the new sync intent
+					pushProjects();
+					//			pullUsers();
+					//			pullUserContactDatas();
+					//			pullProjects();
+					//			pullUserToProjects();
+					//			pullGroups();
+					//			pullUserToGroups();
+					//			pullUserInvites();
+					//			pullUserExpenses();
+
+					// We reload the view
+					return true;
+				case R.id.h_manage_contacts :
+					// We move to the login screen
+					nextIntent = new Intent(getActivity(), ManageContactsActivity.class);
+					startActivity(nextIntent);
+					return true;
+				default:
+					return false;
+				}
+			}
+		});
 
 		return v;
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.menu_home, menu);
-		super.onCreateOptionsMenu(menu,inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent nextIntent = null;
-		// Handle item selection
-		switch (item.getItemId()){
-		case R.id.h_logout : 
-			// We delete all user sessions
-			try {
-				getHelper().deleteAllUserSessions();
-			} catch (SQLException e) {
-				Log.e(TAG, "SQLException caught!", e);
-			}
-			// We move to the login screen
-			nextIntent = new Intent(getActivity(), WelcomeActivity.class);
-			startActivity(nextIntent);
-			return true;
-		case R.id.h_synchronize : 
-			// TODO we need to call the new sync intent
-			pushProjects();
-			//			pullUsers();
-			//			pullUserContactDatas();
-			//			pullProjects();
-			//			pullUserToProjects();
-			//			pullGroups();
-			//			pullUserToGroups();
-			//			pullUserInvites();
-			//			pullUserExpenses();
-
-			// We reload the view
-			return true;
-		case R.id.h_manage_contacts :
-			// We move to the login screen
-			nextIntent = new Intent(getActivity(), ManageContactsActivity.class);
-			startActivity(nextIntent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override

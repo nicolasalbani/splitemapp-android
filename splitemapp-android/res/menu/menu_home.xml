@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/h_logout"
-          android:title="@string/h_logout"/>
-    <item android:id="@+id/h_manage_contacts"
-          android:title="@string/h_manage_contacts"/>
-    <item android:id="@+id/h_synchronize"
-          android:title="@string/h_synchronize"/>
-</menu>
