@@ -77,7 +77,8 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_expense, container, false);
+		// Inflating the action bar and obtaining the View object
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// We populate the expense category grid view
 		mExpenseCategory = (GridView) v.findViewById(R.id.ae_expense_categories_gridView);
