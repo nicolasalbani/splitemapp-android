@@ -42,7 +42,8 @@
         </activity>
         <activity
             android:name="com.splitemapp.android.screen.expense.ExpenseActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
         </activity>
         <activity
             android:name="com.splitemapp.android.screen.addpeople.AddPeopleActivity"

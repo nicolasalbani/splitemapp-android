@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+    <include layout="@layout/action_bar" />
 
     <GridView
         android:id="@+id/ae_expense_categories_gridView"
