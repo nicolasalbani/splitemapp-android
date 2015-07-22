@@ -25,14 +25,14 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.BaseFragmentWithActionbar;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
-public class ExpenseFragment extends BaseFragment {
+public class ExpenseFragment extends BaseFragmentWithActionbar {
 
 	private static final String DECIMAL_DELIMITER_KEY = ".";
 	private static final String DELETE_KEY = "<";
@@ -164,6 +164,12 @@ public class ExpenseFragment extends BaseFragment {
 			mUserExpense.setProject(mCurrentProject);
 			mUserExpense.setUser(mCurrentUser);
 			userExpensesDao.createOrUpdate(mUserExpense);
+
+			// Cleaning up global expense id
+			Globals.setExpenseActivityExpenseId(null);
+
+			// Moving back to the project screen
+			getActivity().finish();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
@@ -239,6 +245,21 @@ public class ExpenseFragment extends BaseFragment {
 	@Override
 	public String getLoggingTag() {
 		return TAG;
+	}
+
+	@Override
+	protected int getFragmentResourceId() {
+		return R.layout.fragment_expense;
+	}
+
+	@Override
+	protected int getTitleResourceId() {
+		return R.string.e_title;
+	}
+
+	@Override
+	protected void doneAction() {
+		saveExpense();
 	}
 
 }
