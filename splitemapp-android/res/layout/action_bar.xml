@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/seablue"
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="-5dp"
         app:contentInsetStart="0dp" >
 
         <RelativeLayout

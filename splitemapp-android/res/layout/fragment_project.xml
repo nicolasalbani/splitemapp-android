@@ -11,29 +11,36 @@
 
         <ImageView
             android:id="@+id/p_project_cover_image_imageView"
-            android:contentDescription="@string/p_cover_image_description"
-            android:background="@color/grey"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:background="@color/grey"
+            android:contentDescription="@string/p_cover_image_description" />
 
         <TextView
             android:id="@+id/p_project_title_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/p_project_cover_image_imageView"
-	        android:padding="10dp"
-        	android:textColor="@color/white"
+            android:padding="10dp"
+            android:textColor="@color/white"
             android:textSize="28sp" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/p_expense_list_listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/p_expense_list_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.60"
-        android:background="@color/white" >
-    </ListView>
+        android:background="@color/white" />
+
+    <!-- <ListView -->
+    <!-- android:id="@+id/p_expense_list_listView" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="0dp" -->
+    <!-- android:layout_weight="0.60" -->
+    <!-- android:background="@color/white" > -->
+    <!-- </ListView> -->
 
     <Button
         android:id="@+id/p_add_expense_button"
