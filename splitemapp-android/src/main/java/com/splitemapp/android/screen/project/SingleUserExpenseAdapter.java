@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -18,6 +20,7 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.domain.SingleUserExpenseList;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
+import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
@@ -159,6 +162,10 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		// Using a linear layout manager
 		viewHolder.mLayoutManager = new LinearLayoutManager(baseFragment.getActivity());
 		viewHolder.mUserExpenseRecyclerView.setLayoutManager(viewHolder.mLayoutManager);
+		
+		// Setting the nested RecyclerView height based on the amount of items inside the list
+		LayoutParams layoutParams = viewHolder.mUserExpenseRecyclerView.getLayoutParams();
+		layoutParams.height = mSingleUserExpenseList.get(position).getExpenseList().size() * (int)baseFragment.getResources().getDimension(R.dimen.user_expense_height);
 
 		// Setting the default animator for the view
 		viewHolder.mUserExpenseRecyclerView.setItemAnimator(new CustomItemAnimator());
