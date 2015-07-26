@@ -6,13 +6,13 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +35,7 @@ public class ProjectFragment extends BaseFragment {
 
 	private TextView mProjectTitle;
 	private ImageView mProjectCoverImage;
-	private Button mAddNewExpense;
+	private FloatingActionButton mFab;
 
 	private View v;
 
@@ -94,12 +94,12 @@ public class ProjectFragment extends BaseFragment {
 		// Setting the default animator for the view
 		mSingleUserExpenseRecycler.setItemAnimator(new CustomItemAnimator());
 
-		// Getting the reference to the add new list button and implement a OnClickListener
-		mAddNewExpense = (Button) v.findViewById(R.id.p_add_expense_button);
-		mAddNewExpense.setOnClickListener(new View.OnClickListener() {
+		// Adding FABs on click listener
+		mFab = (FloatingActionButton) v.findViewById(R.id.p_fab);
+		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				// Moving to the project creation screen
+			public void onClick(View arg0) {
+				// Moving to the expense creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
 				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
 				startActivity(intent);
