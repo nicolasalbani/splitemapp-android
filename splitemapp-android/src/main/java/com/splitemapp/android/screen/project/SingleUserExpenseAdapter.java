@@ -10,9 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -20,7 +19,6 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.domain.SingleUserExpenseList;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
-import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
@@ -80,7 +78,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 			@Override
 			public void onItemClick(View view, int position) {
 				// Expanding or minimizing this user list
-				RecyclerView recyclerView = (RecyclerView)mView.findViewById(R.id.ue_user_expense_list_recyclerView);
+				RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.ue_user_expense_list_recyclerView);
 				switch (recyclerView.getVisibility()){
 				case View.VISIBLE:
 					recyclerView.setVisibility(View.GONE);
