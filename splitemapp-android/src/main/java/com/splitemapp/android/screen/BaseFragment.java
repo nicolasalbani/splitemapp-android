@@ -27,6 +27,7 @@ import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserExpense;
 
 public abstract class BaseFragment extends Fragment {
@@ -176,7 +177,10 @@ public abstract class BaseFragment extends Fragment {
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {
-			avatar = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId()).get(0).getAvatarData();
+			List<UserAvatar> userAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
+			if(userAvatarList.size()>0){
+				avatar = userAvatarList.get(0).getAvatarData();
+			}
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
