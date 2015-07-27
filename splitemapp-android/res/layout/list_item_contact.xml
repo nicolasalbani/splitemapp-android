@@ -4,19 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
     
-    <ImageView
-        android:id="@+id/ap_user_avatar"
-        android:layout_centerVertical="true"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/ap_avatar_description"/>
-
     <TextView
         android:id="@+id/ap_user_full_name"
-        android:layout_toEndOf="@id/ap_user_avatar"
-        android:layout_toRightOf="@id/ap_user_avatar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +20,8 @@
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_alignParentEnd="true"
         android:id="@+id/ap_user_status_icon" 
         android:contentDescription="@string/ap_status_description"/>

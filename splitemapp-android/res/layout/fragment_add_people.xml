@@ -6,10 +6,6 @@
     
     <include layout="@layout/action_bar"/>
     
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/ap_contacts" />
-
     <ListView
         android:id="@+id/ap_contacts_listView"
         android:layout_width="match_parent"

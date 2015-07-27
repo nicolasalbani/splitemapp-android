@@ -178,9 +178,7 @@ public abstract class BaseFragment extends Fragment {
 		byte[] avatar = null;
 		try {
 			List<UserAvatar> userAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
-			if(userAvatarList.size()>0){
-				avatar = userAvatarList.get(0).getAvatarData();
-			}
+			avatar = userAvatarList.get(0).getAvatarData();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
@@ -189,6 +187,24 @@ public abstract class BaseFragment extends Fragment {
 		if(avatar != null){
 			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,imageQuality)));
 		}
+	}
+	
+	/**
+	 * Checks whether the user has an avatar assigned or not
+	 * @param user
+	 * @return
+	 */
+	public boolean isUserHasAvatar(User user){
+		try {
+			List<UserAvatar> userAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
+			if(userAvatarList.size()>0 && (userAvatarList.get(0).getAvatarData() != null)){
+				return true;
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+		
+		return false;
 	}
 
 	/**

@@ -78,14 +78,10 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 
 				//Only users different to current user can be added or removed
 				if(!isCurrentUser(user)){
-					//Setting the user status icon based on the previous status icon
-					ImageView userStatusIcon = (ImageView)view.findViewById(R.id.ap_user_status_icon);
-					if(Globals.getCreateListActivityUserList().contains(user)){
-						userStatusIcon.setImageResource(R.drawable.contact_status_inactive);
-						Globals.getCreateListActivityUserList().remove(user);
+					if(isUserInList(user)){
+						removeUserFromList(view, user);
 					} else {
-						userStatusIcon.setImageResource(R.drawable.contact_status_active);
-						Globals.getCreateListActivityUserList().add(user);
+						addUserToList(view, user);
 					}
 				}
 			}
@@ -110,23 +106,47 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 			//Configure the view for this User
 			User user = getItem(position);
 
-			//Setting the user avatar
-			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.ap_user_avatar);
-			setUsetAvatar(userAvatar, user, 40);
-
 			//Setting the user full name
 			TextView userFullName = (TextView)convertView.findViewById(R.id.ap_user_full_name);
 			userFullName.setText(user.getFullName());
 
 			//Setting the user status icon
-			ImageView userStatusIcon = (ImageView)convertView.findViewById(R.id.ap_user_status_icon);
-			if(Globals.getCreateListActivityUserList().contains(user)){
-				userStatusIcon.setImageResource(R.drawable.contact_status_active);
+			updateUserStatusIcon(convertView, user);
+
+			return convertView;
+		}
+	}
+	
+	private boolean isUserInList(User user){
+		return Globals.getCreateListActivityUserList().contains(user);
+	}
+
+	private void addUserToList(View view, User user){
+		// Adding the user to the list
+		Globals.getCreateListActivityUserList().add(user);
+
+		// Updating the status icon as active
+		updateUserStatusIcon(view, user);
+	}
+
+	private void removeUserFromList(View view, User user){
+		// Removing the user from the list
+		Globals.getCreateListActivityUserList().remove(user);
+
+		// Updating the status icon as active
+		updateUserStatusIcon(view, user);
+	}
+
+	private void updateUserStatusIcon(View view, User user){
+		ImageView userStatusIcon = (ImageView)view.findViewById(R.id.ap_user_status_icon);
+		if(Globals.getCreateListActivityUserList().contains(user)){
+			userStatusIcon.setImageResource(R.drawable.contact_status_active);
+		} else {
+			if(isUserHasAvatar(user)){
+				setUsetAvatar(userStatusIcon, user, 40);
 			} else {
 				userStatusIcon.setImageResource(R.drawable.contact_status_inactive);
 			}
-
-			return convertView;
 		}
 	}
 
