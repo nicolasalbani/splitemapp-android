@@ -69,7 +69,7 @@
     <string name="p_cover_image_description">Cover Image</string>
     
     <!-- Expense Screen -->
-    <string name="e_title">Expense</string>
+    <string name="e_title">New Expense</string>
     <string name="e_cancel_action">Cancel</string>
     <string name="e_save_action">Save</string>
     <string name="e_currency">$</string>
