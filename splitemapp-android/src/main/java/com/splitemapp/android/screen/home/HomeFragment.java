@@ -4,10 +4,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -27,6 +33,7 @@ import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.widget.CustomItemTouchCallback;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -45,7 +52,7 @@ public class HomeFragment extends SynchronizerFragment {
 	private RecyclerView mProjectsRecycler;
 	private ProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
-	
+
 	private NavigationView navigationView;
 
 	@Override
@@ -99,22 +106,9 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
-		
+
 		// Managing swipe
-		ItemTouchHelper.Callback itemTouchCallback = new ItemTouchHelper.Callback() {
-			@Override
-			public void onSwiped(ViewHolder arg0, int arg1) {
-				showToast("swiped!");
-			}
-			@Override
-			public boolean onMove(RecyclerView arg0, ViewHolder arg1, ViewHolder arg2) {
-				return false;
-			}
-			@Override
-			public int getMovementFlags(RecyclerView arg0, ViewHolder arg1) {
-				return makeMovementFlags(0, ItemTouchHelper.LEFT);
-			}
-		};
+		CustomItemTouchCallback itemTouchCallback = new CustomItemTouchCallback(getActivity(), R.color.red);
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
 		itemTouchHelper.attachToRecyclerView(mProjectsRecycler);
 
@@ -128,7 +122,7 @@ public class HomeFragment extends SynchronizerFragment {
 				startActivity(intent);
 			}
 		});
-		
+
 		// Setting the navigation view listener
 		navigationView = (NavigationView) v.findViewById(R.id.h_navigationView);
 		navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
