@@ -10,6 +10,8 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -97,6 +99,24 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
+		
+		// Managing swipe
+		ItemTouchHelper.Callback itemTouchCallback = new ItemTouchHelper.Callback() {
+			@Override
+			public void onSwiped(ViewHolder arg0, int arg1) {
+				showToast("swiped!");
+			}
+			@Override
+			public boolean onMove(RecyclerView arg0, ViewHolder arg1, ViewHolder arg2) {
+				return false;
+			}
+			@Override
+			public int getMovementFlags(RecyclerView arg0, ViewHolder arg1) {
+				return makeMovementFlags(0, ItemTouchHelper.LEFT);
+			}
+		};
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
+		itemTouchHelper.attachToRecyclerView(mProjectsRecycler);
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
