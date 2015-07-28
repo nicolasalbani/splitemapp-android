@@ -39,6 +39,8 @@
     <string name="h_avatar_description">Avatar</string>
     <string name="h_name">Name</string>
     <string name="h_email">E-mail</string>
+    <string name="h_archive_project">Archive</string>
+    <string name="h_edit_project">Edit</string>
     <string name="h_new_list_button">New list of expenses</string>
     <string name="h_logout">LOGOUT</string>
     <string name="h_synchronize">SYNCHRONIZE</string>

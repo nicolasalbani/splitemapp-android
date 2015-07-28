@@ -101,7 +101,7 @@ public class HomeFragment extends SynchronizerFragment {
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
 
 		// Managing swipe
-		CustomItemTouchCallback itemTouchCallback = new CustomItemTouchCallback(getActivity(), R.color.red);
+		CustomItemTouchCallback itemTouchCallback = new CustomItemTouchCallback(getActivity(), R.color.seablue, R.string.h_edit_project, R.color.red, R.string.h_archive_project);
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
 		itemTouchHelper.attachToRecyclerView(mProjectsRecycler);
 
