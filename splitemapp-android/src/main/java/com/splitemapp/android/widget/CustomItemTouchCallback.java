@@ -1,7 +1,5 @@
 package com.splitemapp.android.widget;
 
-import com.splitemapp.android.R;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,19 +9,20 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.Toast;
+
+import com.splitemapp.android.R;
 
 public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 
 	private static final int MAX_SWIPE_RIGHT = 120;
 	private static final int MAX_SWIPE_LEFT = -120;
+	private static final int TEXT_SIZE = 25;
 
 	Context context;
 	int leftColorResource;
 	int leftStringResource;
 	int rightColorResource;
 	int rightStringResource;
-	boolean isSwiped;
 
 	public CustomItemTouchCallback(Context context, boolean isLeftToRigth, int colorResource, int stringResource){
 		this.context = context;
@@ -50,7 +49,7 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 
 	@Override
 	public void onChildDraw(Canvas canvas, RecyclerView recyclerView, ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
+		
 		if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 			
 			View itemView = viewHolder.itemView;
@@ -74,7 +73,9 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 				}
 			}
 		}
+		
 	}
+	
 
 	/**
 	 * Returns a boolean indicating whether this is a right to left or left to right swipe
@@ -112,6 +113,11 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 			return false;
 		}
 	}
+	
+	@Override
+	public float getSwipeThreshold(ViewHolder viewHolder) {
+		return 1f;
+	}
 
 	/**
 	 * Draws a rectangle in the specified position with the specified background color and text
@@ -141,10 +147,10 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 
 		// Drawing text
 		paint.setColor(context.getResources().getColor(R.color.white));
-		paint.setTextSize(25);
+		paint.setTextSize(TEXT_SIZE);
 		paint.setTextAlign(Align.CENTER);
 		paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-		canvas.drawText(text, (right + left) / 2, (top + bottom) / 2 * 1.2f, paint);
+		canvas.drawText(text, (right + left) / 2, ((top + bottom) / 2) + (TEXT_SIZE / 3), paint);
 	}
 
 	@Override
@@ -172,8 +178,6 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 	@Override
 	public void onSwiped(ViewHolder arg0, int arg1) {
 		// Do nothing
-		this.isSwiped = true;
-		Toast.makeText(context, "Swiped!", Toast.LENGTH_SHORT).show();
 	}
 
 }
