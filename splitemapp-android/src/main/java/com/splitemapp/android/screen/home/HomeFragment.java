@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,7 +25,6 @@ import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.android.widget.CustomItemTouchCallback;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
@@ -43,7 +41,7 @@ public class HomeFragment extends SynchronizerFragment {
 	private FloatingActionButton mFab;
 
 	private RecyclerView mProjectsRecycler;
-	private ProjectsAdapter mProjectsAdapter;
+	private SwipeProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
 
 	private NavigationView navigationView;
@@ -83,7 +81,7 @@ public class HomeFragment extends SynchronizerFragment {
 		setUsetAvatar(mAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a projects adapter to be used in the recycler view
-		mProjectsAdapter = new ProjectsAdapter(getProjectsList(), this);
+		mProjectsAdapter = new SwipeProjectsAdapter(getProjectsList(), this);
 
 		// We populate the list of projects for this user
 		mProjectsRecycler = (RecyclerView) v.findViewById(R.id.h_projects_recyclerView);
@@ -99,11 +97,6 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
-
-		// Managing swipe
-		CustomItemTouchCallback itemTouchCallback = new CustomItemTouchCallback(getActivity(), R.color.seablue, R.string.h_edit_project, R.color.red, R.string.h_archive_project);
-		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchCallback);
-		itemTouchHelper.attachToRecyclerView(mProjectsRecycler);
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
