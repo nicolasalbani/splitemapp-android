@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -95,7 +94,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 			}});
 
 		// Setting remove on click listener
-		viewHolder.mActionRemove.setOnClickListener(new OnClickListener(){
+		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				baseFragment.showToast("Remove!");
@@ -141,9 +140,9 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		ImageView mProjectCoverImageView;
 		TextView mProjectTotalValueTextView;
 
-		// Declaring all the items in the bottom view
-		TextView mActionEdit;
-		TextView mActionRemove;
+		// Declaring all the actions in the bottom view
+		ImageView mActionEdit;
+		ImageView mActionArchive;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -157,8 +156,8 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 			mProjectCoverImageView = (ImageView)view.findViewById(R.id.h_project_cover_imageView);
 
 			// Getting instances for all bottom items
-			mActionEdit = (TextView)view.findViewById(R.id.h_action_edit_textView);
-			mActionRemove = (TextView)view.findViewById(R.id.h_action_remove_textView);
+			mActionEdit = (ImageView)view.findViewById(R.id.h_action_edit_imageView);
+			mActionArchive = (ImageView)view.findViewById(R.id.h_action_archive_imageView);
 		}
 
 	}

@@ -46,7 +46,7 @@
     <string name="h_synchronize">SYNCHRONIZE</string>
     <string name="h_manage_contacts">MANAGE CONTACTS</string>
     <string name="h_action_edit">Edit</string>
-    <string name="h_action_remove">Remove</string>
+    <string name="h_action_archive">Archive</string>
     
     <!-- Create List Screen -->
     <string name="cl_title">New List</string>
