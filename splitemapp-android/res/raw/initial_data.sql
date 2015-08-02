@@ -13,7 +13,7 @@ insert into project_type(id,cod,title) values(2,"one_time","Solo una vez");
 
 -- Data for user_to_project_status table
 insert into user_to_project_status(id,cod,title) values(1,"active","Activo");
-insert into user_to_project_status(id,cod,title) values(2,"removed","Eliminado");
+insert into user_to_project_status(id,cod,title) values(2,"archived","Archivado");
 insert into user_to_project_status(id,cod,title) values(3,"left_project","Dejo el proyecto");
 
 -- Data for invite_status table

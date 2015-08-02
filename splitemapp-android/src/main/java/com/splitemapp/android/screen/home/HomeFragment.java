@@ -1,7 +1,6 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.splitemapp.android.screen.createlist.CreateListActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
@@ -81,7 +79,7 @@ public class HomeFragment extends SynchronizerFragment {
 		setUsetAvatar(mAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a projects adapter to be used in the recycler view
-		mProjectsAdapter = new SwipeProjectsAdapter(getProjectsList(), this);
+		mProjectsAdapter = new SwipeProjectsAdapter(this);
 
 		// We populate the list of projects for this user
 		mProjectsRecycler = (RecyclerView) v.findViewById(R.id.h_projects_recyclerView);
@@ -161,25 +159,7 @@ public class HomeFragment extends SynchronizerFragment {
 		super.onResume();
 
 		// Refreshing project list when coming back from the Create List fragment
-		for(Project project:getProjectsList()){
-			mProjectsAdapter.addItem(project);
-		}
-	}
-
-	/**
-	 * Returns the whole projects list for this user
-	 * @return
-	 */
-	private List<Project> getProjectsList(){
-		List<Project> projectList = null;
-
-		try {
-			projectList = getHelper().getAllProjectsForLoggedUser();
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-
-		return projectList;
+		mProjectsAdapter.updateRecycler();
 	}
 
 	@Override

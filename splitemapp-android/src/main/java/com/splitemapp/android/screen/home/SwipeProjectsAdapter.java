@@ -1,9 +1,11 @@
 package com.splitemapp.android.screen.home;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.SwipeLayout.SwipeListener;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
@@ -22,13 +23,15 @@ import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
 
 public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdapter.ViewHolder> {
+	private static final String TAG = SwipeProjectsAdapter.class.getSimpleName();
+
 	private List<Project> mProjects;
 	private BaseFragment baseFragment;
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SwipeProjectsAdapter(List<Project> projects, BaseFragment baseFragment) {
-		this.mProjects = projects;
+	public SwipeProjectsAdapter(BaseFragment baseFragment) {
 		this.baseFragment = baseFragment;
+		this.mProjects = getActiveProjectsList(baseFragment);
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -41,7 +44,10 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
-	public void onBindViewHolder(ViewHolder viewHolder, final int position) {
+	public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+		// Saving project ID
+		viewHolder.project = mProjects.get(position);
+		
 		// Gets element from the data set at this position
 		// Replaces the contents of the view with that element
 		viewHolder.mProjectTitleTextView.setText(mProjects.get(position).getTitle());
@@ -52,27 +58,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		// Setting swipe
 		viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
 		viewHolder.mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.mSwipeLayout.findViewById(R.id.h_bottomView));
-		viewHolder.mSwipeLayout.addSwipeListener(new SwipeListener() {
-			@Override
-			public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-			}
-			
-			@Override
-			public void onStartOpen(SwipeLayout layout) {}
-			
-			@Override
-			public void onStartClose(SwipeLayout layout) {}
-			
-			@Override
-			public void onOpen(SwipeLayout layout) {}
-			
-			@Override
-			public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {}
-			
-			@Override
-			public void onClose(SwipeLayout layout) {}
-		});
-		
+
 		// Setting on click listener
 		viewHolder.mSwipeLayout.getSurfaceView().setOnClickListener(new OnClickListener(){
 			@Override
@@ -85,25 +71,30 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 				view.getContext().startActivity(intent);
 			}
 		});
-		
+
 		// Setting edit on click listener
 		viewHolder.mActionEdit.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View view) {
 				baseFragment.showToast("Edit!");
 			}});
 
-		// Setting remove on click listener
+		// Setting archive on click listener
 		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onClick(View arg0) {
-				baseFragment.showToast("Remove!");
+			public void onClick(View view) {
+				try {
+					baseFragment.getHelper().archiveCurrentUserToProject(viewHolder.project.getId());
+					removeItem(viewHolder);
+				} catch (SQLException e) {
+					Log.e(TAG, "SQLException caught!", e);
+				}
 			}});
 
 		// Setting the total value for the project
-		float total = this.baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
+		float total = baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
 		viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
-		
+
 	}
 
 	@Override
@@ -117,21 +108,52 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	}
 
 	/**
-	 * Add item to recycler view
+	 * Updates Recycler view adding any existing new items to the list
 	 * @param project
 	 */
-	public void addItem(Project project){
-		if(!mProjects.contains(project)){
-			int position = getItemCount();
-			mProjects.add(position, project);
-			notifyItemInserted(position);
+	public void updateRecycler(){
+		List<Project> updatedList = getActiveProjectsList(baseFragment);
+		
+		for(Project project:updatedList){
+			if(!mProjects.contains(project)){
+				int position = getItemCount();
+				mProjects.add(position, project);
+				notifyItemInserted(position);
+			}
 		}
+	}
+
+	/**
+	 * Remove item from Recycler view
+	 */
+	public void removeItem(ViewHolder viewHolder){
+		mProjects.remove(viewHolder.project);
+		notifyItemRemoved(viewHolder.getAdapterPosition());
+	}
+	
+	/**
+	 * Returns the whole list of active projects for this user
+	 * @return
+	 */
+	private List<Project> getActiveProjectsList(BaseFragment baseFragment){
+		List<Project> projectList = null;
+
+		try {
+			projectList = baseFragment.getHelper().getAllActiveProjectsForLoggedUser();
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+
+		return projectList;
 	}
 
 	// Provide a reference to the views for each data item
 	// Complex data items may need more than one view per item, and
 	// you provide access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder {
+		// Holding project object
+		Project project;
+		
 		// Declaring the swipe layout
 		SwipeLayout mSwipeLayout;
 
@@ -146,7 +168,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 
 		public ViewHolder(View view) {
 			super(view);
-
+			
 			// Getting instance for swipe layout
 			mSwipeLayout = (SwipeLayout)view.findViewById(R.id.h_swipeLayout);
 

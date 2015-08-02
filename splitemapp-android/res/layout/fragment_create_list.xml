@@ -41,6 +41,7 @@
             android:drawableLeft="@drawable/dollar_sign"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/dollar_sign"
+            android:text="@string/cl_list_budget_value"
             android:inputType="numberDecimal" />
 
         <View

@@ -23,6 +23,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
 import com.splitemapp.commons.constants.TableField;
+import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
@@ -250,7 +251,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return projectDao;
 	}
-	
+
 	/**
 	 * Returns the Database Access Object (DAO) for the ProjectCoverImage class. It will create it or just give the cached
 	 * value.
@@ -272,7 +273,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return userDao;
 	}
-	
+
 	/**
 	 * Returns the Database Access Object (DAO) for the UserAvatar class. It will create it or just give the cached
 	 * value.
@@ -392,7 +393,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
 			// We get the proper record from the sync_status table
 			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
 
 			// We update the "last_pull_at" field in the sync_status table
 			SyncStatus syncStatus = queryResult.get(0);
@@ -413,7 +414,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
 			// We get the proper record from the sync_status table
 			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq("table_name", Utils.getTableName(entity.getSimpleName()));
+			List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
 
 			// We update the "last_push_at" field in the sync_status table
 			SyncStatus syncStatus = queryResult.get(0);
@@ -441,7 +442,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return userContactData;
 	}
-	
+
 	/**
 	 * Returns all users in the database with their corresponding UserContactData
 	 * @return
@@ -500,7 +501,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public Project getProjectById(Long projectId) throws SQLException{
 		return getProjectDao().queryForId(projectId.longValue());
 	}
-	
+
+	/**
+	 * Gets the list of UserToProjects associated with the currently logged user
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserToProject> getAllUserToProjectsForLoggedUser() throws SQLException{
+		User loggedUser = getLoggedUser();
+		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_USER_ID, loggedUser.getId());
+		return userToProjectList;
+	}
+
 	/**
 	 * Gets the list of Projects associated with the currently logged user
 	 * @return
@@ -509,10 +521,47 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<Project> getAllProjectsForLoggedUser() throws SQLException{
 		ArrayList<Project> result = new ArrayList<Project>();
 
-		User loggedUser = getLoggedUser();
-		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_USER_ID, loggedUser.getId());
+		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
 		for(UserToProject userToProject:userToProjectList){
 			result.add(getProjectDao().queryForId(userToProject.getProject().getId()));
+		}
+
+		return result;
+	}
+
+	/**
+	 * Archive the user to project relationship for the provided project ID and the current user
+	 * @param projectId
+	 * @throws SQLException
+	 */
+	public void archiveCurrentUserToProject(Long projectId) throws SQLException{
+		Dao<UserToProject, Long> userToProjectDao = getUserToProjectDao();
+
+		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
+
+		UserToProjectStatus archivedUserToProjectStatus = getUserToProjectStatusDao().queryForEq(TableField.USER_TO_PROJECT_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ARCHIVED).get(0);
+		for(UserToProject userToProject:userToProjectList){
+			if(userToProject.getProject().getId().equals(projectId)){
+				userToProject.setUserToProjectStatus(archivedUserToProjectStatus);
+				userToProjectDao.update(userToProject);
+			}
+		}
+	}
+
+	/**
+	 * Gets the list of Projects actively associated with the currently logged user
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Project> getAllActiveProjectsForLoggedUser() throws SQLException{
+		ArrayList<Project> result = new ArrayList<Project>();
+
+		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
+		for(UserToProject userToProject:userToProjectList){
+			UserToProjectStatus userToProjectStatus = getUserToProjectStatusDao().queryForId(userToProject.getUserToProjectStatus().getId());
+			if(userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE)){
+				result.add(getProjectDao().queryForId(userToProject.getProject().getId()));
+			}
 		}
 
 		return result;
@@ -530,7 +579,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		if(loggedUserId != null){
 			// Setting User information
 			user = getUserById(getLoggedUserId());
-			
+
 			// Setting UserContactData information
 			Set<UserContactData> userContactDatas = new HashSet<UserContactData>();
 			userContactDatas.add(getLoggedUserContactData());
@@ -539,7 +588,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return user;
 	}
-	
+
 	/**
 	 * Gets the logged user contact data, if any
 	 * @return User instance if logged, null otherwise
@@ -580,7 +629,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public String getSessionToken() throws SQLException{
 		return getUserSessionDao().queryForAll().get(0).getToken();
 	}
-	
+
 	/**
 	 * Gets the sum of all UserExpense items for a particular project
 	 * @param projectId
@@ -589,14 +638,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public List<UserExpense> getAllUserExpenseForProject(Long projectId) throws SQLException{
 		List<UserExpense> userExpenseList = getUserExpenseDao().queryForAll();
-		
+
 		List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>(); 
 		for(UserExpense userExpense:userExpenseList){
 			if(userExpense.getProject().getId() == projectId){
 				filteredUserExpenseList.add(userExpense);
 			}
 		}
-		
+
 		return filteredUserExpenseList;
 	}
 
@@ -611,7 +660,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			userSessionDao.deleteById(us.getId().longValue());
 		}
 	}
-	
+
 	/**
 	 * Updates the specified ID reference with a new ID matching the one in the remote server
 	 * @param dao
@@ -626,5 +675,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			dao.updateRaw(statement);
 		}
 	}
-	
+
 }
