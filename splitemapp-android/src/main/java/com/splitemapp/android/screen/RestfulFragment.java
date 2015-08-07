@@ -20,6 +20,7 @@ import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.UserAvatarDTO;
 import com.splitemapp.commons.domain.dto.UserContactDataDTO;
 import com.splitemapp.commons.domain.dto.UserDTO;
 import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
@@ -323,7 +324,7 @@ public abstract class RestfulFragment extends BaseFragment{
 						
 						// Reconstructing the user object
 						User user = new User(userStatus, userDTO);
-						CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
+						CreateOrUpdateStatus createOrUpdate = getHelper().createOrUpdateUser(user);
 						getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
 						
 						// Reconstructing the user contact data object
@@ -331,8 +332,18 @@ public abstract class RestfulFragment extends BaseFragment{
 							// Matching the appropriate user contact data
 							if(userDTO.getId() == userContactDataDTO.getUserId()){
 								UserContactData userContactData = new UserContactData(user,userContactDataDTO);
-								createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
+								createOrUpdate = getHelper().createOrUpdateUserContactData(userContactData);
 								getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+							}
+						}
+						
+						// Reconstructing the user avatar data object
+						for(UserAvatarDTO userAvatarDTO:synchronizeContactsResponse.getUserAvatarDTOList()){
+							// Matching the appropriate user avatar
+							if(userDTO.getId() == userAvatarDTO.getUserId()){
+								UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
+								createOrUpdate = getHelper().createOrUpdateUserAvatar(userAvatar);
+								getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
 							}
 						}
 					}
