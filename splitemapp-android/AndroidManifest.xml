@@ -31,7 +31,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.splitemapp.android.screen.createlist.CreateListActivity"
+            android:name="com.splitemapp.android.screen.createproject.CreateProjectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="stateHidden" >

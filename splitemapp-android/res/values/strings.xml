@@ -48,17 +48,20 @@
     <string name="h_action_edit">Edit</string>
     <string name="h_action_archive">Archive</string>
     
-    <!-- Create List Screen -->
-    <string name="cl_title">New List</string>
-    <string name="cl_list_name">List Name</string>
-    <string name="cl_list_type">List Type</string>
-    <string name="cl_list_budget">List budget</string>
-    <string name="cl_list_budget_optional">optional</string>
-    <string name="cl_list_budget_value">0</string>
-    <string name="cl_list_members_list">Member list</string>
-    <string name="cl_list_add_people">Add more people</string>
-    <string name="cl_new_list_button">Create list</string>
-    <string name="cl_user_avatar_description">User Avatar</string>
+    <!-- Create Project Screen -->
+    <string name="cp_new_title">New List</string>
+    <string name="cp_edit_title">Edit List</string>
+    <string name="cp_project_name">List Name</string>
+    <string name="cp_project_type">List Type</string>
+    <string name="cp_project_budget">List budget</string>
+    <string name="cp_project_budget_optional">optional</string>
+    <string name="cp_project_budget_value">0</string>
+    <string name="cp_project_members_list">Member list</string>
+    <string name="cp_project_add_people">Add more people</string>
+    <string name="cp_new_project_button">Create list</string>
+    <string name="cp_user_avatar_description">User Avatar</string>
+    <string name="cp_user_name_placeholder">User Name</string>
+    <string name="cp_user_email_placeholder">sample@splitemapp.com</string>
     
     <!-- Add User Expense Screen -->
     <string name="ue_icon_description">User Expense Icon</string>

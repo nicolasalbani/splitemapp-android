@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/cl_linearLayout"
+        android:id="@+id/cp_linearLayout"
         style="@style/NoActionBarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,32 +16,32 @@
 
         <TextView
             style="@style/CustomTextView"
-            android:text="@string/cl_list_name" />
+            android:text="@string/cp_project_name" />
 
         <EditText
-            android:id="@+id/cl_list_name_editText"
+            android:id="@+id/cp_project_name_editText"
             style="@style/CustomEditText"
             android:inputType="text" />
 
         <TextView
             style="@style/CustomTextView"
-            android:text="@string/cl_list_type" />
+            android:text="@string/cp_project_type" />
 
         <Spinner
-            android:id="@+id/cl_list_type_spinner"
-            style="@style/CreateListSpinner" />
+            android:id="@+id/cp_project_type_spinner"
+            style="@style/CreateProjectSpinner" />
 
         <TextView
             style="@style/CustomTextView"
-            android:text="@string/cl_list_budget" />
+            android:text="@string/cp_project_budget" />
 
         <EditText
-            android:id="@+id/cl_budget_editText"
+            android:id="@+id/cp_budget_editText"
             style="@style/CustomEditText"
             android:drawableLeft="@drawable/dollar_sign"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/dollar_sign"
-            android:text="@string/cl_list_budget_value"
+            android:text="@string/cp_project_budget_value"
             android:inputType="numberDecimal" />
 
         <View
@@ -51,23 +51,23 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/cl_list_members_textView"
+        android:id="@+id/cp_project_members_textView"
         style="@style/CustomTextView"
-        android:layout_below="@id/cl_linearLayout"
+        android:layout_below="@id/cp_linearLayout"
         android:background="@color/grey"
-        android:text="@string/cl_list_members_list"
+        android:text="@string/cp_project_members_list"
         android:textColor="@color/hard_grey" />
 
     <ListView
-        android:id="@+id/cl_users_listView"
+        android:id="@+id/cp_users_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cl_list_members_textView"
+        android:layout_below="@id/cp_project_members_textView"
         android:background="@color/white" >
     </ListView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/cl_fab"
+        android:id="@+id/cp_fab"
         style="@style/MainFAB"
         android:layout_alignParentBottom="true"
         app:backgroundTint="@color/fabblue"

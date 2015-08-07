@@ -2,21 +2,22 @@ package com.splitemapp.android.constants;
 
 import java.util.List;
 
-import com.splitemapp.android.screen.createlist.CreateListFragment;
+import com.splitemapp.android.screen.createproject.CreateProjectFragment;
 import com.splitemapp.commons.domain.User;
 
 public class Globals {
-	private static List<User> createListActivityUserList;
+	private static List<User> createProjectActivityUserList;
 	private static Long expenseActivityExpenseId;
 	private static Long expenseActivityProjectId;
-	private static CreateListFragment createListFragment;
+	private static Long createProjectActivityProjectId;
+	private static CreateProjectFragment createProjectFragment;
 
-	public static List<User> getCreateListActivityUserList() {
-		return createListActivityUserList;
+	public static List<User> getCreateProjectActivityUserList() {
+		return createProjectActivityUserList;
 	}
 
-	public static void setCreateListActivityUserList(List<User> createListUserList) {
-		Globals.createListActivityUserList = createListUserList;
+	public static void setCreateProjectActivityUserList(List<User> createProjectUserList) {
+		Globals.createProjectActivityUserList = createProjectUserList;
 	}
 
 	public static Long getExpenseActivityProjectId() {
@@ -37,11 +38,20 @@ public class Globals {
 		Globals.expenseActivityExpenseId = expenseActivityExpenseId;
 	}
 
-	public static CreateListFragment getCreateListFragment() {
-		return createListFragment;
+	public static CreateProjectFragment getCreateProjectFragment() {
+		return createProjectFragment;
 	}
 
-	public static void setCreateListFragment(CreateListFragment createListFragment) {
-		Globals.createListFragment = createListFragment;
+	public static void setCreateProjectFragment(CreateProjectFragment createProjectFragment) {
+		Globals.createProjectFragment = createProjectFragment;
+	}
+
+	public static Long getCreateProjectActivityProjectId() {
+		return createProjectActivityProjectId;
+	}
+
+	public static void setCreateProjectActivityProjectId(
+			Long createProjectActivityProjectId) {
+		Globals.createProjectActivityProjectId = createProjectActivityProjectId;
 	}
 }

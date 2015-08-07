@@ -118,12 +118,12 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 	}
 	
 	private boolean isUserInList(User user){
-		return Globals.getCreateListActivityUserList().contains(user);
+		return Globals.getCreateProjectActivityUserList().contains(user);
 	}
 
 	private void addUserToList(View view, User user){
 		// Adding the user to the list
-		Globals.getCreateListActivityUserList().add(user);
+		Globals.getCreateProjectActivityUserList().add(user);
 
 		// Updating the status icon as active
 		updateUserStatusIcon(view, user);
@@ -131,7 +131,7 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 
 	private void removeUserFromList(View view, User user){
 		// Removing the user from the list
-		Globals.getCreateListActivityUserList().remove(user);
+		Globals.getCreateProjectActivityUserList().remove(user);
 
 		// Updating the status icon as active
 		updateUserStatusIcon(view, user);
@@ -139,7 +139,7 @@ public class AddPeopleFragment extends BaseFragmentWithActionbar {
 
 	private void updateUserStatusIcon(View view, User user){
 		ImageView userStatusIcon = (ImageView)view.findViewById(R.id.ap_user_status_icon);
-		if(Globals.getCreateListActivityUserList().contains(user)){
+		if(Globals.getCreateProjectActivityUserList().contains(user)){
 			userStatusIcon.setImageResource(R.drawable.contact_status_active);
 		} else {
 			if(isUserHasAvatar(user)){

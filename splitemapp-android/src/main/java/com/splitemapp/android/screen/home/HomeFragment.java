@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.SynchronizerFragment;
-import com.splitemapp.android.screen.createlist.CreateListActivity;
+import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
@@ -102,7 +102,7 @@ public class HomeFragment extends SynchronizerFragment {
 			@Override
 			public void onClick(View arg0) {
 				// We move to the project creation screen
-				Intent intent = new Intent(getActivity(), CreateListActivity.class);
+				Intent intent = new Intent(getActivity(), CreateProjectActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -127,7 +127,6 @@ public class HomeFragment extends SynchronizerFragment {
 					startActivity(nextIntent);
 					return true;
 				case R.id.h_synchronize : 
-					// TODO we need to call the new sync intent
 					pushProjects();
 					//			pullUsers();
 					//			pullUserContactDatas();

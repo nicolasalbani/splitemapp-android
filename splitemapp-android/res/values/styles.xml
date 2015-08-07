@@ -50,7 +50,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="CreateListSpinner" parent="Theme.AppCompat">
+    <style name="CreateProjectSpinner" parent="Theme.AppCompat">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">35dp</item>
         <item name="android:paddingLeft">5dp</item>

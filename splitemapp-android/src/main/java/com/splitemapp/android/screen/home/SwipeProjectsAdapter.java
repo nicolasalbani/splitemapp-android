@@ -18,6 +18,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
@@ -63,10 +64,10 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mSwipeLayout.getSurfaceView().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				//Saving the project ID in a global variable
+				// Saving the project ID in a global variable
 				Globals.setExpenseActivityProjectId(mProjects.get(position).getId());
 
-				// We create an intent to the ProjectActivity sending the information from the clicked project
+				// Creating an intent to the ProjectActivity
 				Intent intent = new Intent(view.getContext(), ProjectActivity.class);
 				view.getContext().startActivity(intent);
 			}
@@ -76,7 +77,12 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mActionEdit.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				baseFragment.showToast("Edit!");
+				// Saving the project ID in a global variable
+				Globals.setCreateProjectActivityProjectId(viewHolder.project.getId());
+				
+				// Creating an intent to the Creat Project activity
+				Intent intent = new Intent(view.getContext(), CreateProjectActivity.class);
+				view.getContext().startActivity(intent);
 			}});
 
 		// Setting archive on click listener
@@ -139,7 +145,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		List<Project> projectList = null;
 
 		try {
-			projectList = baseFragment.getHelper().getAllActiveProjectsForLoggedUser();
+			projectList = baseFragment.getHelper().getActiveProjectsForLoggedUser();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
