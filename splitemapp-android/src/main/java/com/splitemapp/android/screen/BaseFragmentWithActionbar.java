@@ -32,7 +32,7 @@ public abstract class BaseFragmentWithActionbar extends BaseFragment {
 		mCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getActivity().finish();
+				getActivity().onBackPressed();
 			}
 		});
 		
