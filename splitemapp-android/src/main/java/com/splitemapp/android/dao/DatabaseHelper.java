@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,7 @@ import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
+import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.ExpenseCategory;
@@ -425,6 +427,89 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
+	 * Creates or updates the user in the DB based on the username
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException 
+	 */
+	public CreateOrUpdateStatus createOrUpdateUser(User user) throws SQLException{
+		List<User> userList = getUserDao().queryForEq(TableField.USER_USERNAME, user.getUsername());
+
+		// Setting return values
+		boolean created = false;
+		boolean updated = false;
+		int linesChanged = 0;
+
+		// If it doesn't exists we create it, otherwise we update it
+		if(userList.size() == 0){
+			getUserDao().create(user);
+			created = true;
+		} else {
+			// If this record already exists we make the id match and the update the record
+			user.setId(userList.get(0).getId());
+			linesChanged = getUserDao().update(user);
+			updated = true;
+		}
+
+		return new CreateOrUpdateStatus(created, updated, linesChanged);
+	}
+
+	/**
+	 * Creates or updates the user contact data in the DB based on the userId
+	 * @param userContactData
+	 * @return
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserContactData(UserContactData userContactData) throws SQLException{
+		List<UserContactData> userContactDataList = getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_USER_ID, userContactData.getUser().getId());
+
+		// Setting return values
+		boolean created = false;
+		boolean updated = false;
+		int linesChanged = 0;
+
+		// If it doesn't exists we create it, otherwise we update it
+		if(userContactDataList.size() == 0){
+			getUserContactDataDao().create(userContactData);
+			created = true;
+		} else {
+			// If this record already exists we make the id match and the update the record
+			userContactData.setId(userContactDataList.get(0).getId());
+			linesChanged = getUserContactDataDao().update(userContactData);
+			updated = true;
+		}
+
+		return new CreateOrUpdateStatus(created, updated, linesChanged);
+	}
+	
+	/**
+	 * Creates or updates the user avatar in the DB based on the userId
+	 * @param userAvatar
+	 * @return
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserAvatar(UserAvatar userAvatar) throws SQLException{
+		List<UserAvatar> userAvatarList = getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, userAvatar.getUser().getId());
+
+		// Setting return values
+		boolean created = false;
+		boolean updated = false;
+		int linesChanged = 0;
+
+		// If it doesn't exists we create it, otherwise we update it
+		if(userAvatarList.size() == 0){
+			getUserAvatarDao().create(userAvatar);
+			created = true;
+		} else {
+			// If this record already exists we make the id match and the update the record
+			userAvatar.setId(userAvatarList.get(0).getId());
+			linesChanged = getUserAvatarDao().update(userAvatar);
+			updated = true;
+		}
+
+		return new CreateOrUpdateStatus(created, updated, linesChanged);
+	}
+
+	/**
 	 * Gets the user contact data from a particular user id
 	 * @param userId Long containing the user id in the DB 
 	 * @return UserContactData instance
@@ -483,6 +568,57 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
+	 * Returns the project cover image for the specified project ID
+	 * @param projectCoverImageId
+	 * @return
+	 * @throws SQLException
+	 */
+	public ProjectCoverImage getProjectCoverImageByProjectId(Long projectId) throws SQLException{
+		ProjectCoverImage projectCoverImage = getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, projectId).get(0);
+		return projectCoverImage;
+	}
+
+	/**
+	 * Returns a list of all available project types
+	 * @return
+	 * @throws SQLException 
+	 */
+	public List<ProjectType> getAllProjectTypes() throws SQLException{
+		return getProjectTypeDao().queryForAll();
+	}
+
+	/**
+	 * Returns the list of actively associated users to a particular project
+	 * @param projectId
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<User> getActiveUsersByProjectId(Long projectId) throws SQLException{
+		List<UserToProject> allUserToProjectsForProjectId = getAllUserToProjectsForProjectId(projectId);
+
+		List<User> activeUsersList = new ArrayList<User>();
+		for(UserToProject userToProject:allUserToProjectsForProjectId){
+			UserToProjectStatus userToProjectStatus = getUserToProjectStatusDao().queryForId(userToProject.getUserToProjectStatus().getId());
+			if(userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE)){
+				activeUsersList.add(getUserById(userToProject.getUser().getId()));
+			}
+		}
+
+		return activeUsersList;
+	}
+
+
+	/**
+	 * Gets the list of UserToProjects associated with the currently logged user
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserToProject> getAllUserToProjectsForProjectId(Long projectId) throws SQLException{
+		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_PROJECT_ID, projectId);
+		return userToProjectList;
+	}
+
+	/**
 	 * Gets the User object for the userId
 	 * @param userId Long containing the user id in the DB
 	 * @return User instance
@@ -499,7 +635,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException 
 	 */
 	public Project getProjectById(Long projectId) throws SQLException{
-		return getProjectDao().queryForId(projectId.longValue());
+		// Getting project
+		Project project = getProjectDao().queryForId(projectId.longValue());
+		
+		// Getting project type
+		ProjectType projectType = getProjectTypeDao().queryForId(project.getProjectType().getId());
+		project.setProjectType(projectType);
+		
+		// Getting project avatar
+		Set<ProjectCoverImage> projectCoverImageSet = new HashSet<ProjectCoverImage>();
+		projectCoverImageSet.add(getProjectCoverImageByProjectId(projectId));
+		project.setProjectCoverImages(projectCoverImageSet);
+		
+		return project;
 	}
 
 	/**
@@ -553,7 +701,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Project> getAllActiveProjectsForLoggedUser() throws SQLException{
+	public List<Project> getActiveProjectsForLoggedUser() throws SQLException{
 		ArrayList<Project> result = new ArrayList<Project>();
 
 		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
@@ -587,6 +735,54 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 
 		return user;
+	}
+
+	/**
+	 * Updates the user list associated with the provided project object
+	 * @param projectId
+	 * @param userList
+	 * @throws SQLException 
+	 */
+	public void updateProjectContacts(Project project, List<User> userList) throws SQLException{
+		// Getting user to project statuses
+		UserToProjectStatus userToProjectActive = getUserToProjectStatusDao().queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE).get(0);
+		UserToProjectStatus userToProjectLeft = getUserToProjectStatusDao().queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.USER_TO_PROJECT_STATUS_LEFT).get(0);
+
+		// Getting pre-existing users for this project
+		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_PROJECT_ID, project.getId());
+
+		// Calculating expense share by default (all members in the group have same %)
+		BigDecimal expenseShare = EconomicUtils.calulateShare(userToProjectList.size());
+
+		// For each of the existing users in the list, we update their status
+		for(UserToProject userToProject:userToProjectList){
+			// By default, we set the status to "left"
+			userToProject.setUserToProjectStatus(userToProjectLeft);
+
+			// If it's in the users list, we update status to active and remove it from the users list
+			for(int i=0; i<userList.size();i++){
+				Long userId = userList.get(i).getId();
+				if (userToProject.getUser().getId().equals(userId)){
+					userToProject.setUserToProjectStatus(userToProjectActive);
+					userToProject.setExpensesShare(expenseShare);
+					userList.remove(i);
+					break;
+				}
+			}
+
+			// Updating userToProject
+			getUserToProjectDao().update(userToProject);
+		}
+
+		// Now we only have new users in the user list, we add the records for those
+		for(User user:userList){
+			UserToProject userToProject = new UserToProject();
+			userToProject.setUserToProjectStatus(userToProjectActive);
+			userToProject.setProject(project);
+			userToProject.setUser(user);
+			userToProject.setExpensesShare(expenseShare);
+			getUserToProjectDao().create(userToProject);
+		}
 	}
 
 	/**
