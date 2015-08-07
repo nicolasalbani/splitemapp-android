@@ -1,10 +1,9 @@
-package com.splitemapp.android.screen.createlist;
+package com.splitemapp.android.screen.createproject;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,7 +27,6 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
 import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
-import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.commons.constants.TableField;
@@ -38,29 +36,28 @@ import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
-import com.splitemapp.commons.domain.UserContactData;
-import com.splitemapp.commons.domain.UserToProject;
-import com.splitemapp.commons.domain.UserToProjectStatus;
 
-public class CreateListFragment extends BaseFragmentWithActionbar {
+public class CreateProjectFragment extends BaseFragmentWithActionbar {
 
-	private static final String TAG = CreateListFragment.class.getSimpleName();
+	private static final String TAG = CreateProjectFragment.class.getSimpleName();
 
 	private User mCurrentUser;
 	private byte[] mAvatarData;
 
-	private EditText mListName;
-	private Spinner mListType;
-	private EditText mListBudget;
+	private EditText mProjectTitle;
+	private Spinner mProjectType;
+	private EditText mProjectBudget;
 	private ListView mMembersList;
 	private FloatingActionButton mFab;
+
+	private Project mProjectToEdit;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// We initialize a new list
-		Globals.setCreateListActivityUserList(new ArrayList<User>());
+		// We initialize a new user list
+		Globals.setCreateProjectActivityUserList(new ArrayList<User>());
 
 		// We get the user and user contact data instances
 		try {
@@ -69,10 +66,25 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 
-		// We only add the current user to the users list at first
-		Globals.getCreateListActivityUserList().add(mCurrentUser);	
+		if(isNewProject()){
+			// We only add the current user to the users list at first
+			Globals.getCreateProjectActivityUserList().add(mCurrentUser);	
+		} else {
+			try {
+				// Saving the project instance to edit
+				mProjectToEdit = getHelper().getProjectById(Globals.getCreateProjectActivityProjectId());
 
-		Globals.setCreateListFragment(this);
+				// Getting the user list associated to that project
+				List<User> activeUsersByProjectId = getHelper().getActiveUsersByProjectId(Globals.getCreateProjectActivityProjectId());
+				for(User user:activeUsersByProjectId){
+					Globals.getCreateProjectActivityUserList().add(user);
+				}
+			} catch (SQLException e) {
+				Log.e(TAG, "SQLException caught!", e);
+			}
+		}
+
+		Globals.setCreateProjectFragment(this);
 	}
 
 	@Override
@@ -81,35 +93,43 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 		// Inflating the action bar and obtaining the View object
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		// We get the list name field
-		mListName = (EditText) v.findViewById(R.id.cl_list_name_editText);
+		// We get the project name field
+		mProjectTitle = (EditText) v.findViewById(R.id.cp_project_name_editText);
 
-		// We get the list budget field
-		mListBudget = (EditText) v.findViewById(R.id.cl_budget_editText);
+		// We get the project budget field
+		mProjectBudget = (EditText) v.findViewById(R.id.cp_budget_editText);
 
 		// We get and populate the spinner
-		mListType = (Spinner) v.findViewById(R.id.cl_list_type_spinner);
+		mProjectType = (Spinner) v.findViewById(R.id.cp_project_type_spinner);
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner );
 		try {
-			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
-			List<ProjectType> projectTypes = projectTypeDao.queryForAll();
-			ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_spinner );
+			List<ProjectType> projectTypes = getHelper().getAllProjectTypes();
 			for(ProjectType projectType:projectTypes){
-				adapter.add(projectType.getCod());
+				spinnerAdapter.add(projectType.getCod());
 			}
-			mListType.setAdapter(adapter);
+			mProjectType.setAdapter(spinnerAdapter);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
+		
+		// If we are editing this project, we populate all fields
+		if(!isNewProject()){
+			mProjectTitle.setText(mProjectToEdit.getTitle());
+			mProjectBudget.setText(mProjectToEdit.getBudget().toString());
+			String cod = mProjectToEdit.getProjectType().getCod();
+			int position = spinnerAdapter.getPosition(cod);
+			mProjectType.setSelection(position);
+		}
 
 		// Setting the global create list user list to the user adapter
-		UserAdapter userAdapter = new UserAdapter(Globals.getCreateListActivityUserList());
+		UserAdapter userAdapter = new UserAdapter(Globals.getCreateProjectActivityUserList());
 
-		// Populating the list of projects for this user
-		mMembersList = (ListView) v.findViewById(R.id.cl_users_listView);
+		// Populating the list of members for this project
+		mMembersList = (ListView) v.findViewById(R.id.cp_users_listView);
 		mMembersList.setAdapter(userAdapter);
 
 		// Adding action FABs to the main FAB
-		mFab = (FloatingActionButton) v.findViewById(R.id.cl_fab);
+		mFab = (FloatingActionButton) v.findViewById(R.id.cp_fab);
 		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
 
 		// Adding add contact FAB
@@ -139,7 +159,7 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 		mAvatarData = ImageUtils.bitmapToByteArray(selectedBitmap, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
-	public void createList(){
+	private void createProject(){
 		try {
 			// Getting the project active status
 			Dao<ProjectStatus,Short> projectStatusDao = getHelper().getProjectStatusDao();
@@ -147,43 +167,70 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 
 			// Getting the project type
 			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
-			ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mListType.getSelectedItem()).get(0);
+			ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mProjectType.getSelectedItem()).get(0);
 
 			// Saving the project in the database
-			Project project = new Project();
-			project.setBudget(new BigDecimal(mListBudget.getText().toString()));
+			Project project = null;
+			project = new Project();
+			project.setBudget(new BigDecimal(mProjectBudget.getText().toString()));
 			project.setProjectStatus(projectActiveStatus);
 			project.setProjectType(projectType);
-			project.setTitle(mListName.getText().toString());
+			project.setTitle(mProjectTitle.getText().toString());
 			getHelper().getProjectDao().create(project);
 
 			// Creating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
+			projectCoverImage = new ProjectCoverImage();
 			projectCoverImage.setProject(project);
 			if(mAvatarData != null){
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
 			getHelper().getProjectCoverImageDao().create(projectCoverImage);
 
-			// Getting the user to project active status
-			Dao<UserToProjectStatus,Short> userToProjectStatusDao = getHelper().getUserToProjectStatusDao();
-			UserToProjectStatus userToProjectActiveStatus = userToProjectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE).get(0);
-
 			// Saving user to project relationships
-			for(User user:Globals.getCreateListActivityUserList()){
-				UserToProject userToProject = new UserToProject();
-				userToProject.setUserToProjectStatus(userToProjectActiveStatus);
-				userToProject.setProject(project);
-				userToProject.setUser(user);
-				userToProject.setExpensesShare(EconomicUtils.calulateShare(Globals.getCreateListActivityUserList().size()));
-				getHelper().getUserToProjectDao().create(userToProject);
+			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+
+			// Resetting the global create project - user list
+			Globals.setCreateProjectActivityUserList(new ArrayList<User>());
+
+			// Resetting the global create project - project id
+			Globals.setCreateProjectActivityProjectId(null);
+
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+	}
+
+	private void updateProject(){
+		try {
+			// Getting the project type
+			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
+			ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mProjectType.getSelectedItem()).get(0);
+
+			// Updating the project in the database
+			Project project = mProjectToEdit;
+			project.setBudget(new BigDecimal(mProjectBudget.getText().toString()));
+			project.setProjectType(projectType);
+			project.setTitle(mProjectTitle.getText().toString());
+			getHelper().getProjectDao().update(project);
+
+			// Updating project image cover
+			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
+			projectCoverImage = getHelper().getProjectCoverImageByProjectId(project.getId());
+			if(mAvatarData != null){
+				projectCoverImage.setAvatarData(mAvatarData);
 			}
+			getHelper().getProjectCoverImageDao().update(projectCoverImage);
 
-			// Resetting the global create list user list
-			Globals.setCreateListActivityUserList(new ArrayList<User>());
+			// Updating user to project relationships
+			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
 
-			// Moving back to the home screen
-			getActivity().finish();
+			// Resetting the global create project - user list
+			Globals.setCreateProjectActivityUserList(new ArrayList<User>());
+
+			// Resetting the global create project - project id
+			Globals.setCreateProjectActivityProjectId(null);
+
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -206,25 +253,31 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 			User user = getItem(position);
 
 			// Setting the user name
-			TextView userName = (TextView)convertView.findViewById(R.id.cl_user_name);
+			TextView userName = (TextView)convertView.findViewById(R.id.cp_user_name);
 			userName.setText(user.getFullName());
 
-			// Getting the existing user contact data from the user
-			UserContactData userContactData = null;
-			Set<UserContactData> userContactDatas = user.getUserContactDatas();
-			for(UserContactData ucd:userContactDatas){
-				userContactData = ucd;
-			}
-
 			// Setting the user email
-			TextView userEmail = (TextView)convertView.findViewById(R.id.cl_user_email);
-			userEmail.setText(userContactData.getContactData());
+			TextView userEmail = (TextView)convertView.findViewById(R.id.cp_user_email);
+			userEmail.setText(user.getUsername());
 
 			//Setting the user avatar
-			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cl_user_avatar);
+			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cp_user_avatar);
 			setUsetAvatar(userAvatar, user, ImageUtils.IMAGE_QUALITY_MED);
 
 			return convertView;
+		}
+	}
+
+	/**
+	 * Returns boolean indicating whether this is a new project or we are editing one
+	 * @return
+	 */
+	private boolean isNewProject(){
+		Long createProjectActivityProjectId = Globals.getCreateProjectActivityProjectId();
+		if(createProjectActivityProjectId == null){
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -243,17 +296,32 @@ public class CreateListFragment extends BaseFragmentWithActionbar {
 
 	@Override
 	protected int getFragmentResourceId() {
-		return R.layout.fragment_create_list;
+		return R.layout.fragment_create_project;
 	}
 
 	@Override
 	protected int getTitleResourceId() {
-		return R.string.cl_title;
+		if(isNewProject()){
+			return R.string.cp_new_title;
+		} else {
+			return R.string.cp_edit_title;
+		}
 	}
 
 	@Override
 	protected void doneAction() {
-		createList();
+		// Creating or updating project
+		if(isNewProject()){
+			createProject();
+			
+			// We just finish the activity so that it animates new row
+			getActivity().finish();
+		} else {
+			updateProject();
+			
+			// We simulate onBackPressed to we create a new intent and update everything
+			getActivity().onBackPressed();
+		}
 	}
 
 }
