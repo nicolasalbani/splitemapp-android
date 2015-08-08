@@ -5,14 +5,12 @@ import java.sql.SQLException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +40,9 @@ public class HomeFragment extends SynchronizerFragment {
 	private SwipeProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
 
-	private NavigationView navigationView;
+	private TextView mLogoutTextView;
+	private TextView mManageContactsTextView;
+	private TextView mSynchronizeTextView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -107,46 +107,43 @@ public class HomeFragment extends SynchronizerFragment {
 			}
 		});
 
-		// Setting the navigation view listener
-		navigationView = (NavigationView) v.findViewById(R.id.h_navigationView);
-		navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
+		mLogoutTextView = (TextView) v.findViewById(R.id.h_logout_textView);
+		mLogoutTextView.setOnClickListener(new OnClickListener(){
 			@Override
-			public boolean onNavigationItemSelected(MenuItem item) {
-				Intent nextIntent = null;
-				// Handle item selection
-				switch (item.getItemId()){
-				case R.id.h_logout : 
-					// We delete all user sessions
-					try {
-						getHelper().deleteAllUserSessions();
-					} catch (SQLException e) {
-						Log.e(TAG, "SQLException caught!", e);
-					}
-					// We move to the login screen
-					nextIntent = new Intent(getActivity(), WelcomeActivity.class);
-					startActivity(nextIntent);
-					return true;
-				case R.id.h_synchronize : 
-					pushProjects();
-					//			pullUsers();
-					//			pullUserContactDatas();
-					//			pullProjects();
-					//			pullUserToProjects();
-					//			pullGroups();
-					//			pullUserToGroups();
-					//			pullUserInvites();
-					//			pullUserExpenses();
-
-					// We reload the view
-					return true;
-				case R.id.h_manage_contacts :
-					// We move to the login screen
-					nextIntent = new Intent(getActivity(), ManageContactsActivity.class);
-					startActivity(nextIntent);
-					return true;
-				default:
-					return false;
+			public void onClick(View arg0) {
+				// We delete all user sessions
+				try {
+					getHelper().deleteAllUserSessions();
+				} catch (SQLException e) {
+					Log.e(TAG, "SQLException caught!", e);
 				}
+				// We move to the welcome screen
+				startActivity(new Intent(getActivity(), WelcomeActivity.class));
+			}
+		});
+
+		mSynchronizeTextView = (TextView) v.findViewById(R.id.h_synchronize_textView);
+		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				pushProjects();
+				//			pullUsers();
+				//			pullUserContactDatas();
+				//			pullProjects();
+				//			pullUserToProjects();
+				//			pullGroups();
+				//			pullUserToGroups();
+				//			pullUserInvites();
+				//			pullUserExpenses();
+			}
+		});
+
+		mManageContactsTextView = (TextView) v.findViewById(R.id.h_manage_contacts_textView);
+		mManageContactsTextView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// We move to the login screen
+				startActivity( new Intent(getActivity(), ManageContactsActivity.class));
 			}
 		});
 
