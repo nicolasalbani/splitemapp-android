@@ -40,8 +40,8 @@
     <RelativeLayout
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:background="@color/grey"
-        android:layout_gravity="start" >
+        android:layout_gravity="start"
+        android:background="@color/grey" >
 
         <ImageView
             android:id="@+id/h_avatar_imageView"
@@ -97,6 +97,8 @@
             <TextView
                 android:id="@+id/h_logout_textView"
                 style="DrawerOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_logout_grey_24dp"
                 android:drawableStart="@drawable/ic_logout_grey_24dp"
                 android:text="@string/h_logout" />
@@ -106,6 +108,8 @@
             <TextView
                 android:id="@+id/h_manage_contacts_textView"
                 style="DrawerOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_manage_contacts_grey_24dp"
                 android:drawableStart="@drawable/ic_manage_contacts_grey_24dp"
                 android:text="@string/h_manage_contacts" />
@@ -115,6 +119,8 @@
             <TextView
                 android:id="@+id/h_synchronize_textView"
                 style="DrawerOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_synchronize_grey_24dp"
                 android:drawableStart="@drawable/ic_synchronize_grey_24dp"
                 android:text="@string/h_synchronize" />
