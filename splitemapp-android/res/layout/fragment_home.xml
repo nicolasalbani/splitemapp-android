@@ -96,9 +96,13 @@
 
             <TextView
                 android:id="@+id/h_logout_textView"
-                style="DrawerOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold"
                 android:drawableLeft="@drawable/ic_logout_grey_24dp"
                 android:drawableStart="@drawable/ic_logout_grey_24dp"
                 android:text="@string/h_logout" />
@@ -107,9 +111,13 @@
 
             <TextView
                 android:id="@+id/h_manage_contacts_textView"
-                style="DrawerOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold"
                 android:drawableLeft="@drawable/ic_manage_contacts_grey_24dp"
                 android:drawableStart="@drawable/ic_manage_contacts_grey_24dp"
                 android:text="@string/h_manage_contacts" />
@@ -118,9 +126,13 @@
 
             <TextView
                 android:id="@+id/h_synchronize_textView"
-                style="DrawerOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold"
                 android:drawableLeft="@drawable/ic_synchronize_grey_24dp"
                 android:drawableStart="@drawable/ic_synchronize_grey_24dp"
                 android:text="@string/h_synchronize" />
