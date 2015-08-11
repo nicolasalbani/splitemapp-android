@@ -77,11 +77,13 @@
     <string name="p_cover_image_description">Cover Image</string>
     
     <!-- Expense Screen -->
-    <string name="e_title">New Expense</string>
+    <string name="e_new_title">New Expense</string>
+    <string name="e_edit_title">Edit Expense</string>
     <string name="e_cancel_action">Cancel</string>
     <string name="e_save_action">Save</string>
+    <string name="e_expenseamount_hint">Expense amount</string>
     <string name="e_currency">$</string>
-    <string name="e_initial_calc_calue">0</string>
+    <string name="e_initial_expense_amount">0</string>
     
     <!-- Add People Screen -->
     <string name="ap_title">Add People</string>

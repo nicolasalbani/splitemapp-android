@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -27,6 +29,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
 import com.splitemapp.android.screen.DatePickerFragment;
+import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
@@ -34,11 +37,8 @@ import com.splitemapp.commons.domain.UserExpense;
 
 public class ExpenseFragment extends BaseFragmentWithActionbar {
 
-	private static final String DECIMAL_DELIMITER_KEY = ".";
-	private static final String DELETE_KEY = "<";
-	private static final String EXPENSE_AMOUNT_INITIAL_VALUE = "0";
-	private static final Integer MAX_EXPENSE_DECIMALS = 2;
-	private static final String[] CALCULATOR_VALUES = new String[]{"1","2","3","4","5","6","7","8","9",DECIMAL_DELIMITER_KEY,"0",DELETE_KEY};
+	private static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
+	private static final int MAX_DIGITS_AFTER_DECIMAL = 2;
 
 	private static final String TAG = ExpenseFragment.class.getSimpleName();
 
@@ -47,10 +47,9 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 	private UserExpense mUserExpense;
 	private short mSelectedCategory;
 
-	private TextView mExpenseAmount;
+	private EditText mExpenseAmount;
 	private TextView mExpenseDateText;
 	private GridView mExpenseCategory;
-	private GridView mExpenseCalculator;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -62,11 +61,11 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 			mCurrentProject = getHelper().getProjectById(Globals.getExpenseActivityProjectId());
 
 			// If we got an expense id, we are meant to edit that expense
-			Long userExpenseId = Globals.getExpenseActivityExpenseId();
-			if(userExpenseId != null){
-				mUserExpense = getHelper().getUserExpenseById(userExpenseId);
-			} else {
+			if(isNewExpense()){
 				mUserExpense = new UserExpense();
+				mUserExpense.setExpenseDate(new Date());
+			} else {
+				mUserExpense = getHelper().getUserExpenseById(Globals.getExpenseActivityExpenseId());
 			}
 		} catch (SQLException e){
 			Log.e(TAG, "SQLException caught!", e);
@@ -81,19 +80,17 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// We populate the expense category grid view
-		mExpenseCategory = (GridView) v.findViewById(R.id.ae_expense_categories_gridView);
+		mExpenseCategory = (GridView) v.findViewById(R.id.e_expense_categories_gridView);
 		mExpenseCategory.setAdapter(getExpenseCategoryAdapter());
 		mExpenseCategory.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				mSelectedCategory = (short)position;
 			}
 		});
-		if(mUserExpense.getId() != null){
-			mSelectedCategory = (short) (mUserExpense.getExpenseCategory().getId().shortValue()-1);
-		}
+
 
 		// We inflate the expense date text view and load todays date by default
-		mExpenseDateText = (TextView) v.findViewById(R.id.ae_expense_date_textView);
+		mExpenseDateText = (TextView) v.findViewById(R.id.e_expense_date_textView);
 		mExpenseDateText.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -105,54 +102,28 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 						cal.set(Calendar.MONTH, month);
 						cal.set(Calendar.DAY_OF_MONTH, day);
 						mUserExpense.setExpenseDate(cal.getTime());
-						updateExpenseDateDisplay();
+						updateExpenseDateDisplay(mUserExpense);
 					}};
 					fragment.show(getActivity().getSupportFragmentManager(), TAG);
 			}
 		});
-		if(mUserExpense.getExpenseDate() == null){
-			mUserExpense.setExpenseDate(new Date());
-		}
-		updateExpenseDateDisplay();
+		updateExpenseDateDisplay(mUserExpense);
 
 		// We inflate the expense amount object
-		mExpenseAmount = (TextView) v.findViewById(R.id.ae_expense_amount_textView);
-		if(mUserExpense.getExpense() != null){
+		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
+		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(MAX_DIGITS_BEFORE_DECIMAL,MAX_DIGITS_AFTER_DECIMAL)});
+
+		// If we are editing the expense, we populate the values
+		if(!isNewExpense()){
+			mSelectedCategory = (short) (mUserExpense.getExpenseCategory().getId().shortValue()-1);
 			mExpenseAmount.setText(mUserExpense.getExpense().toString());
+			updateExpenseDateDisplay(mUserExpense);
 		}
 
-		// We populate the expense calculator grid view
-		mExpenseCalculator = (GridView) v.findViewById(R.id.ae_expense_calculator_gridView);
-		mExpenseCalculator.setAdapter(getExpenseCalculatorAdapter());
-		mExpenseCalculator.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				String pressedKey = CALCULATOR_VALUES[position];
-				if(pressedKey == DECIMAL_DELIMITER_KEY){
-					if(!mExpenseAmount.getText().toString().contains(DECIMAL_DELIMITER_KEY)){
-						mExpenseAmount.setText(mExpenseAmount.getText()+pressedKey);
-					}
-				} else if (pressedKey == DELETE_KEY){
-					int amountLength = mExpenseAmount.getText().length();
-					if(amountLength == 1){
-						mExpenseAmount.setText(EXPENSE_AMOUNT_INITIAL_VALUE);
-					} else {
-						mExpenseAmount.setText(mExpenseAmount.getText().subSequence(0, amountLength-1));
-					}
-				} else {
-					if(mExpenseAmount.getText().equals(EXPENSE_AMOUNT_INITIAL_VALUE)){
-						mExpenseAmount.setText(pressedKey);
-					} else {
-						if(!isMaxDecimalsReached(mExpenseAmount.getText().toString())){
-							mExpenseAmount.setText(mExpenseAmount.getText() + pressedKey);
-						}
-					}
-				}
-			}
-		});
 		return v;
 	}
 
-	public void saveExpense(){
+	private void saveExpense(){
 		try {
 			// We get an instance of the expense category
 			Dao<ExpenseCategory,Short> expenseCategoryDao = getHelper().getExpenseCategoryDao();
@@ -164,13 +135,34 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);
 			mUserExpense.setUser(mCurrentUser);
-			userExpensesDao.createOrUpdate(mUserExpense);
-
-			// Cleaning up global expense id
-			Globals.setExpenseActivityExpenseId(null);
+			userExpensesDao.create(mUserExpense);
 
 			// Moving back to the project screen
-			getActivity().finish();
+			getActivity().onBackPressed();
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught!", e);
+		}
+
+	}
+	
+	private void updateExpense(){
+		try {
+			// We get an instance of the expense category
+			Dao<ExpenseCategory,Short> expenseCategoryDao = getHelper().getExpenseCategoryDao();
+			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId((short)(mSelectedCategory+1));
+
+			// We save the user expense to the DB
+			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpenseDao();
+			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
+			mUserExpense.setExpenseCategory(expenseCategory);
+			
+			// TODO Only set the user if we are owning the expense
+			// mUserExpense.setUser(mCurrentUser);
+			
+			userExpensesDao.update(mUserExpense);
+
+			// Moving back to the project screen
+			getActivity().onBackPressed();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
@@ -194,51 +186,26 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 		return adapter;
 	}
 
-	private void updateExpenseDateDisplay(){
+	/**
+	 * Updates the expense date textView based on the content of the userExpense object
+	 * @param userExpense
+	 */
+	private void updateExpenseDateDisplay(UserExpense userExpense){
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-		String date = dateFormat.format(mUserExpense.getExpenseDate());
-		mExpenseDateText.setText(date);
+		Date date = userExpense.getExpenseDate();
+		mExpenseDateText.setText(dateFormat.format(date));
 	}
 
-	private boolean isMaxDecimalsReached(String expenseAmount){
-		boolean isMaxDecimalsReached = false;
-
-		if(expenseAmount.contains(DECIMAL_DELIMITER_KEY)){
-			// In case our decimal delimiter is a special character, we add escape sequence first
-			String[] tokens = expenseAmount.split("\\"+DECIMAL_DELIMITER_KEY);
-			if (tokens.length > 1 && tokens[1].length() >= MAX_EXPENSE_DECIMALS){
-				isMaxDecimalsReached = true;
-			}
-		}
-
-		return isMaxDecimalsReached;
-	}
-
-	private ArrayAdapter<String> getExpenseCalculatorAdapter(){
-		ExpenseCalculatorAdapter adapter = new ExpenseCalculatorAdapter(CALCULATOR_VALUES);
-		return adapter;
-	}
-
-	private class ExpenseCalculatorAdapter extends ArrayAdapter<String>{
-
-		public ExpenseCalculatorAdapter(String[] calculatorKey){
-			super(getActivity(), 0, calculatorKey);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			//If we weren't given a view, inflate one
-			if (convertView == null){
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_calculator, parent, false);
-			}
-
-			// We obtain the calculator key
-			String calculatorKey = getItem(position);
-
-			TextView calculatorKeyTextView = (TextView)convertView.findViewById(R.id.ae_calculator_key_textView);
-			calculatorKeyTextView.setText(calculatorKey);
-
-			return convertView;
+	/**
+	 * Returns boolean indicating whether this is a new expense or we are editing one
+	 * @return
+	 */
+	private boolean isNewExpense(){
+		Long expenseActivityExpenseId = Globals.getExpenseActivityExpenseId();
+		if(expenseActivityExpenseId == null){
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -255,12 +222,21 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 
 	@Override
 	protected int getTitleResourceId() {
-		return R.string.e_title;
+		if(isNewExpense()){
+			return R.string.e_new_title;
+		} else {
+			return R.string.e_edit_title;
+		}
+		
 	}
 
 	@Override
 	protected void doneAction() {
-		saveExpense();
+		if(isNewExpense()){
+			saveExpense();
+		} else {
+			updateExpense();
+		}
 	}
 
 }

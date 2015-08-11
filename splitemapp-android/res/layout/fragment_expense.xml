@@ -2,24 +2,28 @@
     style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:orientation="vertical"
+    android:background="@color/white" >
+
     <include layout="@layout/action_bar" />
 
-    <GridView
-        android:id="@+id/ae_expense_categories_gridView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3"
-        android:verticalSpacing="2dp" >
-    </GridView>
+    <TextView
+        style="@style/CustomTextView"
+        android:text="@string/e_expenseamount_hint" />
+    
+    <EditText
+        android:id="@+id/e_expense_amount_editText"
+        style="@style/CustomEditText"
+        android:inputType="numberDecimal"
+        android:drawableLeft="@drawable/dollar_sign"
+        android:drawableStart="@drawable/dollar_sign" />
 
     <TextView
-        android:id="@+id/ae_expense_date_textView"
+        android:id="@+id/e_expense_date_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/white"
         android:drawableEnd="@drawable/greater_sign"
         android:drawableRight="@drawable/greater_sign"
@@ -28,41 +32,14 @@
         android:textColor="@color/black"
         android:textSize="23sp" />
 
-    <include layout="@layout/line_separator" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="@string/e_currency"
-            android:textColor="@color/blue"
-            android:textSize="35sp" />
-
-        <TextView
-            android:id="@+id/ae_expense_amount_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/e_initial_calc_calue"
-            android:textColor="@color/blue"
-            android:textSize="35sp" />
-    </LinearLayout>
-
     <GridView
-        android:id="@+id/ae_expense_calculator_gridView"
+        android:id="@+id/e_expense_categories_gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:horizontalSpacing="2dp"
         android:numColumns="3"
-        android:verticalSpacing="2dp" >
+        android:verticalSpacing="2dp"
+        android:background="@color/hard_grey" >
     </GridView>
 
 </LinearLayout>
