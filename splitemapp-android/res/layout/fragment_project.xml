@@ -3,7 +3,8 @@
     style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/white" >
 
     <RelativeLayout
         android:id="@+id/imagelayout"
@@ -33,8 +34,7 @@
         android:id="@+id/p_expense_list_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imagelayout"
-        android:background="@color/white" />
+        android:layout_below="@id/imagelayout" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/p_fab"
@@ -45,11 +45,5 @@
         app:elevation="6dp"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp" />
-
-    <!-- <Button -->
-    <!-- android:id="@+id/p_add_expense_button" -->
-    <!-- style="@style/Button" -->
-    <!-- android:layout_width="match_parent" -->
-    <!-- android:text="@string/p_add_expense_button" /> -->
 
 </RelativeLayout>

@@ -16,12 +16,11 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+    
     <style name="NoActionBarTheme" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@color/white</item>
     </style>
 
     <style name="CustomEditText" parent="Theme.AppCompat">

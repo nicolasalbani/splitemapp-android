@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/white" >
 
     <LinearLayout
         android:id="@+id/cp_linearLayout"
@@ -46,8 +47,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@color/white" />
+            android:layout_height="10dp" />
     </LinearLayout>
 
     <TextView
@@ -62,8 +62,7 @@
         android:id="@+id/cp_users_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cp_project_members_textView"
-        android:background="@color/white" >
+        android:layout_below="@id/cp_project_members_textView" >
     </ListView>
 
     <android.support.design.widget.FloatingActionButton
