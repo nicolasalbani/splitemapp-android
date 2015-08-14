@@ -23,6 +23,8 @@
             android:id="@+id/cp_project_name_editText"
             style="@style/CustomEditText"
             android:inputType="text" />
+        
+        <View style="@style/BottomLine" />
 
         <TextView
             style="@style/CustomTextView"
@@ -31,6 +33,8 @@
         <Spinner
             android:id="@+id/cp_project_type_spinner"
             style="@style/CreateProjectSpinner" />
+        
+        <View style="@style/BottomLine" />
 
         <TextView
             style="@style/CustomTextView"
@@ -44,6 +48,8 @@
             android:drawableStart="@drawable/dollar_sign"
             android:text="@string/cp_project_budget_value"
             android:inputType="numberDecimal" />
+        
+        <View style="@style/BottomLine" />
 
         <View
             android:layout_width="match_parent"

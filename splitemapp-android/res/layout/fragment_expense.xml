@@ -17,6 +17,8 @@
         android:inputType="numberDecimal"
         android:drawableLeft="@drawable/dollar_sign"
         android:drawableStart="@drawable/dollar_sign" />
+    
+    <View style="@style/BottomLine" />
 
     <TextView
         android:id="@+id/e_expense_date_textView"

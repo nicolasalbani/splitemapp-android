@@ -13,6 +13,8 @@
         android:id="@+id/li_username_editText"
         style="@style/CustomEditText"
         android:inputType="textEmailAddress" />
+    
+    <View style="@style/BottomLine" />
 
     <TextView
         style="@style/CustomTextView"
@@ -22,6 +24,8 @@
         android:id="@+id/li_password_editText"
         style="@style/CustomEditText"
         android:inputType="textPassword" />
+    
+    <View style="@style/BottomLine" />
 
     <Button
         android:id="@+id/li_login_button"
