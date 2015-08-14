@@ -54,7 +54,7 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		@Override
 		public void onClick(View view) {
 			// Calling the custom on click listener
-			mClickListener.onItemClick(view, getPosition());
+			mClickListener.onItemClick(view, getAdapterPosition());
 		}
 
 		public static interface IUserExpenseClickListener {

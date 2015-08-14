@@ -155,6 +155,7 @@ public class ExpenseFragment extends BaseFragmentWithActionbar {
 			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpenseDao();
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
+			mUserExpense.setUpdatedAt(new Date());
 			
 			// TODO Only set the user if we are owning the expense
 			// mUserExpense.setUser(mCurrentUser);

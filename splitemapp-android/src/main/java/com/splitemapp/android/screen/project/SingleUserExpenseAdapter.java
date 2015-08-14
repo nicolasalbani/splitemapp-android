@@ -2,6 +2,7 @@ package com.splitemapp.android.screen.project;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,16 +17,17 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.domain.SingleUserExpenseList;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
+import com.splitemapp.commons.comparator.SingleUserExpensesComparator;
+import com.splitemapp.commons.domain.SingleUserExpenses;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExpenseAdapter.ViewHolder> {
 	private static final String TAG = SingleUserExpenseAdapter.class.getSimpleName();
 
-	private List<SingleUserExpenseList> mSingleUserExpenseList;
+	private List<SingleUserExpenses> mSingleUserExpenseList;
 	private BaseFragment baseFragment;
 	private View mView;
 	
@@ -53,7 +55,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		@Override
 		public void onClick(View view) {
 			// Calling the custom on click listener
-			mClickListener.onItemClick(view, getPosition());
+			mClickListener.onItemClick(view, getAdapterPosition());
 		}
 
 		public static interface IUserExpenseClickListener {
@@ -65,6 +67,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	public SingleUserExpenseAdapter(List<UserExpense> userExpenseList, BaseFragment baseFragment) {
 		this.baseFragment = baseFragment;
 		this.mSingleUserExpenseList = getSingleUserExpenseList(userExpenseList);
+		Collections.sort(this.mSingleUserExpenseList, new SingleUserExpensesComparator());
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -92,8 +95,8 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		return viewHolder;
 	}
 
-	public List<SingleUserExpenseList> getSingleUserExpenseList(List<UserExpense> userExpenseList){
-		List<SingleUserExpenseList> singleUserExpenseList = new ArrayList<SingleUserExpenseList>();
+	public List<SingleUserExpenses> getSingleUserExpenseList(List<UserExpense> userExpenseList){
+		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
 
 		// Creating the users ID list
 		List<Long> userIdList = new ArrayList<Long>();
@@ -115,7 +118,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 				try {
 					Long uid = filteredUserExpenseList.get(0).getUser().getId();
 					User user = baseFragment.getHelper().getUserById(uid);
-					singleUserExpenseList.add(new SingleUserExpenseList(user.getFullName(), filteredUserExpenseList));
+					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);
 				}
