@@ -10,18 +10,16 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
@@ -48,8 +46,11 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 	private EditText mProjectTitle;
 	private Spinner mProjectType;
 	private EditText mProjectBudget;
-	private ListView mMembersList;
 	private FloatingActionButton mFab;
+
+	private RecyclerView mMembersRecycler;
+	private UsersAdapter mUsersAdapter;
+	private RecyclerView.LayoutManager mLayoutManager;
 
 	private Project mProjectToEdit;
 
@@ -112,7 +113,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
-		
+
 		// If we are editing this project, we populate all fields
 		if(!isNewProject()){
 			mProjectTitle.setText(mProjectToEdit.getTitle());
@@ -123,18 +124,26 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		}
 
 		// Setting the global create list user list to the user adapter
-		UserAdapter userAdapter = new UserAdapter(Globals.getCreateProjectActivityUserList());
+		mUsersAdapter = new UsersAdapter(this);
 
 		// Populating the list of members for this project
-		mMembersList = (ListView) v.findViewById(R.id.cp_users_listView);
-		mMembersList.setAdapter(userAdapter);
+		mMembersRecycler = (RecyclerView) v.findViewById(R.id.cp_users_recyclerView);
+		mMembersRecycler.setAdapter(mUsersAdapter);
+
+		// Using this setting to improve performance if you know that changes
+		// in content do not change the layout size of the RecyclerView
+		mMembersRecycler.setHasFixedSize(true);
+
+		// Using a linear layout manager
+		mLayoutManager = new LinearLayoutManager(getActivity());
+		mMembersRecycler.setLayoutManager(mLayoutManager);
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.cp_fab);
 		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
 
 		// Adding add contact FAB
-		customFloatingActionButton.addActionFab(getActivity(), "Add contact", R.drawable.action_fab, new OnClickListener() {
+		customFloatingActionButton.addActionFab(getActivity(), "Contacts", R.drawable.action_fab, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Opening add people screen
@@ -144,7 +153,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		});
 
 		// Adding add image cover FAB
-		customFloatingActionButton.addActionFab(getActivity(), "Add cover image", R.drawable.action_fab, new OnClickListener() {
+		customFloatingActionButton.addActionFab(getActivity(), "Cover image", R.drawable.action_fab, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Opening image selector
@@ -238,38 +247,6 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		}
 	}
 
-	private class UserAdapter extends ArrayAdapter<User>{
-
-		public UserAdapter(List<User> users){
-			super(getActivity(), 0, users);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			//If we weren't given a view, inflate one
-			if (convertView == null){
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_user, parent, false);
-			}
-
-			//Configure the view for this User
-			User user = getItem(position);
-
-			// Setting the user name
-			TextView userName = (TextView)convertView.findViewById(R.id.cp_user_name);
-			userName.setText(user.getFullName());
-
-			// Setting the user email
-			TextView userEmail = (TextView)convertView.findViewById(R.id.cp_user_email);
-			userEmail.setText(user.getUsername());
-
-			//Setting the user avatar
-			ImageView userAvatar = (ImageView)convertView.findViewById(R.id.cp_user_avatar);
-			setUsetAvatar(userAvatar, user, ImageUtils.IMAGE_QUALITY_MED);
-
-			return convertView;
-		}
-	}
-
 	/**
 	 * Returns boolean indicating whether this is a new project or we are editing one
 	 * @return
@@ -288,7 +265,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		super.onResume();
 
 		// Refreshing member list when coming back from the Add People fragment
-		((BaseAdapter) mMembersList.getAdapter()).notifyDataSetChanged(); 
+		mUsersAdapter.updateRecycler(); 
 	}
 
 	@Override
@@ -315,13 +292,13 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		// Creating or updating project
 		if(isNewProject()){
 			createProject();
-			
+
 			// We just finish the activity so that it animates new row
 			getActivity().finish();
 		} else {
 			updateProject();
-			
-			// We simulate onBackPressed to we create a new intent and update everything
+
+			// We simulate onBackPressed so we create a new intent and update everything
 			getActivity().onBackPressed();
 		}
 	}

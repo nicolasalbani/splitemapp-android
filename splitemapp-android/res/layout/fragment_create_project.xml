@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/cp_linearLayout"
@@ -23,7 +23,7 @@
             android:id="@+id/cp_project_name_editText"
             style="@style/CustomEditText"
             android:inputType="text" />
-        
+
         <View style="@style/BottomLine" />
 
         <TextView
@@ -33,7 +33,7 @@
         <Spinner
             android:id="@+id/cp_project_type_spinner"
             style="@style/CreateProjectSpinner" />
-        
+
         <View style="@style/BottomLine" />
 
         <TextView
@@ -46,9 +46,9 @@
             android:drawableLeft="@drawable/dollar_sign"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/dollar_sign"
-            android:text="@string/cp_project_budget_value"
-            android:inputType="numberDecimal" />
-        
+            android:inputType="numberDecimal"
+            android:text="@string/cp_project_budget_value" />
+
         <View style="@style/BottomLine" />
 
         <View
@@ -64,12 +64,11 @@
         android:text="@string/cp_project_members_list"
         android:textColor="@color/hard_grey" />
 
-    <ListView
-        android:id="@+id/cp_users_listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cp_users_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cp_project_members_textView" >
-    </ListView>
+        android:layout_below="@id/cp_project_members_textView" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/cp_fab"
