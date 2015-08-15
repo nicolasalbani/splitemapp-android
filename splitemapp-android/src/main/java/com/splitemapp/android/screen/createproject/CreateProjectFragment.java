@@ -3,6 +3,7 @@ package com.splitemapp.android.screen.createproject;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -212,6 +213,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 			project.setBudget(new BigDecimal(mProjectBudget.getText().toString()));
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
+			project.setUpdatedAt(new Date());
 			getHelper().getProjectDao().update(project);
 
 			// Updating project image cover
