@@ -25,7 +25,7 @@ import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithActionbar;
-import com.splitemapp.android.screen.addpeople.AddPeopleActivity;
+import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.commons.constants.TableField;
@@ -49,7 +49,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 	private FloatingActionButton mFab;
 
 	private RecyclerView mMembersRecycler;
-	private UsersAdapter mUsersAdapter;
+	private ContactsAdapter mUsersAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
 
 	private Project mProjectToEdit;
@@ -124,7 +124,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 		}
 
 		// Setting the global create list user list to the user adapter
-		mUsersAdapter = new UsersAdapter(this);
+		mUsersAdapter = new ContactsAdapter(this);
 
 		// Populating the list of members for this project
 		mMembersRecycler = (RecyclerView) v.findViewById(R.id.cp_users_recyclerView);
@@ -147,7 +147,7 @@ public class CreateProjectFragment extends BaseFragmentWithActionbar {
 			@Override
 			public void onClick(View arg0) {
 				// Opening add people screen
-				Intent intent = new Intent(getActivity(), AddPeopleActivity.class);
+				Intent intent = new Intent(getActivity(), ProjectContactsActivity.class);
 				startActivity(intent);
 			}
 		});

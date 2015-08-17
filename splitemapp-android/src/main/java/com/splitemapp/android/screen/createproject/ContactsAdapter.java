@@ -15,20 +15,20 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 
-public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
 
 	private BaseFragment baseFragment;
 	private List<User> mUsers;
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public UsersAdapter(BaseFragment baseFragment) {
+	public ContactsAdapter(BaseFragment baseFragment) {
 		this.baseFragment = baseFragment;
 		this.mUsers = Globals.getCreateProjectActivityUserList();
 	}
 
 	// Create new views (invoked by the layout manager)
 	@Override
-	public UsersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ContactsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// Creating a new view
 		View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_user, parent, false);
 		return new ViewHolder(mView);

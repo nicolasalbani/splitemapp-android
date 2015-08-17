@@ -7,11 +7,9 @@
     
     <include layout="@layout/action_bar"/>
     
-    <ListView
-        android:id="@+id/ap_contacts_listView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pc_contacts_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:listSelector="@android:color/transparent">
-    </ListView>
-
+        android:layout_height="match_parent" />
+    
 </LinearLayout>
