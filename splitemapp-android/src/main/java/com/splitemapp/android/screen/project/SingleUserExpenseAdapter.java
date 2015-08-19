@@ -20,17 +20,22 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
 import com.splitemapp.commons.comparator.SingleUserExpensesComparator;
+import com.splitemapp.commons.comparator.UserExpenseComparator;
+import com.splitemapp.commons.constants.TableField;
+import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.SingleUserExpenses;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExpenseAdapter.ViewHolder> {
+
 	private static final String TAG = SingleUserExpenseAdapter.class.getSimpleName();
 
 	private List<SingleUserExpenses> mSingleUserExpenseList;
-	private BaseFragment baseFragment;
+	private Project mCurrentProject;
+	private BaseFragment mBaseFragment;
 	private View mView;
-	
+
 	// Provide a reference to the views for each data item
 	// Complex data items may need more than one view per item, and
 	// you provide access to all the views for a data item in a view holder
@@ -64,10 +69,10 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SingleUserExpenseAdapter(List<UserExpense> userExpenseList, BaseFragment baseFragment) {
-		this.baseFragment = baseFragment;
-		this.mSingleUserExpenseList = getSingleUserExpenseList(userExpenseList);
-		Collections.sort(this.mSingleUserExpenseList, new SingleUserExpensesComparator());
+	public SingleUserExpenseAdapter(Project currentProject, BaseFragment baseFragment) {
+		this.mCurrentProject = currentProject;
+		this.mBaseFragment = baseFragment;
+		this.mSingleUserExpenseList = getSingleUserExpenseList();
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -95,37 +100,15 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		return viewHolder;
 	}
 
-	public List<SingleUserExpenses> getSingleUserExpenseList(List<UserExpense> userExpenseList){
-		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
+	/**
+	 * Updates the content of the recycler
+	 */
+	public void updateRecycler(){
+		// Getting a sorted list of SingleUserExpenses
+		mSingleUserExpenseList = getSingleUserExpenseList();
 
-		// Creating the users ID list
-		List<Long> userIdList = new ArrayList<Long>();
-		for(UserExpense userExpense:userExpenseList){
-			if(!userIdList.contains(userExpense.getUser().getId())){
-				userIdList.add(userExpense.getUser().getId());
-			}
-		}
-
-		// Populating the SingleUserExpenseList
-		for(Long userId:userIdList){
-			List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>();
-			for(UserExpense userExpense:userExpenseList){
-				if(userExpense.getUser().getId().equals(userId)){
-					filteredUserExpenseList.add(userExpense);
-				}
-			}
-			if(filteredUserExpenseList.size()>0){
-				try {
-					Long uid = filteredUserExpenseList.get(0).getUser().getId();
-					User user = baseFragment.getHelper().getUserById(uid);
-					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
-				} catch (SQLException e) {
-					Log.e(TAG, "SQLException caught!", e);
-				}
-			}
-		}
-
-		return singleUserExpenseList;
+		// We notify that the data set has changed
+		notifyDataSetChanged();
 	}
 
 	/**
@@ -151,7 +134,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		viewHolder.mFullAmountTextView.setText(String.format("%.2f", mSingleUserExpenseList.get(position).getFullAmount()));
 
 		// Creating a single user expense adapter to be used in the recycler view
-		viewHolder.mUserExpenseAdapter = new UserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), baseFragment);
+		viewHolder.mUserExpenseAdapter = new UserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), mBaseFragment);
 
 		// We populate the list of user expenses for this user
 		viewHolder.mUserExpenseRecyclerView.setAdapter(viewHolder.mUserExpenseAdapter);
@@ -161,12 +144,12 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		viewHolder.mUserExpenseRecyclerView.setHasFixedSize(true);
 
 		// Using a linear layout manager
-		viewHolder.mLayoutManager = new LinearLayoutManager(baseFragment.getActivity());
+		viewHolder.mLayoutManager = new LinearLayoutManager(mBaseFragment.getActivity());
 		viewHolder.mUserExpenseRecyclerView.setLayoutManager(viewHolder.mLayoutManager);
-		
+
 		// Setting the nested RecyclerView height based on the amount of items inside the list
 		LayoutParams layoutParams = viewHolder.mUserExpenseRecyclerView.getLayoutParams();
-		layoutParams.height = mSingleUserExpenseList.get(position).getExpenseList().size() * (int)baseFragment.getResources().getDimension(R.dimen.user_expense_height);
+		layoutParams.height = mSingleUserExpenseList.get(position).getExpenseList().size() * (int)mBaseFragment.getResources().getDimension(R.dimen.user_expense_height);
 
 		// Setting the default animator for the view
 		viewHolder.mUserExpenseRecyclerView.setItemAnimator(new CustomItemAnimator());
@@ -175,6 +158,68 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	@Override
 	public int getItemCount() {
 		return mSingleUserExpenseList.size();
+	}
+
+	/**
+	 * Returns the whole user expense list for this project
+	 * @return
+	 */
+	private List<UserExpense> getUserExpenseList(){
+		List<UserExpense> userExpenseList = null;
+
+		// Getting the UserExpense list from the database
+		try {
+			userExpenseList = mBaseFragment.getHelper().getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+		
+		// Sorting the UserExpense list
+		Collections.sort(userExpenseList, new UserExpenseComparator());
+
+		return userExpenseList;
+	}
+
+	/**
+	 * Returns a list of SingleUserExpenses created upon the provided UserExpense list
+	 * @return
+	 */
+	private List<SingleUserExpenses> getSingleUserExpenseList(){
+		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
+
+		List<UserExpense> userExpenseList = getUserExpenseList();
+
+		// Creating the users ID list
+		List<Long> userIdList = new ArrayList<Long>();
+		for(UserExpense userExpense:userExpenseList){
+			if(!userIdList.contains(userExpense.getUser().getId())){
+				userIdList.add(userExpense.getUser().getId());
+			}
+		}
+
+		// Populating the SingleUserExpenseList
+		for(Long userId:userIdList){
+			List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>();
+			for(UserExpense userExpense:userExpenseList){
+				if(userExpense.getUser().getId().equals(userId)){
+					filteredUserExpenseList.add(userExpense);
+				}
+			}
+			if(filteredUserExpenseList.size()>0){
+				try {
+					Long uid = filteredUserExpenseList.get(0).getUser().getId();
+					User user = mBaseFragment.getHelper().getUserById(uid);
+					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
+				} catch (SQLException e) {
+					Log.e(TAG, "SQLException caught!", e);
+				}
+			}
+		}
+		
+		// Sorting the SingleUserExpenseList
+		Collections.sort(singleUserExpenseList, new SingleUserExpensesComparator());
+
+		return singleUserExpenseList;
 	}
 
 }

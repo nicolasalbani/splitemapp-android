@@ -1,7 +1,6 @@
 package com.splitemapp.android.screen.project;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,7 +24,6 @@ import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
-import com.splitemapp.commons.domain.UserExpense;
 
 public class ProjectFragment extends BaseFragment {
 
@@ -77,7 +75,7 @@ public class ProjectFragment extends BaseFragment {
 		setProjectCoverImage(mProjectCoverImage, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a single user expense adapter to be used in the recycler view
-		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(getUserExpenseList(), this);
+		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(mCurrentProject, this);
 
 		// We populate the list of projects for this user
 		mSingleUserExpenseRecycler = (RecyclerView) v.findViewById(R.id.p_expense_list_recyclerView);
@@ -112,27 +110,11 @@ public class ProjectFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		// We populate the list of projects for this user
-		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(getUserExpenseList(), this);
-		mSingleUserExpenseRecycler.setAdapter(mSingleUserExpenseAdapter);
+		
+		// Updating the RecyclerView
+		mSingleUserExpenseAdapter.updateRecycler();
 	}
 
-	/**
-	 * Returns the whole user expense list for this project
-	 * @return
-	 */
-	private List<UserExpense> getUserExpenseList(){
-		List<UserExpense> userExpenseList = null;
-
-		try {
-			userExpenseList = getHelper().getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-
-		return userExpenseList;
-	}
 
 	@Override
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
