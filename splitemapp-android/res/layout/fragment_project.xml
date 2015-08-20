@@ -3,14 +3,14 @@
     style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/imagelayout"
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_height="@dimen/project_cover_image_height" >
+        android:layout_height="@dimen/project_cover_image_height"
+        android:layout_alignParentTop="true" >
 
         <ImageView
             android:id="@+id/p_project_cover_image_imageView"
@@ -35,6 +35,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/imagelayout" />
+
+    <TextView
+        android:id="@+id/p_empty_list_hint_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imagelayout"
+        android:layout_marginTop="50dp"
+        android:drawableTop="@drawable/ic_money_grey_48dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="@string/p_empty_list_hint"
+        android:textColor="@color/hard_grey"
+        android:textSize="16sp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/p_fab"

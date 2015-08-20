@@ -25,6 +25,19 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/h_topLayout" />
 
+        <TextView
+            android:id="@+id/h_empty_list_hint_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/h_topLayout"
+            android:drawableTop="@drawable/ic_list_add_grey_48dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:layout_marginTop="50dp"
+            android:text="@string/h_empty_list_hint"
+            android:textColor="@color/hard_grey"
+            android:textSize="16sp" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/h_fab"
             style="@style/MainFAB"
@@ -99,14 +112,14 @@
                 android:id="@+id/h_logout_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_logout_grey_24dp"
                 android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_logout_grey_24dp"
                 android:gravity="center_vertical|start"
                 android:padding="10dp"
+                android:text="@string/h_logout"
                 android:textColor="@color/hard_grey"
-                android:textStyle="bold"
-                android:drawableLeft="@drawable/ic_logout_grey_24dp"
-                android:drawableStart="@drawable/ic_logout_grey_24dp"
-                android:text="@string/h_logout" />
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 
@@ -114,14 +127,14 @@
                 android:id="@+id/h_manage_contacts_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_manage_contacts_grey_24dp"
                 android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_manage_contacts_grey_24dp"
                 android:gravity="center_vertical|start"
                 android:padding="10dp"
+                android:text="@string/h_manage_contacts"
                 android:textColor="@color/hard_grey"
-                android:textStyle="bold"
-                android:drawableLeft="@drawable/ic_manage_contacts_grey_24dp"
-                android:drawableStart="@drawable/ic_manage_contacts_grey_24dp"
-                android:text="@string/h_manage_contacts" />
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 
@@ -129,14 +142,14 @@
                 android:id="@+id/h_synchronize_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_synchronize_grey_24dp"
                 android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_synchronize_grey_24dp"
                 android:gravity="center_vertical|start"
                 android:padding="10dp"
+                android:text="@string/h_synchronize"
                 android:textColor="@color/hard_grey"
-                android:textStyle="bold"
-                android:drawableLeft="@drawable/ic_synchronize_grey_24dp"
-                android:drawableStart="@drawable/ic_synchronize_grey_24dp"
-                android:text="@string/h_synchronize" />
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 

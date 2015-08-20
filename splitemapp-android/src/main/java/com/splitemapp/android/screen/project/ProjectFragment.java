@@ -36,6 +36,8 @@ public class ProjectFragment extends BaseFragment {
 	private FloatingActionButton mFab;
 
 	private View v;
+	
+	private TextView mEmptyListHintTextView;
 
 	private RecyclerView mSingleUserExpenseRecycler;
 	private SingleUserExpenseAdapter mSingleUserExpenseAdapter;
@@ -91,6 +93,9 @@ public class ProjectFragment extends BaseFragment {
 
 		// Setting the default animator for the view
 		mSingleUserExpenseRecycler.setItemAnimator(new CustomItemAnimator());
+		
+		// Getting the hint if project list is empty
+		mEmptyListHintTextView = (TextView) v.findViewById(R.id.p_empty_list_hint_textView);
 
 		// Adding FABs on click listener
 		mFab = (FloatingActionButton) v.findViewById(R.id.p_fab);
@@ -113,6 +118,13 @@ public class ProjectFragment extends BaseFragment {
 		
 		// Updating the RecyclerView
 		mSingleUserExpenseAdapter.updateRecycler();
+		
+		// Showing or hiding the empty list hint
+		if(mSingleUserExpenseAdapter.getItemCount() == 0){
+			mEmptyListHintTextView.setVisibility(View.VISIBLE);
+		} else {
+			mEmptyListHintTextView.setVisibility(View.GONE);
+		}
 	}
 
 

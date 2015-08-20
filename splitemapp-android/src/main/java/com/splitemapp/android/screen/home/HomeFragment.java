@@ -39,6 +39,8 @@ public class HomeFragment extends SynchronizerFragment {
 	private RecyclerView mProjectsRecycler;
 	private SwipeProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
+	
+	private TextView mEmptyListHintTextView;
 
 	private TextView mLogoutTextView;
 	private TextView mManageContactsTextView;
@@ -92,9 +94,12 @@ public class HomeFragment extends SynchronizerFragment {
 		// Using a linear layout manager
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mProjectsRecycler.setLayoutManager(mLayoutManager);
-
+		
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
+		
+		// Getting the hint if project list is empty
+		mEmptyListHintTextView = (TextView) v.findViewById(R.id.h_empty_list_hint_textView);
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
@@ -156,6 +161,13 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// Refreshing project list when coming back from the Create List fragment
 		mProjectsAdapter.updateRecycler();
+		
+		// Showing or hiding the empty list hint
+		if(mProjectsAdapter.getItemCount() == 0){
+			mEmptyListHintTextView.setVisibility(View.VISIBLE);
+		} else {
+			mEmptyListHintTextView.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
