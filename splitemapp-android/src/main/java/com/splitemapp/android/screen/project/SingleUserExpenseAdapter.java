@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -53,6 +54,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 			mFullNameTextView = (TextView)view.findViewById(R.id.ue_fullName_textView);
 			mFullAmountTextView = (TextView)view.findViewById(R.id.ue_fullAmount_textView);
 			mUserExpenseRecyclerView = (RecyclerView)view.findViewById(R.id.ue_user_expense_list_recyclerView);
+			
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
 		}
@@ -87,11 +89,14 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 			public void onItemClick(View view, int position) {
 				// Expanding or minimizing this user list
 				RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.ue_user_expense_list_recyclerView);
+				ImageView arrowImageView = (ImageView)view.findViewById(R.id.ue_arrow_imageView);
 				switch (recyclerView.getVisibility()){
 				case View.VISIBLE:
+					mBaseFragment.rotateImageViewAntiClockwise(arrowImageView);
 					recyclerView.setVisibility(View.GONE);
 					break;
 				default :
+					mBaseFragment.rotateImageViewClockwise(arrowImageView);
 					recyclerView.setVisibility(View.VISIBLE);
 					break;
 				}

@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
@@ -15,7 +16,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -188,7 +194,7 @@ public abstract class BaseFragment extends Fragment {
 			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,imageQuality)));
 		}
 	}
-	
+
 	/**
 	 * Checks whether the user has an avatar assigned or not
 	 * @param user
@@ -203,7 +209,7 @@ public abstract class BaseFragment extends Fragment {
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
-		
+
 		return false;
 	}
 
@@ -335,6 +341,63 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	public int getProjectCoverImageWidth(){
 		return (int)getScreenWidth();
+	}
+
+	/**
+	 * Rotates the provided image view 90 degrees anti-clockwise
+	 * @param imageView
+	 */
+	public void rotateImageViewAntiClockwise(ImageView imageView){
+		// Creating anti-clockwise rotation animation
+		rotateImageView(imageView, -90f, 100);
+	}
+
+	/**
+	 * Rotates the provided image view 90 degrees clockwise
+	 * @param imageView
+	 */
+	public void rotateImageViewClockwise(ImageView imageView){
+		// Creating anti-clockwise rotation animation
+		rotateImageView(imageView, 90f, 100);
+	}
+
+	/**
+	 * Rotates the provided image view in the specified duration the specified amount of rotation degrees
+	 * @param imageView
+	 * @param rotationDegree
+	 * @param duration
+	 */
+	private void rotateImageView(final ImageView imageView, final float rotationDegree, int duration){
+		// Getting image center
+		final float hCenter = imageView.getWidth()/2;
+		final float vCenter = imageView.getHeight()/2;
+
+		// Creating anti-clockwise rotation animation
+		RotateAnimation anim = new RotateAnimation(0f, rotationDegree,  hCenter, vCenter);
+		anim.setInterpolator(new LinearInterpolator());
+		anim.setDuration(duration);
+		anim.setFillAfter(true);
+		anim.setFillEnabled(true);
+
+		// Setting animation end listener
+		anim.setAnimationListener(new AnimationListener(){
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				// Actually rotating the image so it stays there for future animations
+				Matrix mat = imageView.getImageMatrix();
+				mat.postRotate(rotationDegree, hCenter, vCenter);
+				imageView.setScaleType(ScaleType.MATRIX);
+				imageView.setImageMatrix(mat);
+			}
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+			}
+			@Override
+			public void onAnimationStart(Animation arg0) {
+			}});
+
+		// Start animating the image
+		imageView.startAnimation(anim);
 	}
 
 }
