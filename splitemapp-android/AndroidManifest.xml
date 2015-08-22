@@ -38,7 +38,8 @@
         </activity>
         <activity
             android:name="com.splitemapp.android.screen.project.ProjectActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
         </activity>
         <activity
             android:name="com.splitemapp.android.screen.expense.ExpenseActivity"

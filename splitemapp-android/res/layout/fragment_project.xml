@@ -20,6 +20,12 @@
             android:background="@color/grey"
             android:contentDescription="@string/p_cover_image_description" />
 
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            layout="@layout/transparent_toolbar" />
+
         <TextView
             android:id="@+id/p_project_title_textView"
             android:layout_width="match_parent"

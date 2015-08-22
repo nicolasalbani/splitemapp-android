@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragmentWithActionbar;
+import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.domain.ExpenseCategory;
@@ -35,7 +35,7 @@ import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
-public class ExpenseFragment extends BaseFragmentWithActionbar {
+public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 
 	private static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
 	private static final int MAX_DIGITS_AFTER_DECIMAL = 2;

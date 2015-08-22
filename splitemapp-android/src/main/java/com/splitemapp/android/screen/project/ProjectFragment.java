@@ -19,13 +19,14 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.BaseFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
 
-public class ProjectFragment extends BaseFragment {
+public class ProjectFragment extends BaseFragmentWithTransparentActionbar {
 
 	private static final String TAG = ProjectFragment.class.getSimpleName();
 
@@ -35,8 +36,6 @@ public class ProjectFragment extends BaseFragment {
 	private ImageView mProjectCoverImage;
 	private FloatingActionButton mFab;
 
-	private View v;
-	
 	private TextView mEmptyListHintTextView;
 
 	private RecyclerView mSingleUserExpenseRecycler;
@@ -59,7 +58,8 @@ public class ProjectFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		v = inflater.inflate(R.layout.fragment_project, container, false);
+		// Inflating the action bar and obtaining the View object
+		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// Populating the project title
 		mProjectTitle = (TextView) v.findViewById(R.id.p_project_title_textView);
@@ -93,7 +93,7 @@ public class ProjectFragment extends BaseFragment {
 
 		// Setting the default animator for the view
 		mSingleUserExpenseRecycler.setItemAnimator(new CustomItemAnimator());
-		
+
 		// Getting the hint if project list is empty
 		mEmptyListHintTextView = (TextView) v.findViewById(R.id.p_empty_list_hint_textView);
 
@@ -115,10 +115,10 @@ public class ProjectFragment extends BaseFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		// Updating the RecyclerView
 		mSingleUserExpenseAdapter.updateRecycler();
-		
+
 		// Showing or hiding the empty list hint
 		if(mSingleUserExpenseAdapter.getItemCount() == 0){
 			mEmptyListHintTextView.setVisibility(View.VISIBLE);
@@ -146,6 +146,16 @@ public class ProjectFragment extends BaseFragment {
 	@Override
 	public String getLoggingTag() {
 		return TAG;
+	}
+
+	@Override
+	protected int getFragmentResourceId() {
+		return R.layout.fragment_project;
+	}
+
+	@Override
+	protected void menuAction() {
+		//TODO Implement showing menu
 	}
 
 }

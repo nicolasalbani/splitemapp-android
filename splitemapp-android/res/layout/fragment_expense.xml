@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/white" >
 
-    <include layout="@layout/action_bar" />
+    <include layout="@layout/blue_toolbar" />
 
     <TextView
         style="@style/CustomTextView"

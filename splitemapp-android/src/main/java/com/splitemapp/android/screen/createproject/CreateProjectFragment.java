@@ -24,7 +24,7 @@ import android.widget.Spinner;
 import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragmentWithActionbar;
+import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
@@ -36,7 +36,7 @@ import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
 
-public class CreateProjectFragment extends BaseFragmentWithActionbar {
+public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 
 	private static final String TAG = CreateProjectFragment.class.getSimpleName();
 

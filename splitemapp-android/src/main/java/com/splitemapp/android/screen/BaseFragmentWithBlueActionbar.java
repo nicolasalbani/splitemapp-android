@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public abstract class BaseFragmentWithActionbar extends BaseFragment {
+public abstract class BaseFragmentWithBlueActionbar extends BaseFragment {
 
 	protected Toolbar actionBar;
 	protected TextView mCancel;
