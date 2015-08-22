@@ -31,15 +31,18 @@ public class HomeFragment extends SynchronizerFragment {
 	private User mCurrentUser;
 	private UserContactData mUserContactData;
 
-	private ImageView mAvatar;
-	private TextView mFullName;
-	private TextView mEmail;
+	private ImageView mNavAvatar;
+	private TextView mNavFullName;
+	private TextView mNavEmail;
+	private ImageView mMainAvatar;
+	private TextView mMainFullName;
+	private TextView mMainEmail;
 	private FloatingActionButton mFab;
 
 	private RecyclerView mProjectsRecycler;
 	private SwipeProjectsAdapter mProjectsAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
-	
+
 	private TextView mEmptyListHintTextView;
 
 	private TextView mLogoutTextView;
@@ -68,17 +71,29 @@ public class HomeFragment extends SynchronizerFragment {
 
 		View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-		// We populate the first name
-		mFullName = (TextView) v.findViewById(R.id.h_full_name_textView);
-		mFullName.setText(mCurrentUser.getFullName());
+		// We populate the first name in the navigation view
+		mNavFullName = (TextView) v.findViewById(R.id.h_nav_full_name_textView);
+		mNavFullName.setText(mCurrentUser.getFullName());
 
-		// We populate the email
-		mEmail = (TextView) v.findViewById(R.id.h_email_textView);
-		mEmail.setText(mUserContactData.getContactData());
+		// We populate the email in the navigation view
+		mNavEmail = (TextView) v.findViewById(R.id.h_nav_email_textView);
+		mNavEmail.setText(mUserContactData.getContactData());
 
-		// We set the user avatar
-		mAvatar = (ImageView) v.findViewById(R.id.h_avatar_imageView);
-		setUsetAvatar(mAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		// We set the user avatar in the navigation view
+		mNavAvatar = (ImageView) v.findViewById(R.id.h_nav_avatar_imageView);
+		setUsetAvatar(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+
+		// We populate the first name in the main view
+		mMainFullName = (TextView) v.findViewById(R.id.h_main_full_name_textView);
+		mMainFullName.setText(mCurrentUser.getFullName());
+
+		// We populate the email in the main view
+		mMainEmail = (TextView) v.findViewById(R.id.h_main_email_textView);
+		mMainEmail.setText(mUserContactData.getContactData());
+
+		// We set the user avatar in the main view
+		mMainAvatar = (ImageView) v.findViewById(R.id.h_main_avatar_imageView);
+		setUsetAvatar(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a projects adapter to be used in the recycler view
 		mProjectsAdapter = new SwipeProjectsAdapter(this);
@@ -94,10 +109,10 @@ public class HomeFragment extends SynchronizerFragment {
 		// Using a linear layout manager
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mProjectsRecycler.setLayoutManager(mLayoutManager);
-		
+
 		// Setting the default animator for the view
 		mProjectsRecycler.setItemAnimator(new CustomItemAnimator());
-		
+
 		// Getting the hint if project list is empty
 		mEmptyListHintTextView = (TextView) v.findViewById(R.id.h_empty_list_hint_textView);
 
@@ -161,7 +176,7 @@ public class HomeFragment extends SynchronizerFragment {
 
 		// Refreshing project list when coming back from the Create List fragment
 		mProjectsAdapter.updateRecycler();
-		
+
 		// Showing or hiding the empty list hint
 		if(mProjectsAdapter.getItemCount() == 0){
 			mEmptyListHintTextView.setVisibility(View.VISIBLE);

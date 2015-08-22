@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.BaseFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
