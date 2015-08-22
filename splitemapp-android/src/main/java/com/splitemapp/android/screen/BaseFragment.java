@@ -383,7 +383,7 @@ public abstract class BaseFragment extends Fragment {
 		anim.setAnimationListener(new AnimationListener(){
 			@Override
 			public void onAnimationEnd(Animation arg0) {
-				// Actually rotating the image so it stays there for future animations
+				// Actually rotating the image after the animation ends so it stays there for future animations
 				Matrix mat = imageView.getImageMatrix();
 				mat.postRotate(rotationDegree, hCenter, vCenter);
 				imageView.setScaleType(ScaleType.MATRIX);
@@ -394,6 +394,11 @@ public abstract class BaseFragment extends Fragment {
 			}
 			@Override
 			public void onAnimationStart(Animation arg0) {
+				// Setting initial matrix with 0 rotation
+				Matrix mat = imageView.getImageMatrix();
+				mat.postRotate(0, hCenter, vCenter);
+				imageView.setScaleType(ScaleType.MATRIX);
+				imageView.setImageMatrix(mat);
 			}});
 
 		// Start animating the image
