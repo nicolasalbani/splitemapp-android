@@ -15,6 +15,11 @@
 
         <include layout="@layout/blue_toolbar" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/toolbar_dropshadow" />
+
         <TextView
             style="@style/CustomTextView"
             android:text="@string/cp_project_name" />

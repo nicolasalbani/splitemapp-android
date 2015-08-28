@@ -2,10 +2,15 @@
     style="@style/NoActionBarTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:background="@color/white"
+    android:orientation="vertical" >
 
     <include layout="@layout/blue_toolbar" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/toolbar_dropshadow" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,9 +34,9 @@
             android:id="@id/mc_synchronize_contacts_button"
             style="@style/Button"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/mc_synchronize_contacts_button" />
     </RelativeLayout>
 
