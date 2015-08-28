@@ -10,11 +10,17 @@ import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -50,6 +56,8 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 	private EditText mExpenseAmount;
 	private TextView mExpenseDateText;
 	private GridView mExpenseCategory;
+	
+	private CollapsingToolbarLayout collapsingToolbar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,10 +116,23 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 			}
 		});
 		updateExpenseDateDisplay(mUserExpense);
+		
+		// We enable showing the title in this particular screen
+		collapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
 
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
 		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(MAX_DIGITS_BEFORE_DECIMAL,MAX_DIGITS_AFTER_DECIMAL)});
+		mExpenseAmount.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				collapsingToolbar.setTitle("$" +arg0);
+			}
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+			@Override
+			public void afterTextChanged(Editable arg0) {}
+		});
 
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){

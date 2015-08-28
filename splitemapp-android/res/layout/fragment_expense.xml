@@ -1,47 +1,93 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/NoActionBarTheme"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white" >
+    android:fitsSystemWindows="true" >
 
-    <include layout="@layout/blue_toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="155dp"
+        android:fitsSystemWindows="true" >
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/e_expenseamount_hint" />
-    
-    <EditText
-        android:id="@+id/e_expense_amount_editText"
-        style="@style/CustomEditText"
-        android:inputType="numberDecimal"
-        android:drawableLeft="@drawable/dollar_sign"
-        android:drawableStart="@drawable/dollar_sign" />
-    
-    <View style="@style/BottomLine" />
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true"
+            android:background="@color/seablue"
+            app:contentScrim="@color/seablue"
+            app:expandedTitleMarginBottom="32dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp" >
 
-    <TextView
-        android:id="@+id/e_expense_date_textView"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="45dp"
+                app:layout_collapseMode="parallax"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/WhiteCustomTextView"
+                    android:text="@string/e_expenseamount_hint" />
+
+                <EditText
+                    android:id="@+id/e_expense_amount_editText"
+                    style="@style/BlueCustomEditText"
+                    android:drawableLeft="@drawable/ic_money_white_18dp"
+                    android:drawableStart="@drawable/ic_money_white_18dp"
+                    android:inputType="numberDecimal" />
+
+                <View style="@style/WhiteBottomLine" />
+            </LinearLayout>
+
+            <include layout="@layout/blue_toolbar" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollableview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/white"
-        android:drawableEnd="@drawable/greater_sign"
-        android:drawableRight="@drawable/greater_sign"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="@color/black"
-        android:textSize="23sp" />
+        android:layout_gravity="fill_vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/white" >
 
-    <GridView
-        android:id="@+id/e_expense_categories_gridView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3"
-        android:verticalSpacing="2dp"
-        android:background="@color/hard_grey" >
-    </GridView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/toolbar_dropshadow" />
+
+            <TextView
+                android:id="@+id/e_expense_date_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:drawableEnd="@drawable/greater_sign"
+                android:drawableRight="@drawable/greater_sign"
+                android:gravity="center"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                android:textSize="23sp" />
+
+            <GridView
+                android:id="@+id/e_expense_categories_gridView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/hard_grey"
+                android:horizontalSpacing="2dp"
+                android:numColumns="3"
+                android:verticalSpacing="2dp" >
+            </GridView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
