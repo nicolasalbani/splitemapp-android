@@ -1,6 +1,3 @@
-*.classpath
 /bin/
-/res/
-*.project
-/.settings/
-/gen/
+/.project
+*.classpath
