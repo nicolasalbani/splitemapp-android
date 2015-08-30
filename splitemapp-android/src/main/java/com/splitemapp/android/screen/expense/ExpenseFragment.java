@@ -10,10 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.text.Editable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
 import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +52,9 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 	private EditText mExpenseAmount;
 	private TextView mExpenseDateText;
 	private GridView mExpenseCategory;
-	
-	private CollapsingToolbarLayout collapsingToolbar;
+
+	private AppBarLayout appBarLayout;
+	boolean showingExpense = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -113,23 +113,25 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 			}
 		});
 		updateExpenseDateDisplay(mUserExpense);
-		
+
 		// We enable showing the title in this particular screen
-		collapsingToolbar = (CollapsingToolbarLayout) v.findViewById(R.id.collapsing_toolbar);
+		appBarLayout = (AppBarLayout) v.findViewById(R.id.e_appBarLayout);
+		appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener(){
+			@Override
+			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+				if(verticalOffset < -120 && !showingExpense){
+					mCancel.setText("Expense: $" +mExpenseAmount.getText().toString());
+					showingExpense = true;
+				} else if (verticalOffset >= -120 && showingExpense) {
+					mCancel.setText(getTitleResourceId());
+					showingExpense = false;
+				}
+				Log.i(TAG, "onOffsetChanged: " +verticalOffset);
+			}});
 
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
 		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(MAX_DIGITS_BEFORE_DECIMAL,MAX_DIGITS_AFTER_DECIMAL)});
-		mExpenseAmount.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				collapsingToolbar.setTitle("$" +arg0);
-			}
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
-			@Override
-			public void afterTextChanged(Editable arg0) {}
-		});
 
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){
@@ -162,7 +164,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 		}
 
 	}
-	
+
 	private void updateExpense(){
 		try {
 			// We get an instance of the expense category
@@ -174,10 +176,10 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setUpdatedAt(new Date());
-			
+
 			// TODO Only set the user if we are owning the expense
 			// mUserExpense.setUser(mCurrentUser);
-			
+
 			userExpensesDao.update(mUserExpense);
 
 			// Moving back to the project screen
@@ -246,7 +248,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 		} else {
 			return R.string.e_edit_title;
 		}
-		
+
 	}
 
 	@Override

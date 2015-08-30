@@ -5,12 +5,12 @@
     android:fitsSystemWindows="true" >
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/e_appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="155dp"
         android:fitsSystemWindows="true" >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
