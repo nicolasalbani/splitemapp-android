@@ -10,6 +10,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -56,8 +57,7 @@ public class CustomFloatingActionButton {
 		shade.setVisibility(View.GONE);
 
 		// Adding the shade as a child to the mainFab's parent layout
-		RelativeLayout layout = (RelativeLayout)this.mainFab.getParent();
-		layout.addView(shade);
+		addViewToParent(shade);
 	}
 	
 	/**
@@ -114,8 +114,7 @@ public class CustomFloatingActionButton {
 		this.actionFabList.add(new ActionFAB(actionLayout, actionFab, label));
 
 		// Adding the new relative layout as a child to the mainFab's parent layout
-		RelativeLayout layout = (RelativeLayout)this.mainFab.getParent();
-		layout.addView(actionLayout);
+		addViewToParent(actionLayout);
 	}
 
 	/**
@@ -237,6 +236,20 @@ public class CustomFloatingActionButton {
 		}
 
 		return Xml.asAttributeSet(parser);
+	}
+	
+	/**
+	 * Adds the provided view to the parent layout. We accept RelativeLayout and CoordinatorLayout
+	 * @param view
+	 */
+	private void addViewToParent(View view){
+		if(this.mainFab.getParent() instanceof RelativeLayout){
+			RelativeLayout layout = (RelativeLayout)this.mainFab.getParent();
+			layout.addView(view);
+		} else if (this.mainFab.getParent() instanceof CoordinatorLayout){
+			CoordinatorLayout layout = (CoordinatorLayout)this.mainFab.getParent();
+			layout.addView(view);
+		}
 	}
 
 	// Getters and setters
