@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
@@ -57,9 +58,10 @@ public class CustomFloatingActionButton {
 		shade.setVisibility(View.GONE);
 
 		// Adding the shade as a child to the mainFab's parent layout
-		addViewToParent(shade);
+		CoordinatorLayout layout = (CoordinatorLayout)this.mainFab.getParent();
+		layout.addView(shade);
 	}
-	
+
 	/**
 	 * Toggles FAB visibility
 	 */
@@ -114,7 +116,8 @@ public class CustomFloatingActionButton {
 		this.actionFabList.add(new ActionFAB(actionLayout, actionFab, label));
 
 		// Adding the new relative layout as a child to the mainFab's parent layout
-		addViewToParent(actionLayout);
+		CoordinatorLayout layout = (CoordinatorLayout)this.mainFab.getParent();
+		layout.addView(actionLayout);
 	}
 
 	/**
@@ -123,16 +126,20 @@ public class CustomFloatingActionButton {
 	 * @return
 	 */
 	private RelativeLayout createActionLayout(Context context){
-		// Adding the actionFab and the label as a child to the new relative layout 
-		RelativeLayout.LayoutParams actionLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		if(this.actionFabList.size()==0){
-			actionLayoutParams.addRule(RelativeLayout.ABOVE, this.mainFab.getId());
-		} else {
-			actionLayoutParams.addRule(RelativeLayout.ABOVE, this.actionFabList.get(this.actionFabList.size()-1).getActionLayout().getId());
-		}
-
 		// Creating relative layout and assigning layout parameters
 		RelativeLayout actionLayout = new RelativeLayout(context);
+
+		// Creating layout parameters to position this relative layout in the parent coordinator layout 
+		CoordinatorLayout.LayoutParams actionLayoutParams = new CoordinatorLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		if(this.actionFabList.size()==0){
+			actionLayoutParams.setAnchorId(this.mainFab.getId());
+		} else {
+			actionLayoutParams.setAnchorId(this.actionFabList.get(this.actionFabList.size()-1).getActionLayout().getId());
+		}
+		actionLayoutParams.anchorGravity = Gravity.TOP;
+		actionLayoutParams.gravity = Gravity.TOP;
+
+		// Setting layout parameters
 		actionLayout.setLayoutParams(actionLayoutParams);
 
 		// Setting default visibility to GONE
@@ -236,20 +243,6 @@ public class CustomFloatingActionButton {
 		}
 
 		return Xml.asAttributeSet(parser);
-	}
-	
-	/**
-	 * Adds the provided view to the parent layout. We accept RelativeLayout and CoordinatorLayout
-	 * @param view
-	 */
-	private void addViewToParent(View view){
-		if(this.mainFab.getParent() instanceof RelativeLayout){
-			RelativeLayout layout = (RelativeLayout)this.mainFab.getParent();
-			layout.addView(view);
-		} else if (this.mainFab.getParent() instanceof CoordinatorLayout){
-			CoordinatorLayout layout = (CoordinatorLayout)this.mainFab.getParent();
-			layout.addView(view);
-		}
 	}
 
 	// Getters and setters

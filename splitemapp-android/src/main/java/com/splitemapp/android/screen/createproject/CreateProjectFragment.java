@@ -9,7 +9,9 @@ import java.util.List;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,6 +53,9 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 	private RecyclerView mMembersRecycler;
 	private ContactsAdapter mUsersAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
+
+	private AppBarLayout appBarLayout;
+	boolean showingProjectName = false;
 
 	private Project mProjectToEdit;
 
@@ -130,13 +135,24 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 		mMembersRecycler = (RecyclerView) v.findViewById(R.id.cp_users_recyclerView);
 		mMembersRecycler.setAdapter(mUsersAdapter);
 
-		// Using this setting to improve performance if you know that changes
-		// in content do not change the layout size of the RecyclerView
-		mMembersRecycler.setHasFixedSize(true);
-
 		// Using a linear layout manager
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mMembersRecycler.setLayoutManager(mLayoutManager);
+
+		// We enable showing the title in this particular screen
+		appBarLayout = (AppBarLayout) v.findViewById(R.id.cp_appBarLayout);
+		appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListener(){
+			@Override
+			public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+				if(verticalOffset < -120 && !showingProjectName){
+					mCancel.setText(mProjectTitle.getText().toString());
+					showingProjectName = true;
+				} else if (verticalOffset >= -120 && showingProjectName) {
+					mCancel.setText(getTitleResourceId());
+					showingProjectName = false;
+				}
+				Log.i(TAG, "onOffsetChanged: " +verticalOffset);
+			}});
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.cp_fab);
