@@ -3,10 +3,6 @@ package com.splitemapp.android.screen;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,6 +25,7 @@ import com.splitemapp.commons.domain.dto.request.SynchronizeContactsRequest;
 import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
 import com.splitemapp.commons.domain.dto.response.LoginResponse;
 import com.splitemapp.commons.domain.dto.response.SynchronizeContactsResponse;
+import com.splitemapp.commons.rest.RestUtils;
 import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment{
@@ -81,23 +78,10 @@ public abstract class RestfulFragment extends BaseFragment{
 	 */
 	public <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
 		// We create the url based on the provider serviceName
-		String url = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
-
-		// We get an instance of the spring framework RestTemplate and configure wrapping the root XML element
-		RestTemplate restTemplate = new RestTemplate();
-		MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-		restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
-
-		// We use old version of request factory that uses HTTPClient instead of HttpURLConnection to avoid bugs
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());  
-
-		// We make the POST rest service call
-		T response = restTemplate.postForObject(url, request, responseType);
-		return response;
+		String serviceUrl = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
+		
+		return RestUtils.callRestService(serviceUrl, request, responseType);
 	}
-
-
-
 
 	/**
 	 * Create account task which creates a new account for the user

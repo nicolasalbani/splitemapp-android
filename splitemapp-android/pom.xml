@@ -66,19 +66,6 @@
 			<version>${platform.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.android.support</groupId> -->
-		<!-- <artifactId>appcompat-v7</artifactId> -->
-		<!-- <version>${android.appcompat.version}</version> -->
-		<!-- <type>aar</type> -->
-		<!-- </dependency> -->
-
-		<!-- FAB Compatibility Library -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>com.github.wangjiegulu</groupId> -->
-<!-- 			<artifactId>RapidFloatingActionButton</artifactId> -->
-<!-- 			<version>1.0.1</version> -->
-<!-- 		</dependency> -->
 
 		<!-- ORM Lite dependencies -->
 		<dependency>
