@@ -131,23 +131,23 @@ public abstract class RestfulFragment extends BaseFragment{
 
 		@Override
 		public void onPostExecute(CreateAccountResponse createAccountResponse) {
-			boolean createAccountSuccess = false;
+			boolean success = false;
 
 			// We validate the response
 			if(createAccountResponse != null){
-				createAccountSuccess = createAccountResponse.getSuccess();
+				success = createAccountResponse.getSuccess();
 			}
 			
 			// We remove the dialog
 			waitDialog.dismiss();
 
 			// We show the status toast if it failed
-			if(!createAccountSuccess){
+			if(!success){
 				showToast("Create Account Failed!");
 			}
 
 			// We save the user and session information returned by the backend
-			if(createAccountSuccess){
+			if(success){
 				try {
 					// We reconstruct the user status object
 					UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
@@ -208,21 +208,31 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
 
 		@Override
 		public void onPostExecute(LoginResponse loginResponse) {
-			boolean loginSuccess = false;
+			boolean success = false;
 
 			// Validating the response
 			if(loginResponse != null){
-				loginSuccess = loginResponse.getSuccess();
+				success = loginResponse.getSuccess();
 			}
 
-			// Showing the status toast
-			showToast(loginSuccess ? "Login Successful!" : "Login Failed!");
+			// We remove the dialog
+			waitDialog.dismiss();
+
+			// We show the status toast if it failed
+			if(!success){
+				showToast("Login Failed!");
+			}
 
 			// Saving the user and session information returned by the backend
-			if(loginSuccess){
+			if(success){
 				try {
 					// Reconstructing the user status object
 					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
@@ -302,21 +312,31 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
 
 		@Override
 		public void onPostExecute(SynchronizeContactsResponse synchronizeContactsResponse) {
-			boolean createAccountSuccess = false;
+			boolean success = false;
 
 			// Validating the response
 			if(synchronizeContactsResponse != null){
-				createAccountSuccess = synchronizeContactsResponse.getSuccess();
+				success = synchronizeContactsResponse.getSuccess();
 			}
 
-			// Showing the status toast
-			showToast(createAccountSuccess ? "Synchronize Contacts Successful!" : "Synchronize Contacts Failed!");
+			// We remove the dialog
+			waitDialog.dismiss();
+
+			// We show the status toast if it failed
+			if(!success){
+				showToast("Synchronize Contacts Failed!");
+			}
 
 			// Saving the user and user contact data information returned by the backend
-			if(createAccountSuccess){
+			if(success){
 				try {
 					for(UserDTO userDTO:synchronizeContactsResponse.getUserDTOList()){
 						// Reconstructing the user status object
