@@ -1,6 +1,5 @@
 package com.splitemapp.android.screen.createaccount;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragment;
-import com.splitemapp.android.screen.welcome.WelcomeActivity;
 
 public class CreateAccountFragment extends RestfulFragment {
 	
@@ -47,10 +45,6 @@ public class CreateAccountFragment extends RestfulFragment {
 			public void onClick(View v) {
 				// Creating account
 				createAccount(mEmail.getText().toString(), mUserName.getText().toString(), mPassword.getText().toString(), null);
-				
-				// Redirecting to welcome screen
-				Intent intent = new Intent(getActivity(), WelcomeActivity.class);
-				startActivity(intent);
 			}
 		});
 

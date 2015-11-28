@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.constants.Constants;
+import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
@@ -29,6 +30,8 @@ import com.splitemapp.commons.rest.RestUtils;
 import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment{
+	
+	CustomProgressDialog waitDialog = null;
 
 	static{
 		// We initialize logging
@@ -120,6 +123,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
 
 		@Override
 		public void onPostExecute(CreateAccountResponse createAccountResponse) {
@@ -129,9 +137,14 @@ public abstract class RestfulFragment extends BaseFragment{
 			if(createAccountResponse != null){
 				createAccountSuccess = createAccountResponse.getSuccess();
 			}
+			
+			// We remove the dialog
+			waitDialog.dismiss();
 
-			// We show the status toast
-			showToast(createAccountSuccess ? "Create Account Successful!" : "Create Account Failed!");
+			// We show the status toast if it failed
+			if(!createAccountSuccess){
+				showToast("Create Account Failed!");
+			}
 
 			// We save the user and session information returned by the backend
 			if(createAccountSuccess){
@@ -153,6 +166,9 @@ public abstract class RestfulFragment extends BaseFragment{
 					UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
 					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
 					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
+					
+					// We login
+					login(email, password);
 				} catch (SQLException e) {
 					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 				}
