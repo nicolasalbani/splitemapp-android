@@ -31,7 +31,7 @@ import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment{
 	
-	CustomProgressDialog waitDialog = null;
+	public CustomProgressDialog waitDialog = null;
 
 	static{
 		// We initialize logging

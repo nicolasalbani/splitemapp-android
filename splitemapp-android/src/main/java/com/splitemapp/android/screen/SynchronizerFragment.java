@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
+import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -372,22 +373,32 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 			return null;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
 
 		@Override
 		protected void onPostExecute(R response) {
-			boolean pullSuccess = false;
+			boolean success = false;
 
 			// We validate the response
 			if(response != null){
-				pullSuccess = response.getSuccess();
+				success = response.getSuccess();
+			}
+			
+			// We remove the dialog
+			waitDialog.dismiss();
+
+			// We show the status toast if it failed
+			String pullMessage = "Pull " +getTableName();
+			if(!success){
+				showToast(pullMessage+ " Failed!");
 			}
 
-			// We show the status toast
-			String pullMessage = "Pull " +getTableName();
-			showToast(pullSuccess ? pullMessage+ " Successful!" : pullMessage+ " Failed!");
-
 			// We save the user and session information returned by the backend
-			if(pullSuccess){
+			if(success){
 				try {
 					// We process the service response
 					processResult(response);
@@ -518,22 +529,32 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 			return null;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
 
 		@Override
 		protected void onPostExecute(R response) {
-			boolean pushSuccess = false;
+			boolean success = false;
 
 			// We validate the response
 			if(response != null){
-				pushSuccess = response.getSuccess();
+				success = response.getSuccess();
+			}
+			
+			// We remove the dialog
+			waitDialog.dismiss();
+
+			// We show the status toast if it failed
+			String pushMessage = "Push " +getTableName();
+			if(!success){
+				showToast(pushMessage+ " Failed!");
 			}
 
-			// We show the status toast
-			String pushMessage = "Push " +getTableName();
-			showToast(pushSuccess ? pushMessage+ " Successful!" : pushMessage+ " Failed!");
-
 			// We save the user and session information returned by the backend
-			if(pushSuccess){
+			if(success){
 				try {
 					// We process the service response
 					processResult(response);
