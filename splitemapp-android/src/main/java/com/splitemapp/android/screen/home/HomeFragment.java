@@ -146,15 +146,15 @@ public class HomeFragment extends SynchronizerFragment {
 		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				pushProjects();
-				//			pullUsers();
-				//			pullUserContactDatas();
-				//			pullProjects();
-				//			pullUserToProjects();
-				//			pullGroups();
-				//			pullUserToGroups();
-				//			pullUserInvites();
-				//			pullUserExpenses();
+				// Pulling all services
+				pullUsers();
+				pullUserAvatars();
+				pullUserContactDatas();
+				pullProjects();
+				pullProjectCoverImages();
+				pullUserToProjects();
+				pullUserInvites();
+				pullUserExpenses();
 			}
 		});
 

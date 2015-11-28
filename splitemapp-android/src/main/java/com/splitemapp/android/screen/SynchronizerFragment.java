@@ -10,23 +10,26 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
-import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserExpense;
 import com.splitemapp.commons.domain.UserInvite;
 import com.splitemapp.commons.domain.UserStatus;
 import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
+import com.splitemapp.commons.domain.dto.ProjectCoverImageDTO;
 import com.splitemapp.commons.domain.dto.ProjectDTO;
+import com.splitemapp.commons.domain.dto.UserAvatarDTO;
 import com.splitemapp.commons.domain.dto.UserContactDataDTO;
 import com.splitemapp.commons.domain.dto.UserDTO;
 import com.splitemapp.commons.domain.dto.UserExpenseDTO;
@@ -34,8 +37,10 @@ import com.splitemapp.commons.domain.dto.UserInviteDTO;
 import com.splitemapp.commons.domain.dto.UserToProjectDTO;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
+import com.splitemapp.commons.domain.dto.response.PullProjectCoverImageResponse;
 import com.splitemapp.commons.domain.dto.response.PullProjectResponse;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
+import com.splitemapp.commons.domain.dto.response.PullUserAvatarResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserContactDataResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserExpenseResponse;
 import com.splitemapp.commons.domain.dto.response.PullUserInviteResponse;
@@ -63,10 +68,24 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	}
 
 	/**
+	 * Creates an asynchronous user_avatar table pull request
+	 */
+	protected void pullUserAvatars(){
+		new PullUserAvatarsTask().execute();
+	}
+
+	/**
 	 * Creates an asynchronous project table pull request
 	 */
 	protected void pullProjects(){
 		new PullProjectsTask().execute();
+	}
+
+	/**
+	 * Creates an asynchronous project_cover_image table pull request
+	 */
+	protected void pullProjectCoverImages(){
+		new PullProjectCoverImagesTask().execute();
 	}
 
 	/**
@@ -89,7 +108,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	protected void pullUserExpenses(){
 		new PullUserExpensesTask().execute();
 	}
-	
+
 	/**
 	 * Creates an asynchronous project table push request
 	 */
@@ -168,6 +187,41 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 	}
 
 	/**
+	 * Sync Task to pull user_contact_data table data from the remote DB
+	 * @author nicolas
+	 */
+	private class PullUserAvatarsTask extends PullTask<UserAvatarDTO, PullUserAvatarResponse> {
+		@Override
+		protected String getTableName(){
+			return TableName.USER_AVATAR;
+		}
+
+		@Override
+		protected String getServicePath(){
+			return ServiceConstants.PULL_USER_AVATARS_PATH;
+		}
+
+		@Override
+		protected void processResult(PullUserAvatarResponse response) throws SQLException {
+			Set<UserAvatarDTO> userAvatarDTOs = response.getItemSet();
+			for(UserAvatarDTO userAvatarDTO:userAvatarDTOs){
+				// We obtain the required parameters for the object creation from the local database
+				User user = getHelper().getUserById(userAvatarDTO.getUserId().longValue());
+
+				// We create the new entity and store it into the local database
+				UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
+				CreateOrUpdateStatus createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
+				getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
+			}
+		}
+
+		@Override
+		protected Class<PullUserAvatarResponse> getResponseType() {
+			return PullUserAvatarResponse.class;
+		}
+	}
+
+	/**
 	 * Sync Task to pull project table data from the remote DB
 	 * @author nicolas
 	 */
@@ -200,6 +254,41 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		@Override
 		protected Class<PullProjectResponse> getResponseType() {
 			return PullProjectResponse.class;
+		}
+	}
+
+	/**
+	 * Sync Task to pull project_cover_image table data from the remote DB
+	 * @author nicolas
+	 */
+	private class PullProjectCoverImagesTask extends PullTask<ProjectCoverImageDTO, PullProjectCoverImageResponse> {
+		@Override
+		protected String getTableName(){
+			return TableName.PROJECT;
+		}
+
+		@Override
+		protected String getServicePath(){
+			return ServiceConstants.PULL_PROJECT_COVER_IMAGES_PATH;
+		}
+
+		@Override
+		protected void processResult(PullProjectCoverImageResponse response) throws SQLException {
+			Set<ProjectCoverImageDTO> projectCoverImageDTOs = response.getItemSet();
+			for(ProjectCoverImageDTO projectCoverImageDTO:projectCoverImageDTOs){
+				// We obtain the required parameters for the object creation from the local database
+				Project project = getHelper().getProjectDao().queryForId(projectCoverImageDTO.getProjectId());
+
+				// We create the new entity and store it into the local database
+				ProjectCoverImage projectCoverImage = new ProjectCoverImage(project, projectCoverImageDTO);
+				CreateOrUpdateStatus createOrUpdate = getHelper().getProjectCoverImageDao().createOrUpdate(projectCoverImage);
+				getHelper().updateSyncStatusPullAt(ProjectCoverImage.class, createOrUpdate);
+			}
+		}
+
+		@Override
+		protected Class<PullProjectCoverImageResponse> getResponseType() {
+			return PullProjectCoverImageResponse.class;
 		}
 	}
 
@@ -373,10 +462,11 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			waitDialog = CustomProgressDialog.show(getContext());
+			// We show the progress indicator
+			showProgressIndicator();
 		}
 
 		@Override
@@ -387,9 +477,9 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 			if(response != null){
 				success = response.getSuccess();
 			}
-			
-			// We remove the dialog
-			waitDialog.dismiss();
+
+			// We hide the progress indicator
+			hideProgressIndicator();
 
 			// We show the status toast if it failed
 			String pullMessage = "Pull " +getTableName();
@@ -412,8 +502,8 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Sync Task to push project table data to the remote DB
 	 * @author nicolas
@@ -439,7 +529,7 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 			//TODO make one raw query that will return only the items updated after lastPushSuccessAt and add that in the DatabaseHelper 
 			// We get all the project in the database
 			List<Project> projectList = getHelper().getProjectDao().queryForAll();
-			
+
 			// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
 			ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 			for(Project project:projectList){
@@ -451,20 +541,20 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		@Override
 		protected void processResult(PushLongResponse response) throws SQLException {
 			List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
-			
+
 			// We create the ID reference list to be updated
 			List<IdReference> idReferenceList = new ArrayList<IdReference>();
 			idReferenceList.add(new IdReference(TableName.PROJECT, TableField.PROJECT_ID));
 			idReferenceList.add(new IdReference(TableName.USER_TO_PROJECT, TableField.USER_TO_PROJECT_PROJECT_ID));
 			idReferenceList.add(new IdReference(TableName.USER_EXPENSE, TableField.USER_EXPENSE_PROJECT_ID));
-			
+
 			//We update all references to this ID
 			for(IdUpdate<Long> idUpdate:idUpdateList){
 				getHelper().updateIdReferences(getHelper().getProjectDao(), idUpdate, idReferenceList);
 			}
 		}
 	}
-	
+
 	/**
 	 * Base Push task
 	 * @author nicolas
@@ -484,13 +574,13 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 		 * @return
 		 */
 		protected abstract String getServicePath();
-		
+
 		/**
 		 * Gets the response type
 		 * @return
 		 */
 		protected abstract Class<R> getResponseType();
-		
+
 		/**
 		 * Returns the request item list to be sent to the push service
 		 * @param lastPushSuccessAt Date containing the last push success date
@@ -511,10 +601,10 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 			try {
 				// We get the date in which this table was last successfully pulled
 				Date lastPushSuccessAt = getHelper().getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPushSuccessAt();
-				
+
 				// We get the session token
 				String sessionToken = getHelper().getSessionToken();
-				
+
 				// We create the push request
 				PushRequest<F> pushRequest = new PushRequest<F>();
 				pushRequest.setToken(sessionToken);
@@ -529,10 +619,11 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			waitDialog = CustomProgressDialog.show(getContext());
+			// We show the progress indicator
+			showProgressIndicator();
 		}
 
 		@Override
@@ -543,9 +634,9 @@ public abstract class SynchronizerFragment extends RestfulFragment{
 			if(response != null){
 				success = response.getSuccess();
 			}
-			
-			// We remove the dialog
-			waitDialog.dismiss();
+
+			// We hide the progress indicator
+			hideProgressIndicator();
 
 			// We show the status toast if it failed
 			String pushMessage = "Push " +getTableName();

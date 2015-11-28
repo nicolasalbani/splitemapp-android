@@ -30,8 +30,8 @@ import com.splitemapp.commons.rest.RestUtils;
 import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment{
-	
-	public CustomProgressDialog waitDialog = null;
+
+	private CustomProgressDialog waitDialog = null;
 
 	static{
 		// We initialize logging
@@ -43,6 +43,24 @@ public abstract class RestfulFragment extends BaseFragment{
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
+	}
+
+	/**
+	 * Shows the progress indicator
+	 */
+	public void showProgressIndicator(){
+		if(waitDialog == null || !waitDialog.isShowing()){
+			waitDialog = CustomProgressDialog.show(getContext());
+		}
+	}
+
+	/**
+	 * Hides the progress indicator
+	 */
+	public void hideProgressIndicator(){
+		if(waitDialog.isShowing()){
+			waitDialog.dismiss();
+		}
 	}
 
 	/**
@@ -63,7 +81,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	public void login(String userName, String password){
 		new LoginRequestTask(userName, password).execute();
 	}
-	
+
 	/**
 	 * Create an asynchronous synchronize contacts request
 	 * @param contactsEmailAddressList List containing contacts email addresses
@@ -82,7 +100,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	public <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
 		// We create the url based on the provider serviceName
 		String serviceUrl = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
-		
+
 		return RestUtils.callRestService(serviceUrl, request, responseType);
 	}
 
@@ -123,10 +141,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			waitDialog = CustomProgressDialog.show(getContext());
+			// We show the progress indicator
+			showProgressIndicator();
 		}
 
 		@Override
@@ -137,9 +156,9 @@ public abstract class RestfulFragment extends BaseFragment{
 			if(createAccountResponse != null){
 				success = createAccountResponse.getSuccess();
 			}
-			
-			// We remove the dialog
-			waitDialog.dismiss();
+
+			// We hide the progress indicator
+			hideProgressIndicator();
 
 			// We show the status toast if it failed
 			if(!success){
@@ -161,12 +180,12 @@ public abstract class RestfulFragment extends BaseFragment{
 					UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
-					
+
 					// We reconstruct the uset avatar data object
 					UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
 					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
 					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
-					
+
 					// We login
 					login(email, password);
 				} catch (SQLException e) {
@@ -208,10 +227,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			waitDialog = CustomProgressDialog.show(getContext());
+			// We show the progress indicator
+			showProgressIndicator();
 		}
 
 		@Override
@@ -223,8 +243,8 @@ public abstract class RestfulFragment extends BaseFragment{
 				success = loginResponse.getSuccess();
 			}
 
-			// We remove the dialog
-			waitDialog.dismiss();
+			// We hide the progress indicator
+			hideProgressIndicator();
 
 			// We show the status toast if it failed
 			if(!success){
@@ -265,7 +285,7 @@ public abstract class RestfulFragment extends BaseFragment{
 					}
 					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
 					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
-					
+
 					// Reconstructing the user avatar object
 					UserAvatar userAvatar = new UserAvatar(user, loginResponse.getUserAvatarDTO());
 					// Replacing user avatar if it already exists
@@ -284,7 +304,7 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 		}
 	}
-	
+
 	/**
 	 * Synchronize contacts task which queries the remote server for user information
 	 * @author nicolas
@@ -312,10 +332,11 @@ public abstract class RestfulFragment extends BaseFragment{
 
 			return null;
 		}
-		
+
 		@Override
 		protected void onPreExecute() {
-			waitDialog = CustomProgressDialog.show(getContext());
+			// We show the progress indicator
+			showProgressIndicator();
 		}
 
 		@Override
@@ -327,8 +348,8 @@ public abstract class RestfulFragment extends BaseFragment{
 				success = synchronizeContactsResponse.getSuccess();
 			}
 
-			// We remove the dialog
-			waitDialog.dismiss();
+			// We hide the progress indicator
+			hideProgressIndicator();
 
 			// We show the status toast if it failed
 			if(!success){
@@ -341,12 +362,12 @@ public abstract class RestfulFragment extends BaseFragment{
 					for(UserDTO userDTO:synchronizeContactsResponse.getUserDTOList()){
 						// Reconstructing the user status object
 						UserStatus userStatus = getHelper().getUserStatusDao().queryForId(userDTO.getUserStatusId().shortValue());
-						
+
 						// Reconstructing the user object
 						User user = new User(userStatus, userDTO);
 						CreateOrUpdateStatus createOrUpdate = getHelper().createOrUpdateUser(user);
 						getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
-						
+
 						// Reconstructing the user contact data object
 						for(UserContactDataDTO userContactDataDTO:synchronizeContactsResponse.getUserContactDataDTOList()){
 							// Matching the appropriate user contact data
@@ -356,7 +377,7 @@ public abstract class RestfulFragment extends BaseFragment{
 								getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
 							}
 						}
-						
+
 						// Reconstructing the user avatar data object
 						for(UserAvatarDTO userAvatarDTO:synchronizeContactsResponse.getUserAvatarDTOList()){
 							// Matching the appropriate user avatar
