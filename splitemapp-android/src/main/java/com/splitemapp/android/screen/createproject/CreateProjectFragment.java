@@ -10,8 +10,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,14 +23,12 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
@@ -79,7 +77,7 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 		} else {
 			try {
 				// Saving the project instance to edit
-				mProjectToEdit = getHelper().getProjectById(Globals.getCreateProjectActivityProjectId());
+				mProjectToEdit = getHelper().getProject(Globals.getCreateProjectActivityProjectId());
 
 				// Getting the user list associated to that project
 				List<User> activeUsersByProjectId = getHelper().getActiveUsersByProjectId(Globals.getCreateProjectActivityProjectId());
@@ -188,12 +186,10 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 	private void createProject(){
 		try {
 			// Getting the project active status
-			Dao<ProjectStatus,Short> projectStatusDao = getHelper().getProjectStatusDao();
-			ProjectStatus projectActiveStatus = projectStatusDao.queryForEq(TableField.ALTER_TABLE_COD, TableFieldCod.PROJECT_STATUS_ACTIVE).get(0);
+			ProjectStatus projectActiveStatus = getHelper().getProjectStatus(TableFieldCod.PROJECT_STATUS_ACTIVE);
 
 			// Getting the project type
-			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
-			ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mProjectType.getSelectedItem()).get(0);
+			ProjectType projectType = getHelper().getProjectType(mProjectType.getSelectedItem().toString());
 
 			// Saving the project in the database
 			Project project = null;
@@ -202,7 +198,7 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			project.setProjectStatus(projectActiveStatus);
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
-			getHelper().getProjectDao().create(project);
+			getHelper().persistProject(project);
 
 			// Creating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -211,7 +207,7 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			if(mAvatarData != null){
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
-			getHelper().getProjectCoverImageDao().create(projectCoverImage);
+			getHelper().persistProjectCoverImage(projectCoverImage);;
 
 			// Saving user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
@@ -230,16 +226,14 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 	private void updateProject(){
 		try {
 			// Getting the project type
-			Dao<ProjectType,Short> projectTypeDao = getHelper().getProjectTypeDao();
-			ProjectType projectType = projectTypeDao.queryForEq(TableField.PROJECT_TYPE_COD, mProjectType.getSelectedItem()).get(0);
+			ProjectType projectType = getHelper().getProjectType(mProjectType.getSelectedItem().toString());
 
 			// Updating the project in the database
 			Project project = mProjectToEdit;
 			project.setBudget(new BigDecimal(mProjectBudget.getText().toString()));
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
-			project.setUpdatedAt(new Date());
-			getHelper().getProjectDao().update(project);
+			getHelper().updateProject(project);
 
 			// Updating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -247,7 +241,8 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			if(mAvatarData != null){
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
-			getHelper().getProjectCoverImageDao().update(projectCoverImage);
+			projectCoverImage.setUpdatedAt(new Date());
+			getHelper().updateProjectCoverImage(projectCoverImage);;
 
 			// Updating user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());

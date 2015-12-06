@@ -21,7 +21,6 @@ import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
 
@@ -47,7 +46,7 @@ public class ProjectFragment extends BaseFragmentWithTransparentActionbar {
 
 		// We get the current user and project instances
 		try {
-			mCurrentProject = getHelper().getProjectById(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -134,9 +133,9 @@ public class ProjectFragment extends BaseFragmentWithTransparentActionbar {
 
 		// Persisting selected image to database
 		try {
-			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, mCurrentProject.getId()).get(0);
+			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageByProject(mCurrentProject.getId());
 			projectCoverImage.setAvatarData(ImageUtils.bitmapToByteArray(selectedBitmap,ImageUtils.IMAGE_QUALITY_MAX));
-			getHelper().getProjectCoverImageDao().createOrUpdate(projectCoverImage);
+			getHelper().updateProjectCoverImage(projectCoverImage);
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}

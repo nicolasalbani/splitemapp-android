@@ -120,6 +120,13 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	public void updateRecycler(){
 		List<Project> updatedList = getActiveProjectsList(baseFragment);
 		
+		// We update all projects in the list
+		for(Project project:mProjects){
+			int position = mProjects.indexOf(project);
+			notifyItemChanged(position);
+		}
+		
+		// We add any new project to the list
 		for(Project project:updatedList){
 			if(!mProjects.contains(project)){
 				int position = getItemCount();

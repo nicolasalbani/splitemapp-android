@@ -6,12 +6,10 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
@@ -58,7 +56,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Hides the progress indicator
 	 */
 	public void hideProgressIndicator(){
-		if(waitDialog.isShowing()){
+		if(waitDialog != null && waitDialog.isShowing()){
 			waitDialog.dismiss();
 		}
 	}
@@ -166,31 +164,28 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 
 			// We save the user and session information returned by the backend
-			if(success){
-				try {
-					// We reconstruct the user status object
+			try {
+				if(success){
+					// We reconstruct the UserStatus object
 					UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
 
-					// We reconstruct the user object
+					// We reconstruct the User object
 					User user = new User(userStatus, createAccountResponse.getUserDTO());
-					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
-					getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
+					getHelper().createOrUpdateUser(user);
 
-					// We reconstruct the user contact data object
+					// We reconstruct the UserContactData object
 					UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
-					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
-					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+					getHelper().createOrUpdateUserContactData(userContactData);
 
-					// We reconstruct the uset avatar data object
+					// We reconstruct the UserAvatar object
 					UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
-					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
-					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
+					getHelper().createOrUpdateUserAvatar(userAvatar);
 
 					// We login
 					login(email, password);
-				} catch (SQLException e) {
-					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 				}
+			} catch (SQLException e) {
+				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 			}
 		}
 	}
@@ -252,55 +247,45 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 
 			// Saving the user and session information returned by the backend
-			if(success){
-				try {
+			try {
+				if(success){
 					// Reconstructing the user status object
 					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
 
 					// Reconstructing the user object
 					User user = new User(userStatus, loginResponse.getUserDTO());
-					// Replacing user id if user name already exists
-					List<User> existingUserList = getHelper().getUserDao().queryForEq(TableField.USER_USERNAME, user.getUsername());
-					if(!existingUserList.isEmpty()){
-						user.setId(existingUserList.get(0).getId());
-					}
-					CreateOrUpdateStatus createOrUpdate = getHelper().getUserDao().createOrUpdate(user);
-					getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
+					getHelper().createOrUpdateUser(user);
 
 					// Clearing all previous session records
-					for(UserSession userSession:getHelper().getUserSessionDao().queryForAll()){
-						getHelper().getUserSessionDao().delete(userSession);
-					}
+					getHelper().deleteAllUserSessions();
 
 					// Reconstructing the user session object
 					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
-					createOrUpdate = getHelper().getUserSessionDao().createOrUpdate(userSession);
+					getHelper().createOrUpdateUserSession(userSession);
 
 					// Reconstructing the user contact data object
 					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
 					// Replacing user contact data if email already exists
-					List<UserContactData> existingUserContactDataList = getHelper().getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_CONTACT_DATA, userContactData.getContactData());
-					if(!existingUserContactDataList.isEmpty()){
-						userContactData.setId(existingUserContactDataList.get(0).getId());
+					UserContactData existingUserContactData = getHelper().getUserContactData(userContactData.getContactData());
+					if(existingUserContactData != null){
+						userContactData.setId(existingUserContactData.getId());
 					}
-					createOrUpdate = getHelper().getUserContactDataDao().createOrUpdate(userContactData);
-					getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+					getHelper().createOrUpdateUserContactData(userContactData);
 
 					// Reconstructing the user avatar object
 					UserAvatar userAvatar = new UserAvatar(user, loginResponse.getUserAvatarDTO());
 					// Replacing user avatar if it already exists
-					List<UserAvatar> existingUserAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
-					if(!existingUserAvatarList.isEmpty()){
-						userAvatar.setId(existingUserAvatarList.get(0).getId());
+					UserAvatar existingUserAvatar = getHelper().getUserAvatarByUserId(user.getId());
+					if(existingUserAvatar != null){
+						userAvatar.setId(existingUserAvatar.getId());
 					}
-					createOrUpdate = getHelper().getUserAvatarDao().createOrUpdate(userAvatar);
-					getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
+					getHelper().createOrUpdateUserAvatar(userAvatar);
 
 					// Opening the home activity class
 					startHomeActivity(user.getId());
-				} catch (SQLException e) {
-					Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 				}
+			} catch (SQLException e) {
+				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 			}
 		}
 	}
@@ -357,24 +342,25 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 
 			// Saving the user and user contact data information returned by the backend
-			if(success){
-				try {
+			try {
+				getHelper().updateSyncStatusPullAt(User.class, success);
+				getHelper().updateSyncStatusPullAt(UserContactData.class, success);
+				getHelper().updateSyncStatusPullAt(UserAvatar.class, success);
+				if(success){
 					for(UserDTO userDTO:synchronizeContactsResponse.getUserDTOList()){
 						// Reconstructing the user status object
-						UserStatus userStatus = getHelper().getUserStatusDao().queryForId(userDTO.getUserStatusId().shortValue());
+						UserStatus userStatus = getHelper().getUserStatus(userDTO.getUserStatusId().shortValue());
 
 						// Reconstructing the user object
 						User user = new User(userStatus, userDTO);
-						CreateOrUpdateStatus createOrUpdate = getHelper().createOrUpdateUser(user);
-						getHelper().updateSyncStatusPullAt(User.class, createOrUpdate);
+						getHelper().createOrUpdateUser(user);
 
 						// Reconstructing the user contact data object
 						for(UserContactDataDTO userContactDataDTO:synchronizeContactsResponse.getUserContactDataDTOList()){
 							// Matching the appropriate user contact data
 							if(userDTO.getId() == userContactDataDTO.getUserId()){
 								UserContactData userContactData = new UserContactData(user,userContactDataDTO);
-								createOrUpdate = getHelper().createOrUpdateUserContactData(userContactData);
-								getHelper().updateSyncStatusPullAt(UserContactData.class, createOrUpdate);
+								getHelper().createOrUpdateUserContactData(userContactData);
 							}
 						}
 
@@ -383,14 +369,13 @@ public abstract class RestfulFragment extends BaseFragment{
 							// Matching the appropriate user avatar
 							if(userDTO.getId() == userAvatarDTO.getUserId()){
 								UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
-								createOrUpdate = getHelper().createOrUpdateUserAvatar(userAvatar);
-								getHelper().updateSyncStatusPullAt(UserAvatar.class, createOrUpdate);
+								getHelper().createOrUpdateUserAvatar(userAvatar);
 							}
 						}
 					}
-				} catch (SQLException e) {
-					Log.e(getLoggingTag(), "SQLException caught while synchronizing contacts", e);
 				}
+			} catch (SQLException e) {
+				Log.e(getLoggingTag(), "SQLException caught while synchronizing contacts", e);
 			}
 		}
 	}

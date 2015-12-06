@@ -107,7 +107,7 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		// Setting category title
 		try {
 			Short expenseCategoryId = userExpense.getExpenseCategory().getId();
-			ExpenseCategory expenseCategory = baseFragment.getHelper().getExpenseCategoryDao().queryForId(expenseCategoryId.shortValue());
+			ExpenseCategory expenseCategory = baseFragment.getHelper().getExpenseCategory(expenseCategoryId.shortValue());
 			viewHolder.mCategoryTextView.setText(expenseCategory.getTitle());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
@@ -119,7 +119,7 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		viewHolder.mDateTextView.setText(date);
 
 		// Setting amount
-		viewHolder.mAmountTextView.setText(userExpense.getExpense().toString());
+		viewHolder.mAmountTextView.setText(String.format("%.2f", userExpense.getExpense()));
 	}
 
 	@Override

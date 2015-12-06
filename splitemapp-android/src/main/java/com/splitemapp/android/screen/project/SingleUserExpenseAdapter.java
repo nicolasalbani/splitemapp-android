@@ -22,7 +22,6 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
 import com.splitemapp.commons.comparator.SingleUserExpensesComparator;
 import com.splitemapp.commons.comparator.UserExpenseComparator;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.SingleUserExpenses;
 import com.splitemapp.commons.domain.User;
@@ -174,7 +173,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, mCurrentProject.getId());
+			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -213,7 +212,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 			if(filteredUserExpenseList.size()>0){
 				try {
 					Long uid = filteredUserExpenseList.get(0).getUser().getId();
-					User user = mBaseFragment.getHelper().getUserById(uid);
+					User user = mBaseFragment.getHelper().getUser(uid);
 					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);

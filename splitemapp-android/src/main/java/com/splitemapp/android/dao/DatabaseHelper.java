@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -181,7 +180,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserStatus, Short> getUserStatusDao() throws SQLException {
+	private Dao<UserStatus, Short> getUserStatusDao() throws SQLException {
 		if (userStatusDao == null) {
 			userStatusDao = getDao(UserStatus.class);
 		}
@@ -192,7 +191,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ProjectStatus, Short> getProjectStatusDao() throws SQLException {
+	private Dao<ProjectStatus, Short> getProjectStatusDao() throws SQLException {
 		if (projectStatusDao == null) {
 			projectStatusDao = getDao(ProjectStatus.class);
 		}
@@ -203,7 +202,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectType class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ProjectType, Short> getProjectTypeDao() throws SQLException {
+	private Dao<ProjectType, Short> getProjectTypeDao() throws SQLException {
 		if (projectTypeDao == null) {
 			projectTypeDao = getDao(ProjectType.class);
 		}
@@ -214,7 +213,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToProjectStatus, Short> getUserToProjectStatusDao() throws SQLException {
+	private Dao<UserToProjectStatus, Short> getUserToProjectStatusDao() throws SQLException {
 		if (userToProjectStatusDao == null) {
 			userToProjectStatusDao = getDao(UserToProjectStatus.class);
 		}
@@ -225,7 +224,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the InviteStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<InviteStatus, Short> getInviteStatusDao() throws SQLException {
+	private Dao<InviteStatus, Short> getInviteStatusDao() throws SQLException {
 		if (inviteStatusDao == null) {
 			inviteStatusDao = getDao(InviteStatus.class);
 		}
@@ -236,7 +235,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ExpenseCategory class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ExpenseCategory, Short> getExpenseCategoryDao() throws SQLException {
+	private Dao<ExpenseCategory, Short> getExpenseCategoryDao() throws SQLException {
 		if (expenseCategoryDao == null) {
 			expenseCategoryDao = getDao(ExpenseCategory.class);
 		}
@@ -247,7 +246,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the Project class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<Project, Long> getProjectDao() throws SQLException {
+	private Dao<Project, Long> getProjectDao() throws SQLException {
 		if (projectDao == null) {
 			projectDao = getDao(Project.class);
 		}
@@ -258,7 +257,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectCoverImage class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<ProjectCoverImage, Long> getProjectCoverImageDao() throws SQLException {
+	private Dao<ProjectCoverImage, Long> getProjectCoverImageDao() throws SQLException {
 		if (projectCoverImageDao == null) {
 			projectCoverImageDao = getDao(ProjectCoverImage.class);
 		}
@@ -269,7 +268,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the User class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<User, Long> getUserDao() throws SQLException {
+	private Dao<User, Long> getUserDao() throws SQLException {
 		if (userDao == null) {
 			userDao = getDao(User.class);
 		}
@@ -280,7 +279,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserAvatar class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserAvatar, Long> getUserAvatarDao() throws SQLException {
+	private Dao<UserAvatar, Long> getUserAvatarDao() throws SQLException {
 		if (userAvatarDao == null) {
 			userAvatarDao = getDao(UserAvatar.class);
 		}
@@ -291,7 +290,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserContactData class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserContactData, Long> getUserContactDataDao() throws SQLException {
+	private Dao<UserContactData, Long> getUserContactDataDao() throws SQLException {
 		if (userContactDataDao == null) {
 			userContactDataDao = getDao(UserContactData.class);
 		}
@@ -302,7 +301,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserExpenses class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserExpense, Long> getUserExpenseDao() throws SQLException {
+	private Dao<UserExpense, Long> getUserExpenseDao() throws SQLException {
 		if (userExpensesDao == null) {
 			userExpensesDao = getDao(UserExpense.class);
 		}
@@ -313,7 +312,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProject class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserToProject, Long> getUserToProjectDao() throws SQLException {
+	private Dao<UserToProject, Long> getUserToProjectDao() throws SQLException {
 		if (userToProjectDao == null) {
 			userToProjectDao = getDao(UserToProject.class);
 		}
@@ -324,7 +323,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserInvite class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserInvite, Long> getUserInviteDao() throws SQLException {
+	private Dao<UserInvite, Long> getUserInviteDao() throws SQLException {
 		if (userInviteDao == null) {
 			userInviteDao = getDao(UserInvite.class);
 		}
@@ -335,7 +334,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserSession class. It will create it or just give the cached
 	 * value.
 	 */
-	public Dao<UserSession, Long> getUserSessionDao() throws SQLException {
+	private Dao<UserSession, Long> getUserSessionDao() throws SQLException {
 		if (userSessionDao == null) {
 			userSessionDao = getDao(UserSession.class);
 		}
@@ -385,24 +384,282 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 *********************************************************/
 
 	/**
-	 * Convenience method to update the Sync PULL at timestamp
-	 * @param entity
-	 * @param createOrUpdate
+	 * Gets the user status by id
+	 * @param userStatusId
+	 * @return
+	 * @throws SQLException 
+	 */
+	public UserStatus getUserStatus(short userStatusId) throws SQLException{
+		return getUserStatusDao().queryForId(userStatusId);
+	}
+
+	/**
+	 * Gets the project status by id
+	 * @param projectStatusId
+	 * @return
+	 * @throws SQLException 
+	 */
+	public ProjectStatus getProjectStatus(short projectStatusId) throws SQLException{
+		return getProjectStatusDao().queryForId(projectStatusId);
+	}
+
+	/**
+	 * Gets the project status by cod
+	 * @param projectStatusCod
+	 * @return
 	 * @throws SQLException
 	 */
-	public <T extends java.io.Serializable> void updateSyncStatusPullAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
-		// If a record was created or updated we update the sync_status table
-		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
-			// We get the proper record from the sync_status table
-			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
+	public ProjectStatus getProjectStatus(String projectStatusCod) throws SQLException{
+		return getProjectStatusDao().queryForEq(TableField.ALTER_TABLE_COD, projectStatusCod).get(0);
+	}
 
-			// We update the "last_pull_at" field in the sync_status table
-			SyncStatus syncStatus = queryResult.get(0);
-			syncStatus.setLastPullAt(new Date());
-			syncStatus.setLastPullSuccessAt(new Date());
-			syncStatusDao.update(syncStatus);
+	/**
+	 * Gets the project type by id
+	 * @param projectTypeId
+	 * @return
+	 * @throws SQLException
+	 */
+	public ProjectType getProjectType(short projectTypeId) throws SQLException{
+		return getProjectTypeDao().queryForId(projectTypeId);
+	}
+
+	/**
+	 * Gets the project type by cod
+	 * @param projectTypeCod
+	 * @return
+	 * @throws SQLException
+	 */
+	public ProjectType getProjectType(String projectTypeCod) throws SQLException{
+		return getProjectTypeDao().queryForEq(TableField.PROJECT_TYPE_COD, projectTypeCod).get(0);
+	}
+
+	/**
+	 * Gets the user to project status by id
+	 * @param userToProjectStatusId
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserToProjectStatus getUserToProjectStatus(short userToProjectStatusId) throws SQLException{
+		return getUserToProjectStatusDao().queryForId(userToProjectStatusId);
+	}
+
+	/**
+	 * Gets the invite status by id
+	 * @param inviteStatusId
+	 * @return
+	 * @throws SQLException
+	 */
+	public InviteStatus getInviteStatus(short inviteStatusId) throws SQLException{
+		return getInviteStatusDao().queryForId(inviteStatusId);
+	}
+
+	/**
+	 * Gets the expense category by id
+	 * @param expenseCategoryId
+	 * @return
+	 * @throws SQLException
+	 */
+	public ExpenseCategory getExpenseCategory(short expenseCategoryId) throws SQLException{
+		return getExpenseCategoryDao().queryForId(expenseCategoryId);
+	}
+
+	/**
+	 * Gets all the expense category items in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ExpenseCategory> getExpenseCategoryList() throws SQLException{
+		return getExpenseCategoryDao().queryForAll();
+	}
+	
+	/**
+	 * Gets all the UserToProject items in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserToProject> getUserToProjectList() throws SQLException{
+		return getUserToProjectDao().queryForAll();
+	}
+
+	/**
+	 * Gets all the project items in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<Project> getProjectList() throws SQLException{
+		return getProjectDao().queryForAll();
+	}
+	
+	/**
+	 * Gets all the UserSession items in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserSession> getUserSessionList() throws SQLException{
+		return getUserSessionDao().queryForAll();
+	}
+
+	/**
+	 * Gets all the project cover image items in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<ProjectCoverImage> getProjectCoverImageList() throws SQLException{
+		return getProjectCoverImageDao().queryForAll();
+	}
+
+	/**
+	 * Persists the Project in the database
+	 * @param project
+	 * @throws SQLException
+	 */
+	public void persistProject(Project project) throws SQLException{
+		project.setCreatedAt(new Date());
+		project.setUpdatedAt(new Date());
+		getProjectDao().create(project);
+	}
+	
+	/**
+	 * Persists the user expense in the database
+	 * @param userExpense
+	 * @throws SQLException
+	 */
+	public void persistUserExpense(UserExpense userExpense) throws SQLException{
+		userExpense.setCreatedAt(new Date());
+		userExpense.setUpdatedAt(new Date());
+		getUserExpenseDao().create(userExpense);
+	}
+	
+	/**
+	 * Persists the project cover image in the database
+	 * @param projectCoverImage
+	 * @throws SQLException
+	 */
+	public void persistProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
+		projectCoverImage.setCreatedAt(new Date());
+		projectCoverImage.setUpdatedAt(new Date());
+		getProjectCoverImageDao().create(projectCoverImage);
+	}
+
+	/**
+	 * Updates the Project in the database
+	 * @param project
+	 * @throws SQLException
+	 */
+	public void updateProject(Project project) throws SQLException{
+		project.setUpdatedAt(new Date());
+		getProjectDao().update(project);
+	}
+	
+	/**
+	 * Updates the UserToProject in the database
+	 * @param userToProject
+	 * @throws SQLException
+	 */
+	public void updateUserToProject(UserToProject userToProject) throws SQLException{
+		userToProject.setUpdatedAt(new Date());
+		getUserToProjectDao().update(userToProject);
+	}
+
+	/**
+	 * Updates the project in the database
+	 * @param projectCoverImage
+	 * @throws SQLException
+	 */
+	public void updateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
+		projectCoverImage.setUpdatedAt(new Date());
+		getProjectCoverImageDao().update(projectCoverImage);
+	}
+	
+	/**
+	 * Updates the user expense in the database
+	 * @param userExpense
+	 * @throws SQLException
+	 */
+	public void updateUserExpense(UserExpense userExpense) throws SQLException{
+		userExpense.setUpdatedAt(new Date());
+		getUserExpenseDao().update(userExpense);
+	}
+
+	/**
+	 * Gets the UserAvatar object by user id
+	 * @param userId
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserAvatar getUserAvatarByUserId(Long userId) throws SQLException{
+		UserAvatar userAvatar = null;
+		List<UserAvatar> userAvatarList = getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, userId);
+		if(!userAvatarList.isEmpty()){
+			userAvatar = userAvatarList.get(0);
 		}
+		return userAvatar;
+	}
+	
+	/**
+	 * Gets the complete list of user avatars in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserAvatar> getUserAvatarList() throws SQLException{
+		return getUserAvatarDao().queryForAll();
+	}
+	
+	/**
+	 * Gets the complete list of UserInvite in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserInvite> getUserInviteList() throws SQLException{
+		return getUserInviteDao().queryForAll();
+	}
+	
+	/**
+	 * Gets the complete list of user expense in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserExpense> getUserExpenseList() throws SQLException{
+		return getUserExpenseDao().queryForAll();
+	}
+	
+	/**
+	 * Gets the list of user expense associated to a project id
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
+		return getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
+	}
+	
+	/**
+	 * Deletes all existing user sessions in the DB
+	 * @throws SQLException
+	 */
+	public void deleteAllUserSessions() throws SQLException{
+		for(UserSession userSession:getUserSessionDao().queryForAll()){
+			getUserSessionDao().delete(userSession);
+		}
+	}
+
+	/**
+	 * Convenience method to update the Sync PULL at timestamp
+	 * @param entity
+	 * @param boolean
+	 * @throws SQLException
+	 */
+	public <T extends java.io.Serializable> void updateSyncStatusPullAt(Class<T> entity, boolean success) throws SQLException{
+		// We get the proper record from the sync_status table
+		Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
+		List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
+
+		// We update the "last_pull_at" field in the sync_status table
+		SyncStatus syncStatus = queryResult.get(0);
+		syncStatus.setLastPullAt(new Date());
+		if(success){
+			syncStatus.setLastPullSuccessAt(new Date());
+		}
+		syncStatusDao.update(syncStatus);
 	}
 
 	/**
@@ -411,102 +668,107 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param createOrUpdate
 	 * @throws SQLException
 	 */
-	public <T extends java.io.Serializable> void updateSyncStatusPushAt(Class<T> entity, CreateOrUpdateStatus createOrUpdate) throws SQLException{
-		// If a record was created or updated we update the sync_status table
-		if(createOrUpdate.isCreated() || createOrUpdate.isUpdated()){
-			// We get the proper record from the sync_status table
-			Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
-			List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
+	public <T extends java.io.Serializable> void updateSyncStatusPushAt(Class<T> entity, boolean success) throws SQLException{
+		// We get the proper record from the sync_status table
+		Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
+		List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
 
-			// We update the "last_push_at" field in the sync_status table
-			SyncStatus syncStatus = queryResult.get(0);
-			syncStatus.setLastPushAt(new Date());
+		// We update the "last_push_at" field in the sync_status table
+		SyncStatus syncStatus = queryResult.get(0);
+		syncStatus.setLastPushAt(new Date());
+		if(success){
 			syncStatus.setLastPushSuccessAt(new Date());
-			syncStatusDao.update(syncStatus);
 		}
+		syncStatusDao.update(syncStatus);
+	}
+	
+	/**
+	 * Creates or updates a project
+	 * @param project
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateProject(Project project) throws SQLException{
+		return getProjectDao().createOrUpdate(project);
+	}
+	
+	/**
+	 * Creates or updates a UserInvite
+	 * @param userInvite
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserInvite(UserInvite userInvite) throws SQLException{
+		return getUserInviteDao().createOrUpdate(userInvite);
+	}
+	
+	/**
+	 * Creates or updates a UserSession
+	 * @param userInvite
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserSession(UserSession userSession) throws SQLException{
+		return getUserSessionDao().createOrUpdate(userSession);
+	}
+	
+	/**
+	 * Creates or updates a user to project
+	 * @param userToProject
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserToProject(UserToProject userToProject) throws SQLException{
+		return getUserToProjectDao().createOrUpdate(userToProject);
+	}
+	
+	/**
+	 * Creates or updates a user expense
+	 * @param userExpense
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateUserExpense(UserExpense userExpense) throws SQLException{
+		return getUserExpenseDao().createOrUpdate(userExpense);
 	}
 
 	/**
-	 * Creates or updates the user in the DB based on the username
+	 * Creates or updates a project cover image
+	 * @param projectCoverImage
+	 * @return CreateOrUpdateStatus
+	 * @throws SQLException
+	 */
+	public CreateOrUpdateStatus createOrUpdateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
+		return getProjectCoverImageDao().createOrUpdate(projectCoverImage);
+	}
+
+	/**
+	 * Creates or updates a user
 	 * @return CreateOrUpdateStatus
 	 * @throws SQLException 
 	 */
 	public CreateOrUpdateStatus createOrUpdateUser(User user) throws SQLException{
-		List<User> userList = getUserDao().queryForEq(TableField.USER_USERNAME, user.getUsername());
-
-		// Setting return values
-		boolean created = false;
-		boolean updated = false;
-		int linesChanged = 0;
-
-		// If it doesn't exists we create it, otherwise we update it
-		if(userList.size() == 0){
-			getUserDao().create(user);
-			created = true;
-		} else {
-			// If this record already exists we make the id match and the update the record
-			user.setId(userList.get(0).getId());
-			linesChanged = getUserDao().update(user);
-			updated = true;
-		}
-
-		return new CreateOrUpdateStatus(created, updated, linesChanged);
+		return getUserDao().createOrUpdate(user);
 	}
 
 	/**
 	 * Creates or updates the user contact data in the DB based on the userId
 	 * @param userContactData
-	 * @return
+	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
 	public CreateOrUpdateStatus createOrUpdateUserContactData(UserContactData userContactData) throws SQLException{
-		List<UserContactData> userContactDataList = getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_USER_ID, userContactData.getUser().getId());
-
-		// Setting return values
-		boolean created = false;
-		boolean updated = false;
-		int linesChanged = 0;
-
-		// If it doesn't exists we create it, otherwise we update it
-		if(userContactDataList.size() == 0){
-			getUserContactDataDao().create(userContactData);
-			created = true;
-		} else {
-			// If this record already exists we make the id match and the update the record
-			userContactData.setId(userContactDataList.get(0).getId());
-			linesChanged = getUserContactDataDao().update(userContactData);
-			updated = true;
-		}
-
-		return new CreateOrUpdateStatus(created, updated, linesChanged);
+		return getUserContactDataDao().createOrUpdate(userContactData);
 	}
-	
+
 	/**
 	 * Creates or updates the user avatar in the DB based on the userId
 	 * @param userAvatar
-	 * @return
+	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
 	public CreateOrUpdateStatus createOrUpdateUserAvatar(UserAvatar userAvatar) throws SQLException{
-		List<UserAvatar> userAvatarList = getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, userAvatar.getUser().getId());
-
-		// Setting return values
-		boolean created = false;
-		boolean updated = false;
-		int linesChanged = 0;
-
-		// If it doesn't exists we create it, otherwise we update it
-		if(userAvatarList.size() == 0){
-			getUserAvatarDao().create(userAvatar);
-			created = true;
-		} else {
-			// If this record already exists we make the id match and the update the record
-			userAvatar.setId(userAvatarList.get(0).getId());
-			linesChanged = getUserAvatarDao().update(userAvatar);
-			updated = true;
-		}
-
-		return new CreateOrUpdateStatus(created, updated, linesChanged);
+		return getUserAvatarDao().createOrUpdate(userAvatar);
 	}
 
 	/**
@@ -527,6 +789,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return userContactData;
 	}
+	
+	/**
+	 * Gets the UserContactData object by contact data
+	 * @param contactData
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserContactData getUserContactData(String contactData) throws SQLException{
+		UserContactData userContactData = null;
+		List<UserContactData> userContactDataList = getUserContactDataDao().queryForEq(TableField.USER_CONTACT_DATA_CONTACT_DATA, contactData);
+		if(!userContactDataList.isEmpty()){
+			userContactData = userContactDataList.get(0);
+		}
+		return userContactData;
+	}
 
 	/**
 	 * Returns all users in the database with their corresponding UserContactData
@@ -535,7 +812,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public List<User> getAllUsers() throws SQLException{
 		// Getting all users
-		List<User> userList = getUserDao().queryForAll();
+		List<User> userList = getUserList();
 
 		// Setting contact data for all users
 		for(User user:userList){
@@ -574,7 +851,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public ProjectCoverImage getProjectCoverImageByProjectId(Long projectId) throws SQLException{
-		ProjectCoverImage projectCoverImage = getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, projectId).get(0);
+		ProjectCoverImage projectCoverImage = null;
+		List<ProjectCoverImage> projectCoverImageList = getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, projectId);
+		if(!projectCoverImageList.isEmpty()){
+			projectCoverImage = projectCoverImageList.get(0);
+		}
 		return projectCoverImage;
 	}
 
@@ -600,7 +881,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		for(UserToProject userToProject:allUserToProjectsForProjectId){
 			UserToProjectStatus userToProjectStatus = getUserToProjectStatusDao().queryForId(userToProject.getUserToProjectStatus().getId());
 			if(userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE)){
-				activeUsersList.add(getUserById(userToProject.getUser().getId()));
+				activeUsersList.add(getUser(userToProject.getUser().getId()));
 			}
 		}
 
@@ -624,8 +905,51 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return User instance
 	 * @throws SQLException 
 	 */
-	public User getUserById(Long userId) throws SQLException{
+	public User getUser(Long userId) throws SQLException{
 		return getUserDao().queryForId(userId.longValue());
+	}
+
+	/**
+	 * Gets the complete list of users in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<User> getUserList() throws SQLException{
+		return getUserDao().queryForAll();
+	}
+	
+	/**
+	 * Gets the complete list of user contact data in the database
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserContactData> getUserContactDataList() throws SQLException{
+		return getUserContactDataDao().queryForAll();
+	}
+
+	/**
+	 * Gets the User object for the userName
+	 * @param userName String containing the user name in the DB
+	 * @return User instance
+	 * @throws SQLException 
+	 */
+	public User getUser(String userName) throws SQLException{
+		User user = null;
+		List<User> userList = getUserDao().queryForEq(TableField.USER_USERNAME, userName);
+		if(!userList.isEmpty()){
+			user = userList.get(0);
+		}
+		return user;
+	}
+
+	/**
+	 * Gets the project cover image by project id
+	 * @param projectId
+	 * @return
+	 * @throws SQLException
+	 */
+	public ProjectCoverImage getProjectCoverImageByProject(Long projectId) throws SQLException{
+		return getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, projectId).get(0);
 	}
 
 	/**
@@ -634,19 +958,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return Project instance
 	 * @throws SQLException 
 	 */
-	public Project getProjectById(Long projectId) throws SQLException{
+	public Project getProject(Long projectId) throws SQLException{
 		// Getting project
 		Project project = getProjectDao().queryForId(projectId.longValue());
-		
+
 		// Getting project type
 		ProjectType projectType = getProjectTypeDao().queryForId(project.getProjectType().getId());
 		project.setProjectType(projectType);
-		
+
 		// Getting project avatar
 		Set<ProjectCoverImage> projectCoverImageSet = new HashSet<ProjectCoverImage>();
 		projectCoverImageSet.add(getProjectCoverImageByProjectId(projectId));
 		project.setProjectCoverImages(projectCoverImageSet);
-		
+
 		return project;
 	}
 
@@ -726,7 +1050,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		Long loggedUserId = getLoggedUserId();
 		if(loggedUserId != null){
 			// Setting User information
-			user = getUserById(getLoggedUserId());
+			user = getUser(getLoggedUserId());
 
 			// Setting UserContactData information
 			Set<UserContactData> userContactDatas = new HashSet<UserContactData>();
@@ -752,7 +1076,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		List<UserToProject> userToProjectList = getUserToProjectDao().queryForEq(TableField.USER_TO_PROJECT_PROJECT_ID, project.getId());
 
 		// Calculating expense share by default (all members in the group have same %)
-		BigDecimal expenseShare = EconomicUtils.calulateShare(userToProjectList.size());
+		Float expenseShare = EconomicUtils.calulateShare(userToProjectList.size());
 
 		// For each of the existing users in the list, we update their status
 		for(UserToProject userToProject:userToProjectList){
@@ -771,7 +1095,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			}
 
 			// Updating userToProject
-			getUserToProjectDao().update(userToProject);
+			updateUserToProject(userToProject);
 		}
 
 		// Now we only have new users in the user list, we add the records for those
@@ -809,7 +1133,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public Long getLoggedUserId() throws SQLException{
 		Long userId = null;
 
-		List<UserSession> userSessionList = getUserSessionDao().queryForAll();
+		List<UserSession> userSessionList = getUserSessionList();
 		if(userSessionList.size() > 0){
 			UserSession userSession = userSessionList.get(userSessionList.size()-1);
 			userId = userSession.getUser().getId();
@@ -823,7 +1147,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public String getSessionToken() throws SQLException{
-		return getUserSessionDao().queryForAll().get(0).getToken();
+		return getUserSessionList().get(0).getToken();
 	}
 
 	/**
@@ -833,7 +1157,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public List<UserExpense> getAllUserExpenseForProject(Long projectId) throws SQLException{
-		List<UserExpense> userExpenseList = getUserExpenseDao().queryForAll();
+		List<UserExpense> userExpenseList = getUserExpenseList();
 
 		List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>(); 
 		for(UserExpense userExpense:userExpenseList){
@@ -845,16 +1169,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return filteredUserExpenseList;
 	}
 
+
 	/**
-	 * Deletes all existing user sessions in the DB
-	 * @throws SQLException 
+	 * Updates the specified ID reference with a new ID matching the one in the remote server
+	 * @param idUpdate
+	 * @param idReferenceList
+	 * @throws SQLException
 	 */
-	public void deleteAllUserSessions() throws SQLException{
-		Dao<UserSession, Long> userSessionDao = getUserSessionDao();
-		List<UserSession> userSessionList = userSessionDao.queryForAll();
-		for(UserSession us:userSessionList){
-			userSessionDao.deleteById(us.getId().longValue());
-		}
+	public void updateIdReferences(IdUpdate<Long> idUpdate, List<IdReference> idReferenceList) throws SQLException{
+		updateIdReferences(getProjectDao(), idUpdate, idReferenceList);
 	}
 
 	/**
@@ -864,7 +1187,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param idReferenceList
 	 * @throws SQLException
 	 */
-	public <F extends Serializable,E extends Number> void updateIdReferences(Dao<F,E> dao, IdUpdate<E> idUpdate, List<IdReference> idReferenceList) throws SQLException{
+	private <F extends Serializable,E extends Number> void updateIdReferences(Dao<F,E> dao, IdUpdate<E> idUpdate, List<IdReference> idReferenceList) throws SQLException{
 		for(IdReference idReference:idReferenceList){
 			String statement = "UPDATE " +idReference.getTableName()+ " SET " +idReference.getFieldName()+ " = " +idUpdate.getNewId()+ " WHERE " +idReference.getFieldName()+ " = " +idUpdate.getOldId();
 			Log.i(DATABASE_HELPER_TAG, "Executing ID update: " +statement);

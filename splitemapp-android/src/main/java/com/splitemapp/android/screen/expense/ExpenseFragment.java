@@ -26,7 +26,6 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
 import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Globals;
 import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
@@ -63,7 +62,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 		try{
 			// We get the current user and project instances
 			mCurrentUser = getHelper().getLoggedUser();
-			mCurrentProject = getHelper().getProjectById(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
@@ -143,19 +142,17 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 		return v;
 	}
 
-	private void saveExpense(){
+	private void persistExpense(){
 		try {
 			// We get an instance of the expense category
-			Dao<ExpenseCategory,Short> expenseCategoryDao = getHelper().getExpenseCategoryDao();
-			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId((short)(mSelectedCategory+1));
+			ExpenseCategory expenseCategory = getHelper().getExpenseCategory((short)(mSelectedCategory+1));
 
 			// We save the user expense to the DB
-			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpenseDao();
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);
 			mUserExpense.setUser(mCurrentUser);
-			userExpensesDao.create(mUserExpense);
+			getHelper().persistUserExpense(mUserExpense);
 
 			// Moving back to the project screen
 			getActivity().onBackPressed();
@@ -168,11 +165,9 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 	private void updateExpense(){
 		try {
 			// We get an instance of the expense category
-			Dao<ExpenseCategory,Short> expenseCategoryDao = getHelper().getExpenseCategoryDao();
-			ExpenseCategory expenseCategory = expenseCategoryDao.queryForId((short)(mSelectedCategory+1));
+			ExpenseCategory expenseCategory = getHelper().getExpenseCategory((short)(mSelectedCategory+1));
 
 			// We save the user expense to the DB
-			Dao<UserExpense,Long> userExpensesDao = getHelper().getUserExpenseDao();
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setUpdatedAt(new Date());
@@ -180,7 +175,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 			// TODO Only set the user if we are owning the expense
 			// mUserExpense.setUser(mCurrentUser);
 
-			userExpensesDao.update(mUserExpense);
+			getHelper().updateUserExpense(mUserExpense);
 
 			// Moving back to the project screen
 			getActivity().onBackPressed();
@@ -193,7 +188,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 	private ArrayAdapter<String> getExpenseCategoryAdapter(){
 		String[] expenseCategoryArray = null;
 		try {
-			List<ExpenseCategory> expenseCategoryList = getHelper().getExpenseCategoryDao().queryForAll();
+			List<ExpenseCategory> expenseCategoryList = getHelper().getExpenseCategoryList();
 			List<String> expenseCategoryStringList = new ArrayList<String>();
 			for(ExpenseCategory ec:expenseCategoryList){
 				expenseCategoryStringList.add(ec.getTitle());
@@ -254,7 +249,7 @@ public class ExpenseFragment extends BaseFragmentWithBlueActionbar {
 	@Override
 	protected void doneAction() {
 		if(isNewExpense()){
-			saveExpense();
+			persistExpense();
 		} else {
 			updateExpense();
 		}

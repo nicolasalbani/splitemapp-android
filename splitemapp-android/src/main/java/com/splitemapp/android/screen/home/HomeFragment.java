@@ -146,15 +146,8 @@ public class HomeFragment extends SynchronizerFragment {
 		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				// Pulling all services
-				pullUsers();
-				pullUserAvatars();
-				pullUserContactDatas();
-				pullProjects();
-				pullProjectCoverImages();
-				pullUserToProjects();
-				pullUserInvites();
-				pullUserExpenses();
+				// Pulling all tables
+				syncAllTables();
 			}
 		});
 
@@ -174,7 +167,7 @@ public class HomeFragment extends SynchronizerFragment {
 	public void onResume() {
 		super.onResume();
 
-		// Refreshing project list when coming back from the Create List fragment
+		// Refreshing project list 
 		mProjectsAdapter.updateRecycler();
 
 		// Showing or hiding the empty list hint

@@ -30,7 +30,6 @@ import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
@@ -183,8 +182,7 @@ public abstract class BaseFragment extends Fragment {
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {
-			List<UserAvatar> userAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
-			avatar = userAvatarList.get(0).getAvatarData();
+			avatar = getHelper().getUserAvatarByUserId(user.getId()).getAvatarData();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
@@ -202,8 +200,8 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	public boolean isUserHasAvatar(User user){
 		try {
-			List<UserAvatar> userAvatarList = getHelper().getUserAvatarDao().queryForEq(TableField.USER_AVATAR_USER_ID, user.getId());
-			if(userAvatarList.size()>0 && (userAvatarList.get(0).getAvatarData() != null)){
+			UserAvatar userAvatar = getHelper().getUserAvatarByUserId(user.getId());
+			if(userAvatar != null){
 				return true;
 			}
 		} catch (SQLException e) {
@@ -223,7 +221,7 @@ public abstract class BaseFragment extends Fragment {
 		//Getting the project cover
 		byte[] projectAvatar = null;
 		try {
-			projectAvatar = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, project.getId()).get(0).getAvatarData();
+			projectAvatar = getHelper().getProjectCoverImageByProject(project.getId()).getAvatarData();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
@@ -244,7 +242,7 @@ public abstract class BaseFragment extends Fragment {
 		//Getting the project image cover
 		byte[] coverImage = null;
 		try {
-			coverImage = getHelper().getProjectCoverImageDao().queryForEq(TableField.PROJECT_COVER_IMAGE_PROJECT_ID, project.getId()).get(0).getAvatarData();
+			coverImage = getHelper().getProjectCoverImageByProject(project.getId()).getAvatarData();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
