@@ -1015,7 +1015,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		for(UserToProject userToProject:userToProjectList){
 			if(userToProject.getProject().getId().equals(projectId)){
 				userToProject.setUserToProjectStatus(archivedUserToProjectStatus);
-				userToProjectDao.update(userToProject);
+				updateUserToProject(userToProject);
 			}
 		}
 	}
