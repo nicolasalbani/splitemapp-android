@@ -1,31 +1,27 @@
 package com.splitemapp.android.screen;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dialog.CustomProgressDialog;
-import com.splitemapp.android.utils.NetworkUtils;
-import com.splitemapp.commons.constants.ServiceConstants;
-import com.splitemapp.commons.domain.User;
-import com.splitemapp.commons.domain.UserAvatar;
-import com.splitemapp.commons.domain.UserContactData;
-import com.splitemapp.commons.domain.UserSession;
-import com.splitemapp.commons.domain.UserStatus;
-import com.splitemapp.commons.domain.dto.UserAvatarDTO;
-import com.splitemapp.commons.domain.dto.UserContactDataDTO;
-import com.splitemapp.commons.domain.dto.UserDTO;
-import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
-import com.splitemapp.commons.domain.dto.request.LoginRequest;
-import com.splitemapp.commons.domain.dto.request.SynchronizeContactsRequest;
-import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
-import com.splitemapp.commons.domain.dto.response.LoginResponse;
-import com.splitemapp.commons.domain.dto.response.SynchronizeContactsResponse;
-import com.splitemapp.commons.rest.RestUtils;
-import com.splitemapp.commons.utils.Utils;
+import com.splitemapp.android.task.CreateAccountRequestTask;
+import com.splitemapp.android.task.LoginRequestTask;
+import com.splitemapp.android.task.PullProjectCoverImagesTask;
+import com.splitemapp.android.task.PullProjectsTask;
+import com.splitemapp.android.task.PullUserAvatarsTask;
+import com.splitemapp.android.task.PullUserContactDatasTask;
+import com.splitemapp.android.task.PullUserExpensesTask;
+import com.splitemapp.android.task.PullUserInvitesTask;
+import com.splitemapp.android.task.PullUserToProjectsTask;
+import com.splitemapp.android.task.PullUsersTask;
+import com.splitemapp.android.task.PushProjectCoverImagesTask;
+import com.splitemapp.android.task.PushProjectsTask;
+import com.splitemapp.android.task.PushUserAvatarsTask;
+import com.splitemapp.android.task.PushUserContactDatasTask;
+import com.splitemapp.android.task.PushUserExpensesTask;
+import com.splitemapp.android.task.PushUserInvitesTask;
+import com.splitemapp.android.task.PushUserToProjectsTask;
+import com.splitemapp.android.task.PushUsersTask;
+import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 
 public abstract class RestfulFragment extends BaseFragment{
 
@@ -67,8 +63,20 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param userName String containing the user name
 	 * @param password String containing the password
 	 */
-	public void createAccount(String email, String userName, String password, byte[] avatar){
-		new CreateAccountRequestTask(email, userName, password, avatar).execute();
+	public void createAccount(final String email, final String userName, final String password, final byte[] avatar){
+		// Showing the progress indicator
+		showProgressIndicator();
+
+		// Creating the CreateAccountRequestTask instance with a custom executeOnSuccess
+		CreateAccountRequestTask createAccountRequestTask = new CreateAccountRequestTask(getHelper(), this, email, userName, password, avatar){
+			@Override
+			protected void executeOnSuccess() {
+				hideProgressIndicator();
+				// We login the user after the account was created
+				login(email, password);
+			}
+		};
+		createAccountRequestTask.execute();
 	}
 
 	/**
@@ -77,7 +85,20 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param password String containing the password
 	 */
 	public void login(String userName, String password){
-		new LoginRequestTask(userName, password).execute();
+		// Showing the progress indicator
+		showProgressIndicator();
+
+		// Creating the LoginRequestTask instance with a custom executeOnSuccess
+		LoginRequestTask loginRequestTask = new LoginRequestTask(getHelper(), this, userName, password){
+			@Override
+			protected void executeOnSuccess() {
+				// Hiding the progress indicator
+				hideProgressIndicator();
+				// Starting the home activity
+				startHomeActivity();
+			}
+		};
+		loginRequestTask.execute();
 	}
 
 	/**
@@ -85,298 +106,191 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param contactsEmailAddressList List containing contacts email addresses
 	 */
 	public void synchronizeContacts(List<String> contactsEmailAddressList){
-		new SynchronizeContactsRequestTask(contactsEmailAddressList).execute();
+		// Showing the progress indicator
+		showProgressIndicator();
+
+		SynchronizeContactsRequestTask synchronizeContactsRequestTask = new SynchronizeContactsRequestTask(getHelper(), this,contactsEmailAddressList){
+			@Override
+			protected void executeOnSuccess() {
+				hideProgressIndicator();
+			}
+		};
+		synchronizeContactsRequestTask.execute();
 	}
 
 	/**
-	 * 
-	 * @param servicePath String containing the rest service name
-	 * @param request <E> The request object used in the rest service call
-	 * @param responseType <T> The response class that the rest service call is supposed to return
-	 * @return	<T> An instance of the response type specified as a parameter
+	 * Creates a linked list of asynchronous pull and push requests
 	 */
-	public <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
-		// We create the url based on the provider serviceName
-		String serviceUrl = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
+	protected void syncAllTables(){
+		// Showing progress indicator
+		showProgressIndicator();
 
-		return RestUtils.callRestService(serviceUrl, request, responseType);
+		// Calling all push services
+		final PushUserExpensesTask pushUserExpensesTask = new PushUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {hideProgressIndicator();}};
+		final PushUserInvitesTask pushUserInvitesTask = new PushUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pushUserExpensesTask.execute();}};
+		final PushUserToProjectsTask pushUserToProjectsTask = new PushUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pushUserInvitesTask.execute();}};
+		final PushProjectCoverImagesTask pushProjectCoverImagesTask = new PushProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pushUserToProjectsTask.execute();}};
+		final PushProjectsTask pushProjectsTask = new PushProjectsTask(getHelper(), this){protected void executeOnSuccess() {pushProjectCoverImagesTask.execute();}};
+		final PushUserContactDatasTask pushUserContactDatasTask = new PushUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pushProjectsTask.execute();}};
+		final PushUserAvatarsTask pushUserAvatarsTask = new PushUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pushUserContactDatasTask.execute();}};
+		final PushUsersTask pushUsersTask = new PushUsersTask(getHelper(), this){protected void executeOnSuccess() {pushUserAvatarsTask.execute();}};
+
+		// Calling all pull services
+		final PullUserExpensesTask pullUserExpensesTask = new PullUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {pushUsersTask.execute();}};
+		final PullUserInvitesTask pullUserInvitesTask = new PullUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pullUserExpensesTask.execute();}};
+		final PullUserToProjectsTask pullUserToProjectsTask = new PullUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullUserInvitesTask.execute();}};
+		final PullProjectCoverImagesTask pullProjectCoverImagesTask = new PullProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pullUserToProjectsTask.execute();}};
+		final PullProjectsTask pullProjectsTask = new PullProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullProjectCoverImagesTask.execute();}};
+		final PullUserContactDatasTask pullUserContactDatasTask = new PullUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pullProjectsTask.execute();}};
+		final PullUserAvatarsTask pullUserAvatarsTask = new PullUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pullUserContactDatasTask.execute();}};
+		PullUsersTask pullUsersTask = new PullUsersTask(getHelper(), this){protected void executeOnSuccess() {pullUserAvatarsTask.execute();}};
+		pullUsersTask.execute();
 	}
 
 	/**
-	 * Create account task which creates a new account for the user
-	 * @author nicolas
-	 *
+	 * Creates a linked list of asynchronous pull requests
 	 */
-	private class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccountResponse> {
-		private String email;
-		private String userName;
-		private String password;
-		private byte[] avatar;
+	protected void pullAllTables(){
+		// Showing progress indicator
+		showProgressIndicator();
 
-		public CreateAccountRequestTask(String email, String userName, String password, byte[] avatar) {
-			this.email = email;
-			this.userName = userName;
-			this.password = password;
-			this.avatar = avatar;
-		}
-
-		@Override
-		public CreateAccountResponse doInBackground(Void... params) {
-			try {
-				// We create the login request
-				CreateAccountRequest createAccountRequest = new CreateAccountRequest();
-				createAccountRequest.setEmail(email);
-				createAccountRequest.setFullName(userName);
-				createAccountRequest.setPassword(Utils.hashPassword(password));
-				createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
-				createAccountRequest.setAvatar(avatar);
-
-				// We call the rest service and send back the login response
-				return callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);
-			} catch (Exception e) {
-				Log.e(getLoggingTag(), e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// We show the progress indicator
-			showProgressIndicator();
-		}
-
-		@Override
-		public void onPostExecute(CreateAccountResponse createAccountResponse) {
-			boolean success = false;
-
-			// We validate the response
-			if(createAccountResponse != null){
-				success = createAccountResponse.getSuccess();
-			}
-
-			// We hide the progress indicator
-			hideProgressIndicator();
-
-			// We show the status toast if it failed
-			if(!success){
-				showToast("Create Account Failed!");
-			}
-
-			// We save the user and session information returned by the backend
-			try {
-				if(success){
-					// We reconstruct the UserStatus object
-					UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
-
-					// We reconstruct the User object
-					User user = new User(userStatus, createAccountResponse.getUserDTO());
-					getHelper().createOrUpdateUser(user);
-
-					// We reconstruct the UserContactData object
-					UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
-					getHelper().createOrUpdateUserContactData(userContactData);
-
-					// We reconstruct the UserAvatar object
-					UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
-					getHelper().createOrUpdateUserAvatar(userAvatar);
-
-					// We login
-					login(email, password);
-				}
-			} catch (SQLException e) {
-				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
-			}
-		}
+		// Calling all pull services
+		final PullUserExpensesTask pullUserExpensesTask = new PullUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {hideProgressIndicator();}};
+		final PullUserInvitesTask pullUserInvitesTask = new PullUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pullUserExpensesTask.execute();}};
+		final PullUserToProjectsTask pullUserToProjectsTask = new PullUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullUserInvitesTask.execute();}};
+		final PullProjectCoverImagesTask pullProjectCoverImagesTask = new PullProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pullUserToProjectsTask.execute();}};
+		final PullProjectsTask pullProjectsTask = new PullProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullProjectCoverImagesTask.execute();}};
+		final PullUserContactDatasTask pullUserContactDatasTask = new PullUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pullProjectsTask.execute();}};
+		final PullUserAvatarsTask pullUserAvatarsTask = new PullUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pullUserContactDatasTask.execute();}};
+		PullUsersTask pullUsersTask = new PullUsersTask(getHelper(), this){protected void executeOnSuccess() {pullUserAvatarsTask.execute();}};
+		pullUsersTask.execute();
 	}
 
 	/**
-	 * Login tasks which enables the user to login for the first time and authenticate against the remote server
-	 * @author nicolas
-	 *
+	 * Creates an asynchronous user table pull request
 	 */
-	private class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
-		private String userName;
-		private String password;
-
-		public LoginRequestTask(String userName, String password){
-			this.userName = userName;
-			this.password = password;
-		}
-
-		@Override
-		public LoginResponse doInBackground(Void... params) {
-			try {
-				// Creating the login request
-				LoginRequest loginRequest = new LoginRequest();
-				loginRequest.setDevice(Constants.DEVICE);
-				loginRequest.setOsVersion(Constants.OS_VERSION);
-				loginRequest.setUsername(userName);
-				loginRequest.setPassword(Utils.hashPassword(password));
-
-				// Calling the rest service and send back the login response
-				return callRestService(ServiceConstants.LOGIN_PATH, loginRequest, LoginResponse.class);
-			} catch (Exception e) {
-				Log.e(getLoggingTag(), e.getMessage(), e);
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// We show the progress indicator
-			showProgressIndicator();
-		}
-
-		@Override
-		public void onPostExecute(LoginResponse loginResponse) {
-			boolean success = false;
-
-			// Validating the response
-			if(loginResponse != null){
-				success = loginResponse.getSuccess();
-			}
-
-			// We hide the progress indicator
-			hideProgressIndicator();
-
-			// We show the status toast if it failed
-			if(!success){
-				showToast("Login Failed!");
-			}
-
-			// Saving the user and session information returned by the backend
-			try {
-				if(success){
-					// Reconstructing the user status object
-					UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
-
-					// Reconstructing the user object
-					User user = new User(userStatus, loginResponse.getUserDTO());
-					getHelper().createOrUpdateUser(user);
-
-					// Clearing all previous session records
-					getHelper().deleteAllUserSessions();
-
-					// Reconstructing the user session object
-					UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
-					getHelper().createOrUpdateUserSession(userSession);
-
-					// Reconstructing the user contact data object
-					UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
-					// Replacing user contact data if email already exists
-					UserContactData existingUserContactData = getHelper().getUserContactData(userContactData.getContactData());
-					if(existingUserContactData != null){
-						userContactData.setId(existingUserContactData.getId());
-					}
-					getHelper().createOrUpdateUserContactData(userContactData);
-
-					// Reconstructing the user avatar object
-					UserAvatar userAvatar = new UserAvatar(user, loginResponse.getUserAvatarDTO());
-					// Replacing user avatar if it already exists
-					UserAvatar existingUserAvatar = getHelper().getUserAvatarByUserId(user.getId());
-					if(existingUserAvatar != null){
-						userAvatar.setId(existingUserAvatar.getId());
-					}
-					getHelper().createOrUpdateUserAvatar(userAvatar);
-
-					// Opening the home activity class
-					startHomeActivity(user.getId());
-				}
-			} catch (SQLException e) {
-				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
-			}
-		}
+	protected void pullUsers(){
+		PullUsersTask task = new PullUsersTask(getHelper(), this);
+		task.execute();
 	}
 
 	/**
-	 * Synchronize contacts task which queries the remote server for user information
-	 * @author nicolas
-	 *
+	 * Creates an asynchronous user_contact_data table pull request
 	 */
-	private class SynchronizeContactsRequestTask extends AsyncTask<Void, Void, SynchronizeContactsResponse> {
-		private List<String> contactsEmailAddressList;
+	protected void pullUserContactDatas(){
+		PullUserContactDatasTask task = new PullUserContactDatasTask(getHelper(), this);
+		task.execute();
+	}
 
-		public SynchronizeContactsRequestTask(List<String> contactsEmailAddressList) {
-			this.contactsEmailAddressList = contactsEmailAddressList;
-		}
+	/**
+	 * Creates an asynchronous user_avatar table pull request
+	 */
+	protected void pullUserAvatars(){
+		PullUserAvatarsTask task = new PullUserAvatarsTask(getHelper(), this);
+		task.execute();
+	}
 
-		@Override
-		public SynchronizeContactsResponse doInBackground(Void... params) {
-			try {
-				// We create the login request
-				SynchronizeContactsRequest synchronizeContactsRequest = new SynchronizeContactsRequest();
-				synchronizeContactsRequest.setContactsEmailAddressList(contactsEmailAddressList);
+	/**
+	 * Creates an asynchronous project table pull request
+	 */
+	protected void pullProjects(){
+		PullProjectsTask task = new PullProjectsTask(getHelper(), this);
+		task.execute();
+	}
 
-				// We call the rest service and send back the synchronize contacts
-				return callRestService(ServiceConstants.SYNCHRONIZE_CONTACTS_PATH, synchronizeContactsRequest, SynchronizeContactsResponse.class);
-			} catch (Exception e) {
-				Log.e(getLoggingTag(), e.getMessage(), e);
-			}
+	/**
+	 * Creates an asynchronous project_cover_image table pull request
+	 */
+	protected void pullProjectCoverImages(){
+		PullProjectCoverImagesTask task = new PullProjectCoverImagesTask(getHelper(), this);
+		task.execute();
+	}
 
-			return null;
-		}
+	/**
+	 * Creates an asynchronous user_to_project table pull request
+	 */
+	protected void pullUserToProjects(){
+		PullUserToProjectsTask task = new PullUserToProjectsTask(getHelper(), this);
+		task.execute();
+	}
 
-		@Override
-		protected void onPreExecute() {
-			// We show the progress indicator
-			showProgressIndicator();
-		}
+	/**
+	 * Creates an asynchronous user_invite table pull request
+	 */
+	protected void pullUserInvites(){
+		PullUserInvitesTask task = new PullUserInvitesTask(getHelper(), this);
+		task.execute();
+	}
 
-		@Override
-		public void onPostExecute(SynchronizeContactsResponse synchronizeContactsResponse) {
-			boolean success = false;
+	/**
+	 * Creates an asynchronous user_expense table pull request
+	 */
+	protected void pullUserExpenses(){
+		PullUserExpensesTask task = new PullUserExpensesTask(getHelper(), this);
+		task.execute();
+	}
 
-			// Validating the response
-			if(synchronizeContactsResponse != null){
-				success = synchronizeContactsResponse.getSuccess();
-			}
+	/**
+	 * Creates an asynchronous user table push request
+	 */
+	protected void pushUsers(){
+		PushUsersTask task = new PushUsersTask(getHelper(), this);
+		task.execute();
+	}
 
-			// We hide the progress indicator
-			hideProgressIndicator();
+	/**
+	 * Creates an asynchronous user_contact_data table push request
+	 */
+	protected void pushUserContactDatas(){
+		PushUserContactDatasTask task = new PushUserContactDatasTask(getHelper(), this);
+		task.execute();
+	}
 
-			// We show the status toast if it failed
-			if(!success){
-				showToast("Synchronize Contacts Failed!");
-			}
+	/**
+	 * Creates an asynchronous user_avatar table push request
+	 */
+	protected void pushUserAvatars(){
+		PushUserAvatarsTask task = new PushUserAvatarsTask(getHelper(), this);
+		task.execute();
+	}
 
-			// Saving the user and user contact data information returned by the backend
-			try {
-				getHelper().updateSyncStatusPullAt(User.class, success);
-				getHelper().updateSyncStatusPullAt(UserContactData.class, success);
-				getHelper().updateSyncStatusPullAt(UserAvatar.class, success);
-				if(success){
-					for(UserDTO userDTO:synchronizeContactsResponse.getUserDTOList()){
-						// Reconstructing the user status object
-						UserStatus userStatus = getHelper().getUserStatus(userDTO.getUserStatusId().shortValue());
+	/**
+	 * Creates an asynchronous project table push request
+	 */
+	protected void pushProjects(){
+		PushProjectsTask task = new PushProjectsTask(getHelper(), this);
+		task.execute();
+	}
 
-						// Reconstructing the user object
-						User user = new User(userStatus, userDTO);
-						getHelper().createOrUpdateUser(user);
+	/**
+	 * Creates an asynchronous project_cover_image table push request
+	 */
+	protected void pushProjectCoverImages(){
+		PushProjectCoverImagesTask task = new PushProjectCoverImagesTask(getHelper(), this);
+		task.execute();
+	}
 
-						// Reconstructing the user contact data object
-						for(UserContactDataDTO userContactDataDTO:synchronizeContactsResponse.getUserContactDataDTOList()){
-							// Matching the appropriate user contact data
-							if(userDTO.getId() == userContactDataDTO.getUserId()){
-								UserContactData userContactData = new UserContactData(user,userContactDataDTO);
-								getHelper().createOrUpdateUserContactData(userContactData);
-							}
-						}
+	/**
+	 * Creates an asynchronous user_to_project table push request
+	 */
+	protected void pushUserToProjects(){
+		PushUserToProjectsTask task = new PushUserToProjectsTask(getHelper(), this);
+		task.execute();
+	}
 
-						// Reconstructing the user avatar data object
-						for(UserAvatarDTO userAvatarDTO:synchronizeContactsResponse.getUserAvatarDTOList()){
-							// Matching the appropriate user avatar
-							if(userDTO.getId() == userAvatarDTO.getUserId()){
-								UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
-								getHelper().createOrUpdateUserAvatar(userAvatar);
-							}
-						}
-					}
-				}
-			} catch (SQLException e) {
-				Log.e(getLoggingTag(), "SQLException caught while synchronizing contacts", e);
-			}
-		}
+	/**
+	 * Creates an asynchronous user_invite table push request
+	 */
+	protected void pushUserInvites(){
+		PushUserInvitesTask task = new PushUserInvitesTask(getHelper(), this);
+		task.execute();
+	}
+
+	/**
+	 * Creates an asynchronous user_expense table pull request
+	 */
+	protected void pushUserExpenses(){
+		PushUserExpensesTask task = new PushUserExpensesTask(getHelper(), this);
+		task.execute();
 	}
 }

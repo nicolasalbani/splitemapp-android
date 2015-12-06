@@ -136,9 +136,8 @@ public abstract class BaseFragment extends Fragment {
 
 	/**
 	 * Starts the Home activity
-	 * @param userId Long containing the user id from the local DB
 	 */
-	public void startHomeActivity(Long userId){
+	public void startHomeActivity(){
 		Intent intent = new Intent(getActivity(), HomeActivity.class);
 		startActivity(intent);
 	}

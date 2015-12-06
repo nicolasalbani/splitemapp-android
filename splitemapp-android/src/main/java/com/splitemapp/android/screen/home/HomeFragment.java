@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.screen.SynchronizerFragment;
+import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
@@ -25,7 +25,7 @@ import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
 
-public class HomeFragment extends SynchronizerFragment {
+public class HomeFragment extends RestfulFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private User mCurrentUser;

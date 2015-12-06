@@ -1007,8 +1007,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void archiveCurrentUserToProject(Long projectId) throws SQLException{
-		Dao<UserToProject, Long> userToProjectDao = getUserToProjectDao();
-
 		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
 
 		UserToProjectStatus archivedUserToProjectStatus = getUserToProjectStatusDao().queryForEq(TableField.USER_TO_PROJECT_COD, TableFieldCod.USER_TO_PROJECT_STATUS_ARCHIVED).get(0);

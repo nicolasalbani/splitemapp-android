@@ -41,7 +41,7 @@ public class LoginFragment extends RestfulFragment {
 		
 		if(loggedUser != null){
 			// We open the home activity class
-			startHomeActivity(loggedUser.getId());
+			startHomeActivity();
 		}
 
 		// Otherwise, we inflate the login fragment
