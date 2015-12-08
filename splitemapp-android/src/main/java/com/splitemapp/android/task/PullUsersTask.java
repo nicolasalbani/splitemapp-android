@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.User;
@@ -16,10 +15,10 @@ import com.splitemapp.commons.domain.dto.response.PullUserResponse;
  * Sync Task to pull user table data from the remote DB
  * @author nicolas
  */
-public class PullUsersTask extends PullTask<UserDTO, PullUserResponse> {
+public abstract class PullUsersTask extends PullTask<UserDTO, PullUserResponse> {
 	
-	public PullUsersTask(DatabaseHelper databaseHelper, RestfulFragment restfulFragment) {
-		super(databaseHelper, restfulFragment);
+	public PullUsersTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 	
 	@Override

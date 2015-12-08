@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -20,10 +19,10 @@ import com.splitemapp.commons.domain.id.IdUpdate;
  * Sync Task to push project_cover_image table data to the remote DB
  * @author nicolas
  */
-public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, Long, PushLongResponse> {
+public abstract class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, Long, PushLongResponse> {
 	
-	public PushProjectCoverImagesTask(DatabaseHelper databaseHelper, RestfulFragment restfulFragment) {
-		super(databaseHelper, restfulFragment);
+	public PushProjectCoverImagesTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 	
 	@Override

@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.InviteStatus;
@@ -18,10 +17,10 @@ import com.splitemapp.commons.domain.dto.response.PullUserInviteResponse;
  * Sync Task to pull user_invite table data from the remote DB
  * @author nicolas
  */
-public class PullUserInvitesTask extends PullTask<UserInviteDTO, PullUserInviteResponse> {
+public abstract class PullUserInvitesTask extends PullTask<UserInviteDTO, PullUserInviteResponse> {
 	
-	public PullUserInvitesTask(DatabaseHelper databaseHelper, RestfulFragment restfulFragment) {
-		super(databaseHelper, restfulFragment);
+	public PullUserInvitesTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 	
 	@Override

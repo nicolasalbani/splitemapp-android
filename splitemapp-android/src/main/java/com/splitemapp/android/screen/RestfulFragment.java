@@ -5,6 +5,7 @@ import java.util.List;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
+import com.splitemapp.android.task.PullAllTask;
 import com.splitemapp.android.task.PullProjectCoverImagesTask;
 import com.splitemapp.android.task.PullProjectsTask;
 import com.splitemapp.android.task.PullUserAvatarsTask;
@@ -13,6 +14,7 @@ import com.splitemapp.android.task.PullUserExpensesTask;
 import com.splitemapp.android.task.PullUserInvitesTask;
 import com.splitemapp.android.task.PullUserToProjectsTask;
 import com.splitemapp.android.task.PullUsersTask;
+import com.splitemapp.android.task.PushAllTask;
 import com.splitemapp.android.task.PushProjectCoverImagesTask;
 import com.splitemapp.android.task.PushProjectsTask;
 import com.splitemapp.android.task.PushUserAvatarsTask;
@@ -64,16 +66,21 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param password String containing the password
 	 */
 	public void createAccount(final String email, final String userName, final String password, final byte[] avatar){
-		// Showing the progress indicator
-		showProgressIndicator();
-
 		// Creating the CreateAccountRequestTask instance with a custom executeOnSuccess
-		CreateAccountRequestTask createAccountRequestTask = new CreateAccountRequestTask(getHelper(), this, email, userName, password, avatar){
+		CreateAccountRequestTask createAccountRequestTask = new CreateAccountRequestTask(getHelper(), email, userName, password, avatar){
 			@Override
-			protected void executeOnSuccess() {
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
 				hideProgressIndicator();
-				// We login the user after the account was created
 				login(email, password);
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Create Account Failed!");
 			}
 		};
 		createAccountRequestTask.execute();
@@ -85,17 +92,21 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param password String containing the password
 	 */
 	public void login(String userName, String password){
-		// Showing the progress indicator
-		showProgressIndicator();
-
 		// Creating the LoginRequestTask instance with a custom executeOnSuccess
-		LoginRequestTask loginRequestTask = new LoginRequestTask(getHelper(), this, userName, password){
+		LoginRequestTask loginRequestTask = new LoginRequestTask(getHelper(), userName, password){
 			@Override
-			protected void executeOnSuccess() {
-				// Hiding the progress indicator
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
 				hideProgressIndicator();
-				// Starting the home activity
 				startHomeActivity();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Login Failed!");
 			}
 		};
 		loginRequestTask.execute();
@@ -106,13 +117,20 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * @param contactsEmailAddressList List containing contacts email addresses
 	 */
 	public void synchronizeContacts(List<String> contactsEmailAddressList){
-		// Showing the progress indicator
-		showProgressIndicator();
-
-		SynchronizeContactsRequestTask synchronizeContactsRequestTask = new SynchronizeContactsRequestTask(getHelper(), this,contactsEmailAddressList){
+		SynchronizeContactsRequestTask synchronizeContactsRequestTask = new SynchronizeContactsRequestTask(getHelper(),contactsEmailAddressList){
 			@Override
-			protected void executeOnSuccess() {
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
 				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Synchronize Contacts Failed!");
 			}
 		};
 		synchronizeContactsRequestTask.execute();
@@ -122,55 +140,82 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
-		// Showing progress indicator
-		showProgressIndicator();
-
 		// Calling all push services
-		final PushUserExpensesTask pushUserExpensesTask = new PushUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {hideProgressIndicator();}};
-		final PushUserInvitesTask pushUserInvitesTask = new PushUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pushUserExpensesTask.execute();}};
-		final PushUserToProjectsTask pushUserToProjectsTask = new PushUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pushUserInvitesTask.execute();}};
-		final PushProjectCoverImagesTask pushProjectCoverImagesTask = new PushProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pushUserToProjectsTask.execute();}};
-		final PushProjectsTask pushProjectsTask = new PushProjectsTask(getHelper(), this){protected void executeOnSuccess() {pushProjectCoverImagesTask.execute();}};
-		final PushUserContactDatasTask pushUserContactDatasTask = new PushUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pushProjectsTask.execute();}};
-		final PushUserAvatarsTask pushUserAvatarsTask = new PushUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pushUserContactDatasTask.execute();}};
-		final PushUsersTask pushUsersTask = new PushUsersTask(getHelper(), this){protected void executeOnSuccess() {pushUserAvatarsTask.execute();}};
+		final PushAllTask pushAllTask = new PushAllTask(getHelper()){
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Sync All Tables Failed!");
+			}
+		};
 
 		// Calling all pull services
-		final PullUserExpensesTask pullUserExpensesTask = new PullUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {pushUsersTask.execute();}};
-		final PullUserInvitesTask pullUserInvitesTask = new PullUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pullUserExpensesTask.execute();}};
-		final PullUserToProjectsTask pullUserToProjectsTask = new PullUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullUserInvitesTask.execute();}};
-		final PullProjectCoverImagesTask pullProjectCoverImagesTask = new PullProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pullUserToProjectsTask.execute();}};
-		final PullProjectsTask pullProjectsTask = new PullProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullProjectCoverImagesTask.execute();}};
-		final PullUserContactDatasTask pullUserContactDatasTask = new PullUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pullProjectsTask.execute();}};
-		final PullUserAvatarsTask pullUserAvatarsTask = new PullUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pullUserContactDatasTask.execute();}};
-		PullUsersTask pullUsersTask = new PullUsersTask(getHelper(), this){protected void executeOnSuccess() {pullUserAvatarsTask.execute();}};
-		pullUsersTask.execute();
+		PullAllTask pullAllTask = new PullAllTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				pushAllTask.execute();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Sync All Tables Failed!");
+			}
+		};
+		pullAllTask.execute();
 	}
 
 	/**
 	 * Creates a linked list of asynchronous pull requests
 	 */
 	protected void pullAllTables(){
-		// Showing progress indicator
-		showProgressIndicator();
-
-		// Calling all pull services
-		final PullUserExpensesTask pullUserExpensesTask = new PullUserExpensesTask(getHelper(), this){protected void executeOnSuccess() {hideProgressIndicator();}};
-		final PullUserInvitesTask pullUserInvitesTask = new PullUserInvitesTask(getHelper(), this){protected void executeOnSuccess() {pullUserExpensesTask.execute();}};
-		final PullUserToProjectsTask pullUserToProjectsTask = new PullUserToProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullUserInvitesTask.execute();}};
-		final PullProjectCoverImagesTask pullProjectCoverImagesTask = new PullProjectCoverImagesTask(getHelper(), this){protected void executeOnSuccess() {pullUserToProjectsTask.execute();}};
-		final PullProjectsTask pullProjectsTask = new PullProjectsTask(getHelper(), this){protected void executeOnSuccess() {pullProjectCoverImagesTask.execute();}};
-		final PullUserContactDatasTask pullUserContactDatasTask = new PullUserContactDatasTask(getHelper(), this){protected void executeOnSuccess() {pullProjectsTask.execute();}};
-		final PullUserAvatarsTask pullUserAvatarsTask = new PullUserAvatarsTask(getHelper(), this){protected void executeOnSuccess() {pullUserContactDatasTask.execute();}};
-		PullUsersTask pullUsersTask = new PullUsersTask(getHelper(), this){protected void executeOnSuccess() {pullUserAvatarsTask.execute();}};
-		pullUsersTask.execute();
+		PullAllTask task = new PullAllTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull All Tables Failed!");
+			}
+		};
+		task.execute();
 	}
 
 	/**
 	 * Creates an asynchronous user table pull request
 	 */
 	protected void pullUsers(){
-		PullUsersTask task = new PullUsersTask(getHelper(), this);
+		PullUsersTask task = new PullUsersTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull Users Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -178,7 +223,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_contact_data table pull request
 	 */
 	protected void pullUserContactDatas(){
-		PullUserContactDatasTask task = new PullUserContactDatasTask(getHelper(), this);
+		PullUserContactDatasTask task = new PullUserContactDatasTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull UserContactDatas Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -186,7 +246,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_avatar table pull request
 	 */
 	protected void pullUserAvatars(){
-		PullUserAvatarsTask task = new PullUserAvatarsTask(getHelper(), this);
+		PullUserAvatarsTask task = new PullUserAvatarsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull UserAvatars Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -194,7 +269,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous project table pull request
 	 */
 	protected void pullProjects(){
-		PullProjectsTask task = new PullProjectsTask(getHelper(), this);
+		PullProjectsTask task = new PullProjectsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull Projects Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -202,7 +292,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous project_cover_image table pull request
 	 */
 	protected void pullProjectCoverImages(){
-		PullProjectCoverImagesTask task = new PullProjectCoverImagesTask(getHelper(), this);
+		PullProjectCoverImagesTask task = new PullProjectCoverImagesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull ProjectCoverImages Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -210,7 +315,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_to_project table pull request
 	 */
 	protected void pullUserToProjects(){
-		PullUserToProjectsTask task = new PullUserToProjectsTask(getHelper(), this);
+		PullUserToProjectsTask task = new PullUserToProjectsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull UserToProjects Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -218,7 +338,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_invite table pull request
 	 */
 	protected void pullUserInvites(){
-		PullUserInvitesTask task = new PullUserInvitesTask(getHelper(), this);
+		PullUserInvitesTask task = new PullUserInvitesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull UserInvites Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -226,7 +361,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_expense table pull request
 	 */
 	protected void pullUserExpenses(){
-		PullUserExpensesTask task = new PullUserExpensesTask(getHelper(), this);
+		PullUserExpensesTask task = new PullUserExpensesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Pull UserExpenses Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -234,7 +384,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user table push request
 	 */
 	protected void pushUsers(){
-		PushUsersTask task = new PushUsersTask(getHelper(), this);
+		PushUsersTask task = new PushUsersTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push Users Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -242,7 +407,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_contact_data table push request
 	 */
 	protected void pushUserContactDatas(){
-		PushUserContactDatasTask task = new PushUserContactDatasTask(getHelper(), this);
+		PushUserContactDatasTask task = new PushUserContactDatasTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push UserContactDatas Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -250,7 +430,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_avatar table push request
 	 */
 	protected void pushUserAvatars(){
-		PushUserAvatarsTask task = new PushUserAvatarsTask(getHelper(), this);
+		PushUserAvatarsTask task = new PushUserAvatarsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push UserAvatars Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -258,7 +453,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous project table push request
 	 */
 	protected void pushProjects(){
-		PushProjectsTask task = new PushProjectsTask(getHelper(), this);
+		PushProjectsTask task = new PushProjectsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push Projects Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -266,7 +476,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous project_cover_image table push request
 	 */
 	protected void pushProjectCoverImages(){
-		PushProjectCoverImagesTask task = new PushProjectCoverImagesTask(getHelper(), this);
+		PushProjectCoverImagesTask task = new PushProjectCoverImagesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push ProjectCoverImages Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -274,7 +499,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_to_project table push request
 	 */
 	protected void pushUserToProjects(){
-		PushUserToProjectsTask task = new PushUserToProjectsTask(getHelper(), this);
+		PushUserToProjectsTask task = new PushUserToProjectsTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push UserToProjects Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -282,7 +522,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_invite table push request
 	 */
 	protected void pushUserInvites(){
-		PushUserInvitesTask task = new PushUserInvitesTask(getHelper(), this);
+		PushUserInvitesTask task = new PushUserInvitesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push UserInvites Failed!");
+			}
+		};
 		task.execute();
 	}
 
@@ -290,7 +545,22 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Creates an asynchronous user_expense table pull request
 	 */
 	protected void pushUserExpenses(){
-		PushUserExpensesTask task = new PushUserExpensesTask(getHelper(), this);
+		PushUserExpensesTask task = new PushUserExpensesTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				refreshFragment();
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast("Push UserExpenses Failed!");
+			}
+		};
 		task.execute();
 	}
 }

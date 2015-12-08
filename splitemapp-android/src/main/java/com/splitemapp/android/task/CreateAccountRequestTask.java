@@ -2,11 +2,9 @@ package com.splitemapp.android.task;
 
 import java.sql.SQLException;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
@@ -22,25 +20,28 @@ import com.splitemapp.commons.utils.Utils;
  * @author nicolas
  *
  */
-public class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccountResponse> {
-	private DatabaseHelper databaseHelper;
-	private BaseFragment baseFragment;
+public abstract class CreateAccountRequestTask extends BaseAsyncTask<Void, Void, CreateAccountResponse> {
 	private String email;
 	private String userName;
 	private String password;
 	private byte[] avatar;
 
-	public CreateAccountRequestTask(DatabaseHelper databaseHelper, BaseFragment baseFragment, String email, String userName, String password, byte[] avatar) {
-		this.databaseHelper = databaseHelper;
-		this.baseFragment = baseFragment;
+	public CreateAccountRequestTask(DatabaseHelper databaseHelper, String email, String userName, String password, byte[] avatar) {
+		super(databaseHelper);
+		
 		this.email = email;
 		this.userName = userName;
 		this.password = password;
 		this.avatar = avatar;
 	}
-	
+
 	String getLoggingTag(){
 		return getClass().getSimpleName();
+	}
+	
+	@Override
+	protected void onPreExecute() {
+		executeOnStart();
 	}
 
 	@Override
@@ -62,11 +63,6 @@ public class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccoun
 
 		return null;
 	}
-	
-	/**
-	 * Executes a required action on success. This code executes after the processResult method.
-	 */
-	protected void executeOnSuccess(){};
 
 	@Override
 	public void onPostExecute(CreateAccountResponse createAccountResponse) {
@@ -79,12 +75,10 @@ public class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccoun
 
 		// We show the status toast if it failed
 		if(!success){
-			baseFragment.showToast("Create Account Failed!");
-		}
-
-		// We save the user and session information returned by the backend
-		try {
-			if(success){
+			executeOnFail();
+		} else {
+			// Saving the information returned by the back-end
+			try {
 				// We reconstruct the UserStatus object
 				UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
 
@@ -102,9 +96,9 @@ public class CreateAccountRequestTask extends AsyncTask<Void, Void, CreateAccoun
 
 				// We execute tasks on success
 				executeOnSuccess();
+			} catch (SQLException e) {
+				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 			}
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 		}
 	}
 }

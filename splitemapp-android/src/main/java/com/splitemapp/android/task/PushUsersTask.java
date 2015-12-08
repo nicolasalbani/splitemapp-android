@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -20,10 +19,10 @@ import com.splitemapp.commons.domain.id.IdUpdate;
  * Sync Task to push user table data to the remote DB
  * @author nicolas
  */
-public class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
+public abstract class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
 	
-	public PushUsersTask(DatabaseHelper databaseHelper, RestfulFragment restfulFragment) {
-		super(databaseHelper, restfulFragment);
+	public PushUsersTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 	
 	@Override

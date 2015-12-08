@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.Project;
@@ -16,10 +15,10 @@ import com.splitemapp.commons.domain.dto.response.PullProjectCoverImageResponse;
  * Sync Task to pull project_cover_image table data from the remote DB
  * @author nicolas
  */
-public class PullProjectCoverImagesTask extends PullTask<ProjectCoverImageDTO, PullProjectCoverImageResponse> {
+public abstract class PullProjectCoverImagesTask extends PullTask<ProjectCoverImageDTO, PullProjectCoverImageResponse> {
 	
-	public PullProjectCoverImagesTask(DatabaseHelper databaseHelper, RestfulFragment restfulFragment) {
-		super(databaseHelper, restfulFragment);
+	public PullProjectCoverImagesTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 	
 	@Override

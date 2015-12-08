@@ -2,12 +2,10 @@ package com.splitemapp.android.task;
 
 import java.sql.SQLException;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.User;
@@ -24,15 +22,13 @@ import com.splitemapp.commons.utils.Utils;
  * @author nicolas
  *
  */
-public class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
-	private DatabaseHelper databaseHelper;
-	private BaseFragment baseFragment;
+public abstract class LoginRequestTask extends BaseAsyncTask<Void, Void, LoginResponse> {
 	private String userName;
 	private String password;
 
-	public LoginRequestTask(DatabaseHelper databaseHelper, BaseFragment baseFragment, String userName, String password){
-		this.databaseHelper = databaseHelper;
-		this.baseFragment = baseFragment;
+	public LoginRequestTask(DatabaseHelper databaseHelper, String userName, String password){
+		super(databaseHelper);
+		
 		this.userName = userName;
 		this.password = password;
 	}
@@ -41,11 +37,11 @@ public class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
 		return getClass().getSimpleName();
 	}
 	
-	/**
-	 * Executes a required action on success. This code executes after the processResult method.
-	 */
-	protected void executeOnSuccess(){};
-	
+	@Override
+	protected void onPreExecute() {
+		executeOnStart();
+	}
+
 	@Override
 	public LoginResponse doInBackground(Void... params) {
 		try {
@@ -76,12 +72,10 @@ public class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
 
 		// We show the status toast if it failed
 		if(!success){
-			baseFragment.showToast("Login Failed!");
-		}
-
-		// Saving the user and session information returned by the backend
-		try {
-			if(success){
+			executeOnFail();
+		} else {
+			// Saving the information returned by the back-end
+			try {
 				// Reconstructing the user status object
 				UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
 
@@ -116,9 +110,9 @@ public class LoginRequestTask extends AsyncTask<Void, Void, LoginResponse> {
 
 				// Opening the home activity class
 				executeOnSuccess();
+			} catch (SQLException e) {
+				Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 			}
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught while getting UserSession", e);
 		}
 	}
 }

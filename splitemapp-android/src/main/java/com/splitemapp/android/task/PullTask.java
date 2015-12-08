@@ -3,11 +3,9 @@ package com.splitemapp.android.task;
 import java.sql.SQLException;
 import java.util.Date;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
@@ -19,16 +17,12 @@ import com.splitemapp.commons.domain.dto.response.PullResponse;
  *
  * @param <E>
  */
-public abstract class PullTask <E, R extends PullResponse<E>> extends AsyncTask<Void, Void, R> {
+public abstract class PullTask <E, R extends PullResponse<E>> extends BaseAsyncTask<Void, E, R> {
 
-	protected DatabaseHelper databaseHelper;
-	protected BaseFragment baseFragment;
-	
-	public PullTask(DatabaseHelper databaseHelper, BaseFragment baseFragment) {
-		this.databaseHelper = databaseHelper;
-		this.baseFragment = baseFragment;
+	public PullTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
-	
+
 	/**
 	 * Gets the name of the table to pull the data for
 	 * @return
@@ -53,18 +47,18 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends AsyncTask<
 	 * @throws SQLException
 	 */
 	protected abstract void processResult(R response) throws SQLException;
-	
-	/**
-	 * Executes a required action on success. This code executes after the processResult method.
-	 */
-	protected void executeOnSuccess(){};
-	
+
 	/**
 	 * Returns the tag to be used for logging events 
 	 * @return
 	 */
 	protected abstract String getLoggingTag();
 
+	@Override
+	protected void onPreExecute() {
+		executeOnStart();
+	}
+	
 	@Override
 	protected R doInBackground(Void... params) {
 		try {
@@ -100,11 +94,9 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends AsyncTask<
 		// We show the status toast if it failed
 		String pullMessage = "Pull " +getTableName();
 		if(!success){
-			baseFragment.showToast(pullMessage+ " Failed!");
-		}
-
-		// We save the user and session information returned by the backend
-		if(success){
+			executeOnFail();
+		} else {
+			// Saving the information returned by the back-end
 			try {
 				// We process the service response
 				processResult(response);
@@ -112,11 +104,9 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends AsyncTask<
 				Log.e(getLoggingTag(), "SQLException caught while processing " +pullMessage+ " response", e);
 			}
 
-			// We refresh the fragment we called the sync service from
-			baseFragment.refreshFragment();
-			
 			// Executing next synchronized action
 			executeOnSuccess();
 		}
+
 	}
 }

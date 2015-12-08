@@ -4,11 +4,9 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.splitemapp.android.dao.DatabaseHelper;
-import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
@@ -20,14 +18,10 @@ import com.splitemapp.commons.domain.dto.response.PushResponse;
  *
  * @param <E>
  */
-public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends AsyncTask<Void, Void, R> {
+public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseAsyncTask<F, E, R> {
 
-	protected DatabaseHelper databaseHelper;
-	protected BaseFragment baseFragment;
-	
-	public PushTask(DatabaseHelper databaseHelper, BaseFragment baseFragment) {
-		this.databaseHelper = databaseHelper;
-		this.baseFragment = baseFragment;
+	public PushTask(DatabaseHelper databaseHelper) {
+		super(databaseHelper);
 	}
 
 	/**
@@ -62,18 +56,18 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	 * @throws SQLException
 	 */
 	protected abstract void processResult(R response) throws SQLException;
-	
-	/**
-	 * Executes a required action on success. This code executes after the processResult method.
-	 */
-	protected void executeOnSuccess(){};
-	
+
 	/**
 	 * Returns the tag to be used for logging events 
 	 * @return
 	 */
 	protected abstract String getLoggingTag();
 
+	@Override
+	protected void onPreExecute() {
+		executeOnStart();
+	}
+	
 	@Override
 	protected R doInBackground(Void... params) {
 		try {
@@ -110,11 +104,8 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 		// We show the status toast if it failed
 		String pushMessage = "Push " +getTableName();
 		if(!success){
-			baseFragment.showToast(pushMessage+ " Failed!");
-		}
-
-		// We save the user and session information returned by the backend
-		if(success){
+			executeOnFail();
+		} else {
 			try {
 				// We process the service response
 				processResult(response);
@@ -122,9 +113,6 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 				Log.e(getLoggingTag(), "SQLException caught while processing " +pushMessage+ " response", e);
 			}
 
-			// We refresh the fragment we called the sync service from
-			baseFragment.refreshFragment();
-			
 			// Executing next synchronized action
 			executeOnSuccess();
 		}
