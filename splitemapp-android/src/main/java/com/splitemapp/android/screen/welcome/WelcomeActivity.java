@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen.welcome;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.Tab;
@@ -51,6 +52,15 @@ public class WelcomeActivity extends FragmentActivity {
 		});
 		
 		mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+	}
+	
+	@Override
+	public void onBackPressed() {
+		// Creating an intent to go to the main screen
+		Intent intent = new Intent(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_HOME);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 	private class CustomPagerAdapter extends FragmentPagerAdapter {
