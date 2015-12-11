@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.splitemapp.android.dialog.CustomProgressDialog;
@@ -137,7 +138,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	}
 
 	/**
-	 * Creates a linked list of asynchronous pull and push requests
+	 * Executes a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
 		// Calling all push services
@@ -174,9 +175,9 @@ public abstract class RestfulFragment extends BaseFragment{
 	}
 
 	/**
-	 * Creates a linked list of asynchronous pull requests
+	 * Executes a linked list of asynchronous pull requests and initializes the Push sync data
 	 */
-	protected void pullAllTables(){
+	protected void syncAllTablesFirstTime(){
 		PullAllTask task = new PullAllTask(getHelper()){
 			@Override
 			public void executeOnStart() {
@@ -185,12 +186,17 @@ public abstract class RestfulFragment extends BaseFragment{
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
+				try {
+					databaseHelper.initializePushStatus();
+				} catch (SQLException e) {
+					showToast("Initialize Push Status Failed!");
+				}
 				refreshFragment();
 			}
 			@Override
 			public void executeOnFail() {
 				hideProgressIndicator();
-				showToast("Pull All Tables Failed!");
+				showToast("Sync All Tables Failed!");
 			}
 		};
 		task.execute();

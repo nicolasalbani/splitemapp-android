@@ -471,7 +471,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<ExpenseCategory> getExpenseCategoryList() throws SQLException{
 		return getExpenseCategoryDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets all the UserToProject items in the database
 	 * @return
@@ -489,7 +489,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<Project> getProjectList() throws SQLException{
 		return getProjectDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets all the UserSession items in the database
 	 * @return
@@ -518,7 +518,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		project.setUpdatedAt(new Date());
 		getProjectDao().create(project);
 	}
-	
+
 	/**
 	 * Persists the user expense in the database
 	 * @param userExpense
@@ -529,7 +529,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		userExpense.setUpdatedAt(new Date());
 		getUserExpenseDao().create(userExpense);
 	}
-	
+
 	/**
 	 * Persists the project cover image in the database
 	 * @param projectCoverImage
@@ -550,7 +550,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		project.setUpdatedAt(new Date());
 		getProjectDao().update(project);
 	}
-	
+
 	/**
 	 * Updates the UserToProject in the database
 	 * @param userToProject
@@ -570,7 +570,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		projectCoverImage.setUpdatedAt(new Date());
 		getProjectCoverImageDao().update(projectCoverImage);
 	}
-	
+
 	/**
 	 * Updates the user expense in the database
 	 * @param userExpense
@@ -595,7 +595,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return userAvatar;
 	}
-	
+
 	/**
 	 * Gets the complete list of user avatars in the database
 	 * @return
@@ -604,7 +604,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<UserAvatar> getUserAvatarList() throws SQLException{
 		return getUserAvatarDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets the complete list of UserInvite in the database
 	 * @return
@@ -613,7 +613,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<UserInvite> getUserInviteList() throws SQLException{
 		return getUserInviteDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets the complete list of user expense in the database
 	 * @return
@@ -622,7 +622,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<UserExpense> getUserExpenseList() throws SQLException{
 		return getUserExpenseDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets the list of user expense associated to a project id
 	 * @return
@@ -631,7 +631,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
 		return getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
 	}
-	
+
 	/**
 	 * Deletes all existing user sessions in the DB
 	 * @throws SQLException
@@ -681,7 +681,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		syncStatusDao.update(syncStatus);
 	}
-	
+
 	/**
 	 * Creates or updates a project
 	 * @param project
@@ -691,7 +691,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public CreateOrUpdateStatus createOrUpdateProject(Project project) throws SQLException{
 		return getProjectDao().createOrUpdate(project);
 	}
-	
+
 	/**
 	 * Creates or updates a UserInvite
 	 * @param userInvite
@@ -701,7 +701,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public CreateOrUpdateStatus createOrUpdateUserInvite(UserInvite userInvite) throws SQLException{
 		return getUserInviteDao().createOrUpdate(userInvite);
 	}
-	
+
 	/**
 	 * Creates or updates a UserSession
 	 * @param userInvite
@@ -711,7 +711,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public CreateOrUpdateStatus createOrUpdateUserSession(UserSession userSession) throws SQLException{
 		return getUserSessionDao().createOrUpdate(userSession);
 	}
-	
+
 	/**
 	 * Creates or updates a user to project
 	 * @param userToProject
@@ -721,7 +721,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public CreateOrUpdateStatus createOrUpdateUserToProject(UserToProject userToProject) throws SQLException{
 		return getUserToProjectDao().createOrUpdate(userToProject);
 	}
-	
+
 	/**
 	 * Creates or updates a user expense
 	 * @param userExpense
@@ -789,7 +789,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return userContactData;
 	}
-	
+
 	/**
 	 * Gets the UserContactData object by contact data
 	 * @param contactData
@@ -869,6 +869,39 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
+	 * Initializes the SyncStatus table Push fields with the current time stamp
+	 * @throws SQLException
+	 */
+	public void initializePushStatus() throws SQLException{
+		// We initialize all push entries in the table
+		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
+		for(SyncStatus syncStatus:syncStatusList){
+			syncStatus.setLastPushAt(new Date());
+			syncStatus.setLastPushSuccessAt(new Date());
+			getSyncStatusDao().update(syncStatus);
+		}
+	}
+
+	/**
+	 * Checks whether the sync mechanism was initialized
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean isSyncInitialized() throws SQLException{
+		boolean isSyncInitialized = true;
+
+		// If any push sync field was not initialized, we assume that sync was not initialized  
+		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
+		for(SyncStatus syncStatus:syncStatusList){
+			if((syncStatus.getLastPushAt() == null) || syncStatus.getLastPushAt() == null){
+				isSyncInitialized = false;
+			}
+		}
+
+		return isSyncInitialized;
+	}
+
+	/**
 	 * Returns the list of actively associated users to a particular project
 	 * @param projectId
 	 * @return
@@ -917,7 +950,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<User> getUserList() throws SQLException{
 		return getUserDao().queryForAll();
 	}
-	
+
 	/**
 	 * Gets the complete list of user contact data in the database
 	 * @return

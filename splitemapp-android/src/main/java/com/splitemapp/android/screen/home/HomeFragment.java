@@ -159,7 +159,16 @@ public class HomeFragment extends RestfulFragment {
 				startActivity( new Intent(getActivity(), ManageContactsActivity.class));
 			}
 		});
-
+		
+		// If this user never synched before, we initialize the SyncStatus table
+		try {
+			if(!getHelper().isSyncInitialized()){
+				syncAllTablesFirstTime();
+			}
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+		
 		return v;
 	}
 
