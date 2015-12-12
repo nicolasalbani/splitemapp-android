@@ -44,9 +44,13 @@ public abstract class SynchronizeContactsRequestTask extends BaseAsyncTask<Void,
 	@Override
 	public SynchronizeContactsResponse doInBackground(Void... params) {
 		try {
+			// We get the session token
+			String sessionToken = databaseHelper.getSessionToken();
+			
 			// We create the login request
 			SynchronizeContactsRequest synchronizeContactsRequest = new SynchronizeContactsRequest();
 			synchronizeContactsRequest.setContactsEmailAddressList(contactsEmailAddressList);
+			synchronizeContactsRequest.setToken(sessionToken);
 
 			// We call the rest service and send back the synchronize contacts
 			return NetworkUtils.callRestService(ServiceConstants.SYNCHRONIZE_CONTACTS_PATH, synchronizeContactsRequest, SynchronizeContactsResponse.class);
@@ -102,6 +106,9 @@ public abstract class SynchronizeContactsRequestTask extends BaseAsyncTask<Void,
 							}
 						}
 					}
+					
+					// Executing on success action
+					executeOnSuccess();
 				}
 			} catch (SQLException e) {
 				Log.e(getLoggingTag(), "SQLException caught while synchronizing contacts", e);
