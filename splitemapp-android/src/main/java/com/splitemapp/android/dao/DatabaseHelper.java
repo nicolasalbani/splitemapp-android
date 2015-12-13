@@ -716,12 +716,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void createOrUpdateUserSession(UserSession userSession) throws SQLException{
-		Dao<UserSession, Long> dao = getUserSessionDao();
-		if(dao.idExists(userSession.getId())){
-			dao.update(userSession);
-		} else {
-			dao.create(userSession);
-		}
+		getUserSessionDao().createOrUpdate(userSession);
 	}
 
 	/**
