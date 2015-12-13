@@ -685,90 +685,127 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	/**
 	 * Creates or updates a project
 	 * @param project
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateProject(Project project) throws SQLException{
-		return getProjectDao().createOrUpdate(project);
+	public void createOrUpdateProject(Project project) throws SQLException{
+		Dao<Project, Long> dao = getProjectDao();
+		if(dao.idExists(project.getId())){
+			dao.update(project);
+		} else {
+			dao.create(project);
+		}
 	}
 
 	/**
 	 * Creates or updates a UserInvite
 	 * @param userInvite
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserInvite(UserInvite userInvite) throws SQLException{
-		return getUserInviteDao().createOrUpdate(userInvite);
+	public void createOrUpdateUserInvite(UserInvite userInvite) throws SQLException{
+		Dao<UserInvite, Long> dao = getUserInviteDao();
+		if(dao.idExists(userInvite.getId())){
+			dao.update(userInvite);
+		} else {
+			dao.create(userInvite);
+		}
 	}
 
 	/**
 	 * Creates or updates a UserSession
 	 * @param userInvite
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserSession(UserSession userSession) throws SQLException{
-		return getUserSessionDao().createOrUpdate(userSession);
+	public void createOrUpdateUserSession(UserSession userSession) throws SQLException{
+		Dao<UserSession, Long> dao = getUserSessionDao();
+		if(dao.idExists(userSession.getId())){
+			dao.update(userSession);
+		} else {
+			dao.create(userSession);
+		}
 	}
 
 	/**
 	 * Creates or updates a user to project
 	 * @param userToProject
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserToProject(UserToProject userToProject) throws SQLException{
-		return getUserToProjectDao().createOrUpdate(userToProject);
+	public void createOrUpdateUserToProject(UserToProject userToProject) throws SQLException{
+		Dao<UserToProject, Long> dao = getUserToProjectDao();
+		if(dao.idExists(userToProject.getId())){
+			dao.update(userToProject);
+		} else {
+			dao.create(userToProject);
+		}
 	}
 
 	/**
 	 * Creates or updates a user expense
 	 * @param userExpense
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserExpense(UserExpense userExpense) throws SQLException{
-		return getUserExpenseDao().createOrUpdate(userExpense);
+	public void createOrUpdateUserExpense(UserExpense userExpense) throws SQLException{
+		Dao<UserExpense, Long> dao = getUserExpenseDao();
+		if(dao.idExists(userExpense.getId())){
+			dao.update(userExpense);
+		} else {
+			dao.create(userExpense);
+		}
 	}
 
 	/**
 	 * Creates or updates a project cover image
 	 * @param projectCoverImage
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
-		return getProjectCoverImageDao().createOrUpdate(projectCoverImage);
+	public void createOrUpdateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
+		Dao<ProjectCoverImage, Long> dao = getProjectCoverImageDao();
+		if(dao.idExists(projectCoverImage.getId())){
+			dao.update(projectCoverImage);
+		} else {
+			dao.create(projectCoverImage);
+		}
 	}
 
 	/**
 	 * Creates or updates a user
-	 * @return CreateOrUpdateStatus
+	 * @param user
 	 * @throws SQLException 
 	 */
-	public CreateOrUpdateStatus createOrUpdateUser(User user) throws SQLException{
-		return getUserDao().createOrUpdate(user);
+	public void createOrUpdateUser(User user) throws SQLException{
+		Dao<User, Long> dao = getUserDao();
+		if(dao.idExists(user.getId())){
+			dao.update(user);
+		} else {
+			dao.create(user);
+		}
 	}
 
 	/**
 	 * Creates or updates the user contact data in the DB based on the userId
 	 * @param userContactData
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserContactData(UserContactData userContactData) throws SQLException{
-		return getUserContactDataDao().createOrUpdate(userContactData);
+	public void createOrUpdateUserContactData(UserContactData userContactData) throws SQLException{
+		Dao<UserContactData, Long> dao = getUserContactDataDao();
+		if(dao.idExists(userContactData.getId())){
+			dao.update(userContactData);
+		} else {
+			dao.create(userContactData);
+		}
 	}
 
 	/**
 	 * Creates or updates the user avatar in the DB based on the userId
 	 * @param userAvatar
-	 * @return CreateOrUpdateStatus
 	 * @throws SQLException
 	 */
-	public CreateOrUpdateStatus createOrUpdateUserAvatar(UserAvatar userAvatar) throws SQLException{
-		return getUserAvatarDao().createOrUpdate(userAvatar);
+	public void createOrUpdateUserAvatar(UserAvatar userAvatar) throws SQLException{
+		Dao<UserAvatar, Long> dao = getUserAvatarDao();
+		if(dao.idExists(userAvatar.getId())){
+			dao.update(userAvatar);
+		} else {
+			dao.create(userAvatar);
+		}
 	}
 
 	/**
