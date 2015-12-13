@@ -1,48 +1,54 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/NoActionBarTheme"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
     android:background="@color/white" >
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/ca_name_hint" />
+    <LinearLayout
+        style="@style/NoActionBarTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/ca_username_editText"
-        style="@style/CustomEditText"
-        android:inputType="textPersonName" />
-    
-    <View style="@style/BottomLine" />
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/ca_name_hint" />
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/ca_email_hint" />
-    
-    <EditText
-        android:id="@+id/ca_email_editText"
-        style="@style/CustomEditText"
-        android:inputType="textEmailAddress" />
-    
-    <View style="@style/BottomLine" />
+        <EditText
+            android:id="@+id/ca_username_editText"
+            style="@style/CustomEditText"
+            android:inputType="textPersonName" />
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/ca_password_hint" />
-    
-    <EditText
-        android:id="@+id/ca_password_editText"
-        style="@style/CustomEditText"
-        android:inputType="textPassword" />
-    
-    <View style="@style/BottomLine" />
+        <View style="@style/BottomLine" />
 
-    <Button
-        android:id="@+id/create_account_create_account_button"
-        style="@style/Button"
-        android:layout_marginTop="22dp"
-        android:text="@string/ca_create_account_button" />
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/ca_email_hint" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/ca_email_editText"
+            style="@style/CustomEditText"
+            android:inputType="textEmailAddress" />
+
+        <View style="@style/BottomLine" />
+
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/ca_password_hint" />
+
+        <EditText
+            android:id="@+id/ca_password_editText"
+            style="@style/CustomEditText"
+            android:inputType="textPassword" />
+
+        <View style="@style/BottomLine" />
+
+        <Button
+            android:id="@+id/create_account_create_account_button"
+            style="@style/Button"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"
+            android:text="@string/ca_create_account_button" />
+    </LinearLayout>
+
+</ScrollView>
