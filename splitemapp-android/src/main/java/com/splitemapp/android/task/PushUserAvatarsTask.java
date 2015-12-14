@@ -54,6 +54,11 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
 			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				userAvatar.setPushedAt(new Date());
+				databaseHelper.getUserAvatarDao().update(userAvatar);
+				
+				// Adding item to the list
 				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 			}
 		}

@@ -54,6 +54,11 @@ public abstract class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long
 		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
 		for(UserExpense userExpense:userExpenseList){
 			if(userExpense.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				userExpense.setPushedAt(new Date());
+				databaseHelper.getUserExpenseDao().update(userExpense);
+				
+				// Adding item to the list
 				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 			}
 		}

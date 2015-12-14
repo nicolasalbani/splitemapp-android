@@ -54,6 +54,11 @@ public abstract class PushUsersTask extends PushTask<UserDTO, Long, PushLongResp
 		ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		for(User user:userList){
 			if(user.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				user.setPushedAt(new Date());
+				databaseHelper.getUserDao().update(user);
+				
+				// Adding item to the list
 				userDTOList.add(new UserDTO(user));
 			}
 		}

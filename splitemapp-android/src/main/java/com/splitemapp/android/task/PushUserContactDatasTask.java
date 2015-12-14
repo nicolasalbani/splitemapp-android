@@ -54,6 +54,11 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
 			if(userContactData.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				userContactData.setPushedAt(new Date());
+				databaseHelper.getUserContactDataDao().update(userContactData);
+				
+				// Adding item to the list
 				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 			}
 		}

@@ -54,6 +54,11 @@ public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLo
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 		for(Project project:projectList){
 			if(project.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				project.setPushedAt(new Date());
+				databaseHelper.getProjectDao().update(project);
+				
+				// Adding item to the list
 				projectDTOList.add(new ProjectDTO(project));
 			}
 		}

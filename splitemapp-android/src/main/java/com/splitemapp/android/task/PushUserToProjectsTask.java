@@ -54,6 +54,11 @@ public abstract class PushUserToProjectsTask extends PushTask<UserToProjectDTO, 
 		ArrayList<UserToProjectDTO> userToProjectDTOList = new ArrayList<UserToProjectDTO>();
 		for(UserToProject userToProject:projectCoverImageList){
 			if(userToProject.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				userToProject.setPushedAt(new Date());
+				databaseHelper.getUserToProjectDao().update(userToProject);
+				
+				// Adding item to the list
 				userToProjectDTOList.add(new UserToProjectDTO(userToProject));
 			}
 		}

@@ -18,7 +18,6 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.Dao.CreateOrUpdateStatus;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
@@ -180,7 +179,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserStatus, Short> getUserStatusDao() throws SQLException {
+	public Dao<UserStatus, Short> getUserStatusDao() throws SQLException {
 		if (userStatusDao == null) {
 			userStatusDao = getDao(UserStatus.class);
 		}
@@ -191,7 +190,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<ProjectStatus, Short> getProjectStatusDao() throws SQLException {
+	public Dao<ProjectStatus, Short> getProjectStatusDao() throws SQLException {
 		if (projectStatusDao == null) {
 			projectStatusDao = getDao(ProjectStatus.class);
 		}
@@ -202,7 +201,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectType class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<ProjectType, Short> getProjectTypeDao() throws SQLException {
+	public Dao<ProjectType, Short> getProjectTypeDao() throws SQLException {
 		if (projectTypeDao == null) {
 			projectTypeDao = getDao(ProjectType.class);
 		}
@@ -213,7 +212,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProjectStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserToProjectStatus, Short> getUserToProjectStatusDao() throws SQLException {
+	public Dao<UserToProjectStatus, Short> getUserToProjectStatusDao() throws SQLException {
 		if (userToProjectStatusDao == null) {
 			userToProjectStatusDao = getDao(UserToProjectStatus.class);
 		}
@@ -224,7 +223,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the InviteStatus class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<InviteStatus, Short> getInviteStatusDao() throws SQLException {
+	public Dao<InviteStatus, Short> getInviteStatusDao() throws SQLException {
 		if (inviteStatusDao == null) {
 			inviteStatusDao = getDao(InviteStatus.class);
 		}
@@ -235,7 +234,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ExpenseCategory class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<ExpenseCategory, Short> getExpenseCategoryDao() throws SQLException {
+	public Dao<ExpenseCategory, Short> getExpenseCategoryDao() throws SQLException {
 		if (expenseCategoryDao == null) {
 			expenseCategoryDao = getDao(ExpenseCategory.class);
 		}
@@ -246,7 +245,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the Project class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<Project, Long> getProjectDao() throws SQLException {
+	public Dao<Project, Long> getProjectDao() throws SQLException {
 		if (projectDao == null) {
 			projectDao = getDao(Project.class);
 		}
@@ -257,7 +256,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the ProjectCoverImage class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<ProjectCoverImage, Long> getProjectCoverImageDao() throws SQLException {
+	public Dao<ProjectCoverImage, Long> getProjectCoverImageDao() throws SQLException {
 		if (projectCoverImageDao == null) {
 			projectCoverImageDao = getDao(ProjectCoverImage.class);
 		}
@@ -268,7 +267,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the User class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<User, Long> getUserDao() throws SQLException {
+	public Dao<User, Long> getUserDao() throws SQLException {
 		if (userDao == null) {
 			userDao = getDao(User.class);
 		}
@@ -279,7 +278,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserAvatar class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserAvatar, Long> getUserAvatarDao() throws SQLException {
+	public Dao<UserAvatar, Long> getUserAvatarDao() throws SQLException {
 		if (userAvatarDao == null) {
 			userAvatarDao = getDao(UserAvatar.class);
 		}
@@ -290,7 +289,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserContactData class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserContactData, Long> getUserContactDataDao() throws SQLException {
+	public Dao<UserContactData, Long> getUserContactDataDao() throws SQLException {
 		if (userContactDataDao == null) {
 			userContactDataDao = getDao(UserContactData.class);
 		}
@@ -301,7 +300,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserExpenses class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserExpense, Long> getUserExpenseDao() throws SQLException {
+	public Dao<UserExpense, Long> getUserExpenseDao() throws SQLException {
 		if (userExpensesDao == null) {
 			userExpensesDao = getDao(UserExpense.class);
 		}
@@ -312,7 +311,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserToProject class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserToProject, Long> getUserToProjectDao() throws SQLException {
+	public Dao<UserToProject, Long> getUserToProjectDao() throws SQLException {
 		if (userToProjectDao == null) {
 			userToProjectDao = getDao(UserToProject.class);
 		}
@@ -323,7 +322,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserInvite class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserInvite, Long> getUserInviteDao() throws SQLException {
+	public Dao<UserInvite, Long> getUserInviteDao() throws SQLException {
 		if (userInviteDao == null) {
 			userInviteDao = getDao(UserInvite.class);
 		}
@@ -334,7 +333,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * Returns the Database Access Object (DAO) for the UserSession class. It will create it or just give the cached
 	 * value.
 	 */
-	private Dao<UserSession, Long> getUserSessionDao() throws SQLException {
+	public Dao<UserSession, Long> getUserSessionDao() throws SQLException {
 		if (userSessionDao == null) {
 			userSessionDao = getDao(UserSession.class);
 		}

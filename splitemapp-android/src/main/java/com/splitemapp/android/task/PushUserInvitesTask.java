@@ -54,6 +54,11 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
 		for(UserInvite userInvite:userInviteList){
 			if(userInvite.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				userInvite.setPushedAt(new Date());
+				databaseHelper.getUserInviteDao().update(userInvite);
+				
+				// Adding item to the list
 				userInviteDTOList.add(new UserInviteDTO(userInvite));
 			}
 		}

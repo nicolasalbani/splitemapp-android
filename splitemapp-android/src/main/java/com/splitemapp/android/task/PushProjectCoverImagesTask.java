@@ -54,6 +54,11 @@ public abstract class PushProjectCoverImagesTask extends PushTask<ProjectCoverIm
 		ArrayList<ProjectCoverImageDTO> projectCoverImageDTOList = new ArrayList<ProjectCoverImageDTO>();
 		for(ProjectCoverImage projectCoverImage:projectCoverImageList){
 			if(projectCoverImage.getUpdatedAt().after(lastPushSuccessAt)){
+				// Updating pushedAt date
+				projectCoverImage.setPushedAt(new Date());
+				databaseHelper.getProjectCoverImageDao().update(projectCoverImage);
+				
+				// Adding item to the list
 				projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
 			}
 		}
