@@ -67,7 +67,7 @@ public abstract class PushUsersTask extends PushTask<UserDTO, Long, PushLongResp
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(User.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(User.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(User entity:userList){

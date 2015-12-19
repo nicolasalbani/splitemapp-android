@@ -67,7 +67,7 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserAvatar.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(UserAvatar.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(UserAvatar entity:userAvatarList){

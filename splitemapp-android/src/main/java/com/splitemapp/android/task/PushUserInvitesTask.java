@@ -67,7 +67,7 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserInvite.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(UserInvite.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(UserInvite entity:userInviteList){

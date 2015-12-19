@@ -667,16 +667,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @param createOrUpdate
 	 * @throws SQLException
 	 */
-	public <T extends java.io.Serializable> void updateSyncStatusPushAt(Class<T> entity, boolean success) throws SQLException{
+	public <T extends java.io.Serializable> void updateSyncStatusPushAt(Class<T> entity, boolean success, Date pushedAt) throws SQLException{
 		// We get the proper record from the sync_status table
 		Dao<SyncStatus,Short> syncStatusDao = getSyncStatusDao();
 		List<SyncStatus> queryResult = syncStatusDao.queryForEq(TableField.SYNC_STATUS_TABLE_NAME, Utils.getTableName(entity.getSimpleName()));
 
 		// We update the "last_push_at" field in the sync_status table
 		SyncStatus syncStatus = queryResult.get(0);
-		syncStatus.setLastPushAt(new Date());
+		syncStatus.setLastPushAt(pushedAt);
 		if(success){
-			syncStatus.setLastPushSuccessAt(new Date());
+			syncStatus.setLastPushSuccessAt(pushedAt);
 		}
 		syncStatusDao.update(syncStatus);
 	}

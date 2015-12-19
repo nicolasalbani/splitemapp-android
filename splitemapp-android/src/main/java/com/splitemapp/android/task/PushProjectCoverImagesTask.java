@@ -67,7 +67,7 @@ public abstract class PushProjectCoverImagesTask extends PushTask<ProjectCoverIm
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(ProjectCoverImage.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(ProjectCoverImage.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(ProjectCoverImage entity:projectCoverImageList){

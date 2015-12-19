@@ -67,7 +67,7 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserContactData.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(UserContactData.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(UserContactData entity:userContactDataList){

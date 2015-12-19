@@ -67,7 +67,7 @@ public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLo
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(Project.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPushAt(Project.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(Project entity:projectList){
