@@ -41,7 +41,7 @@ public abstract class PullUserInvitesTask extends PullTask<UserInviteDTO, PullUs
 	@Override
 	protected void processResult(PullUserInviteResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(UserInvite.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(UserInvite.class, response.getSuccess(), response.getPulledAt());
 
 		Set<UserInviteDTO> userInviteDTOs = response.getItemSet();
 		for(UserInviteDTO userInviteDTO:userInviteDTOs){

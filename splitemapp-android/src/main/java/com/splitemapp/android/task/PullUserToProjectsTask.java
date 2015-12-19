@@ -41,7 +41,7 @@ public abstract class PullUserToProjectsTask extends PullTask<UserToProjectDTO, 
 	@Override
 	protected void processResult(PullUserToProjectResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(UserToProject.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(UserToProject.class, response.getSuccess(), response.getPulledAt());
 
 		Set<UserToProjectDTO> userToProjectDTOs = response.getItemSet();
 		for(UserToProjectDTO userToProjectDTO:userToProjectDTOs){

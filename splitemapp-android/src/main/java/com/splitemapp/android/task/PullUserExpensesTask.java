@@ -41,7 +41,7 @@ public abstract class PullUserExpensesTask extends PullTask<UserExpenseDTO, Pull
 	@Override
 	protected void processResult(PullUserExpenseResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(UserExpense.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(UserExpense.class, response.getSuccess(), response.getPulledAt());
 
 		Set<UserExpenseDTO> userExpenseDTOs = response.getItemSet();
 		for(UserExpenseDTO userExpenseDTO:userExpenseDTOs){

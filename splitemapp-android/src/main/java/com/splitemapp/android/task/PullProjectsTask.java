@@ -40,7 +40,7 @@ public abstract class PullProjectsTask extends PullTask<ProjectDTO, PullProjectR
 	@Override
 	protected void processResult(PullProjectResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(Project.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(Project.class, response.getSuccess(), response.getPulledAt());
 
 		Set<ProjectDTO> projectDTOs = response.getItemSet();
 		for(ProjectDTO projectDTO:projectDTOs){

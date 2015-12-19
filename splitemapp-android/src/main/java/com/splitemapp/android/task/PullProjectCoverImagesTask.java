@@ -39,7 +39,7 @@ public abstract class PullProjectCoverImagesTask extends PullTask<ProjectCoverIm
 	@Override
 	protected void processResult(PullProjectCoverImageResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(ProjectCoverImage.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(ProjectCoverImage.class, response.getSuccess(), response.getPulledAt());
 
 		Set<ProjectCoverImageDTO> projectCoverImageDTOs = response.getItemSet();
 		for(ProjectCoverImageDTO projectCoverImageDTO:projectCoverImageDTOs){

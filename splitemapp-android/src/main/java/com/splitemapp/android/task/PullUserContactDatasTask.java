@@ -39,7 +39,7 @@ public abstract class PullUserContactDatasTask extends PullTask<UserContactDataD
 	@Override
 	protected void processResult(PullUserContactDataResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(UserContactData.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(UserContactData.class, response.getSuccess(), response.getPulledAt());
 
 		Set<UserContactDataDTO> userContactDataDTOs = response.getItemSet();
 		for(UserContactDataDTO userContactDataDTO:userContactDataDTOs){

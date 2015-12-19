@@ -39,7 +39,7 @@ public abstract class PullUserAvatarsTask extends PullTask<UserAvatarDTO, PullUs
 	@Override
 	protected void processResult(PullUserAvatarResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPullAt(UserAvatar.class, response.getSuccess());
+		databaseHelper.updateSyncStatusPullAt(UserAvatar.class, response.getSuccess(), response.getPulledAt());
 
 		Set<UserAvatarDTO> userAvatarDTOs = response.getItemSet();
 		for(UserAvatarDTO userAvatarDTO:userAvatarDTOs){
