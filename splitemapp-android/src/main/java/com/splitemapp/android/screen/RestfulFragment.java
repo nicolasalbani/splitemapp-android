@@ -141,8 +141,8 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Executes a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
-		// Calling all push services
-		final PushAllTask pushAllTask = new PushAllTask(getHelper()){
+		// Calling all pull services
+		final PullAllTask pullAllTask = new PullAllTask(getHelper()){
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
@@ -155,15 +155,15 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 		};
 
-		// Calling all pull services
-		PullAllTask pullAllTask = new PullAllTask(getHelper()){
+		// Calling all push services
+		PushAllTask pushAllTask = new PushAllTask(getHelper()){
 			@Override
 			public void executeOnStart() {
 				showProgressIndicator();
 			}
 			@Override
 			public void executeOnSuccess() {
-				pushAllTask.execute();
+				pullAllTask.execute();
 			}
 			@Override
 			public void executeOnFail() {
@@ -171,7 +171,7 @@ public abstract class RestfulFragment extends BaseFragment{
 				showToast("Sync All Tables Failed!");
 			}
 		};
-		pullAllTask.execute();
+		pushAllTask.execute();
 	}
 
 	/**
