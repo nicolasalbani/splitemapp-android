@@ -20,6 +20,8 @@ import com.splitemapp.commons.domain.id.IdUpdate;
  * @author nicolas
  */
 public abstract class PushUserContactDatasTask extends PushTask<UserContactDataDTO, Long, PushLongResponse> {
+	
+	List<UserContactData> userContactDataList = null;
 
 	public PushUserContactDatasTask(DatabaseHelper databaseHelper) {
 		super(databaseHelper);
@@ -48,16 +50,13 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	@Override
 	protected List<UserContactDataDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
-		List<UserContactData> userContactDataList = databaseHelper.getUserContactDataList();
+		// TODO only get the ones marked for push
+		userContactDataList = databaseHelper.getUserContactDataList();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
 			if(userContactData.getUpdatedAt().after(lastPushSuccessAt)){
-				// Updating pushedAt date
-				userContactData.setPushedAt(new Date());
-				databaseHelper.getUserContactDataDao().update(userContactData);
-				
 				// Adding item to the list
 				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 			}
@@ -69,6 +68,11 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		databaseHelper.updateSyncStatusPushAt(UserContactData.class, response.getSuccess());
+		
+		// Updating pushedAt
+		for(UserContactData entity:userContactDataList){
+			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
 

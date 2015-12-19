@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.utils.NetworkUtils;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
 
@@ -72,7 +71,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	protected R doInBackground(Void... params) {
 		try {
 			// We get the date in which this table was last successfully pulled
-			Date lastPushSuccessAt = databaseHelper.getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPushSuccessAt();
+			Date lastPushSuccessAt = databaseHelper.getLastSuccessPushAt(getTableName());
 
 			// We get the session token
 			String sessionToken = databaseHelper.getSessionToken();

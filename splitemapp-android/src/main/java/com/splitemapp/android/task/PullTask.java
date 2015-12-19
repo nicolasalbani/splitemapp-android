@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.utils.NetworkUtils;
-import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
 
@@ -63,7 +62,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseAsyncT
 	protected R doInBackground(Void... params) {
 		try {
 			// We get the date in which this table was last successfully pulled
-			Date lastPullSuccessAt = databaseHelper.getSyncStatusDao().queryForEq(TableField.SYNC_STATUS_TABLE_NAME, getTableName()).get(0).getLastPullSuccessAt();
+			Date lastPullSuccessAt = databaseHelper.getLastSuccessPullAt(getTableName());
 
 			// We get the session token
 			String sessionToken = databaseHelper.getSessionToken();

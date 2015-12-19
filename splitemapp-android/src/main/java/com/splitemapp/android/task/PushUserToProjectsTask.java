@@ -21,6 +21,8 @@ import com.splitemapp.commons.domain.id.IdUpdate;
  */
 public abstract class PushUserToProjectsTask extends PushTask<UserToProjectDTO, Long, PushLongResponse> {
 	
+	private List<UserToProject> userToProjectList = null;
+	
 	public PushUserToProjectsTask(DatabaseHelper databaseHelper) {
 		super(databaseHelper);
 	}
@@ -48,16 +50,13 @@ public abstract class PushUserToProjectsTask extends PushTask<UserToProjectDTO, 
 	@Override
 	protected List<UserToProjectDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
-		List<UserToProject> projectCoverImageList = databaseHelper.getUserToProjectList();
+		// TODO only get the ones marked for push
+		userToProjectList = databaseHelper.getUserToProjectList();
 
 		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserToProjectDTO> userToProjectDTOList = new ArrayList<UserToProjectDTO>();
-		for(UserToProject userToProject:projectCoverImageList){
+		for(UserToProject userToProject:userToProjectList){
 			if(userToProject.getUpdatedAt().after(lastPushSuccessAt)){
-				// Updating pushedAt date
-				userToProject.setPushedAt(new Date());
-				databaseHelper.getUserToProjectDao().update(userToProject);
-				
 				// Adding item to the list
 				userToProjectDTOList.add(new UserToProjectDTO(userToProject));
 			}
@@ -69,6 +68,11 @@ public abstract class PushUserToProjectsTask extends PushTask<UserToProjectDTO, 
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		databaseHelper.updateSyncStatusPushAt(UserToProject.class, response.getSuccess());
+		
+		// Updating pushedAt
+		for(UserToProject entity:userToProjectList){
+			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
 

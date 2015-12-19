@@ -21,6 +21,8 @@ import com.splitemapp.commons.domain.id.IdUpdate;
  */
 public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, PushLongResponse> {
 	
+	private List<UserInvite> userInviteList = null;
+	
 	public PushUserInvitesTask(DatabaseHelper databaseHelper) {
 		super(databaseHelper);
 	}
@@ -48,16 +50,13 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 	@Override
 	protected List<UserInviteDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
-		List<UserInvite> userInviteList = databaseHelper.getUserInviteList();
+		// TODO only get the ones marked for push
+		userInviteList = databaseHelper.getUserInviteList();
 
 		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
 		for(UserInvite userInvite:userInviteList){
 			if(userInvite.getUpdatedAt().after(lastPushSuccessAt)){
-				// Updating pushedAt date
-				userInvite.setPushedAt(new Date());
-				databaseHelper.getUserInviteDao().update(userInvite);
-				
 				// Adding item to the list
 				userInviteDTOList.add(new UserInviteDTO(userInvite));
 			}
@@ -69,6 +68,11 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		databaseHelper.updateSyncStatusPushAt(UserInvite.class, response.getSuccess());
+		
+		// Updating pushedAt
+		for(UserInvite entity:userInviteList){
+			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
 
