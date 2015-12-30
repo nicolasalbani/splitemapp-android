@@ -36,7 +36,7 @@
 		<android.support.version>23.0.0</android.support.version>
 		<google.play.version>8.4.0</google.play.version>
 		<android.swipelayout.version>1.0.0</android.swipelayout.version>
-		<android.sdk.path>/Users/nicolas/Development/android-sdk-macosx</android.sdk.path>
+		<android.sdk.path>${ANDROID_HOME}</android.sdk.path>
 
 		<!-- SplitemApp Common Domain Model -->
 		<commons.version>0.0.1-SNAPSHOT</commons.version>
