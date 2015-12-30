@@ -2,9 +2,14 @@ package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +22,8 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
+import com.splitemapp.android.gsm.QuickstartPreferences;
+import com.splitemapp.android.gsm.RegistrationIntentService;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
@@ -24,9 +31,13 @@ import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserContactData;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 public class HomeFragment extends RestfulFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
+	
+	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
 	private User mCurrentUser;
 	private UserContactData mUserContactData;
@@ -48,6 +59,8 @@ public class HomeFragment extends RestfulFragment {
 	private TextView mLogoutTextView;
 	private TextView mManageContactsTextView;
 	private TextView mSynchronizeTextView;
+	
+	private BroadcastReceiver mRegistrationBroadcastReceiver;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +76,12 @@ public class HomeFragment extends RestfulFragment {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
+		
+		// Start IntentService to register this application with GCM.
+        if (checkPlayServices()) {
+            Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
+            getActivity().startService(intent);
+        }
 	}
 
 	@Override
@@ -169,6 +188,20 @@ public class HomeFragment extends RestfulFragment {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 		
+		// Setting the broadcast receiver for the GCM token
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                	showToast("GCM token retrieved and sent to server!");
+                } else {
+                	showToast("ERROR getting GCM token");
+                }
+			}
+        };
+		
 		return v;
 	}
 
@@ -186,6 +219,32 @@ public class HomeFragment extends RestfulFragment {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
 	}
+	
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
+    }
+    
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(getActivity());
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+            }
+            return false;
+        }
+        return true;
+    }
 
 	@Override
 	public String getLoggingTag() {

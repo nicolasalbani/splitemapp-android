@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.daimajia.swipe</groupId>
+	<artifactId>android-swipelayout</artifactId>
+	<version>1.0.0</version>
+	<name>android-swipelayout</name>
+	<packaging>aar</packaging>
+
+	<developers>
+		<developer>
+			<name>Diego Ghersi</name>
+			<email>diego@ghersi.com.ar</email>
+		</developer>
+		<developer>
+			<name>Nicolas Albani</name>
+			<email>nicolasalbani@gmail.com</email>
+		</developer>
+	</developers>
+
+
+	<properties>
+		<!-- Use UTF-8 for everything -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Source code version -->
+		<source.java.version>1.7</source.java.version>
+		<target.java.version>1.7</target.java.version>
+
+		<!-- Android SDK -->
+		<platform.version>4.1.1.4</platform.version>
+		<android-maven-plugin.version>3.9.0-rc.3</android-maven-plugin.version>
+		<android.platform.version>23</android.platform.version>
+		<android.support.version>23.0.0</android.support.version>
+		<android.sdk.path>/Users/nicolas/Development/android-sdk-macosx</android.sdk.path>
+
+		<!-- Dependencies version -->
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+	</properties>
+
+	<dependencies>
+		<!-- android dependencies -->
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>${platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>recyclerview-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>${android-maven-plugin.version}</version>
+					<configuration>
+						<!-- <extractDuplicates>true</extractDuplicates> -->
+					</configuration>
+					<extensions>true</extensions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<platform>${android.platform.version}</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${source.java.version}</source>
+					<target>${target.java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

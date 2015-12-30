@@ -20,7 +20,6 @@
 		</developer>
 	</developers>
 
-
 	<properties>
 		<!-- Use UTF-8 for everything -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,8 +32,11 @@
 		<!-- Android SDK -->
 		<platform.version>4.1.1.4</platform.version>
 		<android-maven-plugin.version>3.9.0-rc.3</android-maven-plugin.version>
-		<android.platform.version>21</android.platform.version>
-		<android.appcompat.version>20.0.0</android.appcompat.version>
+		<android.platform.version>23</android.platform.version>
+		<android.support.version>23.0.0</android.support.version>
+		<google.play.version>8.4.0</google.play.version>
+		<android.swipelayout.version>1.0.0</android.swipelayout.version>
+		<android.sdk.path>/Users/nicolas/Development/android-sdk-macosx</android.sdk.path>
 
 		<!-- SplitemApp Common Domain Model -->
 		<commons.version>0.0.1-SNAPSHOT</commons.version>
@@ -42,21 +44,14 @@
 		<!-- Dependencies version -->
 		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
 		<ormlite.version>4.48</ormlite.version>
+		<build-helper-maven-plugin.version>1.10</build-helper-maven-plugin.version>
+		<maven-jarsigner-plugin.version>1.4</maven-jarsigner-plugin.version>
 		<javax.persistence.version>1.0.2</javax.persistence.version>
 		<springframework.android.version>1.0.1.RELEASE</springframework.android.version>
 		<fasterxml.jackson.core.version>2.4.3</fasterxml.jackson.core.version>
 		<robolectric.version>2.4</robolectric.version>
 		<junit.version>4.11</junit.version>
 	</properties>
-
-	<!-- We need a local repository for appcompat since it's not yet in maven 
-		central -->
-	<repositories>
-		<repository>
-			<id>android-support</id>
-			<url>file://${env.ANDROID_HOME}/extras/android/m2repository</url>
-		</repository>
-	</repositories>
 
 	<dependencies>
 		<!-- android dependencies -->
@@ -65,6 +60,48 @@
 			<artifactId>android</artifactId>
 			<version>${platform.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>gridlayout-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>cardview-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>recyclerview-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>design</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.daimajia.swipe</groupId>
+			<artifactId>android-swipelayout</artifactId>
+			<version>${android.swipelayout.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android.gms</groupId>
+			<artifactId>play-services-gcm</artifactId>
+			<version>${google.play.version}</version>
+			<type>aar</type>
 		</dependency>
 
 		<!-- ORM Lite dependencies -->
@@ -147,6 +184,18 @@
 					</configuration>
 					<extensions>true</extensions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper-maven-plugin.version}</version>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jarsigner-plugin</artifactId>
+					<version>${maven-jarsigner-plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -171,4 +220,120 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<properties>
+				<deployment.host>https://somehost.com</deployment.host>
+			</properties>
+			<!-- via this activation the profile is automatically used when the release 
+				is done with the maven release plugin -->
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jarsigner-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+									<goal>verify</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>true</inherited>
+								<configuration>
+									<removeExistingSignatures>true</removeExistingSignatures>
+									<archiveDirectory />
+									<includes>
+										<include>${project.build.directory}/${project.artifactId}.apk</include>
+									</includes>
+									<keystore>/Users/nicolas/.android/debug.keystore</keystore>
+									<alias>splitemapp</alias>
+									<storepass>android</storepass>
+									<keypass>micasaeslinda</keypass>
+									<verbose>true</verbose>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- the signed apk then needs to be zipaligned and we activate proguard 
+						and we run the manifest update -->
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<inherited>true</inherited>
+						<configuration>
+							<sign>
+								<debug>false</debug>
+							</sign>
+							<zipalign>
+								<verbose>true</verbose>
+								<inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
+								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk
+								</outputApk>
+							</zipalign>
+							<manifest>
+								<debuggable>false</debuggable>
+								<versionCodeAutoIncrement>true</versionCodeAutoIncrement>
+							</manifest>
+							<proguard>
+								<skip>false</skip>
+							</proguard>
+						</configuration>
+						<executions>
+							<execution>
+								<id>manifestUpdate</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>manifest-update</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>alignApk</id>
+								<phase>package</phase>
+								<goals>
+									<goal>zipalign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>
+									<type>apk</type>
+									<classifier>signed-aligned</classifier>
+								</artifact>
+								<artifact>
+									<file>${project.build.directory}/proguard/mapping.txt</file>
+									<type>map</type>
+									<classifier>release</classifier>
+								</artifact>
+							</artifacts>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-signed-aligned</id>
+								<phase>package</phase>
+								<goals>
+									<goal>attach-artifact</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

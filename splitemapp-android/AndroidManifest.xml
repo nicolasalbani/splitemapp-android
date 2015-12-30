@@ -1,60 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.splitemapp.android"
-    android:versionCode="1"
-    android:versionName="1.0.0-SNAPSHOT" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="22" android:versionName="0.0.1-SNAPSHOT" package="com.splitemapp.android">
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="22" />
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="23"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat" >
-        <activity
-            android:name="com.splitemapp.android.screen.welcome.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" >
+    <application android:allowBackup="true" android:debuggable="false" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/Theme.AppCompat">
+        <activity android:name="com.splitemapp.android.screen.welcome.WelcomeActivity" android:screenOrientation="portrait" android:windowSoftInputMode="stateHidden">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.home.HomeActivity"
-            android:screenOrientation="portrait" >
+        <activity android:name="com.splitemapp.android.screen.home.HomeActivity" android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.createproject.CreateProjectActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme"
-            android:windowSoftInputMode="stateHidden" >
+        <activity android:name="com.splitemapp.android.screen.createproject.CreateProjectActivity" android:screenOrientation="portrait" android:theme="@style/NoActionBarTheme" android:windowSoftInputMode="stateHidden">
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.project.ProjectActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme" >
+        <activity android:name="com.splitemapp.android.screen.project.ProjectActivity" android:screenOrientation="portrait" android:theme="@style/NoActionBarTheme">
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.expense.ExpenseActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme" >
+        <activity android:name="com.splitemapp.android.screen.expense.ExpenseActivity" android:screenOrientation="portrait" android:theme="@style/NoActionBarTheme">
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme" >
+        <activity android:name="com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity" android:screenOrientation="portrait" android:theme="@style/NoActionBarTheme">
         </activity>
-        <activity
-            android:name="com.splitemapp.android.screen.managecontacts.ManageContactsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBarTheme" >
+        <activity android:name="com.splitemapp.android.screen.managecontacts.ManageContactsActivity" android:screenOrientation="portrait" android:theme="@style/NoActionBarTheme">
         </activity>
     </application>
 
