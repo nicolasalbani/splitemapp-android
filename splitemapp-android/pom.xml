@@ -5,7 +5,7 @@
 
 	<groupId>com.splitemapp.android</groupId>
 	<artifactId>splitemapp-android</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>splitemapp-android</name>
 	<packaging>apk</packaging>
 
@@ -66,6 +66,12 @@
 			<artifactId>appcompat-v7</artifactId>
 			<version>${android.support.version}</version>
 			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
@@ -84,6 +90,12 @@
 			<artifactId>recyclerview-v7</artifactId>
 			<version>${android.support.version}</version>
 			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
@@ -190,7 +202,7 @@
 					<artifactId>build-helper-maven-plugin</artifactId>
 					<version>${build-helper-maven-plugin.version}</version>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jarsigner-plugin</artifactId>
@@ -221,119 +233,4 @@
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>release</id>
-			<properties>
-				<deployment.host>https://somehost.com</deployment.host>
-			</properties>
-			<!-- via this activation the profile is automatically used when the release 
-				is done with the maven release plugin -->
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jarsigner-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>signing</id>
-								<goals>
-									<goal>sign</goal>
-									<goal>verify</goal>
-								</goals>
-								<phase>package</phase>
-								<inherited>true</inherited>
-								<configuration>
-									<removeExistingSignatures>true</removeExistingSignatures>
-									<archiveDirectory />
-									<includes>
-										<include>${project.build.directory}/${project.artifactId}.apk</include>
-									</includes>
-									<keystore>/Users/nicolas/.android/debug.keystore</keystore>
-									<alias>splitemapp</alias>
-									<storepass>android</storepass>
-									<keypass>micasaeslinda</keypass>
-									<verbose>true</verbose>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- the signed apk then needs to be zipaligned and we activate proguard 
-						and we run the manifest update -->
-					<plugin>
-						<groupId>com.jayway.maven.plugins.android.generation2</groupId>
-						<artifactId>android-maven-plugin</artifactId>
-						<inherited>true</inherited>
-						<configuration>
-							<sign>
-								<debug>false</debug>
-							</sign>
-							<zipalign>
-								<verbose>true</verbose>
-								<inputApk>${project.build.directory}/${project.artifactId}.apk</inputApk>
-								<outputApk>${project.build.directory}/${project.artifactId}-signed-aligned.apk
-								</outputApk>
-							</zipalign>
-							<manifest>
-								<debuggable>false</debuggable>
-								<versionCodeAutoIncrement>true</versionCodeAutoIncrement>
-							</manifest>
-							<proguard>
-								<skip>false</skip>
-							</proguard>
-						</configuration>
-						<executions>
-							<execution>
-								<id>manifestUpdate</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>manifest-update</goal>
-								</goals>
-							</execution>
-							<execution>
-								<id>alignApk</id>
-								<phase>package</phase>
-								<goals>
-									<goal>zipalign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>${project.build.directory}/${project.artifactId}-signed-aligned.apk</file>
-									<type>apk</type>
-									<classifier>signed-aligned</classifier>
-								</artifact>
-								<artifact>
-									<file>${project.build.directory}/proguard/mapping.txt</file>
-									<type>map</type>
-									<classifier>release</classifier>
-								</artifact>
-							</artifacts>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-signed-aligned</id>
-								<phase>package</phase>
-								<goals>
-									<goal>attach-artifact</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

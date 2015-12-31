@@ -54,12 +54,24 @@
 			<artifactId>appcompat-v7</artifactId>
 			<version>${android.support.version}</version>
 			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.android.support</groupId>
 			<artifactId>recyclerview-v7</artifactId>
 			<version>${android.support.version}</version>
 			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 	</dependencies>
 
