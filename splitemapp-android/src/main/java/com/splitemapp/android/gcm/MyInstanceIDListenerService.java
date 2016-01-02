@@ -1,4 +1,4 @@
-package com.splitemapp.android.gsm;
+package com.splitemapp.android.gcm;
 
 import android.content.Intent;
 

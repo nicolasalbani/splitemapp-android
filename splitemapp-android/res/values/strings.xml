@@ -4,7 +4,7 @@
 	<!-- GLOBAL -->
     <string name="app_name">SplitemApp</string>
     <string name="line_separator_description">Line Separator</string>
-    <string name="gcm_defaultSenderId"></string>
+    <string name="gcm_defaultSenderId">66220540369</string>
     
     <!-- ACtion Bar -->
     <string name="ab_title">Title</string>

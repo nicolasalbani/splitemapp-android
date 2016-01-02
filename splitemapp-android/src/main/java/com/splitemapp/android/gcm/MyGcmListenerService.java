@@ -1,4 +1,4 @@
-package com.splitemapp.android.gsm;
+package com.splitemapp.android.gcm;
 
 
 import android.app.NotificationManager;
@@ -16,7 +16,7 @@ import com.splitemapp.android.screen.home.HomeActivity;
 
 public class MyGcmListenerService extends GcmListenerService {
 
-    private static final String TAG = "MyGcmListenerService";
+    private static final String TAG = MyGcmListenerService.class.getSimpleName();
 
     /**
      * Called when message is received.

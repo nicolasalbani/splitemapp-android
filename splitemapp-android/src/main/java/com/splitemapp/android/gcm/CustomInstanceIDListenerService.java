@@ -1,31 +1,45 @@
-package com.splitemapp.android.gsm;
+package com.splitemapp.android.gcm;
 
 
-import android.app.IntentService;
+import java.io.IOException;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.iid.InstanceIDListenerService;
 import com.splitemapp.android.R;
 
-import java.io.IOException;
+public abstract class CustomInstanceIDListenerService extends InstanceIDListenerService {
 
-public class RegistrationIntentService extends IntentService {
-
-	private static final String TAG = "RegIntentService";
+	private static final String TAG = CustomInstanceIDListenerService.class.getSimpleName();
 	private static final String[] TOPICS = {"global"};
+	public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+	public static final String REGISTRATION_COMPLETE = "registrationComplete";
+	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
-	public RegistrationIntentService() {
-		super(TAG);
-	}
+	/**
+	 * Returns a reference to the activity calling this service
+	 * @return
+	 */
+	public abstract Activity getActivity();
 
+	/**
+	 * Called if InstanceID token is updated. This may occur if the security of
+	 * the previous token had been compromised. This call is initiated by the
+	 * InstanceID provider.
+	 */
+	// [START refresh_token]
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	public void onTokenRefresh() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		try {
@@ -50,18 +64,20 @@ public class RegistrationIntentService extends IntentService {
 			// You should store a boolean that indicates whether the generated token has been
 			// sent to your server. If the boolean is false, send the token to your server,
 			// otherwise your server should have already received the token.
-			sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, true).apply();
+			sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, true).apply();
 			// [END register_for_gcm]
 		} catch (Exception e) {
 			Log.d(TAG, "Failed to complete token refresh", e);
 			// If an exception happens while fetching the new token or updating our registration data
 			// on a third-party server, this ensures that we'll attempt the update at a later time.
-			sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false).apply();
+			sharedPreferences.edit().putBoolean(SENT_TOKEN_TO_SERVER, false).apply();
 		}
 		// Notify UI that registration has completed, so the progress indicator can be hidden.
-		Intent registrationComplete = new Intent(QuickstartPreferences.REGISTRATION_COMPLETE);
+		Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
 		LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
 	}
+	// [END refresh_token]
+
 
 	/**
 	 * Persist registration to third-party servers.
@@ -90,4 +106,23 @@ public class RegistrationIntentService extends IntentService {
 	}
 	// [END subscribe_topics]
 
+	/**
+	 * Check the device to make sure it has the Google Play Services APK. If
+	 * it doesn't, display a dialog that allows users to download the APK from
+	 * the Google Play Store or enable it in the device's system settings.
+	 */
+	private boolean checkPlayServices() {
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (apiAvailability.isUserResolvableError(resultCode)) {
+				//FIXME We need to pass an actual activity here!
+				apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+			} else {
+				Log.i(TAG, "This device is not supported.");
+			}
+			return false;
+		}
+		return true;
+	}
 }

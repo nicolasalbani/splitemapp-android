@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.gsm.QuickstartPreferences;
-import com.splitemapp.android.gsm.RegistrationIntentService;
+import com.splitemapp.android.gcm.QuickstartPreferences;
+import com.splitemapp.android.gcm.RegistrationIntentService;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
