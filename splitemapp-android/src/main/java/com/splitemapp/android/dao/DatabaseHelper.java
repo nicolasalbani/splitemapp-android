@@ -1193,14 +1193,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException 
 	 */
 	public Long getLoggedUserId() throws SQLException{
-		Long userId = null;
+		Long id = null;
 
-		List<UserSession> userSessionList = getUserSessionList();
-		if(userSessionList.size() > 0){
-			UserSession userSession = userSessionList.get(userSessionList.size()-1);
-			userId = userSession.getUser().getId();
+		UserSession currentUserSession = getCurrentUserSession();
+		if(currentUserSession != null){
+			id = currentUserSession.getUser().getId();
 		}
-		return userId;
+
+		return id;
 	}
 
 	/**
@@ -1209,7 +1209,59 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public String getSessionToken() throws SQLException{
-		return getUserSessionList().get(0).getToken();
+		String sessionToken = null;
+
+		UserSession currentUserSession = getCurrentUserSession();
+		if(currentUserSession != null){
+			sessionToken = currentUserSession.getToken();
+		}
+
+		return sessionToken;
+	}
+
+	/**
+	 * Gets the active GCM token
+	 * @return String containing the active GCM token
+	 * @throws SQLException
+	 */
+	public String getGcmToken() throws SQLException{
+		String gcmToken = null;
+
+		UserSession currentUserSession = getCurrentUserSession();
+		if(currentUserSession != null){
+			gcmToken = currentUserSession.getGcmToken();
+		}
+
+		return gcmToken;
+	}
+
+	/**
+	 * Sets the active GCM token
+	 * @throws SQLException
+	 */
+	public void setGcmToken(String gcmToken) throws SQLException{
+		UserSession currentUserSession = getCurrentUserSession();
+
+		// Updating the GCM token in the current user session
+		currentUserSession.setGcmToken(gcmToken);
+
+		getUserSessionDao().update(currentUserSession);
+	}
+
+	/**
+	 * Gets the UserSession instance for the current user
+	 * @return
+	 * @throws SQLException
+	 */
+	public UserSession getCurrentUserSession() throws SQLException{
+		UserSession userSession = null;
+
+		List<UserSession> userSessionList = getUserSessionList();
+		if(userSessionList.size() > 0){
+			userSession = userSessionList.get(userSessionList.size()-1);
+		}
+
+		return userSession;
 	}
 
 	/**

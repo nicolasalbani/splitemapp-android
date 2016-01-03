@@ -11,11 +11,32 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.splitemapp.android.R;
+import com.splitemapp.android.dao.DatabaseHelper;
+import com.splitemapp.android.task.PushUserSessionsTask;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RegistrationIntentService extends IntentService {
+
+	public DatabaseHelper databaseHelper = null;
+
+	static{
+		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
+	}
+
+	/**
+	 * This method calls the OpenHelperManager getHelper static method with the proper DatabaseHelper class reference 
+	 * @return DatabaseHelper object which offers DAO for every domain entity
+	 */
+	public DatabaseHelper getHelper() {
+		if (databaseHelper == null) {
+			databaseHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
+		}
+		return databaseHelper;
+	}
 
 	private static final String TAG = RegistrationIntentService.class.getSimpleName();
 	private static final String[] TOPICS = {"global"};
@@ -41,8 +62,8 @@ public class RegistrationIntentService extends IntentService {
 			// [END get_token]
 			Log.i(TAG, "GCM Registration Token: " + token);
 
-			// TODO: Implement this method to send any registration to your app's servers.
-			sendRegistrationToServer(token);
+			// Saves GCM token to DB and registers it to remote server
+			saveAndRegisterToken(token);
 
 			// Subscribe to topic channels
 			subscribeTopics(token);
@@ -69,10 +90,23 @@ public class RegistrationIntentService extends IntentService {
 	 * Modify this method to associate the user's GCM registration token with any server-side account
 	 * maintained by your application.
 	 *
-	 * @param token The new token.
+	 * @param gcmToken The new token.
+	 * @throws SQLException 
 	 */
-	private void sendRegistrationToServer(String token) {
-		// Add custom implementation, as needed.
+	private void saveAndRegisterToken(String gcmToken) throws SQLException {
+		// Saving the GCM token into the database
+		getHelper().setGcmToken(gcmToken);
+
+		// Registering the GCM token to the remote server
+		new PushUserSessionsTask(getHelper()){
+			@Override
+			public void executeOnSuccess() {
+				Log.i(TAG, "GCM token registration success!");
+			}
+			@Override
+			public void executeOnFail() {
+				Log.e(TAG, "Failed to register GCM token!");
+			}}.execute(); 
 	}
 
 	/**

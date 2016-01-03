@@ -3,7 +3,12 @@ package com.splitemapp.android.screen;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.content.Intent;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.dialog.CustomProgressDialog;
+import com.splitemapp.android.gcm.RegistrationIntentService;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.PullAllTask;
@@ -28,6 +33,7 @@ import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 
 public abstract class RestfulFragment extends BaseFragment{
 
+	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private CustomProgressDialog waitDialog = null;
 
 	static{
@@ -103,6 +109,12 @@ public abstract class RestfulFragment extends BaseFragment{
 			public void executeOnSuccess() {
 				hideProgressIndicator();
 				startHomeActivity();
+				
+				// Start IntentService to register this application with GCM.
+		        if (checkPlayServices()) {
+		            Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
+		            getActivity().startService(intent);
+		        }
 			}
 			@Override
 			public void executeOnFail() {
@@ -111,6 +123,24 @@ public abstract class RestfulFragment extends BaseFragment{
 			}
 		};
 		loginRequestTask.execute();
+	}
+
+	/**
+	 * Check the device to make sure it has the Google Play Services APK. If
+	 * it doesn't, display a dialog that allows users to download the APK from
+	 * the Google Play Store or enable it in the device's system settings.
+	 */
+	private boolean checkPlayServices() {
+		GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+		int resultCode = apiAvailability.isGooglePlayServicesAvailable(getActivity());
+		if (resultCode != ConnectionResult.SUCCESS) {
+			if (apiAvailability.isUserResolvableError(resultCode)) {
+				apiAvailability.getErrorDialog(getActivity(), resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+				.show();
+			}
+			return false;
+		}
+		return true;
 	}
 
 	/**

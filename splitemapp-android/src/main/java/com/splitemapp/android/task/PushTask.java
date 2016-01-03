@@ -66,21 +66,33 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	protected void onPreExecute() {
 		executeOnStart();
 	}
-	
+
+	/**
+	 * Indicates whether we should populate the last push success at date in request
+	 * @return
+	 */
+	protected boolean useLastPushSuccessAt(){
+		return true;
+	}
+
 	@Override
 	protected R doInBackground(Void... params) {
 		try {
-			// We get the date in which this table was last successfully pulled
-			Date lastPushSuccessAt = databaseHelper.getLastSuccessPushAt(getTableName());
-
 			// We get the session token
 			String sessionToken = databaseHelper.getSessionToken();
 
 			// We create the push request
 			PushRequest<F> pushRequest = new PushRequest<F>();
 			pushRequest.setToken(sessionToken);
-			pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
-			pushRequest.setItemList(getRequestItemList(lastPushSuccessAt));
+
+			if(useLastPushSuccessAt()){
+				// We get the date in which this table was last successfully pulled
+				Date lastPushSuccessAt = databaseHelper.getLastSuccessPushAt(getTableName());
+				pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
+				pushRequest.setItemList(getRequestItemList(lastPushSuccessAt));
+			} else {
+				pushRequest.setItemList(getRequestItemList(new Date()));
+			}
 
 			// We call the rest service and send back the login response
 			return NetworkUtils.callRestService(getServicePath(), pushRequest, getResponseType());
