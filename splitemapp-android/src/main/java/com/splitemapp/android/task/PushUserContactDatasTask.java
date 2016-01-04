@@ -43,20 +43,16 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	}
 
 	@Override
-	protected Class<PushLongResponse> getResponseType() {
-		return PushLongResponse.class;
-	}
-
-	@Override
 	protected List<UserContactDataDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		userContactDataList = databaseHelper.getUserContactDataList();
+		Long loggedUserId = databaseHelper.getLoggedUserId();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
-			if(userContactData.getUpdatedAt().after(lastPushSuccessAt)){
+			if(userContactData.getUpdatedAt().after(lastPushSuccessAt) && userContactData.getUser().getId().equals(loggedUserId)){
 				// Adding item to the list
 				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 			}

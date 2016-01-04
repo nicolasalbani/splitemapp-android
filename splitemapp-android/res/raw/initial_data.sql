@@ -41,3 +41,4 @@ insert into sync_status(id,table_name,last_pull_at,last_pull_success_at,last_pus
 insert into sync_status(id,table_name,last_pull_at,last_pull_success_at,last_push_at,last_push_success_at) values(6,"user_invite",'1970-01-01 00:00:00.000000','1970-01-01 00:00:00.000000',null,null);
 insert into sync_status(id,table_name,last_pull_at,last_pull_success_at,last_push_at,last_push_success_at) values(7,"project_cover_image",'1970-01-01 00:00:00.000000','1970-01-01 00:00:00.000000',null,null);
 insert into sync_status(id,table_name,last_pull_at,last_pull_success_at,last_push_at,last_push_success_at) values(8,"user_to_project",'1970-01-01 00:00:00.000000','1970-01-01 00:00:00.000000',null,null);
+insert into sync_status(id,table_name,last_pull_at,last_pull_success_at,last_push_at,last_push_success_at) values(9,"user_session",'1970-01-01 00:00:00.000000','1970-01-01 00:00:00.000000',null,null);

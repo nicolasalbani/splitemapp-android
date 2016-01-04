@@ -9,6 +9,7 @@ import android.util.Log;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
+import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
 
 /**
@@ -17,7 +18,7 @@ import com.splitemapp.commons.domain.dto.response.PushResponse;
  *
  * @param <E>
  */
-public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseAsyncTask<F, E, R> {
+public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseAsyncTask<F, E, PushLongResponse> {
 
 	public PushTask(DatabaseHelper databaseHelper) {
 		super(databaseHelper);
@@ -36,12 +37,6 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	protected abstract String getServicePath();
 
 	/**
-	 * Gets the response type
-	 * @return
-	 */
-	protected abstract Class<R> getResponseType();
-
-	/**
 	 * Returns the request item list to be sent to the push service
 	 * @param lastPushSuccessAt Date containing the last push success date
 	 * @return List<F> containing the list of F objects to be sent to the push service
@@ -54,7 +49,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	 * @param response ServiceResponse that contains the list returned by the server
 	 * @throws SQLException
 	 */
-	protected abstract void processResult(R response) throws SQLException;
+	protected abstract void processResult(PushLongResponse response) throws SQLException;
 
 	/**
 	 * Returns the tag to be used for logging events 
@@ -67,16 +62,8 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 		executeOnStart();
 	}
 
-	/**
-	 * Indicates whether we should populate the last push success at date in request
-	 * @return
-	 */
-	protected boolean useLastPushSuccessAt(){
-		return true;
-	}
-
 	@Override
-	protected R doInBackground(Void... params) {
+	protected PushLongResponse doInBackground(Void... params) {
 		try {
 			// We get the session token
 			String sessionToken = databaseHelper.getSessionToken();
@@ -85,17 +72,24 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 			PushRequest<F> pushRequest = new PushRequest<F>();
 			pushRequest.setToken(sessionToken);
 
-			if(useLastPushSuccessAt()){
-				// We get the date in which this table was last successfully pulled
-				Date lastPushSuccessAt = databaseHelper.getLastSuccessPushAt(getTableName());
-				pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
-				pushRequest.setItemList(getRequestItemList(lastPushSuccessAt));
-			} else {
-				pushRequest.setItemList(getRequestItemList(new Date()));
-			}
+			// We get the date in which this table was last successfully pulled
+			Date lastPushSuccessAt = databaseHelper.getLastSuccessPushAt(getTableName());
+			pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
 
-			// We call the rest service and send back the login response
-			return NetworkUtils.callRestService(getServicePath(), pushRequest, getResponseType());
+			// Getting the list of items to push
+			List<F> requestItemList = getRequestItemList(lastPushSuccessAt);
+
+			// Only calling push service if there are items to push
+			if(requestItemList.size() > 0){
+				pushRequest.setItemList(requestItemList);
+
+				// We call the rest service and send back the login response
+				return NetworkUtils.callRestService(getServicePath(), pushRequest, PushLongResponse.class);
+			} else {
+				PushLongResponse response = new PushLongResponse();
+				response.setSuccess(true);
+				return response;
+			}
 		} catch (Exception e) {
 			Log.e(getLoggingTag(), e.getMessage(), e);
 		}
@@ -104,7 +98,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	}
 
 	@Override
-	protected void onPostExecute(R response) {
+	protected void onPostExecute(PushLongResponse response) {
 		boolean success = false;
 
 		// We validate the response

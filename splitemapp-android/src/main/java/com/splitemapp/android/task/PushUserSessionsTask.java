@@ -38,16 +38,6 @@ public abstract class PushUserSessionsTask extends PushTask<UserSessionDTO, Long
 	}
 
 	@Override
-	protected Class<PushLongResponse> getResponseType() {
-		return PushLongResponse.class;
-	}
-	
-	@Override
-	protected boolean useLastPushSuccessAt() {
-		return false;
-	}
-
-	@Override
 	protected List<UserSessionDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get the current user session
 		UserSession userSession = databaseHelper.getCurrentUserSession();
@@ -61,6 +51,6 @@ public abstract class PushUserSessionsTask extends PushTask<UserSessionDTO, Long
 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
-		// No need to track UserSession push status
+		// No need to track UserSession push status since we only send updates, no new records
 	}
 }

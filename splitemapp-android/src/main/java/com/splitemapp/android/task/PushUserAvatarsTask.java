@@ -43,20 +43,16 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 	}
 
 	@Override
-	protected Class<PushLongResponse> getResponseType() {
-		return PushLongResponse.class;
-	}
-
-	@Override
 	protected List<UserAvatarDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		userAvatarList = databaseHelper.getUserAvatarList();
+		Long loggedUserId = databaseHelper.getLoggedUserId();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
-			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt)){
+			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt) && userAvatar.getUser().getId().equals(loggedUserId)){
 				// Adding item to the list
 				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 			}

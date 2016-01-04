@@ -43,20 +43,16 @@ public abstract class PushUsersTask extends PushTask<UserDTO, Long, PushLongResp
 	}
 
 	@Override
-	protected Class<PushLongResponse> getResponseType() {
-		return PushLongResponse.class;
-	}
-
-	@Override
 	protected List<UserDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		userList = databaseHelper.getUserList();
+		Long loggedUserId = databaseHelper.getLoggedUserId();
 
 		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		for(User user:userList){
-			if(user.getUpdatedAt().after(lastPushSuccessAt)){
+			if(user.getUpdatedAt().after(lastPushSuccessAt) && user.getId().equals(loggedUserId)){
 				// Adding item to the list
 				userDTOList.add(new UserDTO(user));
 			}

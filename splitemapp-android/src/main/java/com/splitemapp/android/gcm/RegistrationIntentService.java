@@ -1,6 +1,9 @@
 package com.splitemapp.android.gcm;
 
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,12 +15,9 @@ import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.splitemapp.android.R;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.task.PushUserSessionsTask;
-
-import java.io.IOException;
-import java.sql.SQLException;
+import com.splitemapp.commons.constants.ServiceConstants;
 
 public class RegistrationIntentService extends IntentService {
 
@@ -57,7 +57,7 @@ public class RegistrationIntentService extends IntentService {
 			// See https://developers.google.com/cloud-messaging/android/start for details on this file.
 			// [START get_token]
 			InstanceID instanceID = InstanceID.getInstance(this);
-			String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId),
+			String token = instanceID.getToken(ServiceConstants.GCM_DEFAULT_SENDER_ID,
 					GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
 			// [END get_token]
 			Log.i(TAG, "GCM Registration Token: " + token);

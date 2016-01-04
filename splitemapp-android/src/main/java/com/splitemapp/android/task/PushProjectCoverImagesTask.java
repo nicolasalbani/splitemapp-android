@@ -43,11 +43,6 @@ public abstract class PushProjectCoverImagesTask extends PushTask<ProjectCoverIm
 	}
 
 	@Override
-	protected Class<PushLongResponse> getResponseType() {
-		return PushLongResponse.class;
-	}
-
-	@Override
 	protected List<ProjectCoverImageDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
