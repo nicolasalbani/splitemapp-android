@@ -3,6 +3,9 @@ package com.splitemapp.android.constants;
 import android.os.Build;
 
 public class Constants {
+	
+	// Application information
+	public static final String APPLICATION_NAME = "SplitemApp";
 
 	// Device information
 	public static final String DEVICE=Build.MANUFACTURER+" "+Build.MODEL;

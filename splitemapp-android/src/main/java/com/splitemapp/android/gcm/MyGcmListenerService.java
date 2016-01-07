@@ -12,71 +12,70 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.commons.constants.Action;
 
 public class MyGcmListenerService extends GcmListenerService {
 
-    private static final String TAG = MyGcmListenerService.class.getSimpleName();
+	private static int notificationCount = 0;
+	private static final String TAG = MyGcmListenerService.class.getSimpleName();
 
-    /**
-     * Called when message is received.
-     *
-     * @param from SenderID of the sender.
-     * @param data Data bundle containing message data as key/value pairs.
-     *             For Set of keys use data.keySet().
-     */
-    // [START receive_message]
-    @Override
-    public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-        Log.d(TAG, "From: " + from);
-        Log.d(TAG, "Message: " + message);
+	/**
+	 * Called when message is received.
+	 *
+	 * @param from SenderID of the sender.
+	 * @param data Data bundle containing message data as key/value pairs.
+	 *             For Set of keys use data.keySet().
+	 */
+	@Override
+	public void onMessageReceived(String from, Bundle data) {
+		String sender = data.getString("sender");
+		String action = data.getString("action");
+		String details = data.getString("details");
 
-        if (from.startsWith("/topics/")) {
-            // message received from some topic.
-        } else {
-            // normal downstream message.
-        }
+		// Logging
+		Log.d(TAG, "sender: " + sender);
+		Log.d(TAG, "action: " + action);
+		Log.d(TAG, "details: " + details);
 
-        // [START_EXCLUDE]
-        /**
-         * Production applications would usually process the message here.
-         * Eg: - Syncing with server.
-         *     - Store message in local database.
-         *     - Update UI.
-         */
+		// Showing notification
+		StringBuilder message = new StringBuilder();
+		message.append(sender);
+		message.append(" has " +action);
+		message.append(" " +details);
 
-        /**
-         * In some cases it may be useful to show a notification indicating to the user
-         * that a message was received.
-         */
-        sendNotification(message);
-        // [END_EXCLUDE]
-    }
-    // [END receive_message]
+		showNotification(message.toString());
 
-    /**
-     * Create and show a simple notification containing the received GCM message.
-     *
-     * @param message GCM message received.
-     */
-    private void sendNotification(String message) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+		// Calling the proper pull task based on the action
+		if(action.equals(Action.ADD_PROJECT) || action.equals(Action.UPDATE_PROJECT)){
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setContentTitle("GCM Message")
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+		}
+	}
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	/**
+	 * Create and show a simple notification containing the received GCM message.
+	 *
+	 * @param message GCM message received.
+	 */
+	private void showNotification(String message) {
+		Intent intent = new Intent(this, HomeActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+				PendingIntent.FLAG_ONE_SHOT);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-    }
+		Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+		.setSmallIcon(android.R.drawable.ic_popup_sync)
+		.setContentTitle(Constants.APPLICATION_NAME)
+		.setContentText(message)
+		.setAutoCancel(true)
+		.setSound(defaultSoundUri)
+		.setContentIntent(pendingIntent);
+
+		NotificationManager notificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		notificationManager.notify(notificationCount++, notificationBuilder.build());
+	}
 }
