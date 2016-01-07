@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-import com.splitemapp.android.constants.Globals;
+import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.SingleFragmentActivity;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.commons.domain.User;

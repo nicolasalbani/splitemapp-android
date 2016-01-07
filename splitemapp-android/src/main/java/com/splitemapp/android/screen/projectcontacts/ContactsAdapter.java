@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Globals;
+import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.commons.domain.User;
 

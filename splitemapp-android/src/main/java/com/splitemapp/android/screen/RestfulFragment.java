@@ -3,7 +3,12 @@ package com.splitemapp.android.screen;
 import java.sql.SQLException;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -30,11 +35,13 @@ import com.splitemapp.android.task.PushUserInvitesTask;
 import com.splitemapp.android.task.PushUserToProjectsTask;
 import com.splitemapp.android.task.PushUsersTask;
 import com.splitemapp.android.task.SynchronizeContactsRequestTask;
+import com.splitemapp.commons.constants.Action;
 
 public abstract class RestfulFragment extends BaseFragment{
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private CustomProgressDialog waitDialog = null;
+	private BroadcastReceiver mBroadcastReceiver;
 
 	static{
 		// We initialize logging
@@ -46,6 +53,66 @@ public abstract class RestfulFragment extends BaseFragment{
 		System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "debug");
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
+	}
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		// Setting the broadcast receiver for the GCM communication
+		mBroadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// If the message contains an action, execute the proper method
+				String action = intent.getStringExtra("ACTION");
+				if(action != null){
+					if(action.equals(Action.ADD_USER) || action.equals(Action.UPDATE_USER)){
+						pullUsers();
+					} else if (action.equals(Action.ADD_USER_AVATAR) || action.equals(Action.UPDATE_USER_AVATAR)){
+						pullUserAvatars();
+					} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
+						pullUserContactDatas();
+					} else if (action.equals(Action.ADD_PROJECT) || action.equals(Action.UPDATE_PROJECT)){
+						pullProjects();
+					} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE) || action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
+						pullProjectCoverImages();
+					} else if (action.equals(Action.ADD_USER_TO_PROJECT) || action.equals(Action.UPDATE_USER_TO_PROJECT)){
+						pullUserToProjects();
+					} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
+						pullUserInvites();
+					} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
+						pullUserExpenses();
+					}
+				}
+			}
+		};
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// Registering broadcast receiver
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
+				new IntentFilter("com.splitemapp.android.GCM_MESSAGE")
+				);
+	}
+
+	@Override
+	public void onStop() {
+		// Unregistering broadcast receiver
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+
+		super.onStop();
+	}
+
+	@Override
+	public void onPause() {
+		// Unregistering broadcast receiver
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+
+		super.onPause();
 	}
 
 	/**
@@ -109,12 +176,12 @@ public abstract class RestfulFragment extends BaseFragment{
 			public void executeOnSuccess() {
 				hideProgressIndicator();
 				startHomeActivity();
-				
+
 				// Start IntentService to register this application with GCM.
-		        if (checkPlayServices()) {
-		            Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
-		            getActivity().startService(intent);
-		        }
+				if (checkPlayServices()) {
+					Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
+					getActivity().startService(intent);
+				}
 			}
 			@Override
 			public void executeOnFail() {

@@ -24,8 +24,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
+import com.splitemapp.android.globals.Globals;
+import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
@@ -36,7 +36,7 @@ import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
 
-public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
+public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = CreateProjectFragment.class.getSimpleName();
 
@@ -199,6 +199,7 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
 			getHelper().persistProject(project);
+			pushProjects();
 
 			// Creating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -207,10 +208,12 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			if(mAvatarData != null){
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
-			getHelper().persistProjectCoverImage(projectCoverImage);;
+			getHelper().persistProjectCoverImage(projectCoverImage);
+			pushProjectCoverImages();
 
 			// Saving user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			pushUserToProjects();
 
 			// Resetting the global create project - user list
 			Globals.setCreateProjectActivityUserList(new ArrayList<User>());
@@ -234,6 +237,7 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
 			getHelper().updateProject(project);
+			pushProjects();
 
 			// Updating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -242,10 +246,12 @@ public class CreateProjectFragment extends BaseFragmentWithBlueActionbar {
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
 			projectCoverImage.setUpdatedAt(new Date());
-			getHelper().updateProjectCoverImage(projectCoverImage);;
+			getHelper().updateProjectCoverImage(projectCoverImage);
+			pushProjectCoverImages();
 
 			// Updating user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			pushUserToProjects();
 
 			// Resetting the global create project - user list
 			Globals.setCreateProjectActivityUserList(new ArrayList<User>());

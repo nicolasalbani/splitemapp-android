@@ -2,14 +2,9 @@ package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +17,6 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.gcm.QuickstartPreferences;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
@@ -55,8 +49,6 @@ public class HomeFragment extends RestfulFragment {
 	private TextView mManageContactsTextView;
 	private TextView mSynchronizeTextView;
 
-	private BroadcastReceiver mRegistrationBroadcastReceiver;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -71,6 +63,7 @@ public class HomeFragment extends RestfulFragment {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
+		
 	}
 
 	@Override
@@ -177,20 +170,6 @@ public class HomeFragment extends RestfulFragment {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 
-		// Setting the broadcast receiver for the GCM token
-		mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-				boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-				if (sentToken) {
-					showToast("GCM token retrieved and sent to server!");
-				} else {
-					showToast("ERROR getting GCM token");
-				}
-			}
-		};
-
 		return v;
 	}
 
@@ -207,12 +186,6 @@ public class HomeFragment extends RestfulFragment {
 		} else {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
-	}
-
-	@Override
-	public void onPause() {
-		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRegistrationBroadcastReceiver);
-		super.onPause();
 	}
 
 	@Override

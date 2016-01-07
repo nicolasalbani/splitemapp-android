@@ -1,4 +1,4 @@
-package com.splitemapp.android.constants;
+package com.splitemapp.android.globals;
 
 import java.util.List;
 

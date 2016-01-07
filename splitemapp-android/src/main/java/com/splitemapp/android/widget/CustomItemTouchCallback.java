@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -133,10 +134,10 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 		String text = null;
 		
 		if(isSwipeRightToLeft(dX)){
-			backgroundColor = context.getResources().getColor(this.rightColorResource);
+			backgroundColor = ContextCompat.getColor(context, this.rightColorResource);
 			text = context.getResources().getString(this.rightStringResource);
 		} else {
-			backgroundColor = context.getResources().getColor(this.leftColorResource);
+			backgroundColor = ContextCompat.getColor(context, this.leftColorResource);
 			text = context.getResources().getString(this.leftStringResource);
 		}
 		
@@ -146,7 +147,7 @@ public class CustomItemTouchCallback extends ItemTouchHelper.Callback{
 		canvas.drawRect(left, top, right, bottom, paint);
 
 		// Drawing text
-		paint.setColor(context.getResources().getColor(R.color.white));
+		paint.setColor(ContextCompat.getColor(context, R.color.white));
 		paint.setTextSize(TEXT_SIZE);
 		paint.setTextAlign(Align.CENTER);
 		paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));

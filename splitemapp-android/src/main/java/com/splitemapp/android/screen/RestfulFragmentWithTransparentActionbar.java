@@ -1,20 +1,20 @@
 package com.splitemapp.android.screen;
 
-import com.splitemapp.android.R;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
-public abstract class BaseFragmentWithBlueActionbar extends BaseFragment {
+import com.splitemapp.android.R;
+
+public abstract class RestfulFragmentWithTransparentActionbar extends RestfulFragment {
 
 	protected Toolbar actionBar;
-	protected TextView mCancel;
-	protected TextView mDone;
+	protected ImageView mBack;
+	protected ImageView mMenu;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,20 +27,19 @@ public abstract class BaseFragmentWithBlueActionbar extends BaseFragment {
 		((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 		
 		// Setting the cancel and done buttons
-		mCancel = (TextView) v.findViewById(R.id.cancel_action);
-		mCancel.setText(getTitleResourceId());
-		mCancel.setOnClickListener(new View.OnClickListener() {
+		mBack = (ImageView) v.findViewById(R.id.back_action_imageView);
+		mBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getActivity().onBackPressed();
 			}
 		});
 		
-		mDone = (TextView) v.findViewById(R.id.done_action);
-		mDone.setOnClickListener(new View.OnClickListener() {
+		mMenu = (ImageView) v.findViewById(R.id.menu_action_imageView);
+		mMenu.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				doneAction();
+				menuAction();
 			}
 		});
 		
@@ -54,13 +53,7 @@ public abstract class BaseFragmentWithBlueActionbar extends BaseFragment {
 	protected abstract int getFragmentResourceId();
 	
 	/**
-	 * Gets the resource id for the title
-	 * @return
-	 */
-	protected abstract int getTitleResourceId();
-	
-	/**
 	 * Action to execute when pressing the DONE button
 	 */
-	protected abstract void doneAction();
+	protected abstract void menuAction();
 }

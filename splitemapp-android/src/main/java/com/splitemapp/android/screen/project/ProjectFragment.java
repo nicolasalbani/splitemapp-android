@@ -17,14 +17,14 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.constants.Globals;
-import com.splitemapp.android.screen.BaseFragmentWithTransparentActionbar;
+import com.splitemapp.android.globals.Globals;
+import com.splitemapp.android.screen.RestfulFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
 
-public class ProjectFragment extends BaseFragmentWithTransparentActionbar {
+public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 	private static final String TAG = ProjectFragment.class.getSimpleName();
 
@@ -136,6 +136,7 @@ public class ProjectFragment extends BaseFragmentWithTransparentActionbar {
 			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageByProject(mCurrentProject.getId());
 			projectCoverImage.setAvatarData(ImageUtils.bitmapToByteArray(selectedBitmap,ImageUtils.IMAGE_QUALITY_MAX));
 			getHelper().updateProjectCoverImage(projectCoverImage);
+			pushProjectCoverImages();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}

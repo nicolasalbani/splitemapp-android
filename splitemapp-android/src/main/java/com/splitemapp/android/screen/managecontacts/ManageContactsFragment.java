@@ -19,29 +19,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.screen.RestfulFragmentWithActionbar;
+import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
 
-public class ManageContactsFragment extends RestfulFragmentWithActionbar {
+public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = ManageContactsFragment.class.getSimpleName();
 
 	private List<User> mContacts;
-	private User mCurrentUser;
 	private Button mSynchronizeContacts;
 	private ListView mContactsList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// We get the user and user contact data instances
-		try {
-			mCurrentUser = getHelper().getLoggedUser();
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
 	}
 
 	@Override
@@ -117,10 +109,6 @@ public class ManageContactsFragment extends RestfulFragmentWithActionbar {
 
 			return convertView;
 		}
-	}
-
-	private boolean isCurrentUser(User user){
-		return user.getId() == mCurrentUser.getId();
 	}
 
 	@Override

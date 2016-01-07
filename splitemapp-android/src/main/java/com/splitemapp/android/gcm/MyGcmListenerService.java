@@ -9,17 +9,24 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.home.HomeActivity;
-import com.splitemapp.commons.constants.Action;
 
 public class MyGcmListenerService extends GcmListenerService {
 
 	private static int notificationCount = 0;
 	private static final String TAG = MyGcmListenerService.class.getSimpleName();
+	private LocalBroadcastManager broadcaster = null;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		broadcaster = LocalBroadcastManager.getInstance(this);
+	}
 
 	/**
 	 * Called when message is received.
@@ -47,10 +54,10 @@ public class MyGcmListenerService extends GcmListenerService {
 
 		showNotification(message.toString());
 
-		// Calling the proper pull task based on the action
-		if(action.equals(Action.ADD_PROJECT) || action.equals(Action.UPDATE_PROJECT)){
-
-		}
+		// Sending the action to the listening fragment
+		Intent intent = new Intent("com.splitemapp.android.GCM_MESSAGE");
+		intent.putExtra("ACTION", action);
+		broadcaster.sendBroadcast(intent);
 	}
 
 	/**

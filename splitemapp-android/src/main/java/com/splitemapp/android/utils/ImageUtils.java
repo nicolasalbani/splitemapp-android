@@ -3,16 +3,16 @@ package com.splitemapp.android.utils;
 import java.io.ByteArrayOutputStream;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
@@ -95,13 +95,13 @@ public class ImageUtils {
 
 	/**
 	 * Returns a boolean indicating whether the image view contains the specified resource
-	 * @param resources
+	 * @param context
 	 * @param imageView
 	 * @param resource
 	 * @return
 	 */
-	public static boolean imageViewEqualsResource(Resources resources, ImageView imageView, int resource){
-		return imageView.getDrawable().getConstantState().equals(resources.getDrawable(resource).getConstantState());
+	public static boolean imageViewEqualsResource(Context context, ImageView imageView, int resource){
+		return imageView.getDrawable().getConstantState().equals(ContextCompat.getDrawable(context, resource).getConstantState());
 	}
 
 	/**

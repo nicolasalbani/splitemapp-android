@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.screen.BaseFragmentWithBlueActionbar;
+import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 
-public class ProjectContactsFragment extends BaseFragmentWithBlueActionbar {
+public class ProjectContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = ProjectContactsFragment.class.getSimpleName();
 
