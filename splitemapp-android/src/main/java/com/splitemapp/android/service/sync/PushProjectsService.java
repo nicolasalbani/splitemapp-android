@@ -1,11 +1,10 @@
-package com.splitemapp.android.task;
+package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -15,23 +14,21 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-/**
- * Sync Task to push project table data to the remote DB
- * @author nicolas
- */
-public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongResponse> {
-	
+public class PushProjectsService extends PushService<ProjectDTO, Long, PushLongResponse> {
+
+	private static final String TAG = PushProjectsService.class.getSimpleName();
+
 	private List<Project> projectList = null;
-	
-	public PushProjectsTask(DatabaseHelper databaseHelper) {
-		super(databaseHelper);
+
+	public PushProjectsService() {
+		super(TAG);
 	}
 	
 	@Override
 	protected String getLoggingTag() {
-		return getClass().getSimpleName();
+		return TAG;
 	}
-	
+
 	@Override
 	protected String getTableName(){
 		return TableName.PROJECT;
@@ -46,7 +43,7 @@ public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLo
 	protected List<ProjectDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
-		projectList = databaseHelper.getProjectList();
+		projectList = getHelper().getProjectList();
 
 		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
@@ -62,11 +59,11 @@ public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLo
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(Project.class, response.getSuccess(), response.getPushedAt());
+		getHelper().updateSyncStatusPushAt(Project.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(Project entity:projectList){
-			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+			getHelper().updatePushedAt(entity, response.getPushedAt());
 		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
@@ -81,7 +78,7 @@ public abstract class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLo
 
 		//We update all references to this ID
 		for(IdUpdate<Long> idUpdate:idUpdateList){
-			databaseHelper.updateIdReferences(idUpdate, idReferenceList);
+			getHelper().updateIdReferences(idUpdate, idReferenceList);
 		}
 	}
 }

@@ -1,11 +1,10 @@
-package com.splitemapp.android.task;
+package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -15,21 +14,19 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-/**
- * Sync Task to push user_contact_data table data to the remote DB
- * @author nicolas
- */
-public abstract class PushUserContactDatasTask extends PushTask<UserContactDataDTO, Long, PushLongResponse> {
-	
+public class PushUserContactDatasService extends PushService<UserContactDataDTO, Long, PushLongResponse> {
+
+	private static final String TAG = PushUserContactDatasService.class.getSimpleName();
+
 	List<UserContactData> userContactDataList = null;
 
-	public PushUserContactDatasTask(DatabaseHelper databaseHelper) {
-		super(databaseHelper);
+	public PushUserContactDatasService() {
+		super(TAG);
 	}
-	
+
 	@Override
 	protected String getLoggingTag() {
-		return getClass().getSimpleName();
+		return TAG;
 	}
 
 	@Override
@@ -46,8 +43,8 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	protected List<UserContactDataDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
-		userContactDataList = databaseHelper.getUserContactDataList();
-		Long loggedUserId = databaseHelper.getLoggedUserId();
+		userContactDataList = getHelper().getUserContactDataList();
+		Long loggedUserId = getHelper().getLoggedUserId();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
@@ -63,11 +60,11 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserContactData.class, response.getSuccess(), response.getPushedAt());
-		
+		getHelper().updateSyncStatusPushAt(UserContactData.class, response.getSuccess(), response.getPushedAt());
+
 		// Updating pushedAt
 		for(UserContactData entity:userContactDataList){
-			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+			getHelper().updatePushedAt(entity, response.getPushedAt());
 		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
@@ -78,7 +75,7 @@ public abstract class PushUserContactDatasTask extends PushTask<UserContactDataD
 
 		//We update all references to this ID
 		for(IdUpdate<Long> idUpdate:idUpdateList){
-			databaseHelper.updateIdReferences(idUpdate, idReferenceList);
+			getHelper().updateIdReferences(idUpdate, idReferenceList);
 		}
 	}
 }

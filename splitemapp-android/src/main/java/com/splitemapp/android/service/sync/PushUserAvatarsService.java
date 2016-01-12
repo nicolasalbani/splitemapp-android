@@ -1,11 +1,10 @@
-package com.splitemapp.android.task;
+package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -15,21 +14,19 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-/**
- * Sync Task to push user_avatar table data to the remote DB
- * @author nicolas
- */
-public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, PushLongResponse> {
-	
+public class PushUserAvatarsService extends PushService<UserAvatarDTO, Long, PushLongResponse> {
+
+	private static final String TAG = PushUserAvatarsService.class.getSimpleName();
+
 	List<UserAvatar> userAvatarList = null;
-	
-	public PushUserAvatarsTask(DatabaseHelper databaseHelper) {
-		super(databaseHelper);
+
+	public PushUserAvatarsService() {
+		super(TAG);
 	}
 	
 	@Override
 	protected String getLoggingTag() {
-		return getClass().getSimpleName();
+		return TAG;
 	}
 
 	@Override
@@ -46,8 +43,8 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 	protected List<UserAvatarDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
-		userAvatarList = databaseHelper.getUserAvatarList();
-		Long loggedUserId = databaseHelper.getLoggedUserId();
+		userAvatarList = getHelper().getUserAvatarList();
+		Long loggedUserId = getHelper().getLoggedUserId();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
@@ -63,11 +60,11 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserAvatar.class, response.getSuccess(), response.getPushedAt());
+		getHelper().updateSyncStatusPushAt(UserAvatar.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(UserAvatar entity:userAvatarList){
-			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+			getHelper().updatePushedAt(entity, response.getPushedAt());
 		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
@@ -78,7 +75,7 @@ public abstract class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, 
 
 		//We update all references to this ID
 		for(IdUpdate<Long> idUpdate:idUpdateList){
-			databaseHelper.updateIdReferences(idUpdate, idReferenceList);
+			getHelper().updateIdReferences(idUpdate, idReferenceList);
 		}
 	}
 }

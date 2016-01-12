@@ -1,11 +1,10 @@
-package com.splitemapp.android.task;
+package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -15,21 +14,19 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-/**
- * Sync Task to push user_invite table data to the remote DB
- * @author nicolas
- */
-public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, PushLongResponse> {
-	
+public class PushUserInvitesService extends PushService<UserInviteDTO, Long, PushLongResponse> {
+
+	private static final String TAG = PushUserInvitesService.class.getSimpleName();
+
 	private List<UserInvite> userInviteList = null;
-	
-	public PushUserInvitesTask(DatabaseHelper databaseHelper) {
-		super(databaseHelper);
+
+	public PushUserInvitesService() {
+		super(TAG);
 	}
-	
+
 	@Override
 	protected String getLoggingTag() {
-		return getClass().getSimpleName();
+		return TAG;
 	}
 
 	@Override
@@ -46,7 +43,7 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 	protected List<UserInviteDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
-		userInviteList = databaseHelper.getUserInviteList();
+		userInviteList = getHelper().getUserInviteList();
 
 		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date 
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
@@ -62,11 +59,11 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		databaseHelper.updateSyncStatusPushAt(UserInvite.class, response.getSuccess(), response.getPushedAt());
+		getHelper().updateSyncStatusPushAt(UserInvite.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
 		for(UserInvite entity:userInviteList){
-			databaseHelper.updatePushedAt(entity, response.getPushedAt());
+			getHelper().updatePushedAt(entity, response.getPushedAt());
 		}
 
 		List<IdUpdate<Long>> idUpdateList = response.getIdUpdateList();
@@ -77,7 +74,7 @@ public abstract class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, 
 
 		//We update all references to this ID
 		for(IdUpdate<Long> idUpdate:idUpdateList){
-			databaseHelper.updateIdReferences(idUpdate, idReferenceList);
+			getHelper().updateIdReferences(idUpdate, idReferenceList);
 		}
 	}
 }

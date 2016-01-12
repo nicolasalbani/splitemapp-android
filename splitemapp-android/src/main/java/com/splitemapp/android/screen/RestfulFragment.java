@@ -9,35 +9,35 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.dialog.CustomProgressDialog;
-import com.splitemapp.android.gcm.RegistrationIntentService;
+import com.splitemapp.android.service.gcm.RegistrationIntentService;
+import com.splitemapp.android.service.sync.PullProjectCoverImagesService;
+import com.splitemapp.android.service.sync.PullProjectsService;
+import com.splitemapp.android.service.sync.PullUserAvatarsService;
+import com.splitemapp.android.service.sync.PullUserContactDatasService;
+import com.splitemapp.android.service.sync.PullUserExpensesService;
+import com.splitemapp.android.service.sync.PullUserInvitesService;
+import com.splitemapp.android.service.sync.PullUserToProjectsService;
+import com.splitemapp.android.service.sync.PullUsersService;
+import com.splitemapp.android.service.sync.PushProjectCoverImagesService;
+import com.splitemapp.android.service.sync.PushProjectsService;
+import com.splitemapp.android.service.sync.PushUserAvatarsService;
+import com.splitemapp.android.service.sync.PushUserContactDatasService;
+import com.splitemapp.android.service.sync.PushUserExpensesService;
+import com.splitemapp.android.service.sync.PushUserInvitesService;
+import com.splitemapp.android.service.sync.PushUserToProjectsService;
+import com.splitemapp.android.service.sync.PushUsersService;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
-import com.splitemapp.android.task.PullAllTask;
-import com.splitemapp.android.task.PullProjectCoverImagesTask;
-import com.splitemapp.android.task.PullProjectsTask;
-import com.splitemapp.android.task.PullUserAvatarsTask;
-import com.splitemapp.android.task.PullUserContactDatasTask;
-import com.splitemapp.android.task.PullUserExpensesTask;
-import com.splitemapp.android.task.PullUserInvitesTask;
-import com.splitemapp.android.task.PullUserToProjectsTask;
-import com.splitemapp.android.task.PullUsersTask;
-import com.splitemapp.android.task.PushAllTask;
-import com.splitemapp.android.task.PushProjectCoverImagesTask;
-import com.splitemapp.android.task.PushProjectsTask;
-import com.splitemapp.android.task.PushUserAvatarsTask;
-import com.splitemapp.android.task.PushUserContactDatasTask;
-import com.splitemapp.android.task.PushUserExpensesTask;
-import com.splitemapp.android.task.PushUserInvitesTask;
-import com.splitemapp.android.task.PushUserToProjectsTask;
-import com.splitemapp.android.task.PushUsersTask;
 import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 import com.splitemapp.commons.constants.Action;
+import com.splitemapp.commons.constants.ServiceConstants;
 
-public abstract class RestfulFragment extends BaseFragment{
+public abstract class RestfulFragment extends BaseFragment {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private CustomProgressDialog waitDialog = null;
@@ -55,7 +55,6 @@ public abstract class RestfulFragment extends BaseFragment{
 		System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "debug");
 	}
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -65,8 +64,14 @@ public abstract class RestfulFragment extends BaseFragment{
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// If the message contains an action, execute the proper method
-				String action = intent.getStringExtra("ACTION");
+				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
 				if(action != null){
+					// Checking for GCM actions
+					if(action.equals(Action.REGISTER_GCM)){
+						pushUsers();
+					}
+
+					// Checking for SYNC actions
 					if(action.equals(Action.ADD_USER) || action.equals(Action.UPDATE_USER)){
 						pullUsers();
 					} else if (action.equals(Action.ADD_USER_AVATAR) || action.equals(Action.UPDATE_USER_AVATAR)){
@@ -85,6 +90,11 @@ public abstract class RestfulFragment extends BaseFragment{
 						pullUserExpenses();
 					}
 				}
+
+				// If the message contains a response from the back-end, we print a message
+				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
+				showToast(response);
+
 			}
 		};
 	}
@@ -95,8 +105,9 @@ public abstract class RestfulFragment extends BaseFragment{
 
 		// Registering broadcast receiver
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
-				new IntentFilter("com.splitemapp.android.GCM_MESSAGE")
-				);
+				new IntentFilter(ServiceConstants.GCM_MESSAGE));
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
+				new IntentFilter(ServiceConstants.REST_MESSAGE));
 	}
 
 	@Override
@@ -134,7 +145,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	}
 
 	/**
-	 * Creates an asynchronous new account request
+	 * Creates a service new account request
 	 * @param email	String containing the email address
 	 * @param userName String containing the user name
 	 * @param password String containing the password
@@ -161,7 +172,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	}
 
 	/**
-	 * Creates an asynchronous login request
+	 * Creates a service login request
 	 * @param userName String containing the user name
 	 * @param password String containing the password
 	 */
@@ -211,7 +222,7 @@ public abstract class RestfulFragment extends BaseFragment{
 	}
 
 	/**
-	 * Create an asynchronous synchronize contacts request
+	 * Create a service synchronize contacts request
 	 * @param contactsEmailAddressList List containing contacts email addresses
 	 */
 	public void synchronizeContacts(List<String> contactsEmailAddressList){
@@ -238,432 +249,174 @@ public abstract class RestfulFragment extends BaseFragment{
 	 * Executes a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
-		// Calling all pull services
-		final PullAllTask pullAllTask = new PullAllTask(getHelper()){
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Sync All Tables Failed!");
-			}
-		};
-
 		// Calling all push services
-		PushAllTask pushAllTask = new PushAllTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				pullAllTask.execute();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Sync All Tables Failed!");
-			}
-		};
-		pushAllTask.execute();
+		pushUsers();
+		pushUserAvatars();
+		pushUserContactDatas();
+		pushProjects();
+		pushProjectCoverImages();
+		pushUserToProjects();
+		pushUserInvites();
+		pushUserExpenses();
+
+		// Calling all pull services
+		pullUsers();
+		pullUserAvatars();
+		pullUserContactDatas();
+		pullProjects();
+		pullProjectCoverImages();
+		pullUserToProjects();
+		pullUserInvites();
+		pullUserExpenses();
 	}
 
 	/**
 	 * Executes a linked list of asynchronous pull requests and initializes the Push sync data
 	 */
 	protected void syncAllTablesFirstTime(){
-		PullAllTask task = new PullAllTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				try {
-					databaseHelper.initializePushStatus();
-				} catch (SQLException e) {
-					showToast("Initialize Push Status Failed!");
-				}
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Sync All Tables Failed!");
-			}
-		};
-		task.execute();
+		// Calling all pull services
+		pullUsers();
+		pullUserAvatars();
+		pullUserContactDatas();
+		pullProjects();
+		pullProjectCoverImages();
+		pullUserToProjects();
+		pullUserInvites();
+		pullUserExpenses();
+
+		// Initializing push status
+		try {
+			getHelper().initializePushStatus();
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "Exception while initializing push status!", e);
+		}
 	}
 
 	/**
-	 * Creates an asynchronous user table pull request
+	 * Creates a service user table pull request
 	 */
 	protected void pullUsers(){
-		PullUsersTask task = new PullUsersTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull Users Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUsersService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user_contact_data table pull request
+	 * Creates a service user_contact_data table pull request
 	 */
 	protected void pullUserContactDatas(){
-		PullUserContactDatasTask task = new PullUserContactDatasTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull UserContactDatas Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUserContactDatasService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user_avatar table pull request
+	 * Creates a service user_avatar table pull request
 	 */
 	protected void pullUserAvatars(){
-		PullUserAvatarsTask task = new PullUserAvatarsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull UserAvatars Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUserAvatarsService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous project table pull request
+	 * Creates a service project table pull request
 	 */
 	protected void pullProjects(){
-		PullProjectsTask task = new PullProjectsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull Projects Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullProjectsService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous project_cover_image table pull request
+	 * Creates a service project_cover_image table pull request
 	 */
 	protected void pullProjectCoverImages(){
-		PullProjectCoverImagesTask task = new PullProjectCoverImagesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull ProjectCoverImages Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullProjectCoverImagesService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user_to_project table pull request
+	 * Creates a service user_to_project table pull request
 	 */
 	protected void pullUserToProjects(){
-		PullUserToProjectsTask task = new PullUserToProjectsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull UserToProjects Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUserToProjectsService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user_invite table pull request
+	 * Creates a service user_invite table pull request
 	 */
 	protected void pullUserInvites(){
-		PullUserInvitesTask task = new PullUserInvitesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull UserInvites Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUserInvitesService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user_expense table pull request
+	 * Creates a service user_expense table pull request
 	 */
 	protected void pullUserExpenses(){
-		PullUserExpensesTask task = new PullUserExpensesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Pull UserExpenses Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PullUserExpensesService.class);
+		getActivity().startService(intent);
 	}
 
 	/**
-	 * Creates an asynchronous user table push request
-	 */
-	protected void pushUsers(){
-		PushUsersTask task = new PushUsersTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push Users Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_contact_data table push request
-	 */
-	protected void pushUserContactDatas(){
-		PushUserContactDatasTask task = new PushUserContactDatasTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push UserContactDatas Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_avatar table push request
-	 */
-	protected void pushUserAvatars(){
-		PushUserAvatarsTask task = new PushUserAvatarsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push UserAvatars Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous project table push request
-	 */
-	protected void pushProjects(){
-		PushProjectsTask task = new PushProjectsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push Projects Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous project_cover_image table push request
-	 */
-	protected void pushProjectCoverImages(){
-		PushProjectCoverImagesTask task = new PushProjectCoverImagesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push ProjectCoverImages Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_to_project table push request
-	 */
-	protected void pushUserToProjects(){
-		PushUserToProjectsTask task = new PushUserToProjectsTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push UserToProjects Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_invite table push request
-	 */
-	protected void pushUserInvites(){
-		PushUserInvitesTask task = new PushUserInvitesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push UserInvites Failed!");
-			}
-		};
-		task.execute();
-	}
-
-	/**
-	 * Creates an asynchronous user_expense table pull request
+	 * Creates a service user table push request
 	 */
 	protected void pushUserExpenses(){
-		PushUserExpensesTask task = new PushUserExpensesTask(getHelper()){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Push UserExpenses Failed!");
-			}
-		};
-		task.execute();
+		Intent intent = new Intent(getActivity(), PushUserExpensesService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service user_contact_data table push request
+	 */
+	protected void pushUserContactDatas(){
+		Intent intent = new Intent(getActivity(), PushUserContactDatasService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service user_avatar table push request
+	 */
+	protected void pushUserAvatars(){
+		Intent intent = new Intent(getActivity(), PushUserAvatarsService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service project table push request
+	 */
+	protected void pushProjects(){
+		Intent intent = new Intent(getActivity(), PushProjectsService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service project_cover_image table push request
+	 */
+	protected void pushProjectCoverImages(){
+		Intent intent = new Intent(getActivity(), PushProjectCoverImagesService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service user_to_project table push request
+	 */
+	protected void pushUserToProjects(){
+		Intent intent = new Intent(getActivity(), PushUserToProjectsService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service user_invite table push request
+	 */
+	protected void pushUserInvites(){
+		Intent intent = new Intent(getActivity(), PushUserInvitesService.class);
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Creates a service user table push request
+	 */
+	protected void pushUsers(){
+		Intent intent = new Intent(getActivity(), PushUsersService.class);
+		getActivity().startService(intent);
 	}
 }

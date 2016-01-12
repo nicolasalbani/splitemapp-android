@@ -18,6 +18,78 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat" >
+        
+        <!-- Pull Services START -->
+        <service
+            android:name="com.splitemapp.android.service.sync.PullProjectCoverImagesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullProjectsService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUserAvatarsService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUserContactDatasService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUserExpensesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUserInvitesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUsersService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PullUserToProjectsService">
+        </service>
+        <!-- Pull Services END -->
+        
+        <!-- Push Services START -->
+         <service
+            android:name="com.splitemapp.android.service.sync.PushProjectCoverImagesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushProjectsService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserAvatarsService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserContactDatasService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserExpensesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserInvitesService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserSessionsService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUsersService">
+        </service>
+        
+        <service
+            android:name="com.splitemapp.android.service.sync.PushUserToProjectsService">
+        </service>
+        <!-- Push Services END -->
 
         <!-- Android GCM START -->
         <meta-data
@@ -34,23 +106,23 @@
                 <category android:name="com.splitemapp.android.gcm" />
             </intent-filter>
         </receiver>
-
+        
         <service
-            android:name="com.splitemapp.android.gcm.MyGcmListenerService"
+            android:name="com.splitemapp.android.service.gcm.MyGcmListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name="com.splitemapp.android.gcm.MyInstanceIDListenerService"
+            android:name="com.splitemapp.android.service.gcm.MyInstanceIDListenerService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-            android:name="com.splitemapp.android.gcm.RegistrationIntentService"
+            android:name="com.splitemapp.android.service.gcm.RegistrationIntentService"
             android:exported="false" >
         </service>
         <!-- Android GCM END -->

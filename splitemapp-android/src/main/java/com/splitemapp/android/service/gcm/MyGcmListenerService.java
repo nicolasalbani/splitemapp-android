@@ -1,4 +1,4 @@
-package com.splitemapp.android.gcm;
+package com.splitemapp.android.service.gcm;
 
 
 import android.app.NotificationManager;
@@ -15,6 +15,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.commons.constants.ServiceConstants;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -55,8 +56,8 @@ public class MyGcmListenerService extends GcmListenerService {
 		showNotification(message.toString());
 
 		// Sending the action to the listening fragment
-		Intent intent = new Intent("com.splitemapp.android.GCM_MESSAGE");
-		intent.putExtra("ACTION", action);
+		Intent intent = new Intent(ServiceConstants.GCM_MESSAGE);
+		intent.putExtra(ServiceConstants.CONTENT_ACTION, action);
 		broadcaster.sendBroadcast(intent);
 	}
 

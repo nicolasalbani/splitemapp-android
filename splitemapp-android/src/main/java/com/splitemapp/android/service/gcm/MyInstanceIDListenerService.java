@@ -1,4 +1,4 @@
-package com.splitemapp.android.gcm;
+package com.splitemapp.android.service.gcm;
 
 import android.content.Intent;
 
@@ -11,12 +11,10 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
      * the previous token had been compromised. This call is initiated by the
      * InstanceID provider.
      */
-    // [START refresh_token]
     @Override
     public void onTokenRefresh() {
         // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
         Intent intent = new Intent(this, RegistrationIntentService.class);
         startService(intent);
     }
-    // [END refresh_token]
 }
