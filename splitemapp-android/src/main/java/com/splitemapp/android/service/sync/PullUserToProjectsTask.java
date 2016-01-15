@@ -3,6 +3,8 @@ package com.splitemapp.android.service.sync;
 import java.sql.SQLException;
 import java.util.Set;
 
+import android.content.Context;
+
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.Project;
@@ -12,12 +14,12 @@ import com.splitemapp.commons.domain.UserToProjectStatus;
 import com.splitemapp.commons.domain.dto.UserToProjectDTO;
 import com.splitemapp.commons.domain.dto.response.PullUserToProjectResponse;
 
-public class PullUserToProjectsService extends PullService<UserToProjectDTO, PullUserToProjectResponse> {
+public class PullUserToProjectsTask extends PullTask<UserToProjectDTO, PullUserToProjectResponse> {
 
-	private static final String TAG = PullUserToProjectsService.class.getSimpleName();
+	private static final String TAG = PullUserToProjectsTask.class.getSimpleName();
 
-	public PullUserToProjectsService() {
-		super(TAG);
+	public PullUserToProjectsTask(Context context) {
+		super(context);
 	}
 	
 	@Override

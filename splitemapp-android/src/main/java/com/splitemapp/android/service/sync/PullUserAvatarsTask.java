@@ -3,6 +3,8 @@ package com.splitemapp.android.service.sync;
 import java.sql.SQLException;
 import java.util.Set;
 
+import android.content.Context;
+
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.User;
@@ -10,12 +12,12 @@ import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.dto.UserAvatarDTO;
 import com.splitemapp.commons.domain.dto.response.PullUserAvatarResponse;
 
-public class PullUserAvatarsService extends PullService<UserAvatarDTO, PullUserAvatarResponse> {
+public class PullUserAvatarsTask extends PullTask<UserAvatarDTO, PullUserAvatarResponse> {
 
-	private static final String TAG = PullUserAvatarsService.class.getSimpleName();
+	private static final String TAG = PullUserAvatarsTask.class.getSimpleName();
 
-	public PullUserAvatarsService() {
-		super(TAG);
+	public PullUserAvatarsTask(Context context) {
+		super(context);
 	}
 
 	@Override

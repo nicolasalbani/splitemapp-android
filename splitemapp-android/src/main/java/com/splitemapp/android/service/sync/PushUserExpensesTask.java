@@ -5,23 +5,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
+
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
-import com.splitemapp.commons.domain.UserInvite;
-import com.splitemapp.commons.domain.dto.UserInviteDTO;
+import com.splitemapp.commons.domain.UserExpense;
+import com.splitemapp.commons.domain.dto.UserExpenseDTO;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-public class PushUserInvitesService extends PushService<UserInviteDTO, Long, PushLongResponse> {
+public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLongResponse> {
 
-	private static final String TAG = PushUserInvitesService.class.getSimpleName();
+	private static final String TAG = PushUserExpensesTask.class.getSimpleName();
 
-	private List<UserInvite> userInviteList = null;
+	List<UserExpense> userExpenseList = null;
 
-	public PushUserInvitesService() {
-		super(TAG);
+	public PushUserExpensesTask(Context context) {
+		super(context);
 	}
 
 	@Override
@@ -31,38 +33,38 @@ public class PushUserInvitesService extends PushService<UserInviteDTO, Long, Pus
 
 	@Override
 	protected String getTableName(){
-		return TableName.USER_INVITE;
+		return TableName.USER_EXPENSE;
 	}
 
 	@Override
 	protected String getServicePath(){
-		return ServiceConstants.PUSH_USER_INVITES_PATH;
+		return ServiceConstants.PUSH_USER_EXPENSES_PATH;
 	}
 
 	@Override
-	protected List<UserInviteDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+	protected List<UserExpenseDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
-		userInviteList = getHelper().getUserInviteList();
+		userExpenseList = getHelper().getUserExpenseList();
 
-		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date 
-		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
-		for(UserInvite userInvite:userInviteList){
-			if(userInvite.getUpdatedAt().after(lastPushSuccessAt)){
+		// We add to the DTO list the ones which were updated after the lastPushSuccessAt date 
+		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
+		for(UserExpense userExpense:userExpenseList){
+			if(userExpense.getUpdatedAt().after(lastPushSuccessAt)){
 				// Adding item to the list
-				userInviteDTOList.add(new UserInviteDTO(userInvite));
+				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 			}
 		}
-		return userInviteDTOList;
+		return userExpenseDTOList;
 	}
 
 	@Override
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
-		getHelper().updateSyncStatusPushAt(UserInvite.class, response.getSuccess(), response.getPushedAt());
+		getHelper().updateSyncStatusPushAt(UserExpense.class, response.getSuccess(), response.getPushedAt());
 		
 		// Updating pushedAt
-		for(UserInvite entity:userInviteList){
+		for(UserExpense entity:userExpenseList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());
 		}
 
@@ -70,7 +72,7 @@ public class PushUserInvitesService extends PushService<UserInviteDTO, Long, Pus
 
 		// We create the ID reference list to be updated
 		List<IdReference> idReferenceList = new ArrayList<IdReference>();
-		idReferenceList.add(new IdReference(TableName.USER_INVITE, TableField.USER_INVITE_ID));
+		idReferenceList.add(new IdReference(TableName.USER_EXPENSE, TableField.USER_EXPENSE_ID));
 
 		//We update all references to this ID
 		for(IdUpdate<Long> idUpdate:idUpdateList){

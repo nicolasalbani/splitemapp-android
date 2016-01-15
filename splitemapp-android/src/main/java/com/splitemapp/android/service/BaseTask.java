@@ -1,6 +1,6 @@
 package com.splitemapp.android.service;
 
-import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -8,14 +8,16 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.ServiceConstants;
 
-public abstract class BaseIntentService extends IntentService {
-
-	public BaseIntentService(String name) {
-		super(name);
-	}
-
+public abstract class BaseTask {
+	
+	public static final String TASK_NAME = "TASK_NAME";
+	
 	private DatabaseHelper databaseHelper = null;
-	private LocalBroadcastManager broadcaster = null;
+	private Context context = null;
+
+	public BaseTask(Context context) {
+		this.context = context;
+	}
 
 	static{
 		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
@@ -27,7 +29,7 @@ public abstract class BaseIntentService extends IntentService {
 	 */
 	public DatabaseHelper getHelper() {
 		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
+			databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
 		}
 		return databaseHelper;
 	}
@@ -40,13 +42,8 @@ public abstract class BaseIntentService extends IntentService {
 		// Sending the action to the listening fragment
 		Intent intent = new Intent(ServiceConstants.REST_MESSAGE);
 		intent.putExtra(ServiceConstants.CONTENT_RESPONSE, response);
-		broadcaster.sendBroadcast(intent);
+		LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 	}
-	
-	/**
-	 * Executes a required action on start.
-	 */
-	public void executeOnStart(){};
 	
 	/**
 	 * Executes a required action on success. This code executes after the processResult method.
@@ -58,4 +55,9 @@ public abstract class BaseIntentService extends IntentService {
 	 */
 	public void executeOnFail(){};
 	
+	/**
+	 * This method contains the tasks to be executed on the service
+	 * @param intent
+	 */
+	public abstract void executeService(Intent intent);
 }

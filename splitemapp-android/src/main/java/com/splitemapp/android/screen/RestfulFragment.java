@@ -14,23 +14,26 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.dialog.CustomProgressDialog;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.service.gcm.RegistrationIntentService;
-import com.splitemapp.android.service.sync.PullProjectCoverImagesService;
-import com.splitemapp.android.service.sync.PullProjectsService;
-import com.splitemapp.android.service.sync.PullUserAvatarsService;
-import com.splitemapp.android.service.sync.PullUserContactDatasService;
-import com.splitemapp.android.service.sync.PullUserExpensesService;
-import com.splitemapp.android.service.sync.PullUserInvitesService;
-import com.splitemapp.android.service.sync.PullUserToProjectsService;
-import com.splitemapp.android.service.sync.PullUsersService;
-import com.splitemapp.android.service.sync.PushProjectCoverImagesService;
-import com.splitemapp.android.service.sync.PushProjectsService;
-import com.splitemapp.android.service.sync.PushUserAvatarsService;
-import com.splitemapp.android.service.sync.PushUserContactDatasService;
-import com.splitemapp.android.service.sync.PushUserExpensesService;
-import com.splitemapp.android.service.sync.PushUserInvitesService;
-import com.splitemapp.android.service.sync.PushUserToProjectsService;
-import com.splitemapp.android.service.sync.PushUsersService;
+import com.splitemapp.android.service.sync.PullProjectCoverImagesTask;
+import com.splitemapp.android.service.sync.PullProjectsTask;
+import com.splitemapp.android.service.sync.PullUserAvatarsTask;
+import com.splitemapp.android.service.sync.PullUserContactDatasTask;
+import com.splitemapp.android.service.sync.PullUserExpensesTask;
+import com.splitemapp.android.service.sync.PullUserInvitesTask;
+import com.splitemapp.android.service.sync.PullUserToProjectsTask;
+import com.splitemapp.android.service.sync.PullUsersTask;
+import com.splitemapp.android.service.sync.PushProjectCoverImagesTask;
+import com.splitemapp.android.service.sync.PushProjectsTask;
+import com.splitemapp.android.service.sync.PushUserAvatarsTask;
+import com.splitemapp.android.service.sync.PushUserContactDatasTask;
+import com.splitemapp.android.service.sync.PushUserExpensesTask;
+import com.splitemapp.android.service.sync.PushUserInvitesTask;
+import com.splitemapp.android.service.sync.PushUserSessionsTask;
+import com.splitemapp.android.service.sync.PushUserToProjectsTask;
+import com.splitemapp.android.service.sync.PushUsersTask;
+import com.splitemapp.android.service.sync.SyncService;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.SynchronizeContactsRequestTask;
@@ -68,7 +71,7 @@ public abstract class RestfulFragment extends BaseFragment {
 				if(action != null){
 					// Checking for GCM actions
 					if(action.equals(Action.REGISTER_GCM)){
-						pushUsers();
+						pushUserSessions();
 					}
 
 					// Checking for SYNC actions
@@ -296,7 +299,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table pull request
 	 */
 	protected void pullUsers(){
-		Intent intent = new Intent(getActivity(), PullUsersService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUsersTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -304,7 +308,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_contact_data table pull request
 	 */
 	protected void pullUserContactDatas(){
-		Intent intent = new Intent(getActivity(), PullUserContactDatasService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserContactDatasTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -312,7 +317,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_avatar table pull request
 	 */
 	protected void pullUserAvatars(){
-		Intent intent = new Intent(getActivity(), PullUserAvatarsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserAvatarsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -320,7 +326,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project table pull request
 	 */
 	protected void pullProjects(){
-		Intent intent = new Intent(getActivity(), PullProjectsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -328,7 +335,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project_cover_image table pull request
 	 */
 	protected void pullProjectCoverImages(){
-		Intent intent = new Intent(getActivity(), PullProjectCoverImagesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullProjectCoverImagesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -336,7 +344,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_to_project table pull request
 	 */
 	protected void pullUserToProjects(){
-		Intent intent = new Intent(getActivity(), PullUserToProjectsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserToProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -344,7 +353,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_invite table pull request
 	 */
 	protected void pullUserInvites(){
-		Intent intent = new Intent(getActivity(), PullUserInvitesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserInvitesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -352,7 +362,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_expense table pull request
 	 */
 	protected void pullUserExpenses(){
-		Intent intent = new Intent(getActivity(), PullUserExpensesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserExpensesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -360,7 +371,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table push request
 	 */
 	protected void pushUserExpenses(){
-		Intent intent = new Intent(getActivity(), PushUserExpensesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserExpensesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -368,7 +380,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_contact_data table push request
 	 */
 	protected void pushUserContactDatas(){
-		Intent intent = new Intent(getActivity(), PushUserContactDatasService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserContactDatasTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -376,7 +389,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_avatar table push request
 	 */
 	protected void pushUserAvatars(){
-		Intent intent = new Intent(getActivity(), PushUserAvatarsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserAvatarsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -384,7 +398,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project table push request
 	 */
 	protected void pushProjects(){
-		Intent intent = new Intent(getActivity(), PushProjectsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -392,7 +407,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project_cover_image table push request
 	 */
 	protected void pushProjectCoverImages(){
-		Intent intent = new Intent(getActivity(), PushProjectCoverImagesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushProjectCoverImagesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -400,7 +416,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_to_project table push request
 	 */
 	protected void pushUserToProjects(){
-		Intent intent = new Intent(getActivity(), PushUserToProjectsService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserToProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -408,7 +425,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_invite table push request
 	 */
 	protected void pushUserInvites(){
-		Intent intent = new Intent(getActivity(), PushUserInvitesService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserInvitesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -416,7 +434,17 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table push request
 	 */
 	protected void pushUsers(){
-		Intent intent = new Intent(getActivity(), PushUsersService.class);
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUsersTask.class.getSimpleName());
+		getActivity().startService(intent);
+	}
+	
+	/**
+	 * Creates a service user_session table push request
+	 */
+	protected void pushUserSessions(){
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PushUserSessionsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 }

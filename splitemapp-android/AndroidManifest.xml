@@ -19,77 +19,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat" >
         
-        <!-- Pull Services START -->
         <service
-            android:name="com.splitemapp.android.service.sync.PullProjectCoverImagesService">
+            android:name="com.splitemapp.android.service.sync.SyncService">
         </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullProjectsService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUserAvatarsService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUserContactDatasService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUserExpensesService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUserInvitesService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUsersService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PullUserToProjectsService">
-        </service>
-        <!-- Pull Services END -->
-        
-        <!-- Push Services START -->
-         <service
-            android:name="com.splitemapp.android.service.sync.PushProjectCoverImagesService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushProjectsService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserAvatarsService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserContactDatasService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserExpensesService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserInvitesService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserSessionsService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUsersService">
-        </service>
-        
-        <service
-            android:name="com.splitemapp.android.service.sync.PushUserToProjectsService">
-        </service>
-        <!-- Push Services END -->
 
         <!-- Android GCM START -->
         <meta-data

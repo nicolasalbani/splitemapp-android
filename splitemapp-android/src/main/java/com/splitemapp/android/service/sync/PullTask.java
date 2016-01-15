@@ -3,18 +3,19 @@ package com.splitemapp.android.service.sync;
 import java.sql.SQLException;
 import java.util.Date;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.splitemapp.android.service.BaseIntentService;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
 
-public abstract class PullService <E, R extends PullResponse<E>> extends BaseIntentService {
+public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 	
-	public PullService(String tag) {
-		super(tag);
+	public PullTask(Context context) {
+		super(context);
 	}
 
 	/**
@@ -49,7 +50,7 @@ public abstract class PullService <E, R extends PullResponse<E>> extends BaseInt
 	protected abstract void processResult(R response) throws SQLException;
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	public void executeService(Intent intent) {
 		Log.i(getLoggingTag(), getServicePath() +" START");
 		try {
 			// We get the date in which this table was last successfully pulled

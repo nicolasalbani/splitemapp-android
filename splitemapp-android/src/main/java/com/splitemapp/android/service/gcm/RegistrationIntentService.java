@@ -3,19 +3,51 @@ package com.splitemapp.android.service.gcm;
 
 import java.sql.SQLException;
 
+import android.app.IntentService;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
-import com.splitemapp.android.service.BaseIntentService;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 
-public class RegistrationIntentService extends BaseIntentService {
+public class RegistrationIntentService extends IntentService {
 
 	private static final String TAG = RegistrationIntentService.class.getSimpleName();
+	private DatabaseHelper databaseHelper = null;
 
+
+	static{
+		OpenHelperManager.setOpenHelperClass(DatabaseHelper.class);
+	}
+
+	/**
+	 * This method calls the OpenHelperManager getHelper static method with the proper DatabaseHelper class reference 
+	 * @return DatabaseHelper object which offers DAO for every domain entity
+	 */
+	public DatabaseHelper getHelper() {
+		if (databaseHelper == null) {
+			databaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
+		}
+		return databaseHelper;
+	}
+	
+	/**
+	 * This method sends a broadcast message for the listening fragment to process
+	 * @param response
+	 */
+	public void broadcastMessage(String response){
+		// Sending the action to the listening fragment
+		Intent intent = new Intent(ServiceConstants.REST_MESSAGE);
+		intent.putExtra(ServiceConstants.CONTENT_ACTION, response);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+	}
+	
+	
 	public RegistrationIntentService() {
 		super(TAG);
 	}

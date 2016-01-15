@@ -4,19 +4,20 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.splitemapp.android.service.BaseIntentService;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
 
-public abstract class PushService <F, E extends Number, R extends PushResponse<E>> extends BaseIntentService {
+public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseTask {
 
-	public PushService(String tag) {
-		super(tag);
+	public PushTask(Context context) {
+		super(context);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public abstract class PushService <F, E extends Number, R extends PushResponse<E
 	protected abstract void processResult(PushLongResponse response) throws SQLException;
 
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	public void executeService(Intent intent) {
 		Log.i(getLoggingTag(), getServicePath() +" START");
 		try {
 			// We get the session token

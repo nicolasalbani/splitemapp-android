@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
+
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -14,14 +16,14 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-public class PushUsersService extends PushService<UserDTO, Long, PushLongResponse> {
+public class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
 
-	private static final String TAG = PushUsersService.class.getSimpleName();
+	private static final String TAG = PushUsersTask.class.getSimpleName();
 
 	List<User> userList = null;
 
-	public PushUsersService() {
-		super(TAG);
+	public PushUsersTask(Context context) {
+		super(context);
 	}
 
 	@Override

@@ -5,18 +5,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
+
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.dto.UserSessionDTO;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 
-public class PushUserSessionsService extends PushService<UserSessionDTO, Long, PushLongResponse> {
+public class PushUserSessionsTask extends PushTask<UserSessionDTO, Long, PushLongResponse> {
 
-	private static final String TAG = PushUserSessionsService.class.getSimpleName();
+	private static final String TAG = PushUserSessionsTask.class.getSimpleName();
 
-	public PushUserSessionsService() {
-		super(TAG);
+	public PushUserSessionsTask(Context context) {
+		super(context);
 	}
 
 	@Override
