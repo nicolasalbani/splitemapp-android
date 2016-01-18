@@ -47,10 +47,11 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, L
 		// TODO only get the ones marked for push
 		projectCoverImageList = getHelper().getProjectCoverImageList();
 
-		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<ProjectCoverImageDTO> projectCoverImageDTOList = new ArrayList<ProjectCoverImageDTO>();
 		for(ProjectCoverImage projectCoverImage:projectCoverImageList){
-			if(projectCoverImage.getUpdatedAt().after(lastPushSuccessAt)){
+			if(projectCoverImage.getUpdatedAt().after(lastPushSuccessAt)  && (projectCoverImage.getPushedAt() == null || projectCoverImage.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
 			}

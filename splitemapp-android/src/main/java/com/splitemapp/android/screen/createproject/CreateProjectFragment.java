@@ -199,7 +199,6 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
 			getHelper().persistProject(project);
-			pushProjects();
 
 			// Creating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -209,10 +208,13 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
 			getHelper().persistProjectCoverImage(projectCoverImage);
-			pushProjectCoverImages();
 
 			// Saving user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			
+			// Pushing the changes
+			pushProjects();
+			pushProjectCoverImages();
 			pushUserToProjects();
 
 			// Resetting the global create project - user list
@@ -237,7 +239,6 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			project.setProjectType(projectType);
 			project.setTitle(mProjectTitle.getText().toString());
 			getHelper().updateProject(project);
-			pushProjects();
 
 			// Updating project image cover
 			ProjectCoverImage projectCoverImage = new ProjectCoverImage();
@@ -247,10 +248,13 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			}
 			projectCoverImage.setUpdatedAt(new Date());
 			getHelper().updateProjectCoverImage(projectCoverImage);
-			pushProjectCoverImages();
 
 			// Updating user to project relationships
 			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			
+			// Pushing the changes
+			pushProjects();
+			pushProjectCoverImages();
 			pushUserToProjects();
 
 			// Resetting the global create project - user list

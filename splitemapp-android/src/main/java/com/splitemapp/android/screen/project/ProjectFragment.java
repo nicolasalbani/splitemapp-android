@@ -136,6 +136,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageByProject(mCurrentProject.getId());
 			projectCoverImage.setAvatarData(ImageUtils.bitmapToByteArray(selectedBitmap,ImageUtils.IMAGE_QUALITY_MAX));
 			getHelper().updateProjectCoverImage(projectCoverImage);
+			
+			// Pushing the changes
 			pushProjectCoverImages();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);

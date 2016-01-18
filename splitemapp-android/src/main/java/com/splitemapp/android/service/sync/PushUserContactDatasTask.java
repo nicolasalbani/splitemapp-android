@@ -48,10 +48,13 @@ public class PushUserContactDatasTask extends PushTask<UserContactDataDTO, Long,
 		userContactDataList = getHelper().getUserContactDataList();
 		Long loggedUserId = getHelper().getLoggedUserId();
 
-		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
-			if(userContactData.getUpdatedAt().after(lastPushSuccessAt) && userContactData.getUser().getId().equals(loggedUserId)){
+			if(userContactData.getUpdatedAt().after(lastPushSuccessAt) && 
+					userContactData.getUser().getId().equals(loggedUserId)  && 
+					(userContactData.getPushedAt() == null || userContactData.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 			}

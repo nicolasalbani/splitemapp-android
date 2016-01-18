@@ -154,6 +154,9 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			mUserExpense.setUser(mCurrentUser);
 			getHelper().persistUserExpense(mUserExpense);
 
+			// Pushing the changes
+			pushUserExpenses();
+
 			// Moving back to the project screen
 			getActivity().onBackPressed();
 		} catch (SQLException e) {
@@ -176,6 +179,9 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			// mUserExpense.setUser(mCurrentUser);
 
 			getHelper().updateUserExpense(mUserExpense);
+
+			// Pushing the changes
+			pushUserExpenses();
 
 			// Moving back to the project screen
 			getActivity().onBackPressed();

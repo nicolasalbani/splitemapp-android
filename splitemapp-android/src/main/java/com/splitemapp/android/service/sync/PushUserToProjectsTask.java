@@ -47,10 +47,12 @@ public class PushUserToProjectsTask extends PushTask<UserToProjectDTO, Long, Pus
 		// TODO only get the ones marked for push
 		userToProjectList = getHelper().getUserToProjectList();
 
-		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserToProjectDTO> userToProjectDTOList = new ArrayList<UserToProjectDTO>();
 		for(UserToProject userToProject:userToProjectList){
-			if(userToProject.getUpdatedAt().after(lastPushSuccessAt)){
+			if(userToProject.getUpdatedAt().after(lastPushSuccessAt) && 
+					(userToProject.getPushedAt() == null || userToProject.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userToProjectDTOList.add(new UserToProjectDTO(userToProject));
 			}

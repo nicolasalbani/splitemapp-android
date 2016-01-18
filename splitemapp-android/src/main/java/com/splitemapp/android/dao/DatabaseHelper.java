@@ -924,7 +924,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// If any push sync field was not initialized, we assume that sync was not initialized  
 		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
 		for(SyncStatus syncStatus:syncStatusList){
-			if((syncStatus.getLastPushAt() == null) || syncStatus.getLastPushAt() == null){
+			if((syncStatus.getLastPushAt() == null)){
 				isSyncInitialized = false;
 			}
 		}

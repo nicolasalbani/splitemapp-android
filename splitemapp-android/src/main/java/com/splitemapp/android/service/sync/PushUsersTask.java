@@ -48,10 +48,13 @@ public class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
 		userList = getHelper().getUserList();
 		Long loggedUserId = getHelper().getLoggedUserId();
 
-		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		for(User user:userList){
-			if(user.getUpdatedAt().after(lastPushSuccessAt) && user.getId().equals(loggedUserId)){
+			if(user.getUpdatedAt().after(lastPushSuccessAt) && 
+					user.getId().equals(loggedUserId)  && 
+					(user.getPushedAt() == null || user.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userDTOList.add(new UserDTO(user));
 			}

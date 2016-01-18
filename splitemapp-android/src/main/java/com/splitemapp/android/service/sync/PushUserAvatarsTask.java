@@ -48,10 +48,13 @@ public class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, PushLongR
 		userAvatarList = getHelper().getUserAvatarList();
 		Long loggedUserId = getHelper().getLoggedUserId();
 
-		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
-			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt) && userAvatar.getUser().getId().equals(loggedUserId)){
+			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt) && 
+					userAvatar.getUser().getId().equals(loggedUserId)  && 
+					(userAvatar.getPushedAt() == null || userAvatar.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 			}

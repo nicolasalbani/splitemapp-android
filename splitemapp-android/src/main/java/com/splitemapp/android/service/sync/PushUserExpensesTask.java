@@ -47,10 +47,12 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		// TODO only get the ones marked for push
 		userExpenseList = getHelper().getUserExpenseList();
 
-		// We add to the DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
 		for(UserExpense userExpense:userExpenseList){
-			if(userExpense.getUpdatedAt().after(lastPushSuccessAt)){
+			if(userExpense.getUpdatedAt().after(lastPushSuccessAt)  && 
+					(userExpense.getPushedAt() == null || userExpense.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 			}

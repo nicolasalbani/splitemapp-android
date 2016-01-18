@@ -48,9 +48,10 @@ public class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongRespons
 		projectList = getHelper().getProjectList();
 
 		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
+		// and that they were not updated by someone else
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 		for(Project project:projectList){
-			if(project.getUpdatedAt().after(lastPushSuccessAt)){
+			if(project.getUpdatedAt().after(lastPushSuccessAt) && (project.getPushedAt() == null || project.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				projectDTOList.add(new ProjectDTO(project));
 			}

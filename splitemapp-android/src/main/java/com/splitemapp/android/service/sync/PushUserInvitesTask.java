@@ -47,10 +47,12 @@ public class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, PushLongR
 		// TODO only get the ones marked for push
 		userInviteList = getHelper().getUserInviteList();
 
-		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date 
+		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date
+		// and that they were not updated by someone else
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
 		for(UserInvite userInvite:userInviteList){
-			if(userInvite.getUpdatedAt().after(lastPushSuccessAt)){
+			if(userInvite.getUpdatedAt().after(lastPushSuccessAt)  && 
+					(userInvite.getPushedAt() == null || userInvite.getPushedAt().before(lastPushSuccessAt))){
 				// Adding item to the list
 				userInviteDTOList.add(new UserInviteDTO(userInvite));
 			}

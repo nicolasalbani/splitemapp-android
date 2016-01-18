@@ -64,7 +64,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 			PushRequest<F> pushRequest = new PushRequest<F>();
 			pushRequest.setToken(sessionToken);
 
-			// We get the date in which this table was last successfully pulled
+			// We get the date in which this table was last successfully pushed
 			Date lastPushSuccessAt = getHelper().getLastSuccessPushAt(getTableName());
 			pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
 

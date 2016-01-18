@@ -75,17 +75,30 @@ public abstract class RestfulFragment extends BaseFragment {
 					}
 
 					// Checking for SYNC actions
-					if(action.equals(Action.ADD_USER) || action.equals(Action.UPDATE_USER)){
+					if(action.equals(Action.UPDATE_USER)){
 						pullUsers();
-					} else if (action.equals(Action.ADD_USER_AVATAR) || action.equals(Action.UPDATE_USER_AVATAR)){
+					} else if (action.equals(Action.UPDATE_USER_AVATAR)){
 						pullUserAvatars();
 					} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
 						pullUserContactDatas();
-					} else if (action.equals(Action.ADD_PROJECT) || action.equals(Action.UPDATE_PROJECT)){
+					} else if (action.equals(Action.UPDATE_PROJECT)){
 						pullProjects();
-					} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE) || action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
+					} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE)){
+						pullProjects();
 						pullProjectCoverImages();
-					} else if (action.equals(Action.ADD_USER_TO_PROJECT) || action.equals(Action.UPDATE_USER_TO_PROJECT)){
+					} else if (action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
+						pullProjectCoverImages();
+					} else if (action.equals(Action.ADD_USER_TO_PROJECT)){
+						// In case some users for this project are not in the local database
+						pullUsers();
+						pullUserAvatars();
+						pullUserContactDatas();
+						// Assuming this is a new project to which this user was added
+						pullProjects();
+						pullProjectCoverImages();
+						// Actually pulling the user to project relationships 
+						pullUserToProjects();
+					} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
 						pullUserToProjects();
 					} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
 						pullUserInvites();
@@ -94,10 +107,11 @@ public abstract class RestfulFragment extends BaseFragment {
 					}
 				}
 
-				// If the message contains a response from the back-end, we print a message
+				// If the message contains a response from the back-end, we refresh the fragment
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
-				showToast(response);
-
+				if(response!=null){
+					refreshFragment();
+				}
 			}
 		};
 	}

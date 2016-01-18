@@ -128,6 +128,7 @@ public abstract class BaseFragment extends Fragment {
 	 * Refreshes the fragment you are on
 	 */
 	public void refreshFragment(){
+		Log.i(getLoggingTag(), "Refreshing fragment");
 		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 		transaction.detach(this);
 		transaction.attach(this);
