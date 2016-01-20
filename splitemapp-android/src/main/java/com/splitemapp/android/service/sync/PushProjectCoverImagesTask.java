@@ -2,7 +2,6 @@ package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -42,7 +41,7 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, L
 	}
 
 	@Override
-	protected List<ProjectCoverImageDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+	protected List<ProjectCoverImageDTO> getRequestItemList() throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		projectCoverImageList = getHelper().getProjectCoverImageList();
@@ -51,7 +50,7 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, L
 		// and that they were not updated by someone else
 		ArrayList<ProjectCoverImageDTO> projectCoverImageDTOList = new ArrayList<ProjectCoverImageDTO>();
 		for(ProjectCoverImage projectCoverImage:projectCoverImageList){
-			if(projectCoverImage.getUpdatedAt().after(lastPushSuccessAt)  && (projectCoverImage.getPushedAt() == null || projectCoverImage.getPushedAt().before(lastPushSuccessAt))){
+			if((projectCoverImage.getPushedAt() == null) || projectCoverImage.getUpdatedAt().after(projectCoverImage.getPushedAt())){
 				// Adding item to the list
 				projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
 			}

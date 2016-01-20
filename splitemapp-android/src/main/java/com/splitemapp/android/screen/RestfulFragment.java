@@ -65,47 +65,10 @@ public abstract class RestfulFragment extends BaseFragment {
 		// Setting the broadcast receiver for the GCM communication
 		mBroadcastReceiver = new BroadcastReceiver() {
 			@Override
-			public void onReceive(Context context, Intent intent) {
-				// If the message contains an action, execute the proper method
+			public synchronized void onReceive(Context context, Intent intent) {
+				// Processing the action after getting a broadcast
 				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
-				if(action != null){
-					// Checking for GCM actions
-					if(action.equals(Action.REGISTER_GCM)){
-						pushUserSessions();
-					}
-
-					// Checking for SYNC actions
-					if(action.equals(Action.UPDATE_USER)){
-						pullUsers();
-					} else if (action.equals(Action.UPDATE_USER_AVATAR)){
-						pullUserAvatars();
-					} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
-						pullUserContactDatas();
-					} else if (action.equals(Action.UPDATE_PROJECT)){
-						pullProjects();
-					} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE)){
-						pullProjects();
-						pullProjectCoverImages();
-					} else if (action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
-						pullProjectCoverImages();
-					} else if (action.equals(Action.ADD_USER_TO_PROJECT)){
-						// In case some users for this project are not in the local database
-						pullUsers();
-						pullUserAvatars();
-						pullUserContactDatas();
-						// Assuming this is a new project to which this user was added
-						pullProjects();
-						pullProjectCoverImages();
-						// Actually pulling the user to project relationships 
-						pullUserToProjects();
-					} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
-						pullUserToProjects();
-					} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
-						pullUserInvites();
-					} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
-						pullUserExpenses();
-					}
-				}
+				processAction(action);
 
 				// If the message contains a response from the back-end, we refresh the fragment
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
@@ -116,10 +79,55 @@ public abstract class RestfulFragment extends BaseFragment {
 		};
 	}
 
+	/**
+	 * Processes the provided action
+	 * @param action
+	 */
+	private void processAction(String action){
+		// If the message contains an action, execute the proper method
+		if(action != null){
+			// Checking for GCM actions
+			if(action.equals(Action.REGISTER_GCM)){
+				pushUserSessions();
+			}
+
+			// Checking for SYNC actions
+			if(action.equals(Action.UPDATE_USER)){
+				pullUsers();
+			} else if (action.equals(Action.UPDATE_USER_AVATAR)){
+				pullUserAvatars();
+			} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
+				pullUserContactDatas();
+			} else if (action.equals(Action.UPDATE_PROJECT)){
+				pullProjects();
+			} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE)){
+				pullProjects();
+				pullProjectCoverImages();
+			} else if (action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
+				pullProjectCoverImages();
+			} else if (action.equals(Action.ADD_USER_TO_PROJECT)){
+				// In case some users for this project are not in the local database
+				pullUsers();
+				pullUserAvatars();
+				pullUserContactDatas();
+				// Assuming this is a new project to which this user was added
+				pullProjects();
+				pullProjectCoverImages();
+				// Actually pulling the user to project relationships 
+				pullUserToProjects();
+			} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
+				pullUserToProjects();
+			} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
+				pullUserInvites();
+			} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
+				pullUserExpenses();
+			}
+		}
+	}
+
 	@Override
 	public void onStart() {
 		super.onStart();
-
 		// Registering broadcast receiver
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
 				new IntentFilter(ServiceConstants.GCM_MESSAGE));
@@ -288,9 +296,9 @@ public abstract class RestfulFragment extends BaseFragment {
 	}
 
 	/**
-	 * Executes a linked list of asynchronous pull requests and initializes the Push sync data
+	 * Executes a linked list of asynchronous pull requests
 	 */
-	protected void syncAllTablesFirstTime(){
+	protected void pullAllTables(){
 		// Calling all pull services
 		pullUsers();
 		pullUserAvatars();
@@ -300,6 +308,13 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserToProjects();
 		pullUserInvites();
 		pullUserExpenses();
+	}
+
+	/**
+	 * Executes a linked list of asynchronous pull requests and initializes the Push sync data
+	 */
+	protected void syncAllTablesFirstTime(){
+		pullAllTables();
 
 		// Initializing push status
 		try {
@@ -452,7 +467,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		intent.putExtra(BaseTask.TASK_NAME, PushUsersTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
-	
+
 	/**
 	 * Creates a service user_session table push request
 	 */

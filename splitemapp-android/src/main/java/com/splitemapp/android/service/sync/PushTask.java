@@ -38,7 +38,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	 * @return List<F> containing the list of F objects to be sent to the push service
 	 * @throws SQLException
 	 */
-	protected abstract List<F> getRequestItemList(Date lastPushSuccessAt) throws SQLException;
+	protected abstract List<F> getRequestItemList() throws SQLException;
 
 	/**
 	 * Returns the tag to be used for logging events 
@@ -69,11 +69,13 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 			pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
 
 			// Getting the list of items to push
-			List<F> requestItemList = getRequestItemList(lastPushSuccessAt);
+			List<F> requestItemList = getRequestItemList();
 
 			// Only calling push service if there are items to push
 			PushLongResponse response = null;
 			if(requestItemList.size() > 0){
+				Log.i(getLoggingTag(), getServicePath() +" Pushing " +requestItemList.size()+ " items");
+				
 				pushRequest.setItemList(requestItemList);
 
 				// We call the rest service and send back the login response

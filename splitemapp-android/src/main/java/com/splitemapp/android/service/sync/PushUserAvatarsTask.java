@@ -2,7 +2,6 @@ package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -42,19 +41,16 @@ public class PushUserAvatarsTask extends PushTask<UserAvatarDTO, Long, PushLongR
 	}
 
 	@Override
-	protected List<UserAvatarDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+	protected List<UserAvatarDTO> getRequestItemList() throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		userAvatarList = getHelper().getUserAvatarList();
-		Long loggedUserId = getHelper().getLoggedUserId();
 
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
-			if(userAvatar.getUpdatedAt().after(lastPushSuccessAt) && 
-					userAvatar.getUser().getId().equals(loggedUserId)  && 
-					(userAvatar.getPushedAt() == null || userAvatar.getPushedAt().before(lastPushSuccessAt))){
+			if((userAvatar.getPushedAt() == null) || userAvatar.getUpdatedAt().after(userAvatar.getPushedAt())){
 				// Adding item to the list
 				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 			}

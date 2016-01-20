@@ -2,7 +2,6 @@ package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -42,7 +41,7 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 	}
 
 	@Override
-	protected List<UserExpenseDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+	protected List<UserExpenseDTO> getRequestItemList() throws SQLException {
 		// We get all the project in the database
 		// TODO only get the ones marked for push
 		userExpenseList = getHelper().getUserExpenseList();
@@ -51,8 +50,7 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		// and that they were not updated by someone else
 		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
 		for(UserExpense userExpense:userExpenseList){
-			if(userExpense.getUpdatedAt().after(lastPushSuccessAt)  && 
-					(userExpense.getPushedAt() == null || userExpense.getPushedAt().before(lastPushSuccessAt))){
+			if((userExpense.getPushedAt() == null) || userExpense.getUpdatedAt().after(userExpense.getPushedAt())){
 				// Adding item to the list
 				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 			}

@@ -82,6 +82,10 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 			} else {
 				// Saving the information returned by the back-end
 				try {
+					if(response.getItemSet().size() > 0){
+						Log.i(getLoggingTag(), getServicePath() +" Pulling " +response.getItemSet().size()+ " items");
+					}
+					
 					// We process the service response
 					processResult(response);
 				} catch (SQLException e) {

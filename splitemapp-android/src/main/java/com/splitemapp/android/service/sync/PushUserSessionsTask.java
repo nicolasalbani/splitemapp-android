@@ -2,7 +2,6 @@ package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -37,7 +36,7 @@ public class PushUserSessionsTask extends PushTask<UserSessionDTO, Long, PushLon
 	}
 
 	@Override
-	protected List<UserSessionDTO> getRequestItemList(Date lastPushSuccessAt) throws SQLException {
+	protected List<UserSessionDTO> getRequestItemList() throws SQLException {
 		// We get the current user session
 		UserSession userSession = getHelper().getCurrentUserSession();
 
