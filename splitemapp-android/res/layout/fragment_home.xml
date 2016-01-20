@@ -23,10 +23,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_alignParentTop="true"
-                android:gravity="center_horizontal"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="25dp"
                 android:contentDescription="@string/h_avatar_description"
+                android:gravity="center_horizontal"
                 android:src="@drawable/avatar_placeholder" />
 
             <TextView
@@ -51,11 +51,18 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/h_projects_recyclerView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/h_swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/h_topLayout" />
+            android:layout_height="wrap_content" >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/h_projects_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/h_topLayout" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/h_empty_list_hint_textView"

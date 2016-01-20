@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -48,6 +49,8 @@ public class HomeFragment extends RestfulFragment {
 	private TextView mLogoutTextView;
 	private TextView mManageContactsTextView;
 	private TextView mSynchronizeTextView;
+	
+	private SwipeRefreshLayout mSwipeRefresh;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,6 +131,7 @@ public class HomeFragment extends RestfulFragment {
 			}
 		});
 
+		// Setting the logout click listener
 		mLogoutTextView = (TextView) v.findViewById(R.id.h_logout_textView);
 		mLogoutTextView.setOnClickListener(new OnClickListener(){
 			@Override
@@ -143,6 +147,7 @@ public class HomeFragment extends RestfulFragment {
 			}
 		});
 
+		// Setting the synchronize click listener
 		mSynchronizeTextView = (TextView) v.findViewById(R.id.h_synchronize_textView);
 		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
 			@Override
@@ -152,6 +157,7 @@ public class HomeFragment extends RestfulFragment {
 			}
 		});
 
+		// Setting the manage contacts click listener
 		mManageContactsTextView = (TextView) v.findViewById(R.id.h_manage_contacts_textView);
 		mManageContactsTextView.setOnClickListener(new OnClickListener(){
 			@Override
@@ -160,8 +166,22 @@ public class HomeFragment extends RestfulFragment {
 				startActivity( new Intent(getActivity(), ManageContactsActivity.class));
 			}
 		});
+		
+		// Setting a swipe refresh listener
+		mSwipeRefresh = (SwipeRefreshLayout) v.findViewById(R.id.h_swipe_refresh);
+		mSwipeRefresh.setOnRefreshListener(
+			    new SwipeRefreshLayout.OnRefreshListener() {
+			        @Override
+			        public void onRefresh() {
+			            Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
 
-		// If this user never synched before, we initialize the SyncStatus table
+			            // Synchronizing all tables
+			            syncAllTables();
+			        }
+			    }
+			);
+
+		// If this user never synchronized before, we initialize the SyncStatus table
 		try {
 			if(!getHelper().isSyncInitialized()){
 				syncAllTablesFirstTime();
