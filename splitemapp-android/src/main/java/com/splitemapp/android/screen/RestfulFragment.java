@@ -74,18 +74,31 @@ public abstract class RestfulFragment extends BaseFragment {
 				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
 				processAction(action);
 
-				// If the message contains a response from the back-end, we refresh the fragment
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
-				if(response!=null && mSwipeRefresh != null){
+				if(response!=null){
+
+					// If there is a swipe refresh layout set, we update animation if required
 					if(response.equals(BaseTask.START_ANIMATION)){
-						mSwipeRefresh.setRefreshing(true);
+						if(mSwipeRefresh != null){
+							mSwipeRefresh.setRefreshing(true);
+						}
 					} else if (response.equals(BaseTask.STOP_ANIMATION)){
-						mSwipeRefresh.setRefreshing(false);
+						if(mSwipeRefresh != null){
+							mSwipeRefresh.setRefreshing(false);
+						}
+						// We call the overridden onRefresh method
+						onRefresh(response);
 					}
 				}
 			}
 		};
 	}
+
+	/**
+	 * Method called right after stopping the refresh animation
+	 * @param response
+	 */
+	protected void onRefresh(String response){}
 
 	/**
 	 * Processes the provided action

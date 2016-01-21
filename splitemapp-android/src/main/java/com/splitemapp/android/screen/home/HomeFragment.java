@@ -204,20 +204,32 @@ public class HomeFragment extends RestfulFragment {
 
 		return v;
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
-		// Refreshing project list 
+	
+	/**
+	 * Makes all necessary updates to this fragment
+	 */
+	private void updateFragment(){
+		// Updating the RecyclerView
 		mProjectsAdapter.updateRecycler();
-
+		
 		// Showing or hiding the empty list hint
 		if(mProjectsAdapter.getItemCount() == 0){
 			mEmptyListHintTextView.setVisibility(View.VISIBLE);
 		} else {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
+	}
+	
+	@Override
+	protected void onRefresh(String response) {
+		updateFragment();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		updateFragment();
 	}
 
 	@Override

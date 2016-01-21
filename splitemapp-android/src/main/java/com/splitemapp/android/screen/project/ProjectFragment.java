@@ -124,11 +124,11 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 		return v;
 	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-
+	
+	/**
+	 * Makes all necessary updates to this fragment
+	 */
+	private void updateFragment(){
 		// Updating the RecyclerView
 		mSingleUserExpenseAdapter.updateRecycler();
 
@@ -138,6 +138,18 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		} else {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
+	}
+	
+	@Override
+	protected void onRefresh(String response) {
+		updateFragment();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		updateFragment();
 	}
 
 
