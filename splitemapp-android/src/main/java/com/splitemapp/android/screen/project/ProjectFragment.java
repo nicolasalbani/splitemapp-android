@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -107,6 +108,20 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			}
 		});
 
+		// Setting a swipe refresh listener
+		setSwipeRefresh((SwipeRefreshLayout) v.findViewById(R.id.p_swipe_refresh));
+		getSwipeRefresh().setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+						// Synchronizing all tables
+						syncAllTables();
+					}
+				}
+				);
+
 		return v;
 	}
 
@@ -136,7 +151,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			ProjectCoverImage projectCoverImage = getHelper().getProjectCoverImageByProject(mCurrentProject.getId());
 			projectCoverImage.setAvatarData(ImageUtils.bitmapToByteArray(selectedBitmap,ImageUtils.IMAGE_QUALITY_MAX));
 			getHelper().updateProjectCoverImage(projectCoverImage);
-			
+
 			// Pushing the changes
 			pushProjectCoverImages();
 		} catch (SQLException e) {

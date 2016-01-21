@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,12 +40,14 @@ import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.constants.TableName;
 
 public abstract class RestfulFragment extends BaseFragment {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private CustomProgressDialog waitDialog = null;
 	private BroadcastReceiver mBroadcastReceiver;
+	private SwipeRefreshLayout mSwipeRefresh;
 
 	static{
 		// We initialize logging
@@ -72,8 +75,10 @@ public abstract class RestfulFragment extends BaseFragment {
 
 				// If the message contains a response from the back-end, we refresh the fragment
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
-				if(response!=null){
-					refreshFragment();
+				if(response!=null && response.contains("Pull " +TableName.USER_EXPENSE)){
+					if(mSwipeRefresh != null){
+						mSwipeRefresh.setRefreshing(false);
+					}
 				}
 			}
 		};
@@ -475,5 +480,13 @@ public abstract class RestfulFragment extends BaseFragment {
 		Intent intent = new Intent(getActivity(), SyncService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserSessionsTask.class.getSimpleName());
 		getActivity().startService(intent);
+	}
+
+	public SwipeRefreshLayout getSwipeRefresh() {
+		return mSwipeRefresh;
+	}
+
+	public void setSwipeRefresh(SwipeRefreshLayout swipeRefresh) {
+		mSwipeRefresh = swipeRefresh;
 	}
 }

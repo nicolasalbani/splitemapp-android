@@ -36,11 +36,18 @@
             android:textSize="28sp" />
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/p_expense_list_recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/p_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imagelayout" />
+        android:layout_below="@id/imagelayout" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/p_expense_list_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/p_empty_list_hint_textView"

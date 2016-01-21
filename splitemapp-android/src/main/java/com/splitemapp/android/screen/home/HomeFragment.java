@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,8 @@ public class HomeFragment extends RestfulFragment {
 	private User mCurrentUser;
 	private UserContactData mUserContactData;
 
+	private DrawerLayout mDrawerLayout;
+	
 	private ImageView mNavAvatar;
 	private TextView mNavFullName;
 	private TextView mNavEmail;
@@ -49,8 +52,6 @@ public class HomeFragment extends RestfulFragment {
 	private TextView mLogoutTextView;
 	private TextView mManageContactsTextView;
 	private TextView mSynchronizeTextView;
-	
-	private SwipeRefreshLayout mSwipeRefresh;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class HomeFragment extends RestfulFragment {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
-		
+
 	}
 
 	@Override
@@ -75,6 +76,9 @@ public class HomeFragment extends RestfulFragment {
 
 		View v = inflater.inflate(R.layout.fragment_home, container, false);
 
+		// We populate the drawer layout
+		mDrawerLayout = (DrawerLayout) v.findViewById(R.id.h_drawerLayout);
+		
 		// We populate the first name in the navigation view
 		mNavFullName = (TextView) v.findViewById(R.id.h_nav_full_name_textView);
 		mNavFullName.setText(mCurrentUser.getFullName());
@@ -152,6 +156,11 @@ public class HomeFragment extends RestfulFragment {
 		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				// Closing the drawer
+				mDrawerLayout.closeDrawers();
+				// Setting refresh animation
+				getSwipeRefresh().setRefreshing(true);
+				
 				// Pulling all tables
 				syncAllTables();
 			}
@@ -162,24 +171,29 @@ public class HomeFragment extends RestfulFragment {
 		mManageContactsTextView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
+				// Closing the drawer
+				mDrawerLayout.closeDrawers();
+				
 				// We move to the login screen
 				startActivity( new Intent(getActivity(), ManageContactsActivity.class));
 			}
 		});
-		
-		// Setting a swipe refresh listener
-		mSwipeRefresh = (SwipeRefreshLayout) v.findViewById(R.id.h_swipe_refresh);
-		mSwipeRefresh.setOnRefreshListener(
-			    new SwipeRefreshLayout.OnRefreshListener() {
-			        @Override
-			        public void onRefresh() {
-			            Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
 
-			            // Synchronizing all tables
-			            syncAllTables();
-			        }
-			    }
-			);
+		// Setting a swipe refresh listener
+		setSwipeRefresh((SwipeRefreshLayout) v.findViewById(R.id.h_swipe_refresh));
+		getSwipeRefresh().setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+						// Synchronizing all tables
+						syncAllTables();
+					}
+
+
+				}
+				);
 
 		// If this user never synchronized before, we initialize the SyncStatus table
 		try {
