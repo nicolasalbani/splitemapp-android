@@ -8,7 +8,7 @@ import com.splitemapp.android.service.BaseTask;
 public class SyncService extends IntentService {
 
 	private static final String TAG = SyncService.class.getSimpleName();
-
+	
 	public SyncService() {
 		super(TAG);
 	}
@@ -20,7 +20,11 @@ public class SyncService extends IntentService {
 		// Obtaining the name of the task to be executed
 		String taskName = intent.getExtras().getString(BaseTask.TASK_NAME);
 
-		if(taskName.equals(PullProjectCoverImagesTask.class.getSimpleName())){
+		if(taskName.equals(StartRefreshAnimationTask.class.getSimpleName())){
+			task = new StartRefreshAnimationTask(this);
+		} else if(taskName.equals(StopRefreshAnimationTask.class.getSimpleName())){
+			task = new StopRefreshAnimationTask(this);
+		} else if(taskName.equals(PullProjectCoverImagesTask.class.getSimpleName())){
 			task = new PullProjectCoverImagesTask(this);
 		} else if(taskName.equals(PullProjectsTask.class.getSimpleName())){
 			task = new PullProjectsTask(this);

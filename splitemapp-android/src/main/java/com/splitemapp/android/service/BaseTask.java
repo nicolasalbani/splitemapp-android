@@ -11,6 +11,8 @@ import com.splitemapp.commons.constants.ServiceConstants;
 public abstract class BaseTask {
 	
 	public static final String TASK_NAME = "TASK_NAME";
+	public static final String START_ANIMATION = "start_animation";
+	public static final String STOP_ANIMATION = "stop_animation";
 	
 	private DatabaseHelper databaseHelper = null;
 	private Context context = null;

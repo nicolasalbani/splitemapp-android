@@ -158,8 +158,6 @@ public class HomeFragment extends RestfulFragment {
 			public void onClick(View arg0) {
 				// Closing the drawer
 				mDrawerLayout.closeDrawers();
-				// Setting refresh animation
-				getSwipeRefresh().setRefreshing(true);
 				
 				// Pulling all tables
 				syncAllTables();

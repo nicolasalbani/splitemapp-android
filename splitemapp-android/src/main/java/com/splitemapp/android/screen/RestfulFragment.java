@@ -34,13 +34,14 @@ import com.splitemapp.android.service.sync.PushUserInvitesTask;
 import com.splitemapp.android.service.sync.PushUserSessionsTask;
 import com.splitemapp.android.service.sync.PushUserToProjectsTask;
 import com.splitemapp.android.service.sync.PushUsersTask;
+import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
+import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SyncService;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
-import com.splitemapp.commons.constants.TableName;
 
 public abstract class RestfulFragment extends BaseFragment {
 
@@ -75,8 +76,10 @@ public abstract class RestfulFragment extends BaseFragment {
 
 				// If the message contains a response from the back-end, we refresh the fragment
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
-				if(response!=null && response.contains("Pull " +TableName.USER_EXPENSE)){
-					if(mSwipeRefresh != null){
+				if(response!=null && mSwipeRefresh != null){
+					if(response.equals(BaseTask.START_ANIMATION)){
+						mSwipeRefresh.setRefreshing(true);
+					} else if (response.equals(BaseTask.STOP_ANIMATION)){
 						mSwipeRefresh.setRefreshing(false);
 					}
 				}
@@ -91,6 +94,9 @@ public abstract class RestfulFragment extends BaseFragment {
 	private void processAction(String action){
 		// If the message contains an action, execute the proper method
 		if(action != null){
+			// Starting refresh animation
+			startRefreshAnimation();
+
 			// Checking for GCM actions
 			if(action.equals(Action.REGISTER_GCM)){
 				pushUserSessions();
@@ -127,6 +133,9 @@ public abstract class RestfulFragment extends BaseFragment {
 			} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
 				pullUserExpenses();
 			}
+
+			// Stopping refresh animation
+			stopRefreshAnimation();
 		}
 	}
 
@@ -279,6 +288,9 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Executes a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
+		// Starting refresh animation
+		startRefreshAnimation();
+
 		// Calling all push services
 		pushUsers();
 		pushUserAvatars();
@@ -298,12 +310,18 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserToProjects();
 		pullUserInvites();
 		pullUserExpenses();
+
+		// Stopping refresh animation
+		stopRefreshAnimation();
 	}
 
 	/**
 	 * Executes a linked list of asynchronous pull requests
 	 */
 	protected void pullAllTables(){
+		// Starting refresh animation
+		startRefreshAnimation();
+
 		// Calling all pull services
 		pullUsers();
 		pullUserAvatars();
@@ -313,6 +331,9 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserToProjects();
 		pullUserInvites();
 		pullUserExpenses();
+
+		// Stopping refresh animation
+		stopRefreshAnimation();
 	}
 
 	/**
@@ -327,6 +348,24 @@ public abstract class RestfulFragment extends BaseFragment {
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "Exception while initializing push status!", e);
 		}
+	}
+
+	/**
+	 * Starts the refresh animation
+	 */
+	protected void startRefreshAnimation(){
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, StartRefreshAnimationTask.class.getSimpleName());
+		getActivity().startService(intent);
+	}
+
+	/**
+	 * Stops the refresh animation
+	 */
+	protected void stopRefreshAnimation(){
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, StopRefreshAnimationTask.class.getSimpleName());
+		getActivity().startService(intent);
 	}
 
 	/**
