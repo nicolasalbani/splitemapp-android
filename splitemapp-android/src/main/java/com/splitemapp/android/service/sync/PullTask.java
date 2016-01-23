@@ -50,7 +50,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 	protected abstract void processResult(R response) throws SQLException;
 
 	@Override
-	public void executeService(Intent intent) {
+	public void executeService(Intent intent) throws Exception {
 		Log.i(getLoggingTag(), getServicePath() +" START");
 		try {
 			// We get the date in which this table was last successfully pulled
@@ -97,8 +97,6 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 				
 				broadcastMessage(pullMessage + " success");
 			}
-		} catch (Exception e) {
-			Log.e(getLoggingTag(), e.getMessage(), e);
 		} finally {
 			Log.i(getLoggingTag(), getServicePath() +" END");
 		}

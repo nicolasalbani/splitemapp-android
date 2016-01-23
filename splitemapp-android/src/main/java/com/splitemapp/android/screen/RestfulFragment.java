@@ -14,6 +14,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.dialog.CustomProgressDialog;
+import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.service.SyncTablesService;
 import com.splitemapp.android.service.gcm.RegistrationIntentService;
@@ -89,6 +90,8 @@ public abstract class RestfulFragment extends BaseFragment {
 						}
 						// We call the overridden onRefresh method
 						onRefresh(response);
+					} else if (response.equals(BaseTask.NETWORK_ERROR)){
+						showToast("Check your network connection!");
 					}
 				}
 			}
@@ -246,6 +249,9 @@ public abstract class RestfulFragment extends BaseFragment {
 					Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
 					getActivity().startService(intent);
 				}
+				
+				// Setting the global connected to server to true
+				Globals.setIsConnectedToServer(true);
 			}
 			@Override
 			public void executeOnFail() {

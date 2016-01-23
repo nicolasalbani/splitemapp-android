@@ -1,6 +1,5 @@
 package com.splitemapp.android.service.sync;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class SynchronizeContactsTask extends BaseTask {
 	}
 
 	@Override
-	public void executeService(Intent intent) {
+	public void executeService(Intent intent) throws Exception{
 		Log.i(TAG, "Synchronize Contacts START");
 		try {
 			// We get the session token
@@ -97,10 +96,6 @@ public class SynchronizeContactsTask extends BaseTask {
 			} 
 
 
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught while synchronizing contacts", e);
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
 		} finally {
 			Log.i(TAG, "Synchronize Contacts END");
 		}

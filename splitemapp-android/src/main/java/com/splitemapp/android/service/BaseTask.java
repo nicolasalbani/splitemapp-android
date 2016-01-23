@@ -13,6 +13,7 @@ public abstract class BaseTask {
 	public static final String TASK_NAME = "TASK_NAME";
 	public static final String START_ANIMATION = "start_animation";
 	public static final String STOP_ANIMATION = "stop_animation";
+	public static final String NETWORK_ERROR = "network_error";
 	
 	private DatabaseHelper databaseHelper = null;
 	private Context context = null;
@@ -60,6 +61,7 @@ public abstract class BaseTask {
 	/**
 	 * This method contains the tasks to be executed on the service
 	 * @param intent
+	 * @throws Exception
 	 */
-	public abstract void executeService(Intent intent);
+	public abstract void executeService(Intent intent) throws Exception;
 }

@@ -3,12 +3,16 @@ package com.splitemapp.android.utils;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.commons.rest.RestUtils;
 
 public class NetworkUtils {
+	
+	public static final int TIMEOUT = 5000;
 	
 	public static String getIpAddress() throws SocketException {
 		Enumeration<NetworkInterface> networkInterfaceList = NetworkInterface.getNetworkInterfaces();
@@ -38,5 +42,23 @@ public class NetworkUtils {
 		String serviceUrl = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
 
 		return RestUtils.callRestService(serviceUrl, request, responseType);
+	}
+	
+	/**
+	 * Checks for connection to server
+	 * @param url
+	 * @param timeout
+	 * @return
+	 */
+	public static boolean isConnectedToServer() {
+		try{
+			URL myUrl = new URL("http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT);
+			URLConnection connection = myUrl.openConnection();
+			connection.setConnectTimeout(TIMEOUT);
+			connection.connect();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

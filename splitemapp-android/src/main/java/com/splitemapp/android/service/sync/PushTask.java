@@ -54,7 +54,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 	protected abstract void processResult(PushLongResponse response) throws SQLException;
 
 	@Override
-	public void executeService(Intent intent) {
+	public void executeService(Intent intent) throws Exception{
 		Log.i(getLoggingTag(), getServicePath() +" START");
 		try {
 			// We get the session token
@@ -111,8 +111,6 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 				
 				broadcastMessage(pushMessage +" success");
 			}
-		} catch (Exception e) {
-			Log.e(getLoggingTag(), e.getMessage(), e);
 		} finally {
 			Log.i(getLoggingTag(), getServicePath() +" END");
 		}

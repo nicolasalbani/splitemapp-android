@@ -11,6 +11,7 @@ public class Globals {
 	private static Long expenseActivityProjectId;
 	private static Long createProjectActivityProjectId;
 	private static CreateProjectFragment createProjectFragment;
+	private static Boolean isConnectedToServer;
 
 	public static List<User> getCreateProjectActivityUserList() {
 		return createProjectActivityUserList;
@@ -53,5 +54,13 @@ public class Globals {
 	public static void setCreateProjectActivityProjectId(
 			Long createProjectActivityProjectId) {
 		Globals.createProjectActivityProjectId = createProjectActivityProjectId;
+	}
+
+	public static Boolean getIsConnectedToServer() {
+		return isConnectedToServer;
+	}
+
+	public static void setIsConnectedToServer(Boolean isConnectedToServer) {
+		Globals.isConnectedToServer = isConnectedToServer;
 	}
 }
