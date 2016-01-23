@@ -1,15 +1,34 @@
-package com.splitemapp.android.service.sync;
+package com.splitemapp.android.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 
-import com.splitemapp.android.service.BaseTask;
+import com.splitemapp.android.service.sync.PullProjectCoverImagesTask;
+import com.splitemapp.android.service.sync.PullProjectsTask;
+import com.splitemapp.android.service.sync.PullUserAvatarsTask;
+import com.splitemapp.android.service.sync.PullUserContactDatasTask;
+import com.splitemapp.android.service.sync.PullUserExpensesTask;
+import com.splitemapp.android.service.sync.PullUserInvitesTask;
+import com.splitemapp.android.service.sync.PullUserToProjectsTask;
+import com.splitemapp.android.service.sync.PullUsersTask;
+import com.splitemapp.android.service.sync.PushProjectCoverImagesTask;
+import com.splitemapp.android.service.sync.PushProjectsTask;
+import com.splitemapp.android.service.sync.PushUserAvatarsTask;
+import com.splitemapp.android.service.sync.PushUserContactDatasTask;
+import com.splitemapp.android.service.sync.PushUserExpensesTask;
+import com.splitemapp.android.service.sync.PushUserInvitesTask;
+import com.splitemapp.android.service.sync.PushUserSessionsTask;
+import com.splitemapp.android.service.sync.PushUserToProjectsTask;
+import com.splitemapp.android.service.sync.PushUsersTask;
+import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
+import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
+import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 
-public class SyncService extends IntentService {
+public class SyncTablesService extends IntentService {
 
-	private static final String TAG = SyncService.class.getSimpleName();
+	private static final String TAG = SyncTablesService.class.getSimpleName();
 	
-	public SyncService() {
+	public SyncTablesService() {
 		super(TAG);
 	}
 
@@ -24,8 +43,8 @@ public class SyncService extends IntentService {
 			task = new StartRefreshAnimationTask(this);
 		} else if(taskName.equals(StopRefreshAnimationTask.class.getSimpleName())){
 			task = new StopRefreshAnimationTask(this);
-		} else if(taskName.equals(SyncContactsTask.class.getSimpleName())){
-			task = new SyncContactsTask(this);
+		} else if(taskName.equals(SynchronizeContactsTask.class.getSimpleName())){
+			task = new SynchronizeContactsTask(this);
 		} else if(taskName.equals(PullProjectCoverImagesTask.class.getSimpleName())){
 			task = new PullProjectCoverImagesTask(this);
 		} else if(taskName.equals(PullProjectsTask.class.getSimpleName())){

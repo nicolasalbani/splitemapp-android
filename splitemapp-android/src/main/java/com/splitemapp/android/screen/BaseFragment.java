@@ -1,16 +1,12 @@
 package com.splitemapp.android.screen;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;

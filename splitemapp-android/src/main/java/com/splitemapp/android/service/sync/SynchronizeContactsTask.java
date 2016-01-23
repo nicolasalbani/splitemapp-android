@@ -24,13 +24,13 @@ import com.splitemapp.commons.domain.dto.UserDTO;
 import com.splitemapp.commons.domain.dto.request.SynchronizeContactsRequest;
 import com.splitemapp.commons.domain.dto.response.SynchronizeContactsResponse;
 
-public class SyncContactsTask extends BaseTask {
+public class SynchronizeContactsTask extends BaseTask {
 
-	private static final String TAG = SyncContactsTask.class.getSimpleName();
+	private static final String TAG = SynchronizeContactsTask.class.getSimpleName();
 
 	private Context context;
 
-	public SyncContactsTask(Context context) {
+	public SynchronizeContactsTask(Context context) {
 		super(context);
 		this.context = context;
 	}

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -113,7 +112,7 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 	@Override
 	protected void onRefresh(String response) {
 		// Refreshing contacts list after making the sync
-		((BaseAdapter) mContactsList.getAdapter()).notifyDataSetChanged(); 
+		refreshFragment();
 	}
 
 	@Override
