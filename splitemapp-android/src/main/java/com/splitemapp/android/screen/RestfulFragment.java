@@ -1,7 +1,6 @@
 package com.splitemapp.android.screen;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,10 +35,10 @@ import com.splitemapp.android.service.sync.PushUserToProjectsTask;
 import com.splitemapp.android.service.sync.PushUsersTask;
 import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
 import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
+import com.splitemapp.android.service.sync.SyncContactsTask;
 import com.splitemapp.android.service.sync.SyncService;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
-import com.splitemapp.android.task.SynchronizeContactsRequestTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 
@@ -274,30 +273,6 @@ public abstract class RestfulFragment extends BaseFragment {
 	}
 
 	/**
-	 * Create a service synchronize contacts request
-	 * @param contactsEmailAddressList List containing contacts email addresses
-	 */
-	public void synchronizeContacts(List<String> contactsEmailAddressList){
-		SynchronizeContactsRequestTask synchronizeContactsRequestTask = new SynchronizeContactsRequestTask(getHelper(),contactsEmailAddressList){
-			@Override
-			public void executeOnStart() {
-				showProgressIndicator();
-			}
-			@Override
-			public void executeOnSuccess() {
-				hideProgressIndicator();
-				refreshFragment();
-			}
-			@Override
-			public void executeOnFail() {
-				hideProgressIndicator();
-				showToast("Synchronize Contacts Failed!");
-			}
-		};
-		synchronizeContactsRequestTask.execute();
-	}
-
-	/**
 	 * Executes a linked list of asynchronous pull and push requests
 	 */
 	protected void syncAllTables(){
@@ -345,6 +320,22 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserInvites();
 		pullUserExpenses();
 
+		// Stopping refresh animation
+		stopRefreshAnimation();
+	}
+	
+	/**
+	 * Synchronize all contacts available in the device contacts list
+	 */
+	protected void syncContacts(){
+		// Starting refresh animation
+		startRefreshAnimation();
+		
+		// Starting sync contacts activity
+		Intent intent = new Intent(getActivity(), SyncService.class);
+		intent.putExtra(BaseTask.TASK_NAME, SyncContactsTask.class.getSimpleName());
+		getActivity().startService(intent);
+		
 		// Stopping refresh animation
 		stopRefreshAnimation();
 	}

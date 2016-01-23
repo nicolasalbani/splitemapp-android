@@ -24,6 +24,8 @@ public class SyncService extends IntentService {
 			task = new StartRefreshAnimationTask(this);
 		} else if(taskName.equals(StopRefreshAnimationTask.class.getSimpleName())){
 			task = new StopRefreshAnimationTask(this);
+		} else if(taskName.equals(SyncContactsTask.class.getSimpleName())){
+			task = new SyncContactsTask(this);
 		} else if(taskName.equals(PullProjectCoverImagesTask.class.getSimpleName())){
 			task = new PullProjectCoverImagesTask(this);
 		} else if(taskName.equals(PullProjectsTask.class.getSimpleName())){

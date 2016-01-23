@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +28,6 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 	private static final String TAG = ManageContactsFragment.class.getSimpleName();
 
 	private List<User> mContacts;
-	private Button mSynchronizeContacts;
 	private ListView mContactsList;
 
 	@Override
@@ -66,20 +65,20 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 			}
 		});
 
-		// We get the reference to the synchronize contacts button and implement a OnClickListener
-		mSynchronizeContacts = (Button) v.findViewById(R.id.mc_synchronize_contacts_button);
-		mSynchronizeContacts.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-				List<String> contactsEmailAddressList = getContactsEmailAddressList();
-				synchronizeContacts(contactsEmailAddressList);
-				
-				// Refreshing contacts list after making the sync
-				((BaseAdapter) mContactsList.getAdapter()).notifyDataSetChanged(); 
-			}
-		});
+		// Setting a swipe refresh listener
+		setSwipeRefresh((SwipeRefreshLayout) v.findViewById(R.id.mc_swipe_refresh));
+		getSwipeRefresh().setOnRefreshListener(
+				new SwipeRefreshLayout.OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
 
+						// Synchronizing all contacts
+						syncContacts();
+					}
+				}
+				);
+		
 		return v;
 	}
 
@@ -109,6 +108,12 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 			return convertView;
 		}
+	}
+	
+	@Override
+	protected void onRefresh(String response) {
+		// Refreshing contacts list after making the sync
+		((BaseAdapter) mContactsList.getAdapter()).notifyDataSetChanged(); 
 	}
 
 	@Override

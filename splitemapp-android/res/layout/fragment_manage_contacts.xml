@@ -22,22 +22,19 @@
             android:layout_alignParentTop="true"
             android:text="@string/mc_contacts" />
 
-        <ListView
-            android:id="@+id/mc_contacts_listView"
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/mc_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/mc_synchronize_contacts_button"
             android:layout_below="@id/mc_contacts_textView" >
-        </ListView>
 
-        <Button
-            android:id="@id/mc_synchronize_contacts_button"
-            style="@style/Button"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/mc_synchronize_contacts_button" />
+            <ListView
+                android:id="@+id/mc_contacts_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
 </LinearLayout>
