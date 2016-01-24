@@ -89,21 +89,25 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			//If we weren't given a view, inflate one
+			// If we weren't given a view, inflate one
 			if (convertView == null){
-				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_manage_contact, parent, false);
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_user, parent, false);
 			}
 
-			//Configure the view for this User
+			// Configure the view for this User
 			User user = getItem(position);
 
-			//Setting the user avatar
-			ImageView userAvatarResource = (ImageView)convertView.findViewById(R.id.mc_user_avatar);
+			// Setting the user avatar
+			ImageView userAvatarResource = (ImageView)convertView.findViewById(R.id.cp_user_avatar);
 			setUsetAvatar(userAvatarResource, user, ImageUtils.IMAGE_QUALITY_MAX);
 
-			//Setting the user full name
-			TextView userFullName = (TextView)convertView.findViewById(R.id.mc_user_full_name);
+			// Setting the user full name
+			TextView userFullName = (TextView)convertView.findViewById(R.id.cp_user_name);
 			userFullName.setText(user.getFullName());
+			
+			// Setting the user e-mail address
+			TextView userEmail = (TextView)convertView.findViewById(R.id.cp_user_email);
+			userEmail.setText(user.getUsername());
 
 			return convertView;
 		}
