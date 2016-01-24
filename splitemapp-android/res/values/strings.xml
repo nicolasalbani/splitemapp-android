@@ -104,4 +104,16 @@
     <string name="mc_contacts">Contacts</string>
     <string name="mc_synchronize_contacts_button">Synchronize Contacts</string>
     <string name="mc_avatar_description">Contact Avatar</string>
+    
+    <!-- Expense Categories -->
+    <string name="e_category_description">Category image</string>
+    <string name="e_category_car">Car</string>
+    <string name="e_category_travel">Travel</string>
+    <string name="e_category_food">Food</string>
+    <string name="e_category_family">Family</string>
+    <string name="e_category_bills">Bills</string>
+    <string name="e_category_entertainment">Entertainment</string>
+    <string name="e_category_home">Home</string>
+    <string name="e_category_utilities">Utilities</string>
+    <string name="e_category_shopping">Shopping</string>
 </resources>

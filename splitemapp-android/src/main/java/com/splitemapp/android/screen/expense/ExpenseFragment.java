@@ -3,33 +3,30 @@ package com.splitemapp.android.screen.expense;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
-import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.DatePickerFragment;
+import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
@@ -40,6 +37,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
 	private static final int MAX_DIGITS_AFTER_DECIMAL = 2;
+	private static final int EXPENSE_CATEGORY_COLUMNS = 3;
 
 	private static final String TAG = ExpenseFragment.class.getSimpleName();
 
@@ -49,8 +47,12 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	private short mSelectedCategory;
 
 	private EditText mExpenseAmount;
+	private DecimalFormat mExpenseAmountFormat;
 	private TextView mExpenseDateText;
-	private GridView mExpenseCategory;
+
+	private RecyclerView mExpenseCategoryRecycler;
+	private ExpenseCategoryAdapter mExpenseCategoryAdapter;
+	private RecyclerView.LayoutManager mLayoutManager;
 
 	private AppBarLayout appBarLayout;
 	boolean showingExpense = false;
@@ -64,6 +66,11 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			mCurrentUser = getHelper().getLoggedUser();
 			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 
+			// Setting the expense amount format
+			mExpenseAmountFormat = new DecimalFormat();
+			mExpenseAmountFormat.setMaximumFractionDigits(MAX_DIGITS_AFTER_DECIMAL);
+			mExpenseAmountFormat.setMinimumFractionDigits(MAX_DIGITS_AFTER_DECIMAL);
+			
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
 				mUserExpense = new UserExpense();
@@ -83,15 +90,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		// Inflating the action bar and obtaining the View object
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		// We populate the expense category grid view
-		mExpenseCategory = (GridView) v.findViewById(R.id.e_expense_categories_gridView);
-		mExpenseCategory.setAdapter(getExpenseCategoryAdapter());
-		mExpenseCategory.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				mSelectedCategory = (short)position;
-			}
-		});
-
+		// Setting already selected category
 
 		// We inflate the expense date text view and load todays date by default
 		mExpenseDateText = (TextView) v.findViewById(R.id.e_expense_date_textView);
@@ -135,9 +134,29 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){
 			mSelectedCategory = (short) (mUserExpense.getExpenseCategory().getId().shortValue()-1);
-			mExpenseAmount.setText(mUserExpense.getExpense().toString());
+			mExpenseAmount.setText(mExpenseAmountFormat.format(mUserExpense.getExpense()));
 			updateExpenseDateDisplay(mUserExpense);
 		}
+
+		// Creating a single user expense adapter to be used in the recycler view
+		mExpenseCategoryAdapter = new ExpenseCategoryAdapter(this, mSelectedCategory){
+			@Override
+			protected void onClick(View view, int position) {
+				mSelectedCategory = (short)position;
+				for(int i=0;i<getItemCount();i++){
+					mExpenseCategoryRecycler.getChildAt(i).setBackgroundResource(R.color.white);
+				}
+				mExpenseCategoryRecycler.getChildAt(position).setBackgroundResource(R.color.grey);
+			}
+		};
+
+		// We populate the list of projects for this user
+		mExpenseCategoryRecycler = (RecyclerView) v.findViewById(R.id.e_expense_categories_recyclerView);
+		mExpenseCategoryRecycler.setAdapter(mExpenseCategoryAdapter);
+
+		// Using a grid layout manager
+		mLayoutManager = new GridLayoutManager(getActivity(), EXPENSE_CATEGORY_COLUMNS);
+		mExpenseCategoryRecycler.setLayoutManager(mLayoutManager);
 
 		return v;
 	}
@@ -189,23 +208,6 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}
 
-	}
-
-	private ArrayAdapter<String> getExpenseCategoryAdapter(){
-		String[] expenseCategoryArray = null;
-		try {
-			List<ExpenseCategory> expenseCategoryList = getHelper().getExpenseCategoryList();
-			List<String> expenseCategoryStringList = new ArrayList<String>();
-			for(ExpenseCategory ec:expenseCategoryList){
-				expenseCategoryStringList.add(ec.getTitle());
-			}
-			expenseCategoryArray = expenseCategoryStringList.toArray(new String[]{});
-		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "SQLException caught!", e);
-		}
-
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, expenseCategoryArray);
-		return adapter;
 	}
 
 	/**

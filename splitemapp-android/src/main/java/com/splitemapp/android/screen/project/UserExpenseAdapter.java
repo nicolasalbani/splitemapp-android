@@ -1,13 +1,11 @@
 package com.splitemapp.android.screen.project;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,12 +17,11 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
+import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
 import com.splitemapp.android.screen.project.UserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
-import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.ViewHolder> {
-	private static final String TAG = UserExpenseAdapter.class.getSimpleName();
 
 	private List<UserExpense> mUserExpenseList;
 	private BaseFragment baseFragment;
@@ -103,15 +100,10 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 	@Override
 	public void onBindViewHolder(ViewHolder viewHolder, int position) {
 		UserExpense userExpense = mUserExpenseList.get(position);
-		
+
 		// Setting category title
-		try {
-			Short expenseCategoryId = userExpense.getExpenseCategory().getId();
-			ExpenseCategory expenseCategory = baseFragment.getHelper().getExpenseCategory(expenseCategoryId.shortValue());
-			viewHolder.mCategoryTextView.setText(expenseCategory.getTitle());
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
+		Short expenseCategoryId = userExpense.getExpenseCategory().getId();
+		viewHolder.mCategoryTextView.setText(ExpenseCategoryMapper.values()[expenseCategoryId-1].getTitleId());
 
 		// Setting date
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
