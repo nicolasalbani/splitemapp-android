@@ -11,7 +11,7 @@ public enum ExpenseCategoryMapper {
 	BILLS			(5, R.drawable.ic_category_bills_48dp, R.string.e_category_bills),
 	ENTERTAINMENT	(6, R.drawable.ic_category_entertainment_48dp, R.string.e_category_entertainment),
 	HOME			(7, R.drawable.ic_category_home_48dp, R.string.e_category_home),
-	UTILITIES		(8, R.drawable.ic_category_gift_48dp, R.string.e_category_utilities),
+	GIFTS			(8, R.drawable.ic_category_gift_48dp, R.string.e_category_gifts),
 	SHOPPING		(9, R.drawable.ic_category_shopping_48dp, R.string.e_category_shopping);
 
 	private final int expenseCategoryId;

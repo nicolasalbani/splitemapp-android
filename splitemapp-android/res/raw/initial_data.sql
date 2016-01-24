@@ -29,7 +29,7 @@ insert into expense_category(id,cod,title) values(4,"family","Familia y Personal
 insert into expense_category(id,cod,title) values(5,"bills","Cuentas");
 insert into expense_category(id,cod,title) values(6,"entertainment","Entretenimiento");
 insert into expense_category(id,cod,title) values(7,"home","Hogar");
-insert into expense_category(id,cod,title) values(8,"utilities","Utilidades");
+insert into expense_category(id,cod,title) values(8,"gifts","Regalos");
 insert into expense_category(id,cod,title) values(9,"shopping","Shopping");
 
 -- Data for sync_status table
