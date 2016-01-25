@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackground"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp" >
@@ -15,8 +16,8 @@
             android:id="@+id/ue_nameRow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey"
-            android:layout_alignParentTop="true" >
+            android:layout_alignParentTop="true"
+            android:background="@color/grey" >
 
             <TextView
                 android:id="@+id/ue_fullName_textView"

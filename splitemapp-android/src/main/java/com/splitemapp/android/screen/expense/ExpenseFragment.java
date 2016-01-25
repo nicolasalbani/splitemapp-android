@@ -143,10 +143,6 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			@Override
 			protected void onClick(View view, int position) {
 				mSelectedCategory = (short)position;
-				for(int i=0;i<getItemCount();i++){
-					mExpenseCategoryRecycler.getChildAt(i).setBackgroundResource(R.color.white);
-				}
-				mExpenseCategoryRecycler.getChildAt(position).setBackgroundResource(R.color.grey);
 			}
 		};
 

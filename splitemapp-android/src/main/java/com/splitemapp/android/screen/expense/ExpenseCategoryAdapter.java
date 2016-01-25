@@ -23,7 +23,7 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 	private static final String TAG = ExpenseCategoryAdapter.class.getSimpleName();
 
 	private List<ExpenseCategory> mExpenseCategoryList;
-	private short mSelectedCategory;
+	private short mSelectedPosition;
 	private BaseFragment mBaseFragment;
 	private View mView;
 
@@ -57,8 +57,8 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ExpenseCategoryAdapter(BaseFragment baseFragment, short selectedCategory) {
-		this.mSelectedCategory = selectedCategory;
+	public ExpenseCategoryAdapter(BaseFragment baseFragment, short initialSelectedPosition) {
+		this.mSelectedPosition = initialSelectedPosition;
 		this.mBaseFragment = baseFragment;
 		this.mExpenseCategoryList = getExpenseCategoryList();
 	}
@@ -73,6 +73,7 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseCategoryClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
+				// Calling external onClick
 				onClick(view, position);
 			}
 		});
@@ -87,10 +88,10 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 
 		// Setting the icon
 		viewHolder.mIconImageView.setImageResource(ExpenseCategoryMapper.values()[position].getDrawableId());
-		
+
 		// Setting background color for selected category
-		if(position == mSelectedCategory){
-			viewHolder.itemView.setBackgroundResource(R.color.grey);
+		if(position == mSelectedPosition){
+			viewHolder.itemView.setSelected(position == mSelectedPosition);
 		}
 	}
 
@@ -98,7 +99,6 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 	public int getItemCount() {
 		return mExpenseCategoryList.size();
 	}
-
 
 	/**
 	 * Returns a list of SingleUserExpenses created upon the provided UserExpense list

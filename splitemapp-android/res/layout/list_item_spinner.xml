@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:textColor="@color/black"
-    android:background="@color/transparent"
+    android:background="@drawable/recycler_color_selector"
     android:textSize="20sp" />
