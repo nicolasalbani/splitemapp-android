@@ -21,6 +21,9 @@ import com.splitemapp.commons.domain.ExpenseCategory;
 public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<ExpenseCategoryAdapter.ViewHolder> {
 
 	private static final String TAG = ExpenseCategoryAdapter.class.getSimpleName();
+	
+	private final static int SELECTED_COLOR =R.color.grey;
+	private final static int NOT_SELECTED_COLOR = R.color.white;
 
 	private List<ExpenseCategory> mExpenseCategoryList;
 	private short mSelectedPosition;
@@ -65,7 +68,7 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 
 	// Create new views (invoked by the layout manager)
 	@Override
-	public ExpenseCategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ExpenseCategoryAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
 		// Creating a new view
 		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_category, parent, false);
 
@@ -73,6 +76,14 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseCategoryClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
+				for(int i=0;i<getItemCount();i++){
+					if(i != position){
+						parent.getChildAt(i).setBackgroundResource(NOT_SELECTED_COLOR);
+					} else {
+						parent.getChildAt(i).setBackgroundResource(SELECTED_COLOR);
+					}
+				}
+				
 				// Calling external onClick
 				onClick(view, position);
 			}
@@ -91,7 +102,7 @@ public abstract class ExpenseCategoryAdapter extends RecyclerView.Adapter<Expens
 
 		// Setting background color for selected category
 		if(position == mSelectedPosition){
-			viewHolder.itemView.setSelected(position == mSelectedPosition);
+			viewHolder.itemView.setBackgroundResource(SELECTED_COLOR);
 		}
 	}
 
