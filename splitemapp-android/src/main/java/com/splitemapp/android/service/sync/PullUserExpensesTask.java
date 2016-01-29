@@ -45,8 +45,8 @@ public class PullUserExpensesTask extends PullTask<UserExpenseDTO, PullUserExpen
 		Set<UserExpenseDTO> userExpenseDTOs = response.getItemSet();
 		for(UserExpenseDTO userExpenseDTO:userExpenseDTOs){
 			// We obtain the required parameters for the object creation from the local database
-			User user = getHelper().getUser(userExpenseDTO.getUserId().longValue());
-			Project project = getHelper().getProject(userExpenseDTO.getProjectId().longValue());
+			User user = getHelper().getUser(userExpenseDTO.getUserId());
+			Project project = getHelper().getProject(userExpenseDTO.getProjectId());
 			ExpenseCategory expenseCategory = getHelper().getExpenseCategory(userExpenseDTO.getExpenseCategoryId().shortValue());
 
 			// We create the new entity and store it into the local database

@@ -14,6 +14,9 @@ import com.splitemapp.commons.domain.dto.response.PullResponse;
 
 public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 	
+	public static final String EXTRA_PULL_ALL_DATES = "com.splitemapp.android.service.PULL_ALL_DATES";
+	public static final String EXTRA_PROJECT_ID = "com.splitemapp.android.service.PROJECT_ID";
+	
 	public PullTask(Context context) {
 		super(context);
 	}
@@ -48,6 +51,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 	 * @throws SQLException
 	 */
 	protected abstract void processResult(R response) throws SQLException;
+	
 
 	@Override
 	public void executeService(Intent intent) throws Exception {
@@ -63,6 +67,16 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 			PullRequest pullRequest = new PullRequest();
 			pullRequest.setLastPullSuccessAt(lastPullSuccessAt);
 			pullRequest.setToken(sessionToken);
+			
+			// If the EXTRA_PULL_ALL_DATES was set
+			if(intent.getExtras().containsKey(EXTRA_PULL_ALL_DATES)){
+				pullRequest.setPullAllDates(true);
+			}
+			
+			// If the EXTRA_PROJECT_ID was set
+			if(intent.getExtras().containsKey(EXTRA_PROJECT_ID)){
+				pullRequest.setProjectId(Long.valueOf(intent.getExtras().getString(EXTRA_PROJECT_ID)));
+			}
 
 			// We call the rest service and send back the pull response
 			R response = NetworkUtils.callRestService(getServicePath(), pullRequest, getResponseType());

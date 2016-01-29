@@ -20,6 +20,7 @@ import com.splitemapp.android.service.SyncTablesService;
 import com.splitemapp.android.service.gcm.RegistrationIntentService;
 import com.splitemapp.android.service.sync.PullProjectCoverImagesTask;
 import com.splitemapp.android.service.sync.PullProjectsTask;
+import com.splitemapp.android.service.sync.PullTask;
 import com.splitemapp.android.service.sync.PullUserAvatarsTask;
 import com.splitemapp.android.service.sync.PullUserContactDatasTask;
 import com.splitemapp.android.service.sync.PullUserExpensesTask;
@@ -72,7 +73,8 @@ public abstract class RestfulFragment extends BaseFragment {
 			public synchronized void onReceive(Context context, Intent intent) {
 				// Processing the action after getting a broadcast
 				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
-				processAction(action);
+				String projectId = intent.getStringExtra(ServiceConstants.PROJECT_ID);
+				processAction(action, projectId);
 
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
 				if(response!=null){
@@ -108,7 +110,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Processes the provided action
 	 * @param action
 	 */
-	private void processAction(String action){
+	private void processAction(String action, String projectId){
 		// If the message contains an action, execute the proper method
 		if(action != null){
 			// Starting refresh animation
@@ -143,6 +145,8 @@ public abstract class RestfulFragment extends BaseFragment {
 				pullProjectCoverImages();
 				// Actually pulling the user to project relationships 
 				pullUserToProjects();
+				// Pulling all user expenses for that project
+				pullUserExpensesByProject(projectId);
 			} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
 				pullUserToProjects();
 			} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
@@ -449,6 +453,18 @@ public abstract class RestfulFragment extends BaseFragment {
 	protected void pullUserExpenses(){
 		Intent intent = new Intent(getActivity(), SyncTablesService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserExpensesTask.class.getSimpleName());
+		getActivity().startService(intent);
+	}
+	
+	/**
+	 * Creates a service user_expense table pull request by project id
+	 * @param projectId
+	 */
+	protected void pullUserExpensesByProject(String projectId){
+		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		intent.putExtra(BaseTask.TASK_NAME, PullUserExpensesTask.class.getSimpleName());
+		intent.putExtra(PullTask.EXTRA_PULL_ALL_DATES, true);
+		intent.putExtra(PullTask.EXTRA_PROJECT_ID, projectId);
 		getActivity().startService(intent);
 	}
 

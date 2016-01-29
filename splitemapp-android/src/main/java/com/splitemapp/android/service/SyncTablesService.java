@@ -97,7 +97,7 @@ public class SyncTablesService extends IntentService {
 				task.executeService(intent);
 			}
 		} catch (Exception e) {
-			Log.e(TAG, "Network error detected");
+			Log.e(TAG, "Network error detected", e);
 			task.broadcastMessage(BaseTask.NETWORK_ERROR);
 			isConnectedToServer = false;
 		}

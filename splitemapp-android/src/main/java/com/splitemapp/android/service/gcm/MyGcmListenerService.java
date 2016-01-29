@@ -41,11 +41,13 @@ public class MyGcmListenerService extends GcmListenerService {
 		String sender = data.getString("sender");
 		String action = data.getString("action");
 		String details = data.getString("details");
+		String projectId = data.getString("projectId");
 
 		// Logging
 		Log.d(TAG, "sender: " + sender);
 		Log.d(TAG, "action: " + action);
 		Log.d(TAG, "details: " + details);
+		Log.d(TAG, "projectId: " + projectId);
 
 		// Showing notification
 		StringBuilder message = new StringBuilder();
@@ -58,6 +60,7 @@ public class MyGcmListenerService extends GcmListenerService {
 		// Sending the action to the listening fragment
 		Intent intent = new Intent(ServiceConstants.GCM_MESSAGE);
 		intent.putExtra(ServiceConstants.CONTENT_ACTION, action);
+		intent.putExtra(ServiceConstants.PROJECT_ID, projectId);
 		broadcaster.sendBroadcast(intent);
 	}
 
