@@ -129,6 +129,12 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 	 * Makes all necessary updates to this fragment
 	 */
 	private void updateFragment(){
+		try {
+			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+		
 		// Updating the RecyclerView
 		mSingleUserExpenseAdapter.updateRecycler();
 
@@ -138,6 +144,12 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		} else {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
+		
+		// Updating project title
+		mProjectTitle.setText(mCurrentProject.getTitle());
+		
+		// Updating project image
+		setProjectCoverImage(mProjectCoverImage, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 	
 	@Override

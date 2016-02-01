@@ -5,7 +5,10 @@
     <string name="app_name">SplitemApp</string>
     <string name="line_separator_description">Line Separator</string>
     
-    <!-- ACtion Bar -->
+    <!-- Messages -->
+    <string name="network_error">Check your network connection!</string>
+    
+    <!-- Action Bar -->
     <string name="ab_title">Title</string>
     <string name="ab_done">DONE</string>
     <string name="ab_back_description">Back</string>

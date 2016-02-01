@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.service.BaseTask;
@@ -93,7 +94,7 @@ public abstract class RestfulFragment extends BaseFragment {
 						// We call the overridden onRefresh method
 						onRefresh(response);
 					} else if (response.equals(BaseTask.NETWORK_ERROR)){
-						showToast("Check your network connection!");
+						showToast(getResources().getString(R.string.network_error));
 					}
 				}
 			}
@@ -225,7 +226,7 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnFail() {
 				hideProgressIndicator();
-				showToast("Create Account Failed!");
+				showToast(getResources().getString(R.string.network_error));
 			}
 		};
 		createAccountRequestTask.execute();
@@ -260,7 +261,7 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnFail() {
 				hideProgressIndicator();
-				showToast("Login Failed!");
+				showToast(getResources().getString(R.string.network_error));
 			}
 		};
 		loginRequestTask.execute();
