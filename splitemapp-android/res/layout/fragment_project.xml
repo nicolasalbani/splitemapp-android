@@ -30,8 +30,14 @@
             android:id="@+id/p_project_title_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/semi_transparent"
             android:layout_alignBottom="@id/p_project_cover_image_imageView"
-            android:padding="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/white"
             android:textSize="28sp" />
     </RelativeLayout>
