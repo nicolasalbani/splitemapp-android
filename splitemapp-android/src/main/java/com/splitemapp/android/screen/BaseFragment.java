@@ -12,12 +12,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -75,8 +80,18 @@ public abstract class BaseFragment extends Fragment {
 	 * @param message String to be shown in the Toast
 	 */
 	public void showToast(String message){
-		Toast toast = Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT);
-		toast.show();
+		// Inflating the toast layout
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View layouttoast = inflater.inflate(R.layout.toast, (ViewGroup)getActivity().findViewById(R.id.custom_toast));
+		((TextView) layouttoast.findViewById(R.id.toast_textView)).setText(message);
+		
+		// Creating and showing the toast
+		Toast mytoast = new Toast(getActivity().getBaseContext());
+        mytoast.setView(layouttoast);
+        mytoast.setDuration(Toast.LENGTH_LONG);
+        mytoast.setGravity(Gravity.CENTER, 0, 0);
+        mytoast.show();
+		
 	}
 
 	/**

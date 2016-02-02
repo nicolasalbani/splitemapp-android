@@ -6,7 +6,7 @@
     <string name="line_separator_description">Line Separator</string>
     
     <!-- Messages -->
-    <string name="network_error">Check your network connection!</string>
+    <string name="network_error">Check your network connection</string>
     
     <!-- Action Bar -->
     <string name="ab_title">Title</string>

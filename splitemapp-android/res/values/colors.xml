@@ -11,6 +11,7 @@
     <color name="text">#ABBEDD</color>
     <color name="blue">#379AEA</color>
     <color name="red">#FF0000</color>
+    <color name="warning">#FDBD00</color>
     <color name="seablue">#20BAE4</color>
     <color name="strongblue">#1988A4</color>
     <color name="fabblue">#53A8FC</color>

@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            layout="@layout/transparent_toolbar" />
+            layout="@layout/toolbar_transparent" />
 
         <TextView
             android:id="@+id/p_project_title_textView"

@@ -48,7 +48,7 @@ public class CustomFloatingActionButton {
 		});
 
 		// Creating the shade view and assigning an On Click Listener
-		shade = new View(context, getAttributeSetFromResource(context, R.drawable.shade));
+		shade = new View(context, getAttributeSetFromResource(context, R.drawable.view_shade));
 		shade.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -172,7 +172,7 @@ public class CustomFloatingActionButton {
 		label.setLayoutParams(labelLayoutParams);
 
 		// Setting rounded shape
-		label.setBackgroundResource(R.drawable.label_rounded_corners);
+		label.setBackgroundResource(R.drawable.shape_label_rounded_corners);
 
 		// Setting the labels text
 		label.setText(labelString);

@@ -5,12 +5,12 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <include layout="@layout/blue_toolbar" />
+    <include layout="@layout/toolbar_blue" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@drawable/toolbar_dropshadow" />
+        android:background="@drawable/shape_toolbar_dropshadow" />
 
     <RelativeLayout
         android:layout_width="match_parent"

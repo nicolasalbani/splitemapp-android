@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/white" >
     
-    <include layout="@layout/blue_toolbar"/>
+    <include layout="@layout/toolbar_blue"/>
     
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pc_contacts_recyclerView"
