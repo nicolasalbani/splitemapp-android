@@ -48,6 +48,7 @@
     <string name="h_edit_project">Edit</string>
     <string name="h_new_list_button">New list of expenses</string>
     <string name="h_logout">LOGOUT</string>
+    <string name="h_settings">SETTINGS</string>
     <string name="h_synchronize">SYNCHRONIZE</string>
     <string name="h_manage_contacts">MANAGE CONTACTS</string>
     <string name="h_action_edit">Edit</string>

@@ -34,7 +34,7 @@ public class HomeFragment extends RestfulFragment {
 	private UserContactData mUserContactData;
 
 	private DrawerLayout mDrawerLayout;
-	
+
 	private ImageView mNavAvatar;
 	private TextView mNavFullName;
 	private TextView mNavEmail;
@@ -49,9 +49,10 @@ public class HomeFragment extends RestfulFragment {
 
 	private TextView mEmptyListHintTextView;
 
-	private TextView mLogoutTextView;
-	private TextView mManageContactsTextView;
-	private TextView mSynchronizeTextView;
+	private View mLogoutButton;
+	private View mManageContactsButton;
+	private View mSynchronizeButton;
+	private View mSettingsButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We populate the drawer layout
 		mDrawerLayout = (DrawerLayout) v.findViewById(R.id.h_drawerLayout);
-		
+
 		// We populate the first name in the navigation view
 		mNavFullName = (TextView) v.findViewById(R.id.h_nav_full_name_textView);
 		mNavFullName.setText(mCurrentUser.getFullName());
@@ -136,8 +137,8 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the logout click listener
-		mLogoutTextView = (TextView) v.findViewById(R.id.h_logout_textView);
-		mLogoutTextView.setOnClickListener(new OnClickListener(){
+		mLogoutButton = (View) v.findViewById(R.id.h_logout_button);
+		mLogoutButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// We delete all user sessions
@@ -152,26 +153,38 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the synchronize click listener
-		mSynchronizeTextView = (TextView) v.findViewById(R.id.h_synchronize_textView);
-		mSynchronizeTextView.setOnClickListener(new OnClickListener(){
+		mSynchronizeButton = (View) v.findViewById(R.id.h_synchronize_button);
+		mSynchronizeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// Closing the drawer
 				mDrawerLayout.closeDrawers();
-				
+
 				// Pulling all tables
 				syncAllTables();
 			}
 		});
 
-		// Setting the manage contacts click listener
-		mManageContactsTextView = (TextView) v.findViewById(R.id.h_manage_contacts_textView);
-		mManageContactsTextView.setOnClickListener(new OnClickListener(){
+		// Setting the settings click listener
+		mSettingsButton = (View) v.findViewById(R.id.h_settings_button);
+		mSettingsButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				// Closing the drawer
 				mDrawerLayout.closeDrawers();
-				
+
+				//TODO Open settings window
+			}
+		});
+
+		// Setting the manage contacts click listener
+		mManageContactsButton = (View) v.findViewById(R.id.h_manage_contacts_button);
+		mManageContactsButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// Closing the drawer
+				mDrawerLayout.closeDrawers();
+
 				// We move to the login screen
 				startActivity( new Intent(getActivity(), ManageContactsActivity.class));
 			}
@@ -204,14 +217,14 @@ public class HomeFragment extends RestfulFragment {
 
 		return v;
 	}
-	
+
 	/**
 	 * Makes all necessary updates to this fragment
 	 */
 	private void updateFragment(){
 		// Updating the RecyclerView
 		mProjectsAdapter.updateRecycler();
-		
+
 		// Showing or hiding the empty list hint
 		if(mProjectsAdapter.getItemCount() == 0){
 			mEmptyListHintTextView.setVisibility(View.VISIBLE);
@@ -219,7 +232,7 @@ public class HomeFragment extends RestfulFragment {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	protected void onRefresh(String response) {
 		updateFragment();
