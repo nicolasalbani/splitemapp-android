@@ -141,12 +141,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	private void updateUserStatusIcon(ImageView userStatusIcon, User user){
 		if(Globals.getCreateProjectActivityUserList().contains(user)){
-			userStatusIcon.setImageResource(R.drawable.contact_status_active);
+			userStatusIcon.setImageResource(R.drawable.ic_contact_status_active_48dp);
 		} else {
 			if(baseFragment.isUserHasAvatar(user)){
 				baseFragment.setUsetAvatar(userStatusIcon, user, 40);
 			} else {
-				userStatusIcon.setImageResource(R.drawable.contact_status_inactive);
+				userStatusIcon.setImageResource(R.drawable.ic_contact_status_inactive_48dp);
 			}
 		}
 	}

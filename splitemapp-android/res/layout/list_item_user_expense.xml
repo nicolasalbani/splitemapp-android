@@ -21,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:contentDescription="@string/ue_icon_description"
             android:padding="5dp"
-            android:src="@drawable/category_placeholder" />
+            android:src="@drawable/ic_category_placeholder_48dp" />
 
         <TextView
             android:id="@+id/ue_category_textView"

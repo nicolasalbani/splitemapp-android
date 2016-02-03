@@ -23,7 +23,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginStart="20dp"
             android:contentDescription="@string/h_action_edit"
-            android:src="@drawable/ic_edit_grey_24dp" />
+            android:src="@drawable/ic_edit_48dp" />
 
         <ImageView
             android:id="@+id/h_action_archive_imageView"
@@ -34,7 +34,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginStart="10dp"
             android:contentDescription="@string/h_action_archive"
-            android:src="@drawable/ic_archive_grey_24dp" />
+            android:src="@drawable/ic_archive_48dp" />
     </LinearLayout>
 
     <!-- A CardView containing the surface view -->
@@ -66,7 +66,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:contentDescription="@string/h_project_cover_description"
-                android:src="@drawable/category_placeholder" />
+                android:src="@drawable/ic_category_placeholder_48dp" />
 
             <TextView
                 android:id="@+id/h_project_title"

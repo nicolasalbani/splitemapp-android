@@ -34,8 +34,8 @@
                 <EditText
                     android:id="@+id/e_expense_amount_editText"
                     style="@style/BlueCustomEditText"
-                    android:drawableLeft="@drawable/ic_money_white_18dp"
-                    android:drawableStart="@drawable/ic_money_white_18dp"
+                    android:drawableLeft="@drawable/ic_money_white_48dp"
+                    android:drawableStart="@drawable/ic_money_white_48dp"
                     android:inputType="numberDecimal" />
 
                 <View
@@ -59,8 +59,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:layout_marginTop="10dp"
-                        android:drawableEnd="@drawable/greater_sign"
-                        android:drawableRight="@drawable/greater_sign"
+                        android:drawableEnd="@drawable/ic_greater_sign_48dp"
+                        android:drawableRight="@drawable/ic_greater_sign_48dp"
                         android:gravity="center"
                         android:padding="5dp"
                         android:textColor="@color/black"

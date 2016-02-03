@@ -122,7 +122,7 @@
         <item name="android:layout_marginRight">-10dp</item>
         <item name="android:layout_marginBottom">-15dp</item>
         <item name="android:layout_marginTop">-15dp</item>
-        <item name="android:src">@drawable/white_plus</item>
+        <item name="android:src">@drawable/ic_add_48dp</item>
     </style>
 
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">

@@ -28,7 +28,7 @@
                 android:layout_marginTop="25dp"
                 android:contentDescription="@string/h_avatar_description"
                 android:gravity="center_horizontal"
-                android:src="@drawable/avatar_placeholder" />
+                android:src="@drawable/ic_avatar_placeholder_48dp" />
 
             <TextView
                 android:id="@+id/h_main_full_name_textView"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/h_topLayout"
             android:layout_marginTop="50dp"
-            android:drawableTop="@drawable/ic_list_add_grey_48dp"
+            android:drawableTop="@drawable/ic_list_add_48dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:text="@string/h_empty_list_hint"
@@ -108,7 +108,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="15dp"
             android:contentDescription="@string/h_avatar_description"
-            android:src="@drawable/avatar_placeholder" />
+            android:src="@drawable/ic_avatar_placeholder_48dp" />
 
         <TextView
             android:id="@+id/h_nav_full_name_textView"

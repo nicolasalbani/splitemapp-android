@@ -17,7 +17,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingStart="5dp"
-        android:src="@drawable/avatar_placeholder" />
+        android:src="@drawable/ic_avatar_placeholder_48dp" />
 
     <TextView
         android:id="@+id/cp_user_name"

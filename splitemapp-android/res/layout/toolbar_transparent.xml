@@ -23,7 +23,7 @@
 
             <ImageView
                 android:id="@+id/back_action_imageView"
-                android:src="@drawable/ic_arrow_back_white_24dp"
+                android:src="@drawable/ic_arrow_back_white_48dp"
                 android:contentDescription="@string/ab_back_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
 
             <ImageView
                 android:id="@+id/menu_action_imageView"
-                android:src="@drawable/ic_more_vert_white_24dp"
+                android:src="@drawable/ic_more_vert_white_48dp"
                 android:contentDescription="@string/ab_menu_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
