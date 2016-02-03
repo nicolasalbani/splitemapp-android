@@ -10,12 +10,12 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:paddingTop="8dip"
-        android:paddingBottom="8dip"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="6dip"
+        android:paddingBottom="6dip"
         android:text="@string/network_error"
         android:textColor="#ffffff"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>

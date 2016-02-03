@@ -89,7 +89,7 @@ public abstract class BaseFragment extends Fragment {
 		Toast mytoast = new Toast(getActivity().getBaseContext());
         mytoast.setView(layouttoast);
         mytoast.setDuration(Toast.LENGTH_LONG);
-        mytoast.setGravity(Gravity.CENTER, 0, 0);
+        mytoast.setGravity(Gravity.CENTER, 0, 100);
         mytoast.show();
 		
 	}
