@@ -28,7 +28,7 @@
                 android:layout_marginTop="25dp"
                 android:contentDescription="@string/h_avatar_description"
                 android:gravity="center_horizontal"
-                android:src="@drawable/ic_avatar_placeholder_48dp" />
+                android:src="@drawable/ic_avatar_placeholder_80dp" />
 
             <TextView
                 android:id="@+id/h_main_full_name_textView"
@@ -108,7 +108,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="15dp"
             android:contentDescription="@string/h_avatar_description"
-            android:src="@drawable/ic_avatar_placeholder_48dp" />
+            android:src="@drawable/ic_avatar_placeholder_80dp" />
 
         <TextView
             android:id="@+id/h_nav_full_name_textView"
@@ -148,119 +148,67 @@
 
             <include layout="@layout/line_separator" />
 
-            <LinearLayout
-                android:id="@+id/h_manage_contacts_button"
+            <TextView
+                android:id="@+id/h_manage_contacts_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_recycler_color"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:contentDescription="@string/h_manage_contacts"
-                    android:paddingRight="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
-                    android:gravity="center_vertical|start"
-                    android:src="@drawable/ic_contacts_48dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|start"
-                    android:text="@string/h_manage_contacts"
-                    android:textColor="@color/hard_grey"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:drawableLeft="@drawable/ic_manage_contacts_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_manage_contacts_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_manage_contacts"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 
-            <LinearLayout
-                android:id="@+id/h_synchronize_button"
+            <TextView
+                android:id="@+id/h_synchronize_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_recycler_color"
-                android:orientation="horizontal" >
+                android:drawableLeft="@drawable/ic_synchronize_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_synchronize_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_synchronize"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
+            
+            <include layout="@layout/line_separator" />
 
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:contentDescription="@string/h_synchronize"
-                    android:paddingRight="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
-                    android:gravity="center_vertical|start"
-                    android:src="@drawable/ic_synchronize_48dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|start"
-                    android:text="@string/h_synchronize"
-                    android:textColor="@color/hard_grey"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/h_settings_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_recycler_color"
+                android:drawableLeft="@drawable/ic_synchronize_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_settings_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_settings"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 
-            <LinearLayout
-                android:id="@+id/h_settings_button"
+            <TextView
+                android:id="@+id/h_logout_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_recycler_color"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:contentDescription="@string/h_settings"
-                    android:paddingRight="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
-                    android:gravity="center_vertical|start"
-                    android:src="@drawable/ic_settings_48dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|start"
-                    android:text="@string/h_settings"
-                    android:textColor="@color/hard_grey"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <include layout="@layout/line_separator" />
-
-            <LinearLayout
-                android:id="@+id/h_logout_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_recycler_color"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:contentDescription="@string/h_logout"
-                    android:paddingRight="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingStart="10dp"
-                    android:gravity="center_vertical|start"
-                    android:src="@drawable/ic_logout_48dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|start"
-                    android:text="@string/h_logout"
-                    android:textColor="@color/hard_grey"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:drawableLeft="@drawable/ic_logout_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_logout_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_logout"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
 
             <include layout="@layout/line_separator" />
 

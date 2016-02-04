@@ -137,7 +137,7 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the logout click listener
-		mLogoutButton = (View) v.findViewById(R.id.h_logout_button);
+		mLogoutButton = (View) v.findViewById(R.id.h_logout_textView);
 		mLogoutButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -153,7 +153,7 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the synchronize click listener
-		mSynchronizeButton = (View) v.findViewById(R.id.h_synchronize_button);
+		mSynchronizeButton = (View) v.findViewById(R.id.h_synchronize_textView);
 		mSynchronizeButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -166,7 +166,7 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the settings click listener
-		mSettingsButton = (View) v.findViewById(R.id.h_settings_button);
+		mSettingsButton = (View) v.findViewById(R.id.h_settings_textView);
 		mSettingsButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
@@ -178,7 +178,7 @@ public class HomeFragment extends RestfulFragment {
 		});
 
 		// Setting the manage contacts click listener
-		mManageContactsButton = (View) v.findViewById(R.id.h_manage_contacts_button);
+		mManageContactsButton = (View) v.findViewById(R.id.h_manage_contacts_textView);
 		mManageContactsButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {

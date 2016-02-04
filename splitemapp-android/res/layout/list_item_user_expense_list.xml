@@ -37,7 +37,7 @@
                 android:layout_toEndOf="@id/ue_fullName_textView"
                 android:layout_toRightOf="@id/ue_fullName_textView"
                 android:contentDescription="@string/p_arrow_description"
-                android:src="@drawable/ic_triangle_48dp" />
+                android:src="@drawable/ic_arrow_down_circle_outline_18dp" />
 
             <TextView
                 android:id="@+id/ue_fullAmount_textView"

@@ -157,7 +157,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
 
 		// Adding add contact FAB
-		customFloatingActionButton.addActionFab(getActivity(), "Contacts", R.drawable.action_fab, new OnClickListener() {
+		customFloatingActionButton.addActionFab(getActivity(), "Contacts", R.drawable.action_fab_contacts, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Opening add people screen
@@ -167,7 +167,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		});
 
 		// Adding add image cover FAB
-		customFloatingActionButton.addActionFab(getActivity(), "Cover image", R.drawable.action_fab, new OnClickListener() {
+		customFloatingActionButton.addActionFab(getActivity(), "Cover image", R.drawable.action_fab_camera, new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Opening image selector

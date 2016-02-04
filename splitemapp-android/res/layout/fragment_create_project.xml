@@ -68,9 +68,9 @@
                     <EditText
                         android:id="@+id/cp_budget_editText"
                         style="@style/CustomEditText"
-                        android:drawableLeft="@drawable/ic_money_black_48dp"
+                        android:drawableLeft="@drawable/ic_money_black_24dp"
                         android:drawablePadding="5dp"
-                        android:drawableStart="@drawable/ic_money_black_48dp"
+                        android:drawableStart="@drawable/ic_money_black_24dp"
                         android:inputType="numberDecimal"
                         android:text="@string/cp_project_budget_value" />
 

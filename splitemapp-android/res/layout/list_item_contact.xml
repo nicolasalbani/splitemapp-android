@@ -26,7 +26,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_contact_status_inactive_48dp"
+        android:src="@drawable/ic_checkbox_blank_circle_outline_48dp"
         android:id="@+id/pc_user_status_icon" 
         android:contentDescription="@string/pc_status_description"/>
 
