@@ -34,8 +34,8 @@
                 <EditText
                     android:id="@+id/e_expense_amount_editText"
                     style="@style/BlueCustomEditText"
-                    android:drawableLeft="@drawable/ic_money_white_48dp"
-                    android:drawableStart="@drawable/ic_money_white_48dp"
+                    android:drawableLeft="@drawable/ic_money_white_24dp"
+                    android:drawableStart="@drawable/ic_money_white_24dp"
                     android:inputType="numberDecimal" />
 
                 <View
