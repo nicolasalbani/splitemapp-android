@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
@@ -34,9 +35,7 @@ import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
-
-	private static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
-	private static final int MAX_DIGITS_AFTER_DECIMAL = 2;
+	
 	private static final int EXPENSE_CATEGORY_COLUMNS = 3;
 
 	private static final String TAG = ExpenseFragment.class.getSimpleName();
@@ -68,8 +67,8 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 			// Setting the expense amount format
 			mExpenseAmountFormat = new DecimalFormat();
-			mExpenseAmountFormat.setMaximumFractionDigits(MAX_DIGITS_AFTER_DECIMAL);
-			mExpenseAmountFormat.setMinimumFractionDigits(MAX_DIGITS_AFTER_DECIMAL);
+			mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+			mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 			
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
@@ -129,7 +128,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
-		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(MAX_DIGITS_BEFORE_DECIMAL,MAX_DIGITS_AFTER_DECIMAL)});
+		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(Constants.MAX_DIGITS_BEFORE_DECIMAL,Constants.MAX_DIGITS_AFTER_DECIMAL)});
 
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){

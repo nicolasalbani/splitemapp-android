@@ -183,7 +183,7 @@ public abstract class BaseFragment extends Fragment {
 	public boolean isUserHasAvatar(User user){
 		try {
 			UserAvatar userAvatar = getHelper().getUserAvatarByUserId(user.getId());
-			if(userAvatar != null){
+			if(userAvatar != null && userAvatar.getAvatarData() != null){
 				return true;
 			}
 		} catch (SQLException e) {

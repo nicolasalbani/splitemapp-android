@@ -13,9 +13,13 @@ public class Constants {
 	public static final String LOOPBACK_ADDRESS = "127.0.0.1";
 	
 	// Backend constants
-	public static final String BACKEND_HOST="135.20.205.179";
+	public static final String BACKEND_HOST="192.168.0.3";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-backend-rest";
+	
+	// Decimal number entry
+	public static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
+	public static final int MAX_DIGITS_AFTER_DECIMAL = 2;
 	
 	// Request codes
 	public static final int SELECT_PICTURE_REQUEST_CODE = 1;
