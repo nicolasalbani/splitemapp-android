@@ -24,6 +24,20 @@
     <string name="li_log_in_button">Login</string>
     <string name="li_sign_up_question">Don\'t have an account?</string>
     <string name="li_sign_up_link">Sign up</string>
+    
+    <!-- Settings Screen -->
+    <string name="s_avatar_description">User Avatar</string>
+    <string name="s_name">Name</string>
+    <string name="s_email">Email</string>
+    <string name="s_title">Settings</string>
+    <string name="s_profile">Profile</string>
+    <string name="s_notifications">Notifications</string>
+    <string name="s_help">Help</string>
+    <string name="s_new_project">New project created</string>
+    <string name="s_new_expense">New expense created</string>
+    <string name="s_updated_cover">Updated project cover</string>
+    <string name="s_ask_a_question">Have a question?</string>
+    <string name="s_splitemapp_faq">SplitemApp FAQ</string>
 
     <!-- Create Account Screen -->
     <string name="ca_avatar_description">Avatar</string>

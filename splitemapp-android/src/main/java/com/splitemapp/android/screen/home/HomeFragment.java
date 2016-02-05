@@ -22,6 +22,7 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
+import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
@@ -173,7 +174,8 @@ public class HomeFragment extends RestfulFragment {
 				// Closing the drawer
 				mDrawerLayout.closeDrawers();
 
-				//TODO Open settings window
+				// Open settings window
+				startActivity( new Intent(getActivity(), SettingsActivity.class));
 			}
 		});
 
