@@ -52,12 +52,19 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
+        <View
+            android:id="@+id/h_topLayoutShadow"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@id/h_topLayout"
+            android:background="@drawable/shape_toolbar_dropshadow" />
+
         <android.support.v4.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/h_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/h_topLayout" >
+            android:layout_below="@id/h_topLayoutShadow" >
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/h_projects_recyclerView"
@@ -177,7 +184,7 @@
                 android:text="@string/h_synchronize"
                 android:textColor="@color/hard_grey"
                 android:textStyle="bold" />
-            
+
             <include layout="@layout/line_separator" />
 
             <TextView

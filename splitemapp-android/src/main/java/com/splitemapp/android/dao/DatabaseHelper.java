@@ -549,6 +549,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		project.setUpdatedAt(new Date());
 		getProjectDao().update(project);
 	}
+	
+	/**
+	 * Updates the User in the database
+	 * @param project
+	 * @throws SQLException
+	 */
+	public void updateUser(User user) throws SQLException{
+		user.setUpdatedAt(new Date());
+		getUserDao().update(user);
+	}
+	
+	/**
+	 * Updates the UserAvatar in the database
+	 * @param project
+	 * @throws SQLException
+	 */
+	public void updateUserAvatar(UserAvatar userAvatar) throws SQLException{
+		userAvatar.setUpdatedAt(new Date());
+		getUserAvatarDao().update(userAvatar);
+	}
 
 	/**
 	 * Updates the UserToProject in the database

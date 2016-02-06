@@ -26,13 +26,11 @@ import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
-import com.splitemapp.commons.domain.UserContactData;
 
 public class HomeFragment extends RestfulFragment {
 	private static final String TAG = HomeFragment.class.getSimpleName();
 
 	private User mCurrentUser;
-	private UserContactData mUserContactData;
 
 	private DrawerLayout mDrawerLayout;
 
@@ -61,15 +59,9 @@ public class HomeFragment extends RestfulFragment {
 
 		// We inform that the activity hosting this fragment has an options menu
 		setHasOptionsMenu(true);
-
-		// We get the user and user contact data instances
-		try {
-			mCurrentUser = getHelper().getLoggedUser();
-			mUserContactData = getHelper().getLoggedUserContactData();
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-
+		
+		// We update the current user entity
+		updateCurrentUser();
 	}
 
 	@Override
@@ -87,7 +79,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We populate the email in the navigation view
 		mNavEmail = (TextView) v.findViewById(R.id.h_nav_email_textView);
-		mNavEmail.setText(mUserContactData.getContactData());
+		mNavEmail.setText(mCurrentUser.getUsername());
 
 		// We set the user avatar in the navigation view
 		mNavAvatar = (ImageView) v.findViewById(R.id.h_nav_avatar_imageView);
@@ -99,7 +91,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We populate the email in the main view
 		mMainEmail = (TextView) v.findViewById(R.id.h_main_email_textView);
-		mMainEmail.setText(mUserContactData.getContactData());
+		mMainEmail.setText(mCurrentUser.getUsername());
 
 		// We set the user avatar in the main view
 		mMainAvatar = (ImageView) v.findViewById(R.id.h_main_avatar_imageView);
@@ -221,6 +213,18 @@ public class HomeFragment extends RestfulFragment {
 	}
 
 	/**
+	 * Updates the current user instance
+	 */
+	private void updateCurrentUser(){
+		// We get the user instance
+		try {
+			mCurrentUser = getHelper().getLoggedUser();
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught!", e);
+		}
+	}
+
+	/**
 	 * Makes all necessary updates to this fragment
 	 */
 	private void updateFragment(){
@@ -233,6 +237,11 @@ public class HomeFragment extends RestfulFragment {
 		} else {
 			mEmptyListHintTextView.setVisibility(View.GONE);
 		}
+
+		// Updating the FullName
+		updateCurrentUser();
+		mMainFullName.setText(mCurrentUser.getFullName());
+		mNavFullName.setText(mCurrentUser.getFullName());
 	}
 
 	@Override
