@@ -15,6 +15,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.home.HomeActivity;
+import com.splitemapp.android.utils.PreferencesManager;
+import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 
 public class MyGcmListenerService extends GcmListenerService {
@@ -49,13 +51,24 @@ public class MyGcmListenerService extends GcmListenerService {
 		Log.d(TAG, "details: " + details);
 		Log.d(TAG, "projectId: " + projectId);
 
-		// Showing notification
-		StringBuilder message = new StringBuilder();
-		message.append(sender);
-		message.append(" has " +action);
-		message.append(" " +details);
+		// Showing notification if the proper setting is enabled
+		boolean notifyNewProject = PreferencesManager.getInstance().getBoolean(PreferencesManager.NOTIFY_NEW_PROJECT);
+		boolean notifyNewExpense = PreferencesManager.getInstance().getBoolean(PreferencesManager.NOTIFY_NEW_EXPENSE);
+		boolean notifyUpdatedProjectCover = PreferencesManager.getInstance().getBoolean(PreferencesManager.NOTIFY_UPDATED_PROJECT_COVER);
 
-		showNotification(message.toString());
+		if((action.equals(Action.ADD_USER_TO_PROJECT) && notifyNewProject) || 
+				action.equals(Action.ADD_USER_EXPENSE) && notifyNewExpense || 
+				action.equals(Action.UPDATE_PROJECT_COVER_IMAGE) && notifyUpdatedProjectCover){
+			// Crafting message
+			StringBuilder message = new StringBuilder();
+			message.append(sender);
+			message.append(" has " +action);
+			message.append(" " +details);
+			
+			// Showing notification
+			showNotification(message.toString());
+		}
+
 
 		// Sending the action to the listening fragment
 		Intent intent = new Intent(ServiceConstants.GCM_MESSAGE);

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 
@@ -28,7 +30,11 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 	private ImageView mAvatarImageView;
 	private EditText mFullNameEditText;
 	private TextView mEmailTextView;
-	
+
+	private SwitchCompat mNewProjectSwitchCompat;
+	private SwitchCompat mNewExpenseSwitchCompat;
+	private SwitchCompat mUpdatedProjectSwitchCompat;
+
 	private boolean avatarChanged;
 	private byte[] mAvatarData;
 
@@ -68,6 +74,18 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		mEmailTextView  = (TextView) v.findViewById(R.id.s_email_textView);
 		mEmailTextView.setText(mCurrentUser.getUsername());
 
+		// We set the switch compat
+		mNewProjectSwitchCompat = (SwitchCompat) v.findViewById(R.id.s_new_project_switch);
+		mNewProjectSwitchCompat.setChecked(getPrefsManager().getBoolean(PreferencesManager.NOTIFY_NEW_PROJECT));
+
+		// We set the switch compat
+		mNewExpenseSwitchCompat = (SwitchCompat) v.findViewById(R.id.s_new_expense_switch);
+		mNewExpenseSwitchCompat.setChecked(getPrefsManager().getBoolean(PreferencesManager.NOTIFY_NEW_EXPENSE));
+
+		// We set the switch compat
+		mUpdatedProjectSwitchCompat = (SwitchCompat) v.findViewById(R.id.s_updated_cover_switch);
+		mUpdatedProjectSwitchCompat.setChecked(getPrefsManager().getBoolean(PreferencesManager.NOTIFY_UPDATED_PROJECT_COVER));
+
 		return v;
 	}
 
@@ -75,14 +93,14 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
 		// Updating change flag
 		avatarChanged = true;
-		
+
 		// Setting the avatar data
 		mAvatarData = ImageUtils.bitmapToByteArray(selectedBitmap, ImageUtils.IMAGE_QUALITY_MAX);
-		
+
 		// Updating project image on screen
 		mAvatarImageView.setImageBitmap(selectedBitmap);
 	}
-	
+
 	@Override
 	public boolean getCropImage() {
 		return true;
@@ -121,7 +139,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				Log.e(TAG, "SQLException caught while updating User entity!", e);
 			}
 		}
-		
+
 		// If avatar changed we persist the change
 		if(avatarChanged){
 			UserAvatar userAvatar;
@@ -135,6 +153,11 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 			}
 		}
 		
+		// Updating notification preferences
+		getPrefsManager().setBoolean(PreferencesManager.NOTIFY_NEW_PROJECT, mNewProjectSwitchCompat.isChecked());
+		getPrefsManager().setBoolean(PreferencesManager.NOTIFY_NEW_EXPENSE, mNewExpenseSwitchCompat.isChecked());
+		getPrefsManager().setBoolean(PreferencesManager.NOTIFY_UPDATED_PROJECT_COVER, mUpdatedProjectSwitchCompat.isChecked());
+
 		getActivity().finish();
 	}
 }

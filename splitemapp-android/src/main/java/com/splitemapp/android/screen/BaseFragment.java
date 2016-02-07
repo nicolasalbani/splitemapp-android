@@ -31,6 +31,7 @@ import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
@@ -39,6 +40,7 @@ import com.splitemapp.commons.domain.UserExpense;
 public abstract class BaseFragment extends Fragment {
 
 	public DatabaseHelper databaseHelper = null;
+	private PreferencesManager preferencesManager = null; 
 
 	private int imageWidth;
 	private int imageHeight;
@@ -73,6 +75,17 @@ public abstract class BaseFragment extends Fragment {
 			databaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
 		}
 		return databaseHelper;
+	}
+	
+	/**
+	 * This method returns an instance of the PreferencesManager which contains access to app settings
+	 * @return
+	 */
+	public PreferencesManager getPrefsManager(){
+		if(preferencesManager == null){
+			preferencesManager = PreferencesManager.getInstance(getContext());
+		}
+		return preferencesManager;
 	}
 
 	/**
