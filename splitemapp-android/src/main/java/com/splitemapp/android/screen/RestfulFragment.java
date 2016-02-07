@@ -16,6 +16,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.globals.Globals;
+import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.service.SyncTablesService;
 import com.splitemapp.android.service.gcm.RegistrationIntentService;
@@ -42,6 +43,7 @@ import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
+import com.splitemapp.android.task.LogoutRequestTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 
@@ -233,6 +235,32 @@ public abstract class RestfulFragment extends BaseFragment {
 			}
 		};
 		createAccountRequestTask.execute();
+	}
+	
+	/**
+	 * Creates a service logout request
+	 */
+	public void logout(){
+		// Creating the LogoutRequestTask instance
+		LogoutRequestTask logoutRequestTask = new LogoutRequestTask(getHelper()){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+
+				// We move to the welcome screen
+				startActivity(new Intent(getActivity(), WelcomeActivity.class));
+			}
+			@Override
+			public void executeOnFail() {
+				hideProgressIndicator();
+				showToast(getResources().getString(R.string.network_error));
+			}
+		};
+		logoutRequestTask.execute();
 	}
 
 	/**

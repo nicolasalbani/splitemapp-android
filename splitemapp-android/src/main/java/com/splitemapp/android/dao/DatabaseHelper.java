@@ -661,6 +661,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			getUserSessionDao().delete(userSession);
 		}
 	}
+	
+	/**
+	 * Deletes all existing information in the database
+	 * @throws SQLException
+	 */
+	public void clearDatabase() throws SQLException{
+		// Removing all information for all tables
+		TableUtils.clearTable(connectionSource, UserSession.class);
+		TableUtils.clearTable(connectionSource, UserInvite.class);
+		TableUtils.clearTable(connectionSource, UserAvatar.class);
+		TableUtils.clearTable(connectionSource, UserContactData.class);
+		TableUtils.clearTable(connectionSource, UserExpense.class);
+		TableUtils.clearTable(connectionSource, UserToProject.class);
+		TableUtils.clearTable(connectionSource, User.class);
+		TableUtils.clearTable(connectionSource, ProjectCoverImage.class);
+		TableUtils.clearTable(connectionSource, Project.class);
+	}
 
 	/**
 	 * Convenience method to update the Sync PULL at timestamp

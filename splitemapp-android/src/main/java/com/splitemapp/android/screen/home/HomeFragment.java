@@ -23,7 +23,6 @@ import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.settings.SettingsActivity;
-import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomAlert;
 import com.splitemapp.commons.domain.User;
@@ -151,14 +150,7 @@ public class HomeFragment extends RestfulFragment {
 					}
 					@Override
 					public void executeOnPositiveAnswer() {
-						// We delete all user sessions
-						try {
-							getHelper().deleteAllUserSessions();
-						} catch (SQLException e) {
-							Log.e(TAG, "SQLException caught!", e);
-						}
-						// We move to the welcome screen
-						startActivity(new Intent(getActivity(), WelcomeActivity.class));
+						logout();
 					}
 					@Override
 					public void executeOnNegativeAnswer() {
