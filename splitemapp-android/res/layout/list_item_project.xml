@@ -87,7 +87,7 @@
                 android:layout_toEndOf="@id/h_project_cover_imageView"
                 android:layout_toRightOf="@id/h_project_cover_imageView"
                 android:text="@string/h_project_total"
-                android:textColor="@color/grey"
+                android:textColor="@color/hard_grey"
                 android:textSize="12sp" />
 
             <TextView
@@ -98,7 +98,7 @@
                 android:layout_toEndOf="@id/h_project_total_label"
                 android:layout_toRightOf="@id/h_project_total_label"
                 android:text="@string/h_project_total_value"
-                android:textColor="@color/grey"
+                android:textColor="@color/hard_grey"
                 android:textSize="12sp" />
 
             <View
@@ -107,7 +107,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/h_project_cover_imageView"
                 android:layout_toRightOf="@id/h_project_cover_imageView"
-                android:background="@color/grey" />
+                android:background="@color/hard_grey" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
