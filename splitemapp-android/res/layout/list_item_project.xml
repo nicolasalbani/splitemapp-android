@@ -107,7 +107,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toEndOf="@id/h_project_cover_imageView"
                 android:layout_toRightOf="@id/h_project_cover_imageView"
-                android:background="@color/hard_grey" />
+                android:background="@color/grey" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 

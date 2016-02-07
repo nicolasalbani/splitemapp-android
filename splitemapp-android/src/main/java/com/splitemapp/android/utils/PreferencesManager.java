@@ -7,45 +7,31 @@ import android.content.SharedPreferences.Editor;
 
 public class PreferencesManager {
 
-	private static PreferencesManager instance;
-
 	private static final String SETTINGS_NAME = "SplitemappSettings";
 	private static final String SETTINGS_INITIALIZED = "SETTINGS_INITIALIZED";
-	private static SharedPreferences settings;
 
 	public static final String NOTIFY_NEW_PROJECT = "NOTIFY_NEW_PROJECT";
 	public static final String NOTIFY_NEW_EXPENSE = "NOTIFY_NEW_EXPENSE";
 	public static final String NOTIFY_UPDATED_PROJECT_COVER = "NOTIFY_UPDATED_PROJECT_COVER";
 
-	private PreferencesManager() {}
+	private SharedPreferences settings;
 
-	public static PreferencesManager getInstance(Context context){
-		if(instance == null){
-			instance = new PreferencesManager();
+	public PreferencesManager(Context context){
+		settings = context.getSharedPreferences(SETTINGS_NAME, 0);
 
-			// Obtaining application preferences
-			settings = context.getSharedPreferences(SETTINGS_NAME, 0);
-
-			// Initializing settings if required
-			initializeSettings();
-		}
-
-		return instance;
+		// Initializing settings if required
+		initializeSettings();
 	}
 
-	public static PreferencesManager getInstance(){
-		return instance;
-	}
-
-	private static void initializeSettings(){
-		if(!instance.getBoolean(SETTINGS_INITIALIZED)){
+	private void initializeSettings(){
+		if(!getBoolean(SETTINGS_INITIALIZED)){
 			// Updating initialized status
-			instance.setBoolean(SETTINGS_INITIALIZED, true);
+			setBoolean(SETTINGS_INITIALIZED, true);
 
 			// Initializing settings 
-			instance.setBoolean(NOTIFY_NEW_EXPENSE, true);
-			instance.setBoolean(NOTIFY_NEW_PROJECT, true);
-			instance.setBoolean(NOTIFY_UPDATED_PROJECT_COVER, true);
+			setBoolean(NOTIFY_NEW_EXPENSE, true);
+			setBoolean(NOTIFY_NEW_PROJECT, true);
+			setBoolean(NOTIFY_UPDATED_PROJECT_COVER, true);
 		}
 	}
 

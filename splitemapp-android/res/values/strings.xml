@@ -14,6 +14,11 @@
     <string name="ab_back_description">Back</string>
     <string name="ab_menu_description">Menu</string>
     
+    <!-- Notifications -->
+    <string name="notification_new_project">has added you to project</string>
+    <string name="notification_new_expense">has added an expense for project</string>
+    <string name="notification_updated_project_cover">has updated cover for project</string>
+    
     <!-- Welcome Screen -->
     <string name="w_login">LOGIN</string>
     <string name="w_create_account">CREATE ACCOUNT</string>

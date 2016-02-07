@@ -83,7 +83,7 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	public PreferencesManager getPrefsManager(){
 		if(preferencesManager == null){
-			preferencesManager = PreferencesManager.getInstance(getContext());
+			preferencesManager = new PreferencesManager(getContext());
 		}
 		return preferencesManager;
 	}
