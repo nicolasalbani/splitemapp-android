@@ -242,6 +242,10 @@ public class HomeFragment extends RestfulFragment {
 		updateCurrentUser();
 		mMainFullName.setText(mCurrentUser.getFullName());
 		mNavFullName.setText(mCurrentUser.getFullName());
+		
+		// Updating the Avatar
+		setUsetAvatar(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatar(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	@Override
