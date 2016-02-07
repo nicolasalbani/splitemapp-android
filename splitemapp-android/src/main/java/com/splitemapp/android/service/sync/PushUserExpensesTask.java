@@ -78,5 +78,8 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		for(IdUpdate<Long> idUpdate:idUpdateList){
 			getHelper().updateIdReferences(idUpdate, idReferenceList);
 		}
+		
+		//We notify the update was successful
+		broadcastMessage(STOP_ANIMATION);
 	}
 }

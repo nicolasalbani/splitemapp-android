@@ -95,6 +95,9 @@ public abstract class RestfulFragment extends BaseFragment {
 						onRefresh(response);
 					} else if (response.equals(BaseTask.NETWORK_ERROR)){
 						showToast(getResources().getString(R.string.network_error));
+					} else if(response.equals(BaseTask.EXPENSES_PUSHED)){
+						// We call the overridden onRefresh method
+						onRefresh(response);
 					}
 				}
 			}

@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen.project;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -109,6 +110,17 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 		String date = dateFormat.format(userExpense.getExpenseDate());
 		viewHolder.mDateTextView.setText(date);
+		
+		// Setting icon which indicates whether this expense was pushed to server already
+		try {
+			if(baseFragment.getHelper().isExpensePushed(userExpense)){
+				viewHolder.mIconImageView.setBackgroundResource(R.drawable.ic_checkbox_marked_circle_24dp);
+			} else {
+				viewHolder.mIconImageView.setBackgroundResource(R.drawable.ic_checkbox_blank_circle_outline_24dp);
+			}
+		} catch (SQLException e) {
+			// Do nothing
+		}
 
 		// Setting amount
 		viewHolder.mAmountTextView.setText(String.format("%.2f", userExpense.getExpense()));

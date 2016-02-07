@@ -24,6 +24,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.utils.EconomicUtils;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
+import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
@@ -1141,6 +1142,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 
 		return user;
+	}
+	
+	/**
+	 * Indicates whether this particular userExpense was pushed to the server
+	 * @param userExpense
+	 * @return
+	 * @throws SQLException 
+	 */
+	public boolean isExpensePushed(UserExpense userExpense) throws SQLException{
+		Date lastSuccessPushAt = getLastSuccessPushAt(TableName.USER_EXPENSE);
+		return lastSuccessPushAt.after(userExpense.getUpdatedAt());
 	}
 
 	/**

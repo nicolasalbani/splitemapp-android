@@ -13,6 +13,7 @@ public abstract class BaseTask {
 	public static final String TASK_NAME = "TASK_NAME";
 	public static final String START_ANIMATION = "start_animation";
 	public static final String STOP_ANIMATION = "stop_animation";
+	public static final String EXPENSES_PUSHED = "expenses_pushed";
 	public static final String NETWORK_ERROR = "network_error";
 	
 	private DatabaseHelper databaseHelper = null;
