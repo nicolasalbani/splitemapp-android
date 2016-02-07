@@ -25,6 +25,7 @@ import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.widget.CustomAlert;
 import com.splitemapp.commons.domain.User;
 
 public class HomeFragment extends RestfulFragment {
@@ -59,7 +60,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We inform that the activity hosting this fragment has an options menu
 		setHasOptionsMenu(true);
-		
+
 		// We update the current user entity
 		updateCurrentUser();
 	}
@@ -134,14 +135,36 @@ public class HomeFragment extends RestfulFragment {
 		mLogoutButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				// We delete all user sessions
-				try {
-					getHelper().deleteAllUserSessions();
-				} catch (SQLException e) {
-					Log.e(TAG, "SQLException caught!", e);
-				}
-				// We move to the welcome screen
-				startActivity(new Intent(getActivity(), WelcomeActivity.class));
+				// SHowing custom alert to let the user confirm action
+				new CustomAlert(getContext()) {
+					@Override
+					public String getPositiveButtonText() {
+						return getResources().getString(R.string.confirmation_positive_text);
+					}
+					@Override
+					public String getNegativeButtonText() {
+						return getResources().getString(R.string.confirmation_negative_text);
+					}
+					@Override
+					public String getMessage() {
+						return getResources().getString(R.string.confirmation_logout);
+					}
+					@Override
+					public void executeOnPositiveAnswer() {
+						// We delete all user sessions
+						try {
+							getHelper().deleteAllUserSessions();
+						} catch (SQLException e) {
+							Log.e(TAG, "SQLException caught!", e);
+						}
+						// We move to the welcome screen
+						startActivity(new Intent(getActivity(), WelcomeActivity.class));
+					}
+					@Override
+					public void executeOnNegativeAnswer() {
+						// We do nothing
+					}
+				}.show();
 			}
 		});
 
@@ -242,7 +265,7 @@ public class HomeFragment extends RestfulFragment {
 		updateCurrentUser();
 		mMainFullName.setText(mCurrentUser.getFullName());
 		mNavFullName.setText(mCurrentUser.getFullName());
-		
+
 		// Updating the Avatar
 		setUsetAvatar(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 		setUsetAvatar(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);

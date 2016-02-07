@@ -21,6 +21,7 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.widget.CustomAlert;
 import com.splitemapp.commons.domain.Project;
 
 public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdapter.ViewHolder> {
@@ -48,7 +49,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 		// Saving project ID
 		viewHolder.project = mProjects.get(position);
-		
+
 		// Gets element from the data set at this position
 		// Replaces the contents of the view with that element
 		viewHolder.mProjectTitleTextView.setText(mProjects.get(position).getTitle());
@@ -79,7 +80,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 			public void onClick(View view) {
 				// Saving the project ID in a global variable
 				Globals.setCreateProjectActivityProjectId(viewHolder.project.getId());
-				
+
 				// Creating an intent to the Creat Project activity
 				Intent intent = new Intent(view.getContext(), CreateProjectActivity.class);
 				view.getContext().startActivity(intent);
@@ -89,12 +90,35 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				try {
-					baseFragment.getHelper().archiveCurrentUserToProject(viewHolder.project.getId());
-					removeItem(viewHolder);
-				} catch (SQLException e) {
-					Log.e(TAG, "SQLException caught!", e);
-				}
+				// SHowing custom alert to let the user confirm action
+				new CustomAlert(baseFragment.getContext()) {
+					@Override
+					public String getPositiveButtonText() {
+						return baseFragment.getResources().getString(R.string.confirmation_positive_text);
+					}
+					@Override
+					public String getNegativeButtonText() {
+						return baseFragment.getResources().getString(R.string.confirmation_negative_text);
+					}
+					@Override
+					public String getMessage() {
+						return baseFragment.getResources().getString(R.string.confirmation_archive_project);
+					}
+					@Override
+					public void executeOnPositiveAnswer() {
+						try {
+							baseFragment.getHelper().archiveCurrentUserToProject(viewHolder.project.getId());
+							removeItem(viewHolder);
+						} catch (SQLException e) {
+							Log.e(TAG, "SQLException caught!", e);
+						}
+					}
+					@Override
+					public void executeOnNegativeAnswer() {
+						// We do nothing
+					}
+				}.show();
+
 			}});
 
 		// Setting the total value for the project
@@ -119,13 +143,13 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	 */
 	public void updateRecycler(){
 		List<Project> updatedList = getActiveProjectsList(baseFragment);
-		
+
 		// We update all projects in the list
 		for(Project project:mProjects){
 			int position = mProjects.indexOf(project);
 			notifyItemChanged(position);
 		}
-		
+
 		// We add any new project to the list
 		for(Project project:updatedList){
 			if(!mProjects.contains(project)){
@@ -143,7 +167,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		mProjects.remove(viewHolder.project);
 		notifyItemRemoved(viewHolder.getAdapterPosition());
 	}
-	
+
 	/**
 	 * Returns the whole list of active projects for this user
 	 * @return
@@ -166,7 +190,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		// Holding project object
 		Project project;
-		
+
 		// Declaring the swipe layout
 		SwipeLayout mSwipeLayout;
 
@@ -181,7 +205,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 
 		public ViewHolder(View view) {
 			super(view);
-			
+
 			// Getting instance for swipe layout
 			mSwipeLayout = (SwipeLayout)view.findViewById(R.id.h_swipeLayout);
 

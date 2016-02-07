@@ -19,6 +19,12 @@
     <string name="notification_new_expense">has added an expense for project</string>
     <string name="notification_updated_project_cover">has updated cover for project</string>
     
+    <!-- Confirmations -->
+    <string name="confirmation_logout">Are you sure you want to logout?</string>
+    <string name="confirmation_archive_project">Are you sure you want to archive this project?</string>
+    <string name="confirmation_positive_text">Yes</string>
+    <string name="confirmation_negative_text">No</string>
+    
     <!-- Welcome Screen -->
     <string name="w_login">LOGIN</string>
     <string name="w_create_account">CREATE ACCOUNT</string>
