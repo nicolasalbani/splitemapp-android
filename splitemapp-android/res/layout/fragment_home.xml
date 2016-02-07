@@ -79,6 +79,7 @@
             android:layout_below="@id/h_topLayout"
             android:layout_marginTop="50dp"
             android:drawableTop="@drawable/ic_list_add_48dp"
+            android:gravity="center_horizontal"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:text="@string/h_empty_list_hint"
