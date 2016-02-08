@@ -83,12 +83,13 @@ public class MyGcmListenerService extends GcmListenerService {
 			showNotification(message.toString());
 		}
 
-
 		// Sending the action to the listening fragment
-		Intent intent = new Intent(ServiceConstants.GCM_MESSAGE);
+		Intent intent = new Intent(ServiceConstants.REST_MESSAGE);
 		intent.putExtra(ServiceConstants.CONTENT_ACTION, action);
 		intent.putExtra(ServiceConstants.PROJECT_ID, projectId);
 		broadcaster.sendBroadcast(intent);
+		
+		Log.d("BroadcastSender", "Sending " +ServiceConstants.REST_MESSAGE+ ": " +action);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.NetworkUtils;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
@@ -97,7 +98,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 			String pushMessage = "Push " +getTableName();
 			if(!success){
 				executeOnFail();
-				broadcastMessage(pushMessage +" fail");
+				broadcastMessage(pushMessage +" fail", ServiceConstants.UI_MESSAGE);
 			} else {
 				try {
 					// We process the service response
@@ -109,7 +110,7 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 				// Executing next synchronized action
 				executeOnSuccess();
 				
-				broadcastMessage(pushMessage +" success");
+				broadcastMessage(pushMessage +" success", ServiceConstants.UI_MESSAGE);
 			}
 		} finally {
 			Log.i(getLoggingTag(), getServicePath() +" END");

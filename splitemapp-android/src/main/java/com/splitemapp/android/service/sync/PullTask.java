@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.NetworkUtils;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
 
@@ -92,7 +93,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 			String pullMessage = "Pull " +getTableName();
 			if(!success){
 				executeOnFail();
-				broadcastMessage(pullMessage + " fail");
+				broadcastMessage(pullMessage + " fail", ServiceConstants.UI_MESSAGE);
 			} else {
 				// Saving the information returned by the back-end
 				try {
@@ -109,7 +110,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 				// Executing next synchronized action
 				executeOnSuccess();
 				
-				broadcastMessage(pullMessage + " success");
+				broadcastMessage(pullMessage + " success", ServiceConstants.UI_MESSAGE);
 			}
 		} finally {
 			Log.i(getLoggingTag(), getServicePath() +" END");

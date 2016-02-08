@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Context;
 
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableName;
@@ -80,6 +81,6 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		}
 		
 		//We notify the update was successful
-		broadcastMessage(STOP_ANIMATION);
+		broadcastMessage(BaseTask.EXPENSES_PUSHED, ServiceConstants.UI_MESSAGE);
 	}
 }

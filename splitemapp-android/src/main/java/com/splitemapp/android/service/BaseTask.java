@@ -3,6 +3,7 @@ package com.splitemapp.android.service;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.splitemapp.android.dao.DatabaseHelper;
@@ -40,13 +41,23 @@ public abstract class BaseTask {
 	
 	/**
 	 * This method sends a broadcast message for the listening fragment to process
-	 * @param response
+	 * @param message
 	 */
-	public void broadcastMessage(String response){
+	public void broadcastMessage(String message, String messageType){
 		// Sending the action to the listening fragment
-		Intent intent = new Intent(ServiceConstants.REST_MESSAGE);
-		intent.putExtra(ServiceConstants.CONTENT_RESPONSE, response);
+		Intent intent = new Intent(messageType);
+		intent.putExtra(ServiceConstants.CONTENT_RESPONSE, message);
 		LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+		
+		Log.d("BroadcastSender", "Sending " +messageType+ ": " +message);
+	}
+	
+	/**
+	 * Returns the context for this task
+	 * @return
+	 */
+	public Context getContext(){
+		return this.context;
 	}
 	
 	/**

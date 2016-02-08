@@ -17,9 +17,9 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
+import com.splitemapp.android.service.BaseIntentService;
 import com.splitemapp.android.service.BaseTask;
-import com.splitemapp.android.service.SyncTablesService;
-import com.splitemapp.android.service.gcm.RegistrationIntentService;
+import com.splitemapp.android.service.gcm.GcmRegistrationTask;
 import com.splitemapp.android.service.sync.PullProjectCoverImagesTask;
 import com.splitemapp.android.service.sync.PullProjectsTask;
 import com.splitemapp.android.service.sync.PullTask;
@@ -35,7 +35,6 @@ import com.splitemapp.android.service.sync.PushUserAvatarsTask;
 import com.splitemapp.android.service.sync.PushUserContactDatasTask;
 import com.splitemapp.android.service.sync.PushUserExpensesTask;
 import com.splitemapp.android.service.sync.PushUserInvitesTask;
-import com.splitemapp.android.service.sync.PushUserSessionsTask;
 import com.splitemapp.android.service.sync.PushUserToProjectsTask;
 import com.splitemapp.android.service.sync.PushUsersTask;
 import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
@@ -51,7 +50,8 @@ public abstract class RestfulFragment extends BaseFragment {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	private CustomProgressDialog waitDialog = null;
-	private BroadcastReceiver mBroadcastReceiver;
+	private BroadcastReceiver mRestBroadcastReceiver;
+	private BroadcastReceiver mUiBroadcastReceiver;
 	private SwipeRefreshLayout mSwipeRefresh;
 
 	static{
@@ -70,18 +70,71 @@ public abstract class RestfulFragment extends BaseFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Setting the broadcast receiver for the GCM communication
-		mBroadcastReceiver = new BroadcastReceiver() {
+		// Setting the REST broadcast receiver
+		mRestBroadcastReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// Processing the action after getting a broadcast
 				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
 				String projectId = intent.getStringExtra(ServiceConstants.PROJECT_ID);
-				processAction(action, projectId);
 
+				Log.d("BroadcastReceiver", "Received REST_MESSAGE: " +action+ " for projectId: " +projectId);
+
+				// If the message contains an action, execute the proper method
+				if(action != null){
+					// Starting refresh animation
+					startRefreshAnimation();
+
+					// Checking for SYNC actions
+					if(action.equals(Action.UPDATE_USER)){
+						pullUsers();
+					} else if (action.equals(Action.UPDATE_USER_AVATAR)){
+						pullUserAvatars();
+					} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
+						pullUserContactDatas();
+					} else if (action.equals(Action.UPDATE_PROJECT)){
+						pullProjects();
+					} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE)){
+						pullProjects();
+						pullProjectCoverImages();
+					} else if (action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
+						pullProjectCoverImages();
+					} else if (action.equals(Action.ADD_USER_TO_PROJECT)){
+						// In case some users for this project are not in the local database
+						pullUsers();
+						pullUserAvatars();
+						pullUserContactDatas();
+						// Assuming this is a new project to which this user was added
+						pullProjects();
+						pullProjectCoverImages();
+						// Actually pulling the user to project relationships 
+						pullUserToProjects();
+						// Pulling all user expenses for that project
+						pullUserExpensesByProject(projectId);
+					} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
+						pullUserToProjects();
+					} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
+						pullUserInvites();
+					} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
+						pullUserExpenses();
+					}
+
+					// Stopping refresh animation
+					stopRefreshAnimation();
+				}
+			}
+		};
+
+		// Setting the UI broadcast receiver
+		mUiBroadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// Processing the action after getting a broadcast
 				String response = intent.getStringExtra(ServiceConstants.CONTENT_RESPONSE);
-				if(response!=null){
 
+				Log.d("BroadcastReceiver", "Received UI_MESSAGE: " +response);
+
+				if(response!=null){
 					// If there is a swipe refresh layout set, we update animation if required
 					if(response.equals(BaseTask.START_ANIMATION)){
 						if(mSwipeRefresh != null){
@@ -112,74 +165,21 @@ public abstract class RestfulFragment extends BaseFragment {
 	 */
 	protected void onRefresh(String response){}
 
-	/**
-	 * Processes the provided action
-	 * @param action
-	 */
-	private void processAction(String action, String projectId){
-		// If the message contains an action, execute the proper method
-		if(action != null){
-			// Starting refresh animation
-			startRefreshAnimation();
-
-			// Checking for GCM actions
-			if(action.equals(Action.REGISTER_GCM)){
-				pushUserSessions();
-			}
-
-			// Checking for SYNC actions
-			if(action.equals(Action.UPDATE_USER)){
-				pullUsers();
-			} else if (action.equals(Action.UPDATE_USER_AVATAR)){
-				pullUserAvatars();
-			} else if (action.equals(Action.ADD_USER_CONTACT_DATA) || action.equals(Action.UPDATE_USER_CONTACT_DATA)){
-				pullUserContactDatas();
-			} else if (action.equals(Action.UPDATE_PROJECT)){
-				pullProjects();
-			} else if (action.equals(Action.ADD_PROJECT_COVER_IMAGE)){
-				pullProjects();
-				pullProjectCoverImages();
-			} else if (action.equals(Action.UPDATE_PROJECT_COVER_IMAGE)){
-				pullProjectCoverImages();
-			} else if (action.equals(Action.ADD_USER_TO_PROJECT)){
-				// In case some users for this project are not in the local database
-				pullUsers();
-				pullUserAvatars();
-				pullUserContactDatas();
-				// Assuming this is a new project to which this user was added
-				pullProjects();
-				pullProjectCoverImages();
-				// Actually pulling the user to project relationships 
-				pullUserToProjects();
-				// Pulling all user expenses for that project
-				pullUserExpensesByProject(projectId);
-			} else if (action.equals(Action.UPDATE_USER_TO_PROJECT)){
-				pullUserToProjects();
-			} else if (action.equals(Action.ADD_USER_INVITE) || action.equals(Action.UPDATE_USER_INVITE)){
-				pullUserInvites();
-			} else if (action.equals(Action.ADD_USER_EXPENSE) || action.equals(Action.UPDATE_USER_EXPENSE)){
-				pullUserExpenses();
-			}
-
-			// Stopping refresh animation
-			stopRefreshAnimation();
-		}
-	}
-
 	@Override
 	public void onStart() {
 		super.onStart();
 		// Registering broadcast receiver
-		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
-				new IntentFilter(ServiceConstants.GCM_MESSAGE));
-		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mBroadcastReceiver), 
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mRestBroadcastReceiver), 
 				new IntentFilter(ServiceConstants.REST_MESSAGE));
+		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mUiBroadcastReceiver), 
+				new IntentFilter(ServiceConstants.UI_MESSAGE));
 	}
 
 	@Override
 	public void onStop() {
 		// Unregistering broadcast receiver
-		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRestBroadcastReceiver);
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUiBroadcastReceiver);
 
 		super.onStop();
 	}
@@ -187,7 +187,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	@Override
 	public void onPause() {
 		// Unregistering broadcast receiver
-		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mRestBroadcastReceiver);
+		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mUiBroadcastReceiver);
 
 		super.onPause();
 	}
@@ -236,7 +237,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		};
 		createAccountRequestTask.execute();
 	}
-	
+
 	/**
 	 * Creates a service logout request
 	 */
@@ -282,16 +283,15 @@ public abstract class RestfulFragment extends BaseFragment {
 
 				// Start IntentService to register this application with GCM.
 				if (checkPlayServices()) {
-					Intent intent = new Intent(getActivity(), RegistrationIntentService.class);
-					getActivity().startService(intent);
+					registerGcmToken();
 				}
-				
+
 				// Synchronizing all tables for the first time
 				pullAllTablesFirstTime();
-				
+
 				// Synchronizing contacts
 				syncContacts();
-				
+
 				// Setting the global connected to server to true
 				Globals.setIsConnectedToServer(true);
 			}
@@ -373,19 +373,19 @@ public abstract class RestfulFragment extends BaseFragment {
 		// Stopping refresh animation
 		stopRefreshAnimation();
 	}
-	
+
 	/**
 	 * Synchronize all contacts available in the device contacts list
 	 */
 	protected void syncContacts(){
 		// Starting refresh animation
 		startRefreshAnimation();
-		
+
 		// Starting sync contacts activity
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, SynchronizeContactsTask.class.getSimpleName());
 		getActivity().startService(intent);
-		
+
 		// Stopping refresh animation
 		stopRefreshAnimation();
 	}
@@ -409,7 +409,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Starts the refresh animation
 	 */
 	protected void startRefreshAnimation(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, StartRefreshAnimationTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -418,7 +418,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Stops the refresh animation
 	 */
 	protected void stopRefreshAnimation(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, StopRefreshAnimationTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -427,7 +427,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table pull request
 	 */
 	protected void pullUsers(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUsersTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -436,7 +436,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_contact_data table pull request
 	 */
 	protected void pullUserContactDatas(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserContactDatasTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -445,7 +445,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_avatar table pull request
 	 */
 	protected void pullUserAvatars(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserAvatarsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -454,7 +454,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project table pull request
 	 */
 	protected void pullProjects(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -463,7 +463,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project_cover_image table pull request
 	 */
 	protected void pullProjectCoverImages(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullProjectCoverImagesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -472,7 +472,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_to_project table pull request
 	 */
 	protected void pullUserToProjects(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserToProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -481,7 +481,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_invite table pull request
 	 */
 	protected void pullUserInvites(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserInvitesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -490,17 +490,17 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_expense table pull request
 	 */
 	protected void pullUserExpenses(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserExpensesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
-	
+
 	/**
 	 * Creates a service user_expense table pull request by project id
 	 * @param projectId
 	 */
 	protected void pullUserExpensesByProject(String projectId){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PullUserExpensesTask.class.getSimpleName());
 		intent.putExtra(PullTask.EXTRA_PULL_ALL_DATES, true);
 		intent.putExtra(PullTask.EXTRA_PROJECT_ID, projectId);
@@ -511,7 +511,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table push request
 	 */
 	protected void pushUserExpenses(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserExpensesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -520,7 +520,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_contact_data table push request
 	 */
 	protected void pushUserContactDatas(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserContactDatasTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -529,8 +529,17 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_avatar table push request
 	 */
 	protected void pushUserAvatars(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserAvatarsTask.class.getSimpleName());
+		getActivity().startService(intent);
+	}
+	
+	/**
+	 * Creates a GCM token registration request
+	 */
+	protected void registerGcmToken(){
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
+		intent.putExtra(BaseTask.TASK_NAME, GcmRegistrationTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 
@@ -538,7 +547,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project table push request
 	 */
 	protected void pushProjects(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -547,7 +556,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service project_cover_image table push request
 	 */
 	protected void pushProjectCoverImages(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushProjectCoverImagesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -556,7 +565,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_to_project table push request
 	 */
 	protected void pushUserToProjects(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserToProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -565,7 +574,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user_invite table push request
 	 */
 	protected void pushUserInvites(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserInvitesTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
@@ -574,17 +583,8 @@ public abstract class RestfulFragment extends BaseFragment {
 	 * Creates a service user table push request
 	 */
 	protected void pushUsers(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
+		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUsersTask.class.getSimpleName());
-		getActivity().startService(intent);
-	}
-
-	/**
-	 * Creates a service user_session table push request
-	 */
-	protected void pushUserSessions(){
-		Intent intent = new Intent(getActivity(), SyncTablesService.class);
-		intent.putExtra(BaseTask.TASK_NAME, PushUserSessionsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
 

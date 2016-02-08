@@ -3,6 +3,8 @@ package com.splitemapp.android.service.gcm;
 import android.content.Intent;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
+import com.splitemapp.android.service.BaseTask;
+import com.splitemapp.android.service.BaseIntentService;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {
 
@@ -14,7 +16,8 @@ public class MyInstanceIDListenerService extends InstanceIDListenerService {
     @Override
     public void onTokenRefresh() {
         // Fetch updated Instance ID token and notify our app's server of any changes (if applicable).
-        Intent intent = new Intent(this, RegistrationIntentService.class);
-        startService(intent);
+        Intent intent = new Intent(this, BaseIntentService.class);
+		intent.putExtra(BaseTask.TASK_NAME, GcmRegistrationTask.class.getSimpleName());
+		startService(intent);
     }
 }

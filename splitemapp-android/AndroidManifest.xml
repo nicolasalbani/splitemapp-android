@@ -20,7 +20,7 @@
         android:theme="@style/Theme.AppCompat" >
         
         <service
-            android:name="com.splitemapp.android.service.SyncTablesService">
+            android:name="com.splitemapp.android.service.BaseIntentService">
         </service>
 
         <!-- Android GCM START -->

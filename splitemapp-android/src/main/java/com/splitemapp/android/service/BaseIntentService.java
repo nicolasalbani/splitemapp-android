@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.splitemapp.android.service.gcm.GcmRegistrationTask;
 import com.splitemapp.android.service.sync.PullProjectCoverImagesTask;
 import com.splitemapp.android.service.sync.PullProjectsTask;
 import com.splitemapp.android.service.sync.PullUserAvatarsTask;
@@ -18,19 +19,19 @@ import com.splitemapp.android.service.sync.PushUserAvatarsTask;
 import com.splitemapp.android.service.sync.PushUserContactDatasTask;
 import com.splitemapp.android.service.sync.PushUserExpensesTask;
 import com.splitemapp.android.service.sync.PushUserInvitesTask;
-import com.splitemapp.android.service.sync.PushUserSessionsTask;
 import com.splitemapp.android.service.sync.PushUserToProjectsTask;
 import com.splitemapp.android.service.sync.PushUsersTask;
 import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
 import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
+import com.splitemapp.commons.constants.ServiceConstants;
 
-public class SyncTablesService extends IntentService {
+public class BaseIntentService extends IntentService {
 
-	private static final String TAG = SyncTablesService.class.getSimpleName();
+	private static final String TAG = BaseIntentService.class.getSimpleName();
 	private boolean isConnectedToServer;
 
-	public SyncTablesService() {
+	public BaseIntentService() {
 		super(TAG);
 		isConnectedToServer = true;
 	}
@@ -51,6 +52,8 @@ public class SyncTablesService extends IntentService {
 			if(isConnectedToServer){
 				if(taskName.equals(SynchronizeContactsTask.class.getSimpleName())){
 					task = new SynchronizeContactsTask(this);
+				} else if(taskName.equals(GcmRegistrationTask.class.getSimpleName())){
+					task = new GcmRegistrationTask(this);
 				} else if(taskName.equals(PullProjectCoverImagesTask.class.getSimpleName())){
 					task = new PullProjectCoverImagesTask(this);
 				} else if(taskName.equals(PullProjectsTask.class.getSimpleName())){
@@ -79,8 +82,6 @@ public class SyncTablesService extends IntentService {
 					task = new PushUserExpensesTask(this);
 				} else if(taskName.equals(PushUserInvitesTask.class.getSimpleName())){
 					task = new PushUserInvitesTask(this);
-				} else if(taskName.equals(PushUserSessionsTask.class.getSimpleName())){
-					task = new PushUserSessionsTask(this);
 				} else if(taskName.equals(PushUsersTask.class.getSimpleName())){
 					task = new PushUsersTask(this);
 				} else if(taskName.equals(PushUserToProjectsTask.class.getSimpleName())){
@@ -98,7 +99,7 @@ public class SyncTablesService extends IntentService {
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "Network error detected", e);
-			task.broadcastMessage(BaseTask.NETWORK_ERROR);
+			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);
 			isConnectedToServer = false;
 		}
 	}
