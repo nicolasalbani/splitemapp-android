@@ -938,36 +938,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Initializes the SyncStatus table Push fields with the current time stamp
+	 * Initializes the SyncStatus table fields
 	 * @throws SQLException
 	 */
-	public void initializePushStatus() throws SQLException{
-		// We initialize all push entries in the table
+	public void initializeSyncStatus() throws SQLException{
+		// We initialize all entries in the table
 		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
 		for(SyncStatus syncStatus:syncStatusList){
+			// Setting pull entries to the oldest time
+			syncStatus.setLastPullAt(new Date(0));
+			syncStatus.setLastPullSuccessAt(new Date(0));
+			
+			// Setting push entries to the current time
 			syncStatus.setLastPushAt(new Date());
 			syncStatus.setLastPushSuccessAt(new Date());
+			
+			// Persisting changes
 			getSyncStatusDao().update(syncStatus);
 		}
-	}
-
-	/**
-	 * Checks whether the sync mechanism was initialized
-	 * @return
-	 * @throws SQLException
-	 */
-	public boolean isSyncInitialized() throws SQLException{
-		boolean isSyncInitialized = true;
-
-		// If any push sync field was not initialized, we assume that sync was not initialized  
-		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
-		for(SyncStatus syncStatus:syncStatusList){
-			if((syncStatus.getLastPushAt() == null)){
-				isSyncInitialized = false;
-			}
-		}
-
-		return isSyncInitialized;
 	}
 
 	/**

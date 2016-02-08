@@ -215,15 +215,6 @@ public class HomeFragment extends RestfulFragment {
 				}
 				);
 
-		// If this user never synchronized before, we initialize the SyncStatus table
-		try {
-			if(!getHelper().isSyncInitialized()){
-				syncAllTablesFirstTime();
-			}
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught!", e);
-		}
-
 		return v;
 	}
 

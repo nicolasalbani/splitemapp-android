@@ -73,7 +73,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		// Setting the broadcast receiver for the GCM communication
 		mBroadcastReceiver = new BroadcastReceiver() {
 			@Override
-			public synchronized void onReceive(Context context, Intent intent) {
+			public void onReceive(Context context, Intent intent) {
 				// Processing the action after getting a broadcast
 				String action = intent.getStringExtra(ServiceConstants.CONTENT_ACTION);
 				String projectId = intent.getStringExtra(ServiceConstants.PROJECT_ID);
@@ -286,6 +286,12 @@ public abstract class RestfulFragment extends BaseFragment {
 					getActivity().startService(intent);
 				}
 				
+				// Synchronizing all tables for the first time
+				pullAllTablesFirstTime();
+				
+				// Synchronizing contacts
+				syncContacts();
+				
 				// Setting the global connected to server to true
 				Globals.setIsConnectedToServer(true);
 			}
@@ -385,17 +391,18 @@ public abstract class RestfulFragment extends BaseFragment {
 	}
 
 	/**
-	 * Executes a linked list of asynchronous pull requests and initializes the Push sync data
+	 * Executes an asynchronous pull request and initializes the sync data
 	 */
-	protected void syncAllTablesFirstTime(){
-		pullAllTables();
-
-		// Initializing push status
+	protected void pullAllTablesFirstTime(){
+		// Initializing the synchronization table
 		try {
-			getHelper().initializePushStatus();
+			getHelper().initializeSyncStatus();
 		} catch (SQLException e) {
-			Log.e(getLoggingTag(), "Exception while initializing push status!", e);
+			Log.e(getLoggingTag(), "Exception while initializing synchronization table!", e);
 		}
+
+		// Pulling all tables
+		pullAllTables();
 	}
 
 	/**

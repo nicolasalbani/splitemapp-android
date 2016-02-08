@@ -38,7 +38,7 @@ public abstract class LogoutRequestTask extends BaseAsyncTask<Void, Void, Servic
 			logoutRequest.setToken(databaseHelper.getCurrentUserSession().getToken());
 
 			// Calling the rest service and send back the login response
-			return NetworkUtils.callRestService(ServiceConstants.LOGIN_PATH, logoutRequest, ServiceResponse.class);
+			return NetworkUtils.callRestService(ServiceConstants.LOGOUT_PATH, logoutRequest, ServiceResponse.class);
 		} catch (Exception e) {
 			Log.e(getLoggingTag(), e.getMessage(), e);
 		}
@@ -60,7 +60,11 @@ public abstract class LogoutRequestTask extends BaseAsyncTask<Void, Void, Servic
 			executeOnFail();
 		} else {
 			try {
+				// Clearing all tables in database
 				databaseHelper.clearDatabase();
+				
+				// Executing code on success
+				executeOnSuccess();
 			} catch (SQLException e) {
 				Log.e(getLoggingTag(), "SQLException caught while clearing the database", e);
 			}
