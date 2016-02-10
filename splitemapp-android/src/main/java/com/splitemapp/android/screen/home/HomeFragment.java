@@ -24,7 +24,7 @@ import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.android.widget.CustomAlert;
+import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.User;
 
 public class HomeFragment extends RestfulFragment {
@@ -135,7 +135,7 @@ public class HomeFragment extends RestfulFragment {
 			@Override
 			public void onClick(View arg0) {
 				// SHowing custom alert to let the user confirm action
-				new CustomAlert(getContext()) {
+				new ConfirmationAlertDialog(getContext()) {
 					@Override
 					public String getPositiveButtonText() {
 						return getResources().getString(R.string.confirmation_positive_text);
@@ -235,7 +235,7 @@ public class HomeFragment extends RestfulFragment {
 	 */
 	private void updateFragment(){
 		// Updating the RecyclerView
-		mProjectsAdapter.updateRecycler();
+		mProjectsAdapter.updateRecycler(mProjectsRecycler);
 
 		// Showing or hiding the empty list hint
 		if(mProjectsAdapter.getItemCount() == 0){

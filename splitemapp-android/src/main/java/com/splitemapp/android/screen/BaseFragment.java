@@ -205,6 +205,22 @@ public abstract class BaseFragment extends Fragment {
 
 		return false;
 	}
+	
+	/**
+	 * Returns the project title in the database for a particular projectId
+	 * @return
+	 */
+	public String getProjectTitle(Long projectId){
+		String title = null;
+		
+		try {
+			title = getHelper().getProject(projectId).getTitle();
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException caught while getting project title", e);
+		}
+		
+		return title;
+	}
 
 	/**
 	 * Sets the project avatar image to the provided image view and the specified image quality
@@ -212,11 +228,11 @@ public abstract class BaseFragment extends Fragment {
 	 * @param project
 	 * @param imageQuality
 	 */
-	public void setProjectAvatar(ImageView projectAvatarResource, Project project, int imageQuality){
+	public void setProjectAvatar(ImageView projectAvatarResource, Long projectId, int imageQuality){
 		//Getting the project cover
 		byte[] projectAvatar = null;
 		try {
-			projectAvatar = getHelper().getProjectCoverImageByProject(project.getId()).getAvatarData();
+			projectAvatar = getHelper().getProjectCoverImageByProject(projectId).getAvatarData();
 		} catch (SQLException e) {
 			Log.e(getLoggingTag(), "SQLException caught!", e);
 		}

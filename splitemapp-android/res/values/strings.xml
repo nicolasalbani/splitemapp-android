@@ -109,6 +109,9 @@
     <string name="p_cover_image_description">Cover Image</string>
     <string name="p_empty_list_hint">You don\'t have any spendings. Tap on the ADD button to start.</string>
     <string name="p_arrow_description">Arrow Image</string>
+    <string name="p_more_option_edit">Edit</string>
+    <string name="p_more_option_change_cover">Change cover</string>
+    <string name="p_more_option_archive">Archive</string>
     
     <!-- Expense Screen -->
     <string name="e_new_title">New Expense</string>

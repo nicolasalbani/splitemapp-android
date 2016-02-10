@@ -21,7 +21,7 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.android.widget.CustomAlert;
+import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.Project;
 
 public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdapter.ViewHolder> {
@@ -50,12 +50,16 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		// Saving project ID
 		viewHolder.project = mProjects.get(position);
 
-		// Gets element from the data set at this position
-		// Replaces the contents of the view with that element
-		viewHolder.mProjectTitleTextView.setText(mProjects.get(position).getTitle());
+		// Getting the title directly from the database since android doesn't update the ViewHolder payload
+		String projectTitle = baseFragment.getProjectTitle(mProjects.get(position).getId());
+		viewHolder.mProjectTitleTextView.setText(projectTitle);
+		
+		// Setting the total value for the project
+		float total = baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
+		viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
 
 		// Setting the project image cover
-		baseFragment.setProjectAvatar(viewHolder.mProjectCoverImageView, mProjects.get(position), ImageUtils.IMAGE_QUALITY_MAX);
+		baseFragment.setProjectAvatar(viewHolder.mProjectCoverImageView, mProjects.get(position).getId(), ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Setting swipe
 		viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -81,7 +85,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 				// Saving the project ID in a global variable
 				Globals.setCreateProjectActivityProjectId(viewHolder.project.getId());
 
-				// Creating an intent to the Creat Project activity
+				// Creating an intent to the Create Project activity
 				Intent intent = new Intent(view.getContext(), CreateProjectActivity.class);
 				view.getContext().startActivity(intent);
 			}});
@@ -90,8 +94,8 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				// SHowing custom alert to let the user confirm action
-				new CustomAlert(baseFragment.getContext()) {
+				// Showing custom alert to let the user confirm action
+				new ConfirmationAlertDialog(baseFragment.getContext()) {
 					@Override
 					public String getPositiveButtonText() {
 						return baseFragment.getResources().getString(R.string.confirmation_positive_text);
@@ -121,10 +125,6 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 
 			}});
 
-		// Setting the total value for the project
-		float total = baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
-		viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
-
 	}
 
 	@Override
@@ -141,7 +141,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	 * Updates Recycler view adding any existing new items to the list
 	 * @param project
 	 */
-	public void updateRecycler(){
+	public void updateRecycler(RecyclerView mProjectsRecycler){
 		List<Project> updatedList = getActiveProjectsList(baseFragment);
 
 		// We update all projects in the list
@@ -156,6 +156,22 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 				int position = getItemCount();
 				mProjects.add(position, project);
 				notifyItemInserted(position);
+			}
+		}
+		
+		// We remove any archived projects from the list
+		removeArchivedProjects(updatedList);
+	}
+	
+	private void removeArchivedProjects(List<Project> updatedList){
+		// We remove any archived projects from the list
+		for(Project project:mProjects){
+			if(!updatedList.contains(project)){
+				int position = mProjects.indexOf(project);
+				mProjects.remove(position);
+				notifyItemRemoved(position);
+				removeArchivedProjects(updatedList);
+				break;
 			}
 		}
 	}

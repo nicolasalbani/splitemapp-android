@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
-public abstract class CustomAlert {
+public abstract class ConfirmationAlertDialog {
 
 	private AlertDialog.Builder builder;
 	private DialogInterface.OnClickListener dialogClickListener;
 
-	public CustomAlert(Context context){
+	public ConfirmationAlertDialog(Context context){
 		// Creating the onClick listener
 		dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
