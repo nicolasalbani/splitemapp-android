@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="150dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/p_option_edit"
-        android:layout_width="match_parent"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
+        android:gravity="end"
         android:padding="5dp"
         android:text="@string/p_more_option_edit"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <include layout="@layout/line_separator" />
+    <View
+        android:layout_width="130dp"
+        android:layout_height="0.5dp"
+        android:background="@color/grey" />
 
     <TextView
         android:id="@+id/p_option_change_cover"
-        android:layout_width="match_parent"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
+        android:gravity="end"
         android:padding="5dp"
         android:text="@string/p_more_option_change_cover"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <include layout="@layout/line_separator" />
+    <View
+        android:layout_width="130dp"
+        android:layout_height="0.5dp"
+        android:background="@color/grey" />
 
     <TextView
         android:id="@+id/p_option_archive"
-        android:layout_width="match_parent"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
+        android:gravity="end"
         android:padding="5dp"
         android:text="@string/p_more_option_archive"
         android:textColor="@color/black"

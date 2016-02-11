@@ -1,29 +1,48 @@
 package com.splitemapp.android.widget;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
+import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager.LayoutParams;
+import android.widget.LinearLayout;
 
 public abstract class ListAlertDialog {
 
-	private AlertDialog.Builder builder;
-	private View dialogView;
+	private Dialog dialog;
+	private LinearLayout dialogLinearLayout;
 
-	public ListAlertDialog(Activity activity){
-		builder = new AlertDialog.Builder(activity);
+	public ListAlertDialog(final Activity activity){
+		dialog = new Dialog(activity);
 		
-		// Inflating the layout
+		// Inflating and setting the layout
 		LayoutInflater inflater = activity.getLayoutInflater();
-		dialogView = inflater.inflate(getLayoutView(), null);
-		builder.setView(dialogView);
+		dialogLinearLayout = (LinearLayout) inflater.inflate(getLinearLayoutView(), null);
+		
+		// Setting dialog style
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setContentView(dialogLinearLayout);
+        
+		// Setting window properties
+		Window dialogWindow = dialog.getWindow();
+		LayoutParams attributes = dialogWindow.getAttributes();
+		attributes.gravity = Gravity.TOP | Gravity.RIGHT;
+		attributes.horizontalMargin = 0.05f;
+		attributes.verticalMargin = 0.05f;
+		attributes.alpha = 0.9f;
+		dialogWindow.setAttributes(attributes);
 	}
 
 	/**
 	 * Shows this dialog in the screen
 	 */
 	public void show(){
-		builder.show();
+		dialog.show();
 	}
 	
 	/**
@@ -32,13 +51,13 @@ public abstract class ListAlertDialog {
 	 * @return
 	 */
 	public View findViewById(int id){
-		return dialogView.findViewById(id);
+		return dialogLinearLayout.findViewById(id);
 	}
 	
 	/**
-	 * Returns the integer which points to the selected view to be used
+	 * Returns the integer which points to the selected linear layout to be used
 	 * @return
 	 */
-	public abstract int getLayoutView();
+	public abstract int getLinearLayoutView();
 	
 }

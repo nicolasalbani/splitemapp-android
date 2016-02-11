@@ -194,7 +194,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 	protected void menuAction() {
 		ListAlertDialog listAlertDialog = new ListAlertDialog(getActivity()) {
 			@Override
-			public int getLayoutView() {
+			public int getLinearLayoutView() {
 				return R.layout.options_project;
 			}
 		};
