@@ -137,6 +137,24 @@
     <string name="mc_synchronize_contacts_button">Synchronize Contacts</string>
     <string name="mc_avatar_description">Contact Avatar</string>
     
+    <!-- Balance -->
+    <string name="b_title">Balance</string>
+    <string name="b_next_month">Next month</string>
+    <string name="b_last_month">Last month</string>
+    <string name="b_back_action">Back</string>
+    <string name="b_total_placeholder">$18.000</string>
+    <string name="b_month_placeholder">August</string>
+    <string name="b_year_placeholder">2016</string>
+    <string name="b_balance">Balance</string>
+    <string name="b_balance_placeholder">$2.000</string>
+    <string name="b_budget">Budget</string>
+    <string name="b_budget_placeholder">$20.000</string>
+    <string name="b_percent">%</string>
+    <string name="b_category">CATEGORY</string>
+    <string name="b_user">USER</string>
+    <string name="b_date">DATE</string>
+    <string name="b_icon_description">Expense Group Icon</string>
+    
     <!-- Expense Categories -->
     <string name="e_category_description">Category image</string>
     <string name="e_category_car">Car</string>

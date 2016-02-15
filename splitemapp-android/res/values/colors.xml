@@ -4,6 +4,7 @@
     <color name="background">#6C8296</color>
     <color name="black">#000000</color>
     <color name="grey">#E5E5E5</color>
+    <color name="middle_gray">#D8D8D8</color>
     <color name="hard_grey">#878787</color>
     <color name="white">#FFFFFF</color>
     <color name="green">#90DD1E</color>
@@ -12,7 +13,8 @@
     <color name="blue">#379AEA</color>
     <color name="red">#FF0000</color>
     <color name="warning">#FDBD00</color>
-    <color name="seablue">#20BAE4</color>
+    <color name="seablue">#4EA6FF</color>
+    <color name="seagreen">#79C67E</color>
     <color name="strongblue">#1988A4</color>
     <color name="fabblue">#53A8FC</color>
     <color name="darkblue">#0088A1</color>
