@@ -41,8 +41,8 @@
         <View
             android:layout_width="0.5dp"
             android:layout_height="60dp"
-            android:layout_alignEnd="@id/b_circle_imageView"
-            android:layout_alignRight="@id/b_circle_imageView"
+            android:layout_toEndOf="@id/b_circle_imageView"
+            android:layout_toRightOf="@id/b_circle_imageView"
             android:background="@color/middle_gray" />
 
         <View
