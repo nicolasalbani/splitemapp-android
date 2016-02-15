@@ -105,7 +105,7 @@
                     android:layout_height="80dp"
                     android:layout_below="@id/b_total_textView"
                     android:layout_centerHorizontal="true"
-                    android:background="@color/middle_gray" />
+                    android:background="@color/middle_grey" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -17,8 +17,8 @@
             android:id="@+id/b_icon_imageView"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginStart="6dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginStart="2dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
@@ -26,24 +26,23 @@
             android:padding="6dp"
             android:src="@drawable/ic_category_food_48dp" />
 
-        <ImageView
+        <View 
             android:id="@+id/b_circle_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
-            android:contentDescription="@string/b_icon_description"
-            android:src="@drawable/ic_checkbox_blank_circle_outline_48dp" />
-
+            android:background="@drawable/shape_ring"/>
+        
         <View
             android:layout_width="0.5dp"
             android:layout_height="60dp"
             android:layout_toEndOf="@id/b_circle_imageView"
             android:layout_toRightOf="@id/b_circle_imageView"
-            android:background="@color/middle_gray" />
+            android:background="@color/middle_grey" />
 
         <View
             android:id="@+id/b_bar_view"
@@ -64,7 +63,7 @@
             android:layout_toEndOf="@id/b_bar_view"
             android:layout_toRightOf="@id/b_bar_view"
             android:text="@string/ue_amount_placeholder"
-            android:textColor="@color/middle_gray"
+            android:textColor="@color/middle_grey"
             android:textSize="22sp" />
 
         <TextView
@@ -75,7 +74,7 @@
             android:layout_toEndOf="@id/b_amount_textView"
             android:layout_toRightOf="@id/b_amount_textView"
             android:text="@string/b_percent"
-            android:textColor="@color/middle_gray"
+            android:textColor="@color/middle_grey"
             android:textSize="22sp" />
     </RelativeLayout>
 
