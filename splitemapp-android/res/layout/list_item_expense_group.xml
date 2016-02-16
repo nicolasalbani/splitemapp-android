@@ -53,7 +53,7 @@
             android:layout_marginRight="5dp"
             android:layout_toEndOf="@id/b_circle_imageView"
             android:layout_toRightOf="@id/b_circle_imageView"
-            android:background="@color/seablue" />
+            android:background="@color/barblue" />
 
         <TextView
             android:id="@+id/b_amount_textView"

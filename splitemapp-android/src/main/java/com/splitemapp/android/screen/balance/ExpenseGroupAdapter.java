@@ -1,37 +1,35 @@
 package com.splitemapp.android.screen.balance;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.BaseFragment;
-import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
-import com.splitemapp.commons.comparator.SingleUserExpensesComparator;
+import com.splitemapp.android.screen.balance.ExpenseGroupAdapter.ViewHolder.IExpenseGroupClickListener;
+import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
 import com.splitemapp.commons.comparator.UserExpenseComparator;
 import com.splitemapp.commons.domain.Project;
-import com.splitemapp.commons.domain.SingleUserExpenses;
-import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapter.ViewHolder> {
 
 	private static final String TAG = ExpenseGroupAdapter.class.getSimpleName();
+	
+	private static final int MAX_BAR_SIZE = 100;
 
-	private List<UserExpense> mUserExpenseList;
+	private List<ExpenseGroup> mExpenseGroupList;
 	private Project mCurrentProject;
 	private BaseFragment mBaseFragment;
 	private View mView;
@@ -41,15 +39,17 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	// you provide access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 		// Each data item is a project
-		public TextView mFullNameTextView;
-		public TextView mFullAmountTextView;
+		public ImageView mIconImageView;
+		public View mBarView;
+		public TextView mAmountTextView;
 		public RecyclerView.LayoutManager mLayoutManager;
-		public IUserExpenseClickListener mClickListener;
+		public IExpenseGroupClickListener mClickListener;
 
-		public ViewHolder(View view, IUserExpenseClickListener clickListener) {
+		public ViewHolder(View view, IExpenseGroupClickListener clickListener) {
 			super(view);
-			mFullNameTextView = (TextView)view.findViewById(R.id.ue_fullName_textView);
-			mFullAmountTextView = (TextView)view.findViewById(R.id.ue_fullAmount_textView);
+			mIconImageView = (ImageView)view.findViewById(R.id.b_icon_imageView);
+			mBarView = view.findViewById(R.id.b_bar_view);
+			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
 			
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
@@ -61,7 +61,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 			mClickListener.onItemClick(view, getAdapterPosition());
 		}
 
-		public static interface IUserExpenseClickListener {
+		public static interface IExpenseGroupClickListener {
 			public void onItemClick(View view, int position);
 		}
 	}
@@ -70,17 +70,17 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	public ExpenseGroupAdapter(Project currentProject, BaseFragment baseFragment) {
 		this.mCurrentProject = currentProject;
 		this.mBaseFragment = baseFragment;
-		this.mUserExpenseList = getSingleUserExpenseList();
+		this.mExpenseGroupList = getExpenseGroupList();
 	}
 
 	// Create new views (invoked by the layout manager)
 	@Override
 	public ExpenseGroupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// Creating a new view
-		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_user_expense_list, parent, false);
+		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group, parent, false);
 
 		// Creating a new view holder
-		ViewHolder viewHolder = new ViewHolder(mView, new IUserExpenseClickListener() {
+		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseGroupClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
 				// Expanding or minimizing this user list
@@ -106,7 +106,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 */
 	public void updateRecycler(){
 		// Getting a sorted list of SingleUserExpenses
-		mUserExpenseList = getSingleUserExpenseList();
+		mExpenseGroupList = getExpenseGroupList();
 
 		// We notify that the data set has changed
 		notifyDataSetChanged();
@@ -129,15 +129,27 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	public void onBindViewHolder(ViewHolder viewHolder, int position) {
 		// Gets element from the dataset at this position
 		// Replaces the contents of the view with that element
-		viewHolder.mFullNameTextView.setText(mUserExpenseList.get(position).getFullName());
+		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
-		// Setting the total value for the user
-		viewHolder.mFullAmountTextView.setText(String.format("%.2f", mUserExpenseList.get(position).getFullAmount()));
+		// Setting the size of the bar and percentage value
+		try {
+			// Calculating percentage
+			BigDecimal totalExpenseValue = mBaseFragment.getHelper().getTotalExpenseValueByProjectId(mCurrentProject.getId());
+			int percentage = mExpenseGroupList.get(position).getAmount().divide(totalExpenseValue).intValue()*100;
+			
+			// Setting bar width
+			viewHolder.mBarView.getLayoutParams().width = percentage * MAX_BAR_SIZE;
+			
+			// Setting percentage value
+			viewHolder.mAmountTextView.setText(percentage);
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught while calculating total expense value", e);
+		}
 	}
 
 	@Override
 	public int getItemCount() {
-		return mUserExpenseList.size();
+		return mExpenseGroupList.size();
 	}
 
 	/**
@@ -164,42 +176,21 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 * Returns a list of SingleUserExpenses created upon the provided UserExpense list
 	 * @return
 	 */
-	private List<SingleUserExpenses> getSingleUserExpenseList(){
-		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
+	private List<ExpenseGroup> getExpenseGroupList(){
+		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
 
 		List<UserExpense> userExpenseList = getUserExpenseList();
-
-		// Creating the users ID list
-		List<Long> userIdList = new ArrayList<Long>();
-		for(UserExpense userExpense:userExpenseList){
-			if(!userIdList.contains(userExpense.getUser().getId())){
-				userIdList.add(userExpense.getUser().getId());
-			}
-		}
-
-		// Populating the SingleUserExpenseList
-		for(Long userId:userIdList){
-			List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>();
-			for(UserExpense userExpense:userExpenseList){
-				if(userExpense.getUser().getId().equals(userId)){
-					filteredUserExpenseList.add(userExpense);
-				}
-			}
-			if(filteredUserExpenseList.size()>0){
-				try {
-					Long uid = filteredUserExpenseList.get(0).getUser().getId();
-					User user = mBaseFragment.getHelper().getUser(uid);
-					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
-				} catch (SQLException e) {
-					Log.e(TAG, "SQLException caught!", e);
-				}
-			}
-		}
 		
-		// Sorting the SingleUserExpenseList
-		Collections.sort(singleUserExpenseList, new SingleUserExpensesComparator());
+		//TODO implement logic to create the ExpenseGroup list
+		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
+			for(UserExpense userExpense:userExpenseList){
+				if(userExpense.getExpenseCategory().getId().equals(expenseCategoryMapper.getExpenseCategoryId())){
+					
+				}
+			}
+		}
 
-		return singleUserExpenseList;
+		return expenseGroupList;
 	}
 
 }

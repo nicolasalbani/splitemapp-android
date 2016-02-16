@@ -154,6 +154,18 @@
     <string name="b_user">USER</string>
     <string name="b_date">DATE</string>
     <string name="b_icon_description">Expense Group Icon</string>
+    <string name="b_month_january">January</string>
+    <string name="b_month_february">February</string>
+    <string name="b_month_march">March</string>
+    <string name="b_month_april">April</string>
+    <string name="b_month_may">May</string>
+    <string name="b_month_june">June</string>
+    <string name="b_month_july">July</string>
+    <string name="b_month_august">August</string>
+    <string name="b_month_september">September</string>
+    <string name="b_month_october">October</string>
+    <string name="b_month_november">November</string>
+    <string name="b_month_december">December</string>
     
     <!-- Expense Categories -->
     <string name="e_category_description">Category image</string>

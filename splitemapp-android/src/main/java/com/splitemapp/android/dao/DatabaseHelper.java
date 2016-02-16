@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -650,6 +651,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
 		return getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
+	}
+	
+	/**
+	 * Gets the total expense value associated to a project id
+	 * @param projectId
+	 * @return
+	 * @throws SQLException
+	 */
+	public BigDecimal getTotalExpenseValueByProjectId(Long projectId) throws SQLException{
+		BigDecimal totalExpenseValue = new BigDecimal(0);
+		
+		List<UserExpense> userExpenses = getUserExpensesByProjectId(projectId);
+		
+		for(UserExpense userExpense:userExpenses){
+			totalExpenseValue = totalExpenseValue.add(userExpense.getExpense());
+		}
+		
+		return totalExpenseValue;
 	}
 
 	/**
