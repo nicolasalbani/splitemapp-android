@@ -21,6 +21,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithTransparentActionbar;
+import com.splitemapp.android.screen.balance.BalanceActivity;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
@@ -240,6 +241,16 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			public void onClick(View v) {
 				// Opening image selector to choose a new cover
 				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
+			}
+		});;
+		
+		// Setting OnClickListener for balance action
+		listAlertDialog.findViewById(R.id.p_option_balance).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// Creating an intent to the Balance activity
+				Intent intent = new Intent(getContext(), BalanceActivity.class);
+				getContext().startActivity(intent);
 			}
 		});;
 

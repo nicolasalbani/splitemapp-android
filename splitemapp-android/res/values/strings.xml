@@ -111,6 +111,7 @@
     <string name="p_arrow_description">Arrow Image</string>
     <string name="p_more_option_edit">Edit</string>
     <string name="p_more_option_change_cover">Change cover</string>
+    <string name="p_more_option_balance">Balance</string>
     <string name="p_more_option_archive">Archive</string>
     
     <!-- Expense Screen -->

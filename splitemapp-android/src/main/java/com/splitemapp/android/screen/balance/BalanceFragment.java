@@ -19,10 +19,10 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
-import com.splitemapp.android.screen.RestfulFragmentWithTransparentActionbar;
+import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.commons.domain.Project;
 
-public class BalanceFragment extends RestfulFragmentWithTransparentActionbar {
+public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = BalanceFragment.class.getSimpleName();
 
@@ -105,11 +105,11 @@ public class BalanceFragment extends RestfulFragmentWithTransparentActionbar {
 	private void updateTextViews(Long projectId) throws SQLException{
 		if(mFragmentView != null){
 			// Setting month
-			mMonthTextView = (TextView) mFragmentView.findViewById(R.id.b_month);
+			mMonthTextView = (TextView) mFragmentView.findViewById(R.id.b_monthTextView);
 			mMonthTextView.setText(MonthMapper.values()[mCalendar.get(Calendar.MONTH)].getStringId());
 
 			// Setting year
-			mYearTextView = (TextView) mFragmentView.findViewById(R.id.b_year);
+			mYearTextView = (TextView) mFragmentView.findViewById(R.id.b_yearTextView);
 			mYearTextView.setText(mCalendar.get(Calendar.YEAR));
 
 			// Setting total expense
@@ -176,9 +176,13 @@ public class BalanceFragment extends RestfulFragmentWithTransparentActionbar {
 	}
 
 	@Override
-	protected void menuAction() {
-		// Do nothing
+	protected int getTitleResourceId() {
+		return R.string.b_title;
 	}
 
-
+	@Override
+	protected void doneAction() {
+		// Simulate OnBackPressed
+		getActivity().onBackPressed();
+	}
 }

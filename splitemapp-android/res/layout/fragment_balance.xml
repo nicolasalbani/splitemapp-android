@@ -59,7 +59,7 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/b_month"
+                        android:id="@+id/b_monthTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/b_month_placeholder"
@@ -67,7 +67,7 @@
                         android:textSize="22sp" />
 
                     <TextView
-                        android:id="@+id/b_year"
+                        android:id="@+id/b_yearTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/b_year_placeholder"

@@ -96,6 +96,11 @@
             android:theme="@style/NoActionBarTheme" >
         </activity>
         <activity
+            android:name="com.splitemapp.android.screen.balance.BalanceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+        <activity
             android:name="com.splitemapp.android.screen.managecontacts.ManageContactsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBarTheme" >

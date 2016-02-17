@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +29,6 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 	private static final String TAG = ExpenseGroupAdapter.class.getSimpleName();
 	
-	private static final int MAX_BAR_SIZE = 100;
-
 	private List<ExpenseGroup> mExpenseGroupList;
 	private Project mCurrentProject;
 	private BaseFragment mBaseFragment;
@@ -83,19 +83,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseGroupClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				// Expanding or minimizing this user list
-				RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.ue_user_expense_list_recyclerView);
-				ImageView arrowImageView = (ImageView)view.findViewById(R.id.ue_arrow_imageView);
-				switch (recyclerView.getVisibility()){
-				case View.VISIBLE:
-					mBaseFragment.rotateImageViewAntiClockwise(arrowImageView);
-					recyclerView.setVisibility(View.GONE);
-					break;
-				default :
-					mBaseFragment.rotateImageViewClockwise(arrowImageView);
-					recyclerView.setVisibility(View.VISIBLE);
-					break;
-				}
+				//TODO switch from one type of view to the other (total amount vs percentage)
 			}
 		});
 		return viewHolder;
@@ -135,13 +123,13 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		try {
 			// Calculating percentage
 			BigDecimal totalExpenseValue = mBaseFragment.getHelper().getTotalExpenseValueByProjectId(mCurrentProject.getId());
-			int percentage = mExpenseGroupList.get(position).getAmount().divide(totalExpenseValue).intValue()*100;
+			int percentage = mExpenseGroupList.get(position).getAmount().divide(totalExpenseValue).intValue();
 			
 			// Setting bar width
-			viewHolder.mBarView.getLayoutParams().width = percentage * MAX_BAR_SIZE;
+			viewHolder.mBarView.getLayoutParams().width = viewHolder.mBarView.getLayoutParams().width * percentage;
 			
 			// Setting percentage value
-			viewHolder.mAmountTextView.setText(percentage);
+			viewHolder.mAmountTextView.setText(percentage*100);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught while calculating total expense value", e);
 		}
@@ -171,7 +159,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 		return userExpenseList;
 	}
-
+	
 	/**
 	 * Returns a list of SingleUserExpenses created upon the provided UserExpense list
 	 * @return
@@ -180,13 +168,26 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
 
 		List<UserExpense> userExpenseList = getUserExpenseList();
-		
-		//TODO implement logic to create the ExpenseGroup list
 		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
+			// Creating new ExpenseGroup object
+			ExpenseGroup expenseGroup = new ExpenseGroup();
+			
+			// Getting the category icon
+			Drawable categoryIcon = ContextCompat.getDrawable(mBaseFragment.getContext(), expenseCategoryMapper.getDrawableId());
+			expenseGroup.setDrawable(categoryIcon);
+			
+			// Getting the category expenses
+			BigDecimal totalExpense = new BigDecimal(0);
 			for(UserExpense userExpense:userExpenseList){
 				if(userExpense.getExpenseCategory().getId().equals(expenseCategoryMapper.getExpenseCategoryId())){
-					
+					totalExpense = totalExpense.add(userExpense.getExpense());
 				}
+			}
+			expenseGroup.setAmount(totalExpense);
+			
+			// We only add this entry to the list if there are expenses for it
+			if(totalExpense.signum()>0){
+				expenseGroupList.add(expenseGroup);
 			}
 		}
 
