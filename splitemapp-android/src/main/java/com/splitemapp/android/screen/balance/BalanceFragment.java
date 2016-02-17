@@ -25,6 +25,8 @@ import com.splitemapp.commons.domain.Project;
 public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = BalanceFragment.class.getSimpleName();
+	
+	private static final String CURRENCY_SIGN = "$";
 
 	private Project mCurrentProject;
 
@@ -110,22 +112,22 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 			// Setting year
 			mYearTextView = (TextView) mFragmentView.findViewById(R.id.b_yearTextView);
-			mYearTextView.setText(mCalendar.get(Calendar.YEAR));
+			mYearTextView.setText(String.valueOf(mCalendar.get(Calendar.YEAR)));
 
 			// Setting total expense
 			BigDecimal totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId);
 			mTotalTextView = (TextView) mFragmentView.findViewById(R.id.b_total_textView);
-			mTotalTextView.setText(mExpenseAmountFormat.format(totalExpenseValue));
+			mTotalTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(totalExpenseValue));
 
 			// Setting budget TextView
 			BigDecimal budgetValue = mCurrentProject.getBudget();
 			mBudgetTextView = (TextView) mFragmentView.findViewById(R.id.b_budget);
-			mBudgetTextView.setText(mExpenseAmountFormat.format(budgetValue));
+			mBudgetTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(budgetValue));
 
 			// Setting balance TextView
 			BigDecimal balanceValue = budgetValue.subtract(totalExpenseValue);
 			mBalanceTextView = (TextView) mFragmentView.findViewById(R.id.b_balance);
-			mBalanceTextView.setText(mExpenseAmountFormat.format(balanceValue.abs()));
+			mBalanceTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(balanceValue.abs()));
 			if(balanceValue.signum()>0){
 				mBalanceTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
 			} else {

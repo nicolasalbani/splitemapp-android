@@ -114,9 +114,9 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		// Setting icon which indicates whether this expense was pushed to server already
 		try {
 			if(baseFragment.getHelper().isExpensePushed(userExpense)){
-				viewHolder.mIconImageView.setBackgroundResource(R.drawable.ic_checkbox_marked_circle_24dp);
+				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_marked_circle_24dp);
 			} else {
-				viewHolder.mIconImageView.setBackgroundResource(R.drawable.ic_checkbox_blank_circle_outline_24dp);
+				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_marked_circle_24dp);
 			}
 		} catch (SQLException e) {
 			// Do nothing
