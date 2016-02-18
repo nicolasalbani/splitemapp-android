@@ -86,7 +86,9 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" >
 
                 <TextView
                     android:id="@+id/b_total_textView"
@@ -94,7 +96,6 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
                     android:text="@string/b_total_placeholder"
                     android:textColor="@color/black"
                     android:textSize="28sp" />

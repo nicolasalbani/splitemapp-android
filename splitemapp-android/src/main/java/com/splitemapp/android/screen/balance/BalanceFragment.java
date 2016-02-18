@@ -7,7 +7,6 @@ import java.util.Calendar;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
+import com.splitemapp.android.widget.LinearLayoutManager;
 import com.splitemapp.commons.domain.Project;
 
 public class BalanceFragment extends RestfulFragmentWithBlueActionbar {

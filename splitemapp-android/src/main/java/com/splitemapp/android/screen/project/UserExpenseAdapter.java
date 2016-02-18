@@ -116,7 +116,7 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 			if(baseFragment.getHelper().isExpensePushed(userExpense)){
 				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_marked_circle_24dp);
 			} else {
-				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_marked_circle_24dp);
+				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_blank_circle_outline_24dp);
 			}
 		} catch (SQLException e) {
 			// Do nothing
