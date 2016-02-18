@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	private Project mCurrentProject;
 	private BaseFragment mBaseFragment;
 	private View mView;
+	private Calendar mCalendar;
 	private BigDecimal mTotalExpenseValue;
 	private BigDecimal mMaxCategoryExpenseValue;
 	private int mFullBarSize;
@@ -73,9 +75,10 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ExpenseGroupAdapter(Project currentProject, BaseFragment baseFragment) {
+	public ExpenseGroupAdapter(Project currentProject, BaseFragment baseFragment, Calendar calendar) {
 		this.mCurrentProject = currentProject;
 		this.mBaseFragment = baseFragment;
+		this.mCalendar = calendar;
 		this.mExpenseGroupList = getExpenseGroupList();
 		this.mTotalExpenseValue = getTotalExpenseValue();
 		this.mMaxCategoryExpenseValue = getMaxCategoryExpenseValue();
@@ -142,10 +145,10 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 */
 	private List<UserExpense> getUserExpenseList(){
 		List<UserExpense> userExpenseList = null;
-
+		
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId());
+			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), mCalendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -200,7 +203,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		
 		// Obtaining total expense value
 		try {
-			mTotalExpenseValue = mBaseFragment.getHelper().getTotalExpenseValueByProjectId(mCurrentProject.getId());
+			mTotalExpenseValue = mBaseFragment.getHelper().getTotalExpenseValueByProjectId(mCurrentProject.getId(), mCalendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught while calculating total expense value", e);
 		}

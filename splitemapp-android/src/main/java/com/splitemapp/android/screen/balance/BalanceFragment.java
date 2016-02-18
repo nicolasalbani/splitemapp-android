@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -38,6 +40,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private TextView mTotalTextView;
 	private TextView mBudgetTextView;
 	private TextView mBalanceTextView;
+	
+	private ImageView mLeftArrowImageView;
+	private ImageView mRightArrowImageView;
 
 	private Calendar mCalendar;
 
@@ -79,8 +84,26 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			Log.e(TAG, "SQLException caught while updating TextViews", e);
 		}
 
+		// Set onClick listener for right/left arrows
+		mLeftArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_left_arrow_imageView);
+		mLeftArrowImageView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mCalendar.add(Calendar.MONTH, -1);
+				refreshFragment();
+			}
+		});
+		mRightArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_right_arrow_imageView);
+		mRightArrowImageView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				mCalendar.add(Calendar.MONTH, 1);
+				refreshFragment();
+			}
+		});
+		
 		// Creating a single user expense adapter to be used in the recycler view
-		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this);
+		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar);
 
 		// We populate the list of projects for this user
 		mExpenseGroupRecycler = (RecyclerView) mFragmentView.findViewById(R.id.b_expense_group_recyclerView);
@@ -118,7 +141,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			mYearTextView.setText(String.valueOf(mCalendar.get(Calendar.YEAR)));
 
 			// Setting total expense
-			BigDecimal totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId);
+			BigDecimal totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, mCalendar);
 			mTotalTextView = (TextView) mFragmentView.findViewById(R.id.b_total_textView);
 			mTotalTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(totalExpenseValue));
 

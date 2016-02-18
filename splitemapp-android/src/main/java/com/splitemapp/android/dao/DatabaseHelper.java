@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -650,7 +651,44 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
-		return getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
+		return getUserExpensesByProjectId(projectId, null);
+	}
+	
+	/**
+	 * Gets the list of user expense associated to a project id for the month specified in Calendar 
+	 * @param projectId
+	 * @param calendar
+	 * @return
+	 * @throws SQLException
+	 */
+	public List<UserExpense> getUserExpensesByProjectId(Long projectId, Calendar calendar) throws SQLException{
+		List<UserExpense> userExpenseList = new ArrayList<UserExpense>();
+		
+		List<UserExpense> fullList =  getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
+		
+		if(calendar != null){
+			userExpenseList = new ArrayList<UserExpense>();
+			
+			int calendarMonth = calendar.get(Calendar.MONTH);
+			int calendarYear = calendar.get(Calendar.YEAR);
+			
+			for(UserExpense userExpense:fullList){
+				Calendar expenseCal = Calendar.getInstance();
+				expenseCal.setTime(userExpense.getExpenseDate());
+				
+				int expenseMonth = expenseCal.get(Calendar.MONTH);
+				int expenseYear = expenseCal.get(Calendar.YEAR);
+				
+				if(expenseMonth == calendarMonth && expenseYear == calendarYear){
+					userExpenseList.add(userExpense);
+				}
+			}
+			
+		} else {
+			userExpenseList = fullList;
+		}
+		
+		return userExpenseList;
 	}
 	
 	/**
@@ -659,10 +697,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public BigDecimal getTotalExpenseValueByProjectId(Long projectId) throws SQLException{
+	public BigDecimal getTotalExpenseValueByProjectId(Long projectId, Calendar calendar) throws SQLException{
 		BigDecimal totalExpenseValue = new BigDecimal(0);
 		
-		List<UserExpense> userExpenses = getUserExpensesByProjectId(projectId);
+		List<UserExpense> userExpenses = getUserExpensesByProjectId(projectId, calendar);
 		
 		for(UserExpense userExpense:userExpenses){
 			totalExpenseValue = totalExpenseValue.add(userExpense.getExpense());

@@ -44,6 +44,7 @@
                 android:orientation="horizontal" >
 
                 <ImageView
+                    android:id="@+id/b_left_arrow_imageView"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
@@ -77,6 +78,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/b_right_arrow_imageView"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
