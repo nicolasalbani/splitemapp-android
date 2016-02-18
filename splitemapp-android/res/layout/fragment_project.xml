@@ -20,11 +20,59 @@
             android:background="@drawable/project_default_background"
             android:contentDescription="@string/p_cover_image_description" />
 
-        <include
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            layout="@layout/toolbar_transparent" />
+            android:background="@color/semi_transparent"
+            android:orientation="vertical" >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/actionBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="-10dp"
+                android:layout_marginTop="-10dp"
+                app:contentInsetStart="0dp" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="10dp" >
+
+                    <ImageView
+                        android:id="@+id/back_action_imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:contentDescription="@string/ab_back_description"
+                        android:src="@drawable/ic_arrow_back_white_24dp" />
+
+                    <ImageView
+                        android:id="@+id/menu_action_imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:contentDescription="@string/ab_menu_description"
+                        android:src="@drawable/ic_more_vert_white_24dp" />
+
+                    <ImageView
+                        android:id="@+id/p_chart_imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_toLeftOf="@id/menu_action_imageView"
+                        android:layout_toStartOf="@id/menu_action_imageView"
+                        android:contentDescription="@string/ab_menu_description"
+                        android:src="@drawable/ic_chart_bar_24dp" />
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/p_project_title_textView"

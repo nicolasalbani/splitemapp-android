@@ -36,8 +36,9 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 	private Project mCurrentProject;
 
-	private TextView mProjectTitle;
-	private ImageView mProjectCoverImage;
+	private TextView mProjectTitleTextView;
+	private ImageView mProjectCoverImageView;
+	private ImageView mChartImageView;
 	private FloatingActionButton mFab;
 
 	private TextView mEmptyListHintTextView;
@@ -66,12 +67,23 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
 		// Populating the project title
-		mProjectTitle = (TextView) v.findViewById(R.id.p_project_title_textView);
-		mProjectTitle.setText(mCurrentProject.getTitle());
+		mProjectTitleTextView = (TextView) v.findViewById(R.id.p_project_title_textView);
+		mProjectTitleTextView.setText(mCurrentProject.getTitle());
+		
+		// Adding an OnClickListener to the chart image view
+		mChartImageView = (ImageView) v.findViewById(R.id.p_chart_imageView);
+		mChartImageView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// Creating an intent to the Balance activity
+				Intent intent = new Intent(getContext(), BalanceActivity.class);
+				getContext().startActivity(intent);
+			}
+		});
 
 		// Populating the project cover image
-		mProjectCoverImage = (ImageView) v.findViewById(R.id.p_project_cover_image_imageView);
-		setProjectCoverImage(mProjectCoverImage, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
+		mProjectCoverImageView = (ImageView) v.findViewById(R.id.p_project_cover_image_imageView);
+		setProjectCoverImage(mProjectCoverImageView, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a single user expense adapter to be used in the recycler view
 		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(mCurrentProject, this);
@@ -144,10 +156,10 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		}
 
 		// Updating project title
-		mProjectTitle.setText(mCurrentProject.getTitle());
+		mProjectTitleTextView.setText(mCurrentProject.getTitle());
 
 		// Updating project image
-		setProjectCoverImage(mProjectCoverImage, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
+		setProjectCoverImage(mProjectCoverImageView, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	@Override
@@ -166,7 +178,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 	@Override
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
 		// Updating project image on screen
-		mProjectCoverImage.setImageBitmap(selectedBitmap);
+		mProjectCoverImageView.setImageBitmap(selectedBitmap);
 
 		// Persisting selected image to database
 		try {
@@ -248,18 +260,6 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			}
 		});;
 		
-		// Setting OnClickListener for balance action
-		listAlertDialog.findViewById(R.id.p_option_balance).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Hiding dialog
-				listAlertDialog.hide();
-				// Creating an intent to the Balance activity
-				Intent intent = new Intent(getContext(), BalanceActivity.class);
-				getContext().startActivity(intent);
-			}
-		});;
-
 		// Setting OnClickListener for archive action
 		listAlertDialog.findViewById(R.id.p_option_edit).setOnClickListener(new OnClickListener() {
 			@Override

@@ -5,22 +5,6 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/p_option_balance"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_recycler_color"
-        android:gravity="end"
-        android:padding="5dp"
-        android:text="@string/p_more_option_balance"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
-
-    <View
-        android:layout_width="130dp"
-        android:layout_height="0.5dp"
-        android:background="@color/grey" />
-
-    <TextView
         android:id="@+id/p_option_edit"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
@@ -37,13 +21,13 @@
         android:background="@color/grey" />
 
     <TextView
-        android:id="@+id/p_option_archive"
+        android:id="@+id/p_option_change_cover"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
         android:gravity="end"
         android:padding="5dp"
-        android:text="@string/p_more_option_archive"
+        android:text="@string/p_more_option_change_cover"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
@@ -53,13 +37,13 @@
         android:background="@color/grey" />
 
     <TextView
-        android:id="@+id/p_option_change_cover"
+        android:id="@+id/p_option_archive"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
         android:gravity="end"
         android:padding="5dp"
-        android:text="@string/p_more_option_change_cover"
+        android:text="@string/p_more_option_archive"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
