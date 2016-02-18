@@ -115,11 +115,14 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		// Replaces the contents of the view with that element
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
+		// Calculating relative percentage
+		float relativePercentage = mExpenseGroupList.get(position).getAmount().divide(mMaxCategoryExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		
 		// Setting bar width
 		if(mFullBarSize == 0){
 			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
 		}
-		viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * mMaxCategoryExpenseValue);
+		viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
 
 		// Calculating total percentage
 		float totalPercentage = mExpenseGroupList.get(position).getAmount().divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();

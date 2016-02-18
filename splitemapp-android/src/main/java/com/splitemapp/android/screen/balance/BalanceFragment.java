@@ -96,6 +96,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Setting the default animator for the view
 		mExpenseGroupRecycler.setItemAnimator(new CustomItemAnimator());
+		
+		// Setting focusability to false to avoid going to the bottom of the screen
+		mExpenseGroupRecycler.setFocusable(false);
 
 		return mFragmentView;
 	}

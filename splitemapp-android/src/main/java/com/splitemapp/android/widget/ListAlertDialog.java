@@ -46,6 +46,13 @@ public abstract class ListAlertDialog {
 	}
 	
 	/**
+	 * Hides this dialog from the screen
+	 */
+	public void hide(){
+		dialog.hide();
+	}
+	
+	/**
 	 * Returns the required View by id
 	 * @param id
 	 * @return

@@ -193,7 +193,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 	@Override
 	protected void menuAction() {
-		ListAlertDialog listAlertDialog = new ListAlertDialog(getActivity()) {
+		final ListAlertDialog listAlertDialog = new ListAlertDialog(getActivity()) {
 			@Override
 			public int getLinearLayoutView() {
 				return R.layout.options_project;
@@ -204,6 +204,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_archive).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Hiding dialog
+				listAlertDialog.hide();
 				// Showing custom alert to let the user confirm action
 				new ConfirmationAlertDialog(getContext()) {
 					@Override
@@ -239,6 +241,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_change_cover).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Hiding dialog
+				listAlertDialog.hide();
 				// Opening image selector to choose a new cover
 				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
@@ -248,6 +252,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_balance).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Hiding dialog
+				listAlertDialog.hide();
 				// Creating an intent to the Balance activity
 				Intent intent = new Intent(getContext(), BalanceActivity.class);
 				getContext().startActivity(intent);
@@ -258,6 +264,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_edit).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Hiding dialog
+				listAlertDialog.hide();
 				// Saving the project ID in a global variable
 				Globals.setCreateProjectActivityProjectId(mCurrentProject.getId());
 
