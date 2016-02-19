@@ -33,6 +33,8 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private Project mCurrentProject;
 
 	private View mFragmentView;
+	
+	private BalanceMode mBalanceMode;
 
 	private DecimalFormat mExpenseAmountFormat;
 	private TextView mMonthTextView;
@@ -63,6 +65,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We get the current date by default
 		mCalendar = Calendar.getInstance();
+		
+		// Setting the CATEGORY balance mode by default
+		mBalanceMode = BalanceMode.CATEGORY;
 	}
 
 	@Override
@@ -103,7 +108,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		});
 		
 		// Creating a single user expense adapter to be used in the recycler view
-		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar);
+		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar, mBalanceMode);
 
 		// We populate the list of projects for this user
 		mExpenseGroupRecycler = (RecyclerView) mFragmentView.findViewById(R.id.b_expense_group_recyclerView);

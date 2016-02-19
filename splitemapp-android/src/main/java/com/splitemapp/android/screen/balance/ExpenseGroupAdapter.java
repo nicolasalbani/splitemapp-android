@@ -38,8 +38,9 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	private BaseFragment mBaseFragment;
 	private View mView;
 	private Calendar mCalendar;
+	private BalanceMode mBalanceMode;
 	private BigDecimal mTotalExpenseValue;
-	private BigDecimal mMaxCategoryExpenseValue;
+	private BigDecimal mMaxGroupExpenseValue;
 	private int mFullBarSize;
 
 	// Provide a reference to the views for each data item
@@ -75,13 +76,14 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ExpenseGroupAdapter(Project currentProject, BaseFragment baseFragment, Calendar calendar) {
+	public ExpenseGroupAdapter(Project currentProject, BaseFragment baseFragment, Calendar calendar, BalanceMode balanceMode) {
 		this.mCurrentProject = currentProject;
 		this.mBaseFragment = baseFragment;
 		this.mCalendar = calendar;
+		this.mBalanceMode = balanceMode;
 		this.mExpenseGroupList = getExpenseGroupList();
 		this.mTotalExpenseValue = getTotalExpenseValue();
-		this.mMaxCategoryExpenseValue = getMaxCategoryExpenseValue();
+		this.mMaxGroupExpenseValue = getMaxGroupExpenseValue();
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -119,7 +121,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
 		// Calculating relative percentage
-		float relativePercentage = mExpenseGroupList.get(position).getAmount().divide(mMaxCategoryExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		float relativePercentage = mExpenseGroupList.get(position).getAmount().divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 		
 		// Setting bar width
 		if(mFullBarSize == 0){
@@ -160,21 +162,63 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	}
 
 	/**
-	 * Returns a list of SingleUserExpenses created upon the provided UserExpense list
+	 * Returns the ExpenseGroup list based on the selected balance mode
 	 * @return
 	 */
 	private List<ExpenseGroup> getExpenseGroupList(){
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
 
+		if(mBalanceMode == BalanceMode.CATEGORY){
+			expenseGroupList = getCategoryExpenseGroupList();
+		} else if (mBalanceMode == BalanceMode.USER){
+			expenseGroupList = getUserExpenseGroupList();
+		} else if (mBalanceMode == BalanceMode.DATE){
+			expenseGroupList = getDateExpenseGroupList();
+		}
+
+		return expenseGroupList;
+	}
+	
+	/**
+	 * Returns a list of ExpenseGroup items organized by USER
+	 * @return
+	 */
+	private List<ExpenseGroup> getUserExpenseGroupList(){
+		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
+		
+		//TODO implement
+		
+		return expenseGroupList;
+	}
+	
+	/**
+	 * Returns a list of ExpenseGroup items organized by DATE
+	 * @return
+	 */
+	private List<ExpenseGroup> getDateExpenseGroupList(){
+		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
+		
+		//TODO implement
+		
+		return expenseGroupList;
+	}
+	
+	/**
+	 * Returns a list of ExpenseGroup items organized by CATEGORY
+	 * @return
+	 */
+	private List<ExpenseGroup> getCategoryExpenseGroupList(){
+		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
+		
 		List<UserExpense> userExpenseList = getUserExpenseList();
 		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
 			// Creating new ExpenseGroup object
 			ExpenseGroup expenseGroup = new ExpenseGroup();
-
+			
 			// Getting the category icon
 			Drawable categoryIcon = ContextCompat.getDrawable(mBaseFragment.getContext(), expenseCategoryMapper.getDrawableId());
 			expenseGroup.setDrawable(categoryIcon);
-
+			
 			// Getting the category expenses
 			BigDecimal totalExpense = new BigDecimal(0);
 			for(UserExpense userExpense:userExpenseList){
@@ -184,13 +228,13 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				}
 			}
 			expenseGroup.setAmount(totalExpense);
-
+			
 			// We only add this entry to the list if there are expenses for it
 			if(totalExpense.signum()>0){
 				expenseGroupList.add(expenseGroup);
 			}
 		}
-
+		
 		return expenseGroupList;
 	}
 
@@ -215,7 +259,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 * Returns the max expense value category-wise
 	 * @return
 	 */
-	private BigDecimal getMaxCategoryExpenseValue(){
+	private BigDecimal getMaxGroupExpenseValue(){
 		BigDecimal maxCategoryExpenseValue = new BigDecimal(0);
 		
 		for(ExpenseGroup expenseGroup:mExpenseGroupList){
