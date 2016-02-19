@@ -2,14 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:orientation="vertical"
+    android:background="@drawable/shape_rectangle" >
 
     <TextView
         android:id="@+id/p_option_edit"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
-        android:gravity="end"
+        android:gravity="start"
         android:padding="5dp"
         android:text="@string/p_more_option_edit"
         android:textColor="@color/black"
@@ -25,7 +28,7 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
-        android:gravity="end"
+        android:gravity="start"
         android:padding="5dp"
         android:text="@string/p_more_option_change_cover"
         android:textColor="@color/black"
@@ -41,7 +44,7 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_recycler_color"
-        android:gravity="end"
+        android:gravity="start"
         android:padding="5dp"
         android:text="@string/p_more_option_archive"
         android:textColor="@color/black"
