@@ -173,7 +173,7 @@ public abstract class BaseFragment extends Fragment {
 	 * @param user
 	 * @param imageQuality
 	 */
-	public void setUsetAvatar(ImageView userAvatarResource, User user, int imageQuality){
+	public void setUsetAvatarToImageView(ImageView userAvatarResource, User user, int imageQuality){
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {

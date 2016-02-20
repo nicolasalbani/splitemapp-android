@@ -2,40 +2,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:paddingEnd="0dp"
     android:paddingLeft="25dp"
-    android:paddingStart="25dp"
     android:paddingRight="0dp"
-    android:paddingEnd="0dp" >
+    android:paddingStart="25dp" >
 
-    <ImageView
-        android:id="@+id/b_icon_imageView"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="2dp"
-        android:layout_marginStart="2dp"
-        android:contentDescription="@string/b_icon_description"
-        android:padding="6dp"
-        android:src="@drawable/ic_category_food_48dp" />
-
-    <View
-        android:id="@+id/b_circle_imageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <RelativeLayout
+        android:id="@+id/b_icon_relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerInParent="true"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/shape_ring" />
+        android:layout_marginRight="10dp" >
+
+        <View
+            android:id="@+id/b_circle_imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_ring" />
+
+        <ImageView
+            android:id="@+id/b_icon_imageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/b_icon_description"
+            android:src="@drawable/ic_category_food_48dp" />
+    </RelativeLayout>
 
     <View
         android:layout_width="0.5dp"
         android:layout_height="50dp"
-        android:layout_toEndOf="@id/b_circle_imageView"
-        android:layout_toRightOf="@id/b_circle_imageView"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
         android:background="@color/middle_grey" />
 
     <View
@@ -45,8 +47,8 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
-        android:layout_toEndOf="@id/b_circle_imageView"
-        android:layout_toRightOf="@id/b_circle_imageView"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
         android:background="@color/barblue" />
 
     <TextView

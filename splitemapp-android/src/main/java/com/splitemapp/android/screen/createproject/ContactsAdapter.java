@@ -47,7 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		viewHolder.mUserEmailTextView.setText(mUsers.get(position).getUsername());
 
 		// Setting the project image cover
-		baseFragment.setUsetAvatar(viewHolder.mUserAvatarImageView, mUsers.get(position), ImageUtils.IMAGE_QUALITY_MAX);
+		baseFragment.setUsetAvatarToImageView(viewHolder.mUserAvatarImageView, mUsers.get(position), ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	@Override

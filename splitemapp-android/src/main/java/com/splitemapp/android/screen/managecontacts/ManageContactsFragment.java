@@ -99,7 +99,7 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 			// Setting the user avatar
 			ImageView userAvatarResource = (ImageView)convertView.findViewById(R.id.cp_user_avatar);
-			setUsetAvatar(userAvatarResource, user, ImageUtils.IMAGE_QUALITY_MAX);
+			setUsetAvatarToImageView(userAvatarResource, user, ImageUtils.IMAGE_QUALITY_MAX);
 
 			// Setting the user full name
 			TextView userFullName = (TextView)convertView.findViewById(R.id.cp_user_name);

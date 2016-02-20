@@ -1,11 +1,11 @@
 package com.splitemapp.android.dialog;
 
-import com.splitemapp.android.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ProgressBar;
+
+import com.splitemapp.android.R;
 
 public class CustomProgressDialog extends Dialog {
 

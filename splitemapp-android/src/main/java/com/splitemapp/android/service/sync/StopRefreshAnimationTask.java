@@ -1,10 +1,10 @@
 package com.splitemapp.android.service.sync;
 
-import com.splitemapp.android.service.BaseTask;
-import com.splitemapp.commons.constants.ServiceConstants;
-
 import android.content.Context;
 import android.content.Intent;
+
+import com.splitemapp.android.service.BaseTask;
+import com.splitemapp.commons.constants.ServiceConstants;
 
 public class StopRefreshAnimationTask extends BaseTask {
 

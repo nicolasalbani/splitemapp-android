@@ -23,8 +23,10 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.balance.ExpenseGroupAdapter.ViewHolder.IExpenseGroupClickListener;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
+import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.comparator.UserExpenseComparator;
 import com.splitemapp.commons.domain.Project;
+import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapter.ViewHolder> {
@@ -108,7 +110,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	public void updateRecycler(){
 		// Getting a sorted list of SingleUserExpenses
 		mExpenseGroupList = getExpenseGroupList();
-
+		
 		// We notify that the data set has changed
 		notifyDataSetChanged();
 	}
@@ -116,8 +118,16 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(ViewHolder viewHolder, int position) {
-		// Gets element from the dataset at this position
-		// Replaces the contents of the view with that element
+		// Setting the icon size
+		if(mBalanceMode == BalanceMode.CATEGORY){
+			viewHolder.mIconImageView.getLayoutParams().width = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 30);
+			viewHolder.mIconImageView.getLayoutParams().height = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 30);
+		} else if (mBalanceMode == BalanceMode.USER){
+			viewHolder.mIconImageView.getLayoutParams().width = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
+			viewHolder.mIconImageView.getLayoutParams().height = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
+		}
+		
+		// Setting the icon drawable
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
 		// Calculating relative percentage
@@ -186,7 +196,35 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	private List<ExpenseGroup> getUserExpenseGroupList(){
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
 		
-		//TODO implement
+		List<UserExpense> userExpenseList = getUserExpenseList();
+		try {
+			for(User user:mBaseFragment.getHelper().getAllUsers()){
+				// Creating new ExpenseGroup object
+				ExpenseGroup expenseGroup = new ExpenseGroup();
+				
+				// Getting the user icon
+				byte[] avatarData = mBaseFragment.getHelper().getUserAvatarByUserId(user.getId()).getAvatarData();
+				Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
+				expenseGroup.setDrawable(userAvatar);
+				
+				
+				// Getting the user expenses
+				BigDecimal totalExpense = new BigDecimal(0);
+				for(UserExpense userExpense:userExpenseList){
+					if(userExpense.getUser().getId().equals(user.getId())){
+						totalExpense = totalExpense.add(userExpense.getExpense());
+					}
+				}
+				expenseGroup.setAmount(totalExpense);
+				
+				// We only add this entry to the list if there are expenses for it
+				if(totalExpense.signum()>0){
+					expenseGroupList.add(expenseGroup);
+				}
+			}
+		} catch (SQLException e) {
+			Log.e(TAG, "SQLException caught while getting user expense group", e);
+		}
 		
 		return expenseGroupList;
 	}

@@ -3,8 +3,8 @@ package com.splitemapp.android.service.gcm;
 import android.content.Intent;
 
 import com.google.android.gms.iid.InstanceIDListenerService;
-import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.service.BaseIntentService;
+import com.splitemapp.android.service.BaseTask;
 
 public class MyInstanceIDListenerService extends InstanceIDListenerService {
 

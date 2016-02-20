@@ -27,13 +27,13 @@ import com.splitemapp.commons.domain.Project;
 public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = BalanceFragment.class.getSimpleName();
-	
+
 	private static final String CURRENCY_SIGN = "$";
 
 	private Project mCurrentProject;
 
 	private View mFragmentView;
-	
+
 	private BalanceMode mBalanceMode;
 
 	private DecimalFormat mExpenseAmountFormat;
@@ -42,7 +42,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private TextView mTotalTextView;
 	private TextView mBudgetTextView;
 	private TextView mBalanceTextView;
-	
+
 	private ImageView mLeftArrowImageView;
 	private ImageView mRightArrowImageView;
 
@@ -51,6 +51,10 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private RecyclerView mExpenseGroupRecycler;
 	private ExpenseGroupAdapter mExpenseGroupAdapter;
 	private RecyclerView.LayoutManager mLayoutManager;
+
+	private TextView mCategoryTextView;
+	private TextView mUserTextView;
+	private TextView mDateTextView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We get the current date by default
 		mCalendar = Calendar.getInstance();
-		
+
 		// Setting the CATEGORY balance mode by default
 		mBalanceMode = BalanceMode.CATEGORY;
 	}
@@ -106,7 +110,37 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 				refreshFragment();
 			}
 		});
-		
+
+		// Set onClick listener for CATEGORY button
+		mCategoryTextView = (TextView) mFragmentView.findViewById(R.id.b_category_textView);
+		mCategoryTextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mBalanceMode = BalanceMode.CATEGORY;
+				refreshFragment();
+			}
+		});
+
+		// Set onClick listener for USER button
+		mUserTextView = (TextView) mFragmentView.findViewById(R.id.b_user_textView);
+		mUserTextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mBalanceMode = BalanceMode.USER;
+				refreshFragment();
+			}
+		});
+
+		// Set onClick listener for DATE button
+		mDateTextView = (TextView) mFragmentView.findViewById(R.id.b_date_textView);
+		mDateTextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mBalanceMode = BalanceMode.DATE;
+				refreshFragment();
+			}
+		});
+
 		// Creating a single user expense adapter to be used in the recycler view
 		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar, mBalanceMode);
 
@@ -124,7 +158,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Setting the default animator for the view
 		mExpenseGroupRecycler.setItemAnimator(new CustomItemAnimator());
-		
+
 		// Setting focusability to false to avoid going to the bottom of the screen
 		mExpenseGroupRecycler.setFocusable(false);
 

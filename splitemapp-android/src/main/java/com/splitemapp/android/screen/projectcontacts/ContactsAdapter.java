@@ -144,7 +144,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 			userStatusIcon.setImageResource(R.drawable.ic_checkbox_marked_circle_48dp);
 		} else {
 			if(baseFragment.isUserHasAvatar(user)){
-				baseFragment.setUsetAvatar(userStatusIcon, user, 40);
+				baseFragment.setUsetAvatarToImageView(userStatusIcon, user, 40);
 			} else {
 				userStatusIcon.setImageResource(R.drawable.ic_checkbox_blank_circle_outline_48dp);
 			}

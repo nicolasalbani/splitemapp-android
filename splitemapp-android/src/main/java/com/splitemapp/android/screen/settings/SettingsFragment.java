@@ -58,7 +58,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We set the user avatar in the navigation view
 		mAvatarImageView = (ImageView) v.findViewById(R.id.s_avatar_imageView);
-		setUsetAvatar(mAvatarImageView, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mAvatarImageView, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 		mAvatarImageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

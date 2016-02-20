@@ -13,6 +13,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
@@ -137,6 +138,17 @@ public class ImageUtils {
 		bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() * imageQuality / 100 , bitmap.getHeight() * imageQuality / 100, true);
 
 		return bitmap;
+	}
+	
+	/**
+	 * Returns a Drawable representing the image
+	 * @param image
+	 * @param imageQuality
+	 * @param resources
+	 * @return
+	 */
+	public static Drawable byteArrayToCroppedDrawable(byte[] image, int imageQuality, Resources resources){
+		return new BitmapDrawable(resources,getCroppedBitmap(byteArrayToBitmap(image, imageQuality)));
 	}
 
 	/**

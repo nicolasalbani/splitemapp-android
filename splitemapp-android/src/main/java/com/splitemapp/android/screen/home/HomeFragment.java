@@ -83,7 +83,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We set the user avatar in the navigation view
 		mNavAvatar = (ImageView) v.findViewById(R.id.h_nav_avatar_imageView);
-		setUsetAvatar(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// We populate the first name in the main view
 		mMainFullName = (TextView) v.findViewById(R.id.h_main_full_name_textView);
@@ -95,7 +95,7 @@ public class HomeFragment extends RestfulFragment {
 
 		// We set the user avatar in the main view
 		mMainAvatar = (ImageView) v.findViewById(R.id.h_main_avatar_imageView);
-		setUsetAvatar(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a projects adapter to be used in the recycler view
 		mProjectsAdapter = new SwipeProjectsAdapter(this);
@@ -250,8 +250,8 @@ public class HomeFragment extends RestfulFragment {
 		mNavFullName.setText(mCurrentUser.getFullName());
 
 		// Updating the Avatar
-		setUsetAvatar(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
-		setUsetAvatar(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mMainAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	@Override
