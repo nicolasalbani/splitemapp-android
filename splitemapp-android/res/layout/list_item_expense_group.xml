@@ -3,9 +3,9 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:paddingEnd="0dp"
-    android:paddingLeft="25dp"
+    android:paddingLeft="15dp"
     android:paddingRight="0dp"
-    android:paddingStart="25dp" >
+    android:paddingStart="15dp" >
 
     <RelativeLayout
         android:id="@+id/b_icon_relativeLayout"
@@ -14,8 +14,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerInParent="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp" >
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp" >
 
         <View
             android:id="@+id/b_circle_imageView"
@@ -42,14 +42,25 @@
 
     <View
         android:id="@+id/b_bar_view"
-        android:layout_width="170dp"
+        android:layout_width="150dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_toEndOf="@id/b_icon_relativeLayout"
         android:layout_toRightOf="@id/b_icon_relativeLayout"
-        android:background="@color/barblue" />
+        android:background="@color/barblue"
+        android:visibility="visible" />
+
+    <SeekBar
+        android:id="@+id/b_seekBar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/b_icon_relativeLayout"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/b_amount_textView"
@@ -60,17 +71,6 @@
         android:layout_toRightOf="@id/b_bar_view"
         android:text="@string/ue_amount_placeholder"
         android:textColor="@color/middle_grey"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/b_percent_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/b_amount_textView"
-        android:layout_toRightOf="@id/b_amount_textView"
-        android:text="@string/b_percent"
-        android:textColor="@color/middle_grey"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
 </RelativeLayout>

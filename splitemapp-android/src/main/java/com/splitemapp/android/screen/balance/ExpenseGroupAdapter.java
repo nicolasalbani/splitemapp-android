@@ -3,6 +3,7 @@ package com.splitemapp.android.screen.balance;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,9 +18,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.balance.ExpenseGroupAdapter.ViewHolder.IExpenseGroupClickListener;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
@@ -43,6 +47,8 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	private BalanceMode mBalanceMode;
 	private BigDecimal mTotalExpenseValue;
 	private BigDecimal mMaxGroupExpenseValue;
+	private boolean mShowPrimaryView;
+	private DecimalFormat mExpenseAmountFormat;
 	private int mFullBarSize;
 
 	// Provide a reference to the views for each data item
@@ -53,13 +59,28 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		public ImageView mIconImageView;
 		public View mBarView;
 		public TextView mAmountTextView;
-		public RecyclerView.LayoutManager mLayoutManager;
+		public SeekBar mSeekBar;
 		public IExpenseGroupClickListener mClickListener;
 
 		public ViewHolder(View view, IExpenseGroupClickListener clickListener) {
 			super(view);
 			mIconImageView = (ImageView)view.findViewById(R.id.b_icon_imageView);
 			mBarView = view.findViewById(R.id.b_bar_view);
+			mSeekBar = (SeekBar)view.findViewById(R.id.b_seekBar);
+			mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					//TODO hide text view
+				}
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					//TODO show text view
+				}
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+					
+				}
+			});
 			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
 
 			mClickListener = clickListener;
@@ -86,6 +107,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		this.mExpenseGroupList = getExpenseGroupList();
 		this.mTotalExpenseValue = getTotalExpenseValue();
 		this.mMaxGroupExpenseValue = getMaxGroupExpenseValue();
+		this.mShowPrimaryView = true;
+		
+		// Setting the expense amount format
+		mExpenseAmountFormat = new DecimalFormat();
+		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+		mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -98,10 +125,24 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseGroupClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				//TODO switch from one type of view to the other (total amount vs percentage)
+				//Switching view from primary to secondary
+				switchView();
+				// Updating recycler view
+				updateRecycler();
 			}
 		});
 		return viewHolder;
+	}
+
+	/**
+	 * Switches view from primary to secondary
+	 */
+	public void switchView(){
+		if(mShowPrimaryView){
+			mShowPrimaryView = false;
+		} else {
+			mShowPrimaryView = true;
+		}
 	}
 
 	/**
@@ -110,7 +151,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	public void updateRecycler(){
 		// Getting a sorted list of SingleUserExpenses
 		mExpenseGroupList = getExpenseGroupList();
-		
+
 		// We notify that the data set has changed
 		notifyDataSetChanged();
 	}
@@ -126,13 +167,13 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 			viewHolder.mIconImageView.getLayoutParams().width = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
 			viewHolder.mIconImageView.getLayoutParams().height = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
 		}
-		
+
 		// Setting the icon drawable
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
 		// Calculating relative percentage
 		float relativePercentage = mExpenseGroupList.get(position).getAmount().divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
-		
+
 		// Setting bar width
 		if(mFullBarSize == 0){
 			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
@@ -142,8 +183,42 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		// Calculating total percentage
 		float totalPercentage = mExpenseGroupList.get(position).getAmount().divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 
-		// Setting percentage value
-		viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100)));
+		// Setting percentage or total value
+		if(mBalanceMode == BalanceMode.CATEGORY){
+			if(mShowPrimaryView){
+				viewBarView(viewHolder);
+				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
+			} else {
+				viewBarView(viewHolder);
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(mExpenseGroupList.get(position).getAmount()));
+			}
+		} else if (mBalanceMode == BalanceMode.USER){
+			if(mShowPrimaryView){
+				viewBarView(viewHolder);
+				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
+			} else {
+				viewSeekBar(viewHolder);
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(mExpenseGroupList.get(position).getAmount()));
+			}
+		}
+	}
+	
+	/**
+	 * View the SeekBar
+	 * @param viewHolder
+	 */
+	private void viewSeekBar(ViewHolder viewHolder){
+		viewHolder.mSeekBar.setVisibility(View.VISIBLE);
+		viewHolder.mBarView.setVisibility(View.INVISIBLE);
+	}
+	
+	/**
+	 * View the BarView
+	 * @param viewHolder
+	 */
+	private void viewBarView(ViewHolder viewHolder){
+		viewHolder.mSeekBar.setVisibility(View.INVISIBLE);
+		viewHolder.mBarView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -157,7 +232,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 */
 	private List<UserExpense> getUserExpenseList(){
 		List<UserExpense> userExpenseList = null;
-		
+
 		// Getting the UserExpense list from the database
 		try {
 			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), mCalendar);
@@ -188,26 +263,26 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 		return expenseGroupList;
 	}
-	
+
 	/**
 	 * Returns a list of ExpenseGroup items organized by USER
 	 * @return
 	 */
 	private List<ExpenseGroup> getUserExpenseGroupList(){
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
-		
+
 		List<UserExpense> userExpenseList = getUserExpenseList();
 		try {
 			for(User user:mBaseFragment.getHelper().getAllUsers()){
 				// Creating new ExpenseGroup object
 				ExpenseGroup expenseGroup = new ExpenseGroup();
-				
+
 				// Getting the user icon
 				byte[] avatarData = mBaseFragment.getHelper().getUserAvatarByUserId(user.getId()).getAvatarData();
 				Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
 				expenseGroup.setDrawable(userAvatar);
-				
-				
+
+
 				// Getting the user expenses
 				BigDecimal totalExpense = new BigDecimal(0);
 				for(UserExpense userExpense:userExpenseList){
@@ -216,7 +291,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 					}
 				}
 				expenseGroup.setAmount(totalExpense);
-				
+
 				// We only add this entry to the list if there are expenses for it
 				if(totalExpense.signum()>0){
 					expenseGroupList.add(expenseGroup);
@@ -225,38 +300,38 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught while getting user expense group", e);
 		}
-		
+
 		return expenseGroupList;
 	}
-	
+
 	/**
 	 * Returns a list of ExpenseGroup items organized by DATE
 	 * @return
 	 */
 	private List<ExpenseGroup> getDateExpenseGroupList(){
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
-		
+
 		//TODO implement
-		
+
 		return expenseGroupList;
 	}
-	
+
 	/**
 	 * Returns a list of ExpenseGroup items organized by CATEGORY
 	 * @return
 	 */
 	private List<ExpenseGroup> getCategoryExpenseGroupList(){
 		List<ExpenseGroup> expenseGroupList = new ArrayList<ExpenseGroup>();
-		
+
 		List<UserExpense> userExpenseList = getUserExpenseList();
 		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
 			// Creating new ExpenseGroup object
 			ExpenseGroup expenseGroup = new ExpenseGroup();
-			
+
 			// Getting the category icon
 			Drawable categoryIcon = ContextCompat.getDrawable(mBaseFragment.getContext(), expenseCategoryMapper.getDrawableId());
 			expenseGroup.setDrawable(categoryIcon);
-			
+
 			// Getting the category expenses
 			BigDecimal totalExpense = new BigDecimal(0);
 			for(UserExpense userExpense:userExpenseList){
@@ -266,13 +341,13 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				}
 			}
 			expenseGroup.setAmount(totalExpense);
-			
+
 			// We only add this entry to the list if there are expenses for it
 			if(totalExpense.signum()>0){
 				expenseGroupList.add(expenseGroup);
 			}
 		}
-		
+
 		return expenseGroupList;
 	}
 
@@ -282,30 +357,30 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 */
 	private BigDecimal getTotalExpenseValue(){
 		BigDecimal mTotalExpenseValue = null;
-		
+
 		// Obtaining total expense value
 		try {
 			mTotalExpenseValue = mBaseFragment.getHelper().getTotalExpenseValueByProjectId(mCurrentProject.getId(), mCalendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught while calculating total expense value", e);
 		}
-		
+
 		return mTotalExpenseValue;
 	}
-	
+
 	/**
 	 * Returns the max expense value category-wise
 	 * @return
 	 */
 	private BigDecimal getMaxGroupExpenseValue(){
 		BigDecimal maxCategoryExpenseValue = new BigDecimal(0);
-		
+
 		for(ExpenseGroup expenseGroup:mExpenseGroupList){
 			if(expenseGroup.getAmount().compareTo(maxCategoryExpenseValue)>0){
 				maxCategoryExpenseValue = expenseGroup.getAmount();
 			}
 		}
-		
+
 		return maxCategoryExpenseValue;
 	}
 }

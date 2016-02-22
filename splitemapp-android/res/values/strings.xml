@@ -100,7 +100,7 @@
     <string name="ue_category_placeholder">Category</string>
     <string name="ue_date_placeholder">13 10 2014</string>
     <string name="ue_currency">$</string>
-    <string name="ue_amount_placeholder">30,5</string>
+    <string name="ue_amount_placeholder">30,5%</string>
     <string name="ue_fullName_placeholder">Full Name</string>
     <string name="ue_fullAmount_placeholder">405.50</string>
     
