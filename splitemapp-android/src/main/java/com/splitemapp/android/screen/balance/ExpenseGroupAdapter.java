@@ -59,29 +59,35 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		public ImageView mIconImageView;
 		public View mBarView;
 		public TextView mAmountTextView;
+		public TextView mShareTextView;
 		public SeekBar mSeekBar;
 		public IExpenseGroupClickListener mClickListener;
 
-		public ViewHolder(View view, IExpenseGroupClickListener clickListener) {
+		public ViewHolder(final View view, IExpenseGroupClickListener clickListener) {
 			super(view);
 			mIconImageView = (ImageView)view.findViewById(R.id.b_icon_imageView);
 			mBarView = view.findViewById(R.id.b_bar_view);
+			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
+			mShareTextView = (TextView)view.findViewById(R.id.b_share_textView);
+
 			mSeekBar = (SeekBar)view.findViewById(R.id.b_seekBar);
 			mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					//TODO hide text view
+					mShareTextView.setVisibility(View.INVISIBLE);
+					mIconImageView.setVisibility(View.VISIBLE);
 				}
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-					//TODO show text view
+					mIconImageView.setVisibility(View.INVISIBLE);
+					mShareTextView.setVisibility(View.VISIBLE);
 				}
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-					
+					mShareTextView.setText( seekBar.getProgress() + "%");
 				}
+
 			});
-			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
 
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
@@ -108,7 +114,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		this.mTotalExpenseValue = getTotalExpenseValue();
 		this.mMaxGroupExpenseValue = getMaxGroupExpenseValue();
 		this.mShowPrimaryView = true;
-		
+
 		// Setting the expense amount format
 		mExpenseAmountFormat = new DecimalFormat();
 		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
@@ -202,7 +208,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 			}
 		}
 	}
-	
+
 	/**
 	 * View the SeekBar
 	 * @param viewHolder
@@ -211,7 +217,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		viewHolder.mSeekBar.setVisibility(View.VISIBLE);
 		viewHolder.mBarView.setVisibility(View.INVISIBLE);
 	}
-	
+
 	/**
 	 * View the BarView
 	 * @param viewHolder
@@ -279,8 +285,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 				// Getting the user icon
 				byte[] avatarData = mBaseFragment.getHelper().getUserAvatarByUserId(user.getId()).getAvatarData();
-				Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
-				expenseGroup.setDrawable(userAvatar);
+				if(avatarData!=null){
+					Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
+					expenseGroup.setDrawable(userAvatar);
+				} else {
+					expenseGroup.setDrawable(mBaseFragment.getResources().getDrawable(R.drawable.ic_avatar_placeholder_80dp));
+				}
 
 
 				// Getting the user expenses
