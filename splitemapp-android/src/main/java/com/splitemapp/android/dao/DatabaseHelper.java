@@ -20,6 +20,8 @@ import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.splitemapp.android.R;
@@ -788,6 +790,28 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		} else {
 			dao.create(project);
 		}
+	}
+	
+	/**
+	 * Returns the UserToProject object for the specified projedt and user ids
+	 * @param projectId
+	 * @param userId
+	 * @return
+	 * @throws SQLException 
+	 */
+	public UserToProject getUserToProject(Long projectId, Long userId) throws SQLException{
+		// Creating query
+		QueryBuilder<UserToProject, Long> qb = getUserToProjectDao().queryBuilder();
+		
+		// Setting where conditions
+		Where<UserToProject, Long> where = qb.where();
+		where.eq(TableField.USER_TO_PROJECT_PROJECT_ID, projectId);
+		where.and();
+		where.eq(TableField.USER_TO_PROJECT_USER_ID, userId);
+		qb.setWhere(where);
+		
+		// Executing query
+		return qb.queryForFirst();
 	}
 
 	/**

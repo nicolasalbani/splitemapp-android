@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.splitemapp.commons.comparator.UserExpenseComparator;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
+import com.splitemapp.commons.domain.UserToProject;
 
 public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapter.ViewHolder> {
 
@@ -60,6 +62,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		public View mBarView;
 		public TextView mAmountTextView;
 		public TextView mShareTextView;
+		public TextView mShareBalanceTextView;
 		public SeekBar mSeekBar;
 		public IExpenseGroupClickListener mClickListener;
 
@@ -69,6 +72,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 			mBarView = view.findViewById(R.id.b_bar_view);
 			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
 			mShareTextView = (TextView)view.findViewById(R.id.b_share_textView);
+			mShareBalanceTextView = (TextView)view.findViewById(R.id.b_share_balance_textView);
 
 			mSeekBar = (SeekBar)view.findViewById(R.id.b_seekBar);
 			mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -84,7 +88,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				}
 				@Override
 				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-					mShareTextView.setText( seekBar.getProgress() + "%");
+					mShareTextView.setText(seekBar.getProgress() + "%");
 				}
 
 			});
@@ -177,17 +181,16 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		// Setting the icon drawable
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
-		// Calculating relative percentage
-		float relativePercentage = mExpenseGroupList.get(position).getAmount().divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		// Calculating total and relative percentage
+		BigDecimal amount = mExpenseGroupList.get(position).getAmount();
+		float totalPercentage = amount.divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		float relativePercentage = amount.divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 
 		// Setting bar width
 		if(mFullBarSize == 0){
 			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
 		}
 		viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
-
-		// Calculating total percentage
-		float totalPercentage = mExpenseGroupList.get(position).getAmount().divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 
 		// Setting percentage or total value
 		if(mBalanceMode == BalanceMode.CATEGORY){
@@ -196,7 +199,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
 				viewBarView(viewHolder);
-				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(mExpenseGroupList.get(position).getAmount()));
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
 			}
 		} else if (mBalanceMode == BalanceMode.USER){
 			if(mShowPrimaryView){
@@ -204,7 +207,16 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
 				viewSeekBar(viewHolder);
-				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(mExpenseGroupList.get(position).getAmount()));
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
+				int expenseShare = mExpenseGroupList.get(position).getUserToProject().getExpensesShare().intValue();
+				viewHolder.mSeekBar.setProgress(expenseShare);
+				BigDecimal balance = mTotalExpenseValue.multiply(new BigDecimal((float)expenseShare/100)).subtract(amount);
+				viewHolder.mShareBalanceTextView.setText("$"+ mExpenseAmountFormat.format(balance));
+				if(balance.signum()>0){
+					viewHolder.mShareBalanceTextView.setTextColor(Color.RED);
+				} else {
+					viewHolder.mShareBalanceTextView.setTextColor(Color.GREEN);
+				}
 			}
 		}
 	}
@@ -216,6 +228,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	private void viewSeekBar(ViewHolder viewHolder){
 		viewHolder.mSeekBar.setVisibility(View.VISIBLE);
 		viewHolder.mBarView.setVisibility(View.INVISIBLE);
+		viewHolder.mShareBalanceTextView.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -224,6 +237,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 */
 	private void viewBarView(ViewHolder viewHolder){
 		viewHolder.mSeekBar.setVisibility(View.INVISIBLE);
+		viewHolder.mShareBalanceTextView.setVisibility(View.GONE);
 		viewHolder.mBarView.setVisibility(View.VISIBLE);
 	}
 
@@ -289,9 +303,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 					Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
 					expenseGroup.setDrawable(userAvatar);
 				} else {
-					expenseGroup.setDrawable(mBaseFragment.getResources().getDrawable(R.drawable.ic_avatar_placeholder_80dp));
+					expenseGroup.setDrawable(ContextCompat.getDrawable(mBaseFragment.getContext(), R.drawable.ic_avatar_placeholder_80dp));
 				}
 
+				// Getting the userToProject relationship
+				UserToProject userToProject = mBaseFragment.getHelper().getUserToProject(mCurrentProject.getId(), user.getId());
+				expenseGroup.setUserToProject(userToProject);
 
 				// Getting the user expenses
 				BigDecimal totalExpense = new BigDecimal(0);
@@ -302,10 +319,8 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				}
 				expenseGroup.setAmount(totalExpense);
 
-				// We only add this entry to the list if there are expenses for it
-				if(totalExpense.signum()>0){
-					expenseGroupList.add(expenseGroup);
-				}
+				// We add this entry to the list
+				expenseGroupList.add(expenseGroup);
 			}
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught while getting user expense group", e);
