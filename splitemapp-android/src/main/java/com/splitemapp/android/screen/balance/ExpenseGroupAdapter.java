@@ -73,25 +73,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
 			mShareTextView = (TextView)view.findViewById(R.id.b_share_textView);
 			mShareBalanceTextView = (TextView)view.findViewById(R.id.b_share_balance_textView);
-
 			mSeekBar = (SeekBar)view.findViewById(R.id.b_seekBar);
-			mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {
-					mShareTextView.setVisibility(View.INVISIBLE);
-					mIconImageView.setVisibility(View.VISIBLE);
-				}
-				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {
-					mIconImageView.setVisibility(View.INVISIBLE);
-					mShareTextView.setVisibility(View.VISIBLE);
-				}
-				@Override
-				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-					mShareTextView.setText(seekBar.getProgress() + "%");
-				}
-
-			});
 
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
@@ -129,16 +111,36 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	@Override
 	public ExpenseGroupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// Creating a new view
-		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group, parent, false);
+		switch (mBalanceMode) {
+		case CATEGORY: 
+			if(mShowPrimaryView){
+				mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group_category_primary, parent, false);
+			} else {
+				mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group_category_secondary, parent, false);
+			}
+			break;
+		case USER:
+			if(mShowPrimaryView){
+				mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group_user_primary, parent, false);
+			} else {
+				mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group_user_secondary, parent, false);
+			}
+			break;
+		case DATE:
+			mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_expense_group_date, parent, false);
+			break;
+		}
 
 		// Creating a new view holder
 		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseGroupClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
-				//Switching view from primary to secondary
-				switchView();
-				// Updating recycler view
-				updateRecycler();
+				if(mBalanceMode != BalanceMode.DATE){
+					//Switching view from primary to secondary
+					switchView();
+					// Updating recycler view
+					updateRecycler();
+				}
 			}
 		});
 		return viewHolder;
@@ -168,16 +170,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
-	public void onBindViewHolder(ViewHolder viewHolder, int position) {
-		// Setting the icon size
-		if(mBalanceMode == BalanceMode.CATEGORY){
-			viewHolder.mIconImageView.getLayoutParams().width = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 30);
-			viewHolder.mIconImageView.getLayoutParams().height = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 30);
-		} else if (mBalanceMode == BalanceMode.USER){
-			viewHolder.mIconImageView.getLayoutParams().width = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
-			viewHolder.mIconImageView.getLayoutParams().height = ImageUtils.calculateDpUnits(mBaseFragment.getContext(), 36);
-		}
-
+	public void onBindViewHolder(final ViewHolder viewHolder, int position) {
 		// Setting the icon drawable
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
@@ -186,30 +179,54 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		float totalPercentage = amount.divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 		float relativePercentage = amount.divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
 
-		// Setting bar width
+		// Setting the full bar size only once
 		if(mFullBarSize == 0){
 			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
 		}
-		viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
 
-		// Setting percentage or total value
 		if(mBalanceMode == BalanceMode.CATEGORY){
+			// Setting bar size
+			viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
 			if(mShowPrimaryView){
-				viewBarView(viewHolder);
+				// Setting percentage
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
-				viewBarView(viewHolder);
+				// Setting amount
 				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
 			}
 		} else if (mBalanceMode == BalanceMode.USER){
 			if(mShowPrimaryView){
-				viewBarView(viewHolder);
+				// Setting bar size and percentage
+				viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
-				viewSeekBar(viewHolder);
+				// Setting the seekbar OnSeekBarChangeListener
+				viewHolder.mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						viewHolder.mShareTextView.setVisibility(View.INVISIBLE);
+						viewHolder.mIconImageView.setVisibility(View.VISIBLE);
+					}
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+						viewHolder.mIconImageView.setVisibility(View.INVISIBLE);
+						viewHolder.mShareTextView.setVisibility(View.VISIBLE);
+					}
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+						viewHolder.mShareTextView.setText(seekBar.getProgress() + "%");
+					}
+
+				});
+				
+				// Setting total amount
 				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
+				
+				// Setting seekbar progress
 				int expenseShare = mExpenseGroupList.get(position).getUserToProject().getExpensesShare().intValue();
 				viewHolder.mSeekBar.setProgress(expenseShare);
+				
+				// Setting balance amount and color
 				BigDecimal balance = mTotalExpenseValue.multiply(new BigDecimal((float)expenseShare/100)).subtract(amount);
 				viewHolder.mShareBalanceTextView.setText("$"+ mExpenseAmountFormat.format(balance));
 				if(balance.signum()>0){
@@ -219,26 +236,6 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 				}
 			}
 		}
-	}
-
-	/**
-	 * View the SeekBar
-	 * @param viewHolder
-	 */
-	private void viewSeekBar(ViewHolder viewHolder){
-		viewHolder.mSeekBar.setVisibility(View.VISIBLE);
-		viewHolder.mBarView.setVisibility(View.INVISIBLE);
-		viewHolder.mShareBalanceTextView.setVisibility(View.VISIBLE);
-	}
-
-	/**
-	 * View the BarView
-	 * @param viewHolder
-	 */
-	private void viewBarView(ViewHolder viewHolder){
-		viewHolder.mSeekBar.setVisibility(View.INVISIBLE);
-		viewHolder.mShareBalanceTextView.setVisibility(View.GONE);
-		viewHolder.mBarView.setVisibility(View.VISIBLE);
 	}
 
 	@Override

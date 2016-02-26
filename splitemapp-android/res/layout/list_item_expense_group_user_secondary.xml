@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingEnd="0dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="0dp"
+    android:paddingStart="15dp" >
+
+    <RelativeLayout
+        android:id="@+id/b_icon_relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp" >
+
+        <View
+            android:id="@+id/b_circle_imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_ring" />
+
+        <ImageView
+            android:id="@+id/b_icon_imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/b_icon_description"
+            android:src="@drawable/ic_avatar_placeholder_80dp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/b_share_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/barblue"
+            android:textSize="14sp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
+        android:background="@color/middle_grey" />
+
+    <SeekBar
+        android:id="@+id/b_seekBar"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/b_icon_relativeLayout"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
+        android:maxHeight="5dip"
+        android:minHeight="5dip"
+        android:paddingBottom="10dp"
+        android:paddingEnd="1px"
+        android:paddingLeft="1px"
+        android:paddingRight="1px"
+        android:paddingStart="1px"
+        android:paddingTop="10dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/shape_seekbar"
+        android:thumb="@drawable/ic_seekbar_thumbler_6"
+        android:thumbOffset="0px" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/b_seekBar"
+        android:layout_toRightOf="@id/b_seekBar"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/b_amount_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/b_amount_placeholder"
+            android:textColor="@color/middle_grey"
+            android:textSize="16sp" />
+        
+        <TextView
+            android:id="@+id/b_share_balance_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/b_share_calc_placeholder"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

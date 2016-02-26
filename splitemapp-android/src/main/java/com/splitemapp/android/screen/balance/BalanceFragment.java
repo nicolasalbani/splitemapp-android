@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
@@ -155,9 +154,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		// Using a linear layout manager
 		mLayoutManager = new LinearLayoutManager(getActivity());
 		mExpenseGroupRecycler.setLayoutManager(mLayoutManager);
-
-		// Setting the default animator for the view
-		mExpenseGroupRecycler.setItemAnimator(new CustomItemAnimator());
 
 		// Setting focusability to false to avoid going to the bottom of the screen
 		mExpenseGroupRecycler.setFocusable(false);

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
 import com.splitemapp.android.widget.LinearLayoutManager;
@@ -149,9 +148,6 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		// Using a linear layout manager
 		viewHolder.mLayoutManager = new LinearLayoutManager(mBaseFragment.getActivity());
 		viewHolder.mUserExpenseRecyclerView.setLayoutManager(viewHolder.mLayoutManager);
-
-		// Setting the default animator for the view
-		viewHolder.mUserExpenseRecyclerView.setItemAnimator(new CustomItemAnimator());
 	}
 
 	@Override

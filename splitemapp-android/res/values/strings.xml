@@ -143,7 +143,8 @@
     <string name="b_next_month">Next month</string>
     <string name="b_last_month">Last month</string>
     <string name="b_back_action">Back</string>
-    <string name="b_amount_placeholder">30,5%</string>
+    <string name="b_percent_placeholder">30,5%</string>
+    <string name="b_amount_placeholder">$200.00</string>
     <string name="b_share_calc_placeholder">$200.00</string>
     <string name="b_total_placeholder">$18.000</string>
     <string name="b_month_placeholder">August</string>
