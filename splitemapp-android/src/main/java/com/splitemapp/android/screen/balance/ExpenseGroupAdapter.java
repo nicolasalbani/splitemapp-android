@@ -41,16 +41,17 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 
 	private static final int DIVISION_PRESICION = 4;
 
+	private static BigDecimal mTotalExpenseValue;
+	private static DecimalFormat mExpenseAmountFormat;
+
 	private List<ExpenseGroup> mExpenseGroupList;
 	private Project mCurrentProject;
 	private BaseFragment mBaseFragment;
 	private View mView;
 	private Calendar mCalendar;
 	private BalanceMode mBalanceMode;
-	private BigDecimal mTotalExpenseValue;
 	private BigDecimal mMaxGroupExpenseValue;
 	private boolean mShowPrimaryView;
-	private DecimalFormat mExpenseAmountFormat;
 	private int mFullBarSize;
 
 	// Provide a reference to the views for each data item
@@ -58,22 +59,50 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	// you provide access to all the views for a data item in a view holder
 	public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
 		// Each data item is a project
+		public BalanceMode mBalanceMode;
+		public boolean mShowPrimaryView;
+		public boolean mInitializedSeekBar;
+		public String identifier;
 		public ImageView mIconImageView;
 		public View mBarView;
 		public TextView mAmountTextView;
+		public BigDecimal mAmount;
 		public TextView mShareTextView;
 		public TextView mShareBalanceTextView;
 		public SeekBar mSeekBar;
 		public IExpenseGroupClickListener mClickListener;
 
-		public ViewHolder(final View view, IExpenseGroupClickListener clickListener) {
+		public ViewHolder(View view, BalanceMode balanceMode, boolean showPrimaryView, IExpenseGroupClickListener clickListener) {
 			super(view);
+			mBalanceMode = balanceMode;
+			mShowPrimaryView = showPrimaryView;
+			mInitializedSeekBar = false;
 			mIconImageView = (ImageView)view.findViewById(R.id.b_icon_imageView);
-			mBarView = view.findViewById(R.id.b_bar_view);
 			mAmountTextView = (TextView)view.findViewById(R.id.b_amount_textView);
+			mBarView = view.findViewById(R.id.b_bar_view);
 			mShareTextView = (TextView)view.findViewById(R.id.b_share_textView);
 			mShareBalanceTextView = (TextView)view.findViewById(R.id.b_share_balance_textView);
 			mSeekBar = (SeekBar)view.findViewById(R.id.b_seekBar);
+
+			if(mSeekBar != null){
+				mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						mShareTextView.setVisibility(View.INVISIBLE);
+						mIconImageView.setVisibility(View.VISIBLE);
+					}
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+						mIconImageView.setVisibility(View.INVISIBLE);
+						mShareTextView.setVisibility(View.VISIBLE);
+					}
+					@Override
+					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+						mShareTextView.setText(seekBar.getProgress() + "%");
+						updateShareBalance(seekBar, mAmount, mShareBalanceTextView);
+					}
+				});
+			}
 
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
@@ -97,7 +126,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		this.mCalendar = calendar;
 		this.mBalanceMode = balanceMode;
 		this.mExpenseGroupList = getExpenseGroupList();
-		this.mTotalExpenseValue = getTotalExpenseValue();
+		mTotalExpenseValue = getTotalExpenseValue();
 		this.mMaxGroupExpenseValue = getMaxGroupExpenseValue();
 		this.mShowPrimaryView = true;
 
@@ -132,11 +161,11 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 		}
 
 		// Creating a new view holder
-		ViewHolder viewHolder = new ViewHolder(mView, new IExpenseGroupClickListener() {
+		ViewHolder viewHolder = new ViewHolder(mView, mBalanceMode, mShowPrimaryView, new IExpenseGroupClickListener() {
 			@Override
 			public void onItemClick(View view, int position) {
 				if(mBalanceMode != BalanceMode.DATE){
-					//Switching view from primary to secondary
+					// Switching view from primary to secondary
 					switchView();
 					// Updating recycler view
 					updateRecycler();
@@ -161,80 +190,88 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<ExpenseGroupAdapte
 	 * Updates the content of the recycler
 	 */
 	public void updateRecycler(){
+		// Notify of all the ViewHolders that are going to be removed
+		notifyItemRangeRemoved(0, getItemCount());
+
 		// Getting a sorted list of SingleUserExpenses
 		mExpenseGroupList = getExpenseGroupList();
 
-		// We notify that the data set has changed
-		notifyDataSetChanged();
+		// Notify of all the ViewHolders that are going to be removed
+		notifyItemRangeInserted(0, getItemCount());
 	}
 
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
-	public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+	public void onBindViewHolder(ViewHolder viewHolder, int position) {
+		// Workaround for when we get a viewHolder that is not supposed to be binding
+		if(mShowPrimaryView != viewHolder.mShowPrimaryView){
+			return;
+		}
+
 		// Setting the icon drawable
 		viewHolder.mIconImageView.setImageDrawable(mExpenseGroupList.get(position).getDrawable());
 
 		// Calculating total and relative percentage
-		BigDecimal amount = mExpenseGroupList.get(position).getAmount();
-		float totalPercentage = amount.divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
-		float relativePercentage = amount.divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		viewHolder.mAmount = mExpenseGroupList.get(position).getAmount();
+		float totalPercentage = 0;
+		if(mTotalExpenseValue.doubleValue() != 0){
+			totalPercentage = viewHolder.mAmount.divide(mTotalExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		}
+		float relativePercentage = 0;
+		if(mMaxGroupExpenseValue.doubleValue() != 0){
+			relativePercentage = viewHolder.mAmount.divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		}
 
 		// Setting the full bar size only once
 		if(mFullBarSize == 0){
 			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
 		}
 
-		if(mBalanceMode == BalanceMode.CATEGORY){
+		if(viewHolder.mBalanceMode == BalanceMode.CATEGORY){
 			// Setting bar size
 			viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
-			if(mShowPrimaryView){
+			if(viewHolder.mShowPrimaryView){
 				// Setting percentage
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
 				// Setting amount
-				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(viewHolder.mAmount));
 			}
-		} else if (mBalanceMode == BalanceMode.USER){
-			if(mShowPrimaryView){
+		} else if (viewHolder.mBalanceMode == BalanceMode.USER){
+			if(viewHolder.mShowPrimaryView){
 				// Setting bar size and percentage
 				viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
 				viewHolder.mAmountTextView.setText(String.valueOf((int)(totalPercentage*100))+"%");
 			} else {
-				// Setting the seekbar OnSeekBarChangeListener
-				viewHolder.mSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-						viewHolder.mShareTextView.setVisibility(View.INVISIBLE);
-						viewHolder.mIconImageView.setVisibility(View.VISIBLE);
-					}
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {
-						viewHolder.mIconImageView.setVisibility(View.INVISIBLE);
-						viewHolder.mShareTextView.setVisibility(View.VISIBLE);
-					}
-					@Override
-					public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-						viewHolder.mShareTextView.setText(seekBar.getProgress() + "%");
-					}
-
-				});
-				
 				// Setting total amount
-				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(amount));
-				
-				// Setting seekbar progress
-				int expenseShare = mExpenseGroupList.get(position).getUserToProject().getExpensesShare().intValue();
-				viewHolder.mSeekBar.setProgress(expenseShare);
-				
-				// Setting balance amount and color
-				BigDecimal balance = mTotalExpenseValue.multiply(new BigDecimal((float)expenseShare/100)).subtract(amount);
-				viewHolder.mShareBalanceTextView.setText("$"+ mExpenseAmountFormat.format(balance));
-				if(balance.signum()>0){
-					viewHolder.mShareBalanceTextView.setTextColor(Color.RED);
-				} else {
-					viewHolder.mShareBalanceTextView.setTextColor(Color.GREEN);
+				viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(viewHolder.mAmount));
+
+				// Setting seekbar progress for the first time
+				if(!viewHolder.mInitializedSeekBar){
+					viewHolder.mInitializedSeekBar = true;
+					int expenseShare = mExpenseGroupList.get(position).getUserToProject().getExpensesShare().intValue();
+					viewHolder.mSeekBar.setProgress(expenseShare);
 				}
+
+				// Setting balance amount and color
+				updateShareBalance(viewHolder.mSeekBar, viewHolder.mAmount, viewHolder.mShareBalanceTextView);
 			}
+		}
+	}
+
+	/**
+	 * Updates the textView with the appropriate share balance
+	 * @param seekBar
+	 * @param amount
+	 * @param textView
+	 */
+	public static void updateShareBalance(SeekBar seekBar, BigDecimal amount, TextView textView){
+		BigDecimal balance = mTotalExpenseValue.multiply(new BigDecimal((float)seekBar.getProgress()/100)).subtract(amount);
+		textView.setText("$"+ mExpenseAmountFormat.format(balance.abs()));
+		if(balance.signum()>0){
+			textView.setTextColor(Color.RED);
+		} else {
+			textView.setTextColor(Color.GREEN);
 		}
 	}
 

@@ -85,13 +85,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 		mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 
-		// Populating the balance screen TextViews
-		try {
-			updateTextViews(mCurrentProject.getId());
-		} catch (SQLException e) {
-			Log.e(TAG, "SQLException caught while updating TextViews", e);
-		}
-
 		// Set onClick listener for right/left arrows
 		mLeftArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_left_arrow_imageView);
 		mLeftArrowImageView.setOnClickListener(new OnClickListener() {
@@ -157,6 +150,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Setting focusability to false to avoid going to the bottom of the screen
 		mExpenseGroupRecycler.setFocusable(false);
+		
+		// Updating text views and recycler
+		updateFragment();
 
 		return mFragmentView;
 	}
@@ -213,7 +209,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Updating the RecyclerView
 		mExpenseGroupAdapter.updateRecycler();
-
 	}
 
 	@Override
@@ -247,5 +242,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	protected void doneAction() {
 		// Simulate OnBackPressed
 		getActivity().onBackPressed();
+		//TODO Maybe we need to update the expense share if they changed
 	}
 }
