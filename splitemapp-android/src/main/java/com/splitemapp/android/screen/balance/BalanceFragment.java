@@ -33,8 +33,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 	private View mFragmentView;
 
-	private BalanceMode mBalanceMode;
-
 	private DecimalFormat mExpenseAmountFormat;
 	private TextView mMonthTextView;
 	private TextView mYearTextView;
@@ -68,9 +66,6 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We get the current date by default
 		mCalendar = Calendar.getInstance();
-
-		// Setting the CATEGORY balance mode by default
-		mBalanceMode = BalanceMode.CATEGORY;
 	}
 
 	@Override
@@ -91,7 +86,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			@Override
 			public void onClick(View arg0) {
 				mCalendar.add(Calendar.MONTH, -1);
-				refreshFragment();
+
+				// Updating the fragment
+				updateFragment();
 			}
 		});
 		mRightArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_right_arrow_imageView);
@@ -99,7 +96,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			@Override
 			public void onClick(View arg0) {
 				mCalendar.add(Calendar.MONTH, 1);
-				refreshFragment();
+
+				// Updating the fragment
+				updateFragment();
 			}
 		});
 
@@ -108,8 +107,11 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mCategoryTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mBalanceMode = BalanceMode.CATEGORY;
-				refreshFragment();
+				// Setting the balance mode to category
+				mExpenseGroupAdapter.setBalanceMode(BalanceMode.CATEGORY);
+
+				// Updating the RecyclerView
+				mExpenseGroupAdapter.updateRecycler();
 			}
 		});
 
@@ -118,8 +120,11 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mUserTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mBalanceMode = BalanceMode.USER;
-				refreshFragment();
+				// Setting the balance mode to user
+				mExpenseGroupAdapter.setBalanceMode(BalanceMode.USER);
+				
+				// Updating the RecyclerView
+				mExpenseGroupAdapter.updateRecycler();
 			}
 		});
 
@@ -128,13 +133,16 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mDateTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mBalanceMode = BalanceMode.DATE;
-				refreshFragment();
+				// Setting the balance mode to date
+				mExpenseGroupAdapter.setBalanceMode(BalanceMode.DATE);
+				
+				// Updating the RecyclerView
+				mExpenseGroupAdapter.updateRecycler();
 			}
 		});
 
 		// Creating a single user expense adapter to be used in the recycler view
-		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar, mBalanceMode);
+		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar, BalanceMode.CATEGORY);
 
 		// We populate the list of projects for this user
 		mExpenseGroupRecycler = (RecyclerView) mFragmentView.findViewById(R.id.b_expense_group_recyclerView);
