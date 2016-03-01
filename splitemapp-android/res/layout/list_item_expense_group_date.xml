@@ -24,13 +24,30 @@
             android:layout_centerInParent="true"
             android:background="@drawable/shape_ring" />
 
-        <TextView
-            android:id="@+id/b_share_textView"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/barblue"
-            android:textSize="14sp" />
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/b_month_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/b_month_short_placeholder"
+                android:textColor="@color/barblue"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/b_year_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/b_year_placeholder"
+                android:textColor="@color/hard_grey"
+                android:textSize="10sp" />
+        </LinearLayout>
     </RelativeLayout>
 
     <View
@@ -66,9 +83,9 @@
             android:text="@string/b_amount_placeholder"
             android:textColor="@color/middle_grey"
             android:textSize="16sp" />
-        
+
         <TextView
-            android:id="@+id/b_share_balance_textView"
+            android:id="@+id/b_balance_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/b_share_calc_placeholder"

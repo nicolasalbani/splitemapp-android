@@ -148,6 +148,7 @@
     <string name="b_share_calc_placeholder">$200.00</string>
     <string name="b_total_placeholder">$18.000</string>
     <string name="b_month_placeholder">August</string>
+    <string name="b_month_short_placeholder">Aug</string>
     <string name="b_year_placeholder">2016</string>
     <string name="b_balance">Balance</string>
     <string name="b_balance_placeholder">$2.000</string>
@@ -170,6 +171,18 @@
     <string name="b_month_october">October</string>
     <string name="b_month_november">November</string>
     <string name="b_month_december">December</string>
+    <string name="b_short_month_january">Jan</string>
+    <string name="b_short_month_february">Feb</string>
+    <string name="b_short_month_march">Mar</string>
+    <string name="b_short_month_april">Apr</string>
+    <string name="b_short_month_may">May</string>
+    <string name="b_short_month_june">Jun</string>
+    <string name="b_short_month_july">Jul</string>
+    <string name="b_short_month_august">Aug</string>
+    <string name="b_short_month_september">Sep</string>
+    <string name="b_short_month_october">Oct</string>
+    <string name="b_short_month_november">Nov</string>
+    <string name="b_short_month_december">Dec</string>
     
     <!-- Expense Categories -->
     <string name="e_category_description">Category image</string>

@@ -39,6 +39,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private static final int USER_PRIMARY = 3;
 	private static final int USER_SECONDARY = 4;
 	private static final int DATE = 5;
+	private static final String CURRENCY_SIGN = "$";
 
 	private static BigDecimal mTotalExpenseValue;
 	private static DecimalFormat mExpenseAmountFormat;
@@ -293,7 +294,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 		// Setting amount
 		viewHolder.mAmount = mExpenseGroupList.get(position).getAmount();
-		
+
 		// Setting total amount
 		viewHolder.mAmountTextView.setText("$"+ mExpenseAmountFormat.format(viewHolder.mAmount));
 
@@ -308,15 +309,51 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 		viewHolder.updateShareBalance(viewHolder.mSeekBar, viewHolder.mAmount, viewHolder.mShareBalanceTextView);
 	}
 
+	/**
+	 * Configures a Date view holder
+	 * @param viewHolder
+	 * @param position
+	 */
 	private void configureDateViewHolder(ViewHolderDate viewHolder, int position){
+		ExpenseGroupDate expenseGroup = (ExpenseGroupDate)mExpenseGroupList.get(position);
 
+		// Setting the month textView
+		viewHolder.mMonthTextView.setText(MonthMapper.values()[expenseGroup.getMonthYear().get(Calendar.MONTH)].getShortStringId());
+
+		// Setting the year textView
+		viewHolder.mYearTextView.setText(expenseGroup.getMonthYear().get(Calendar.YEAR));
+
+		// Setting the full bar size only once
+		if(mFullBarSize == 0){
+			mFullBarSize = viewHolder.mBarView.getLayoutParams().width;
+		}
+
+		// Calculating relative percentage
+		BigDecimal amount = mExpenseGroupList.get(position).getAmount();
+		float relativePercentage = 0;
+		if(mMaxGroupExpenseValue.doubleValue() != 0){
+			relativePercentage = amount.divide(mMaxGroupExpenseValue, DIVISION_PRESICION,  RoundingMode.HALF_UP).floatValue();
+		}
+
+		// Setting bar size and percentage
+		viewHolder.mBarView.getLayoutParams().width = (int)(mFullBarSize * relativePercentage);
+
+		// Setting the amount and the project balance
+		BigDecimal balance = mCurrentProject.getBudget().subtract(amount);
+		viewHolder.mAmountTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(amount));
+		viewHolder.mBalanceTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(balance.abs()));
+		if(balance.signum()>0){
+			viewHolder.mBalanceTextView.setTextColor(ContextCompat.getColor(mBaseFragment.getContext(), R.color.green));
+		} else {
+			viewHolder.mBalanceTextView.setTextColor(ContextCompat.getColor(mBaseFragment.getContext(), R.color.red));
+		}
 	}
 
 	/**
 	 * Returns the whole user expense list for this project
 	 * @return
 	 */
-	private List<UserExpense> getUserExpenseList(){
+	private List<UserExpense> getUserExpensesForCurrentProject(){
 		List<UserExpense> userExpenseList = null;
 
 		// Getting the UserExpense list from the database
@@ -357,7 +394,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupUser> getUserExpenseGroupList(){
 		List<ExpenseGroupUser> expenseGroupList = new ArrayList<ExpenseGroupUser>();
 
-		List<UserExpense> userExpenseList = getUserExpenseList();
+		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
 		try {
 			for(User user:mBaseFragment.getHelper().getAllUsers()){
 				// Creating new ExpenseGroup object
@@ -387,7 +424,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 				// We add this entry to the list
 				expenseGroupList.add(expenseGroup);
-				
+
 				// Setting whether this is a primary view
 				expenseGroup.setShowPrimary(mShowPrimaryView);
 			}
@@ -405,9 +442,47 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupDate> getDateExpenseGroupList(){
 		List<ExpenseGroupDate> expenseGroupList = new ArrayList<ExpenseGroupDate>();
 
-		//TODO implement
+		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
+		for(UserExpense userExpense:userExpenseList){
+			// Creating a userExpense calendar
+			Calendar userExpenseCalendar = Calendar.getInstance();
+			userExpenseCalendar.setTime(userExpense.getExpenseDate());
+
+			// Checking to which expense group object this expense corresponds to and updating its value
+			boolean addNewExpenseGroup = true;
+			for(ExpenseGroupDate expenseGroupDate:expenseGroupList){
+				if(sameMonthYear(expenseGroupDate.getMonthYear(), userExpenseCalendar)){
+					addNewExpenseGroup = false;
+					expenseGroupDate.setAmount(expenseGroupDate.getAmount().add(userExpense.getExpense()));
+				}
+			}
+
+			// Adding a new expense group to the list if the expense date didn't match any existing one
+			if(addNewExpenseGroup){
+				ExpenseGroupDate expenseGroupDate = new ExpenseGroupDate();
+				expenseGroupDate.setMonthYear(userExpenseCalendar);
+				expenseGroupDate.setAmount(userExpense.getExpense());
+				expenseGroupList.add(expenseGroupDate);
+			}
+		}
 
 		return expenseGroupList;
+	}
+
+	/**
+	 * Determines whether both calendar objects correspond to same year and month
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	private boolean sameMonthYear(Calendar date1, Calendar date2){
+		int year1 = date1.get(Calendar.YEAR);
+		int month1 = date1.get(Calendar.MONTH);
+
+		int year2 = date2.get(Calendar.YEAR);
+		int month2 = date2.get(Calendar.MONTH);
+
+		return (year1 == year2) && (month1 == month2);
 	}
 
 	/**
@@ -417,7 +492,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupCategory> getCategoryExpenseGroupList(){
 		List<ExpenseGroupCategory> expenseGroupList = new ArrayList<ExpenseGroupCategory>();
 
-		List<UserExpense> userExpenseList = getUserExpenseList();
+		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
 		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
 			// Creating new ExpenseGroup object
 			ExpenseGroupCategory expenseGroup = new ExpenseGroupCategory();
@@ -440,7 +515,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 			if(totalExpense.signum()>0){
 				expenseGroupList.add(expenseGroup);
 			}
-			
+
 			// Setting whether this is a primary view
 			expenseGroup.setShowPrimary(mShowPrimaryView);
 		}
