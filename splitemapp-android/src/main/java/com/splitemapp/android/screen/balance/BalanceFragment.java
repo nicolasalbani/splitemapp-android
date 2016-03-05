@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen.balance;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -28,10 +29,14 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private static final String TAG = BalanceFragment.class.getSimpleName();
 
 	private static final String CURRENCY_SIGN = "$";
+	private static final int DIVISION_PRESICION = 4;
 
 	private Project mCurrentProject;
 
 	private View mFragmentView;
+
+	private View mTopMonthView;
+	private View mTopAverageView;
 
 	private DecimalFormat mExpenseAmountFormat;
 	private TextView mMonthTextView;
@@ -80,6 +85,16 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 		mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
 
+		// Getting top layouts
+		mTopMonthView = mFragmentView.findViewById(R.id.b_top_month_view);
+		mTopAverageView = mFragmentView.findViewById(R.id.b_top_average_view);
+
+		// If this is a one time project we dont show the months view
+		if(!isMonthlyProject()){
+			mTopMonthView.setVisibility(View.GONE);
+			mTopAverageView.setVisibility(View.GONE);
+		}
+
 		// Set onClick listener for right/left arrows
 		mLeftArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_left_arrow_imageView);
 		mLeftArrowImageView.setOnClickListener(new OnClickListener() {
@@ -107,11 +122,18 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mCategoryTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Setting visibility for top views if it is a monthly project
+				if(isMonthlyProject()){
+					mTopMonthView.setVisibility(View.VISIBLE);
+					mTopAverageView.setVisibility(View.GONE);
+				}
+
 				// Setting the balance mode to category
 				mExpenseGroupAdapter.setBalanceMode(BalanceMode.CATEGORY);
+				mExpenseGroupAdapter.setShowPrimaryView(true);
 
-				// Updating the RecyclerView
-				mExpenseGroupAdapter.updateRecycler();
+				// Updating the fragment
+				updateFragment();
 			}
 		});
 
@@ -120,11 +142,18 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mUserTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Setting visibility for top views if it is a monthly project
+				if(isMonthlyProject()){
+					mTopMonthView.setVisibility(View.VISIBLE);
+					mTopAverageView.setVisibility(View.GONE);
+				}
+
 				// Setting the balance mode to user
 				mExpenseGroupAdapter.setBalanceMode(BalanceMode.USER);
-				
-				// Updating the RecyclerView
-				mExpenseGroupAdapter.updateRecycler();
+				mExpenseGroupAdapter.setShowPrimaryView(true);
+
+				// Updating the fragment
+				updateFragment();
 			}
 		});
 
@@ -133,13 +162,22 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mDateTextView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				// Setting visibility for top views
+				mTopMonthView.setVisibility(View.GONE);
+				mTopAverageView.setVisibility(View.VISIBLE);
+
 				// Setting the balance mode to date
 				mExpenseGroupAdapter.setBalanceMode(BalanceMode.DATE);
-				
-				// Updating the RecyclerView
-				mExpenseGroupAdapter.updateRecycler();
+
+				// Updating the fragment
+				updateFragment();
 			}
 		});
+
+		// If this is a one time project we don't show the DATE view 
+		if(!isMonthlyProject()){
+			mDateTextView.setVisibility(View.GONE);
+		}
 
 		// Creating a single user expense adapter to be used in the recycler view
 		mExpenseGroupAdapter = new ExpenseGroupAdapter(mCurrentProject, this, mCalendar, BalanceMode.CATEGORY);
@@ -158,7 +196,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Setting focusability to false to avoid going to the bottom of the screen
 		mExpenseGroupRecycler.setFocusable(false);
-		
+
 		// Updating text views and recycler
 		updateFragment();
 
@@ -179,8 +217,19 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			mYearTextView = (TextView) mFragmentView.findViewById(R.id.b_yearTextView);
 			mYearTextView.setText(String.valueOf(mCalendar.get(Calendar.YEAR)));
 
-			// Setting total expense
-			BigDecimal totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, mCalendar);
+			BigDecimal totalExpenseValue = null;
+			if(isMonthlyProject()){
+				// Setting total expense or average in case of DATE balance mode
+				if(mExpenseGroupAdapter.getBalanceMode() == BalanceMode.DATE){
+					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, null);
+					totalExpenseValue = totalExpenseValue.divide(new BigDecimal(mExpenseGroupAdapter.getItemCount()), DIVISION_PRESICION,  RoundingMode.HALF_UP);
+				} else {
+					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, mCalendar);
+				}
+			} else {
+				// Setting total expense
+				totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, null);
+			}
 			mTotalTextView = (TextView) mFragmentView.findViewById(R.id.b_total_textView);
 			mTotalTextView.setText(CURRENCY_SIGN+mExpenseAmountFormat.format(totalExpenseValue));
 
@@ -200,6 +249,14 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			}
 		}
 	}
+	
+	/**
+	 * Returns a boolean indicating whether this is a monthly project
+	 * @return
+	 */
+	private boolean isMonthlyProject(){
+		return mCurrentProject.getProjectType().getCod().equals(ProjectTypeMapper.monthly.toString());
+	}
 
 	/**
 	 * Makes all necessary updates to this fragment
@@ -209,14 +266,14 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 			// Getting current project from database
 			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 
+			// Updating the RecyclerView
+			mExpenseGroupAdapter.updateRecycler();
+
 			// Updating all TextViews
 			updateTextViews(mCurrentProject.getId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
-
-		// Updating the RecyclerView
-		mExpenseGroupAdapter.updateRecycler();
 	}
 
 	@Override

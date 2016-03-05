@@ -140,6 +140,9 @@
     
     <!-- Balance -->
     <string name="b_title">Balance</string>
+    <string name="b_monthly">Monthly</string>
+    <string name="b_one_time">One Time</string>
+    <string name="b_average">AVERAGE</string>
     <string name="b_next_month">Next month</string>
     <string name="b_last_month">Last month</string>
     <string name="b_back_action">Back</string>

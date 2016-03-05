@@ -29,6 +29,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
+import com.splitemapp.android.screen.balance.ProjectTypeMapper;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
@@ -121,7 +122,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		try {
 			List<ProjectType> projectTypes = getHelper().getAllProjectTypes();
 			for(ProjectType projectType:projectTypes){
-				spinnerAdapter.add(projectType.getCod());
+				spinnerAdapter.add(ProjectTypeMapper.getString(getContext(), projectType.getCod()));
 			}
 			mProjectType.setAdapter(spinnerAdapter);
 		} catch (SQLException e) {
@@ -132,8 +133,8 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		if(!isNewProject()){
 			mProjectTitle.setText(mProjectToEdit.getTitle());
 			mProjectBudget.setText(mProjectBudgetFormat.format(mProjectToEdit.getBudget()));
-			String cod = mProjectToEdit.getProjectType().getCod();
-			int position = spinnerAdapter.getPosition(cod);
+			String projectTypeString = ProjectTypeMapper.getString(getContext(), mProjectToEdit.getProjectType().getCod());
+			int position = spinnerAdapter.getPosition(projectTypeString);
 			mProjectType.setSelection(position);
 		}
 
@@ -200,7 +201,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			ProjectStatus projectActiveStatus = getHelper().getProjectStatus(TableFieldCod.PROJECT_STATUS_ACTIVE);
 
 			// Getting the project type
-			ProjectType projectType = getHelper().getProjectType(mProjectType.getSelectedItem().toString());
+			ProjectType projectType = getHelper().getProjectType(ProjectTypeMapper.getCod(getContext(), mProjectType.getSelectedItem().toString()));
 
 			// Saving the project in the database
 			Project project = null;
@@ -242,7 +243,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 	private void updateProject(){
 		try {
 			// Getting the project type
-			ProjectType projectType = getHelper().getProjectType(mProjectType.getSelectedItem().toString());
+			ProjectType projectType = getHelper().getProjectType(ProjectTypeMapper.getCod(getContext(), mProjectType.getSelectedItem().toString()));
 
 			// Updating the project in the database
 			Project project = mProjectToEdit;

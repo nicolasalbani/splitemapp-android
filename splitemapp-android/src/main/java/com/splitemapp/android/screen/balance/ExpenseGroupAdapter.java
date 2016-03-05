@@ -321,7 +321,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 		viewHolder.mMonthTextView.setText(MonthMapper.values()[expenseGroup.getMonthYear().get(Calendar.MONTH)].getShortStringId());
 
 		// Setting the year textView
-		viewHolder.mYearTextView.setText(expenseGroup.getMonthYear().get(Calendar.YEAR));
+		viewHolder.mYearTextView.setText(String.valueOf(expenseGroup.getMonthYear().get(Calendar.YEAR)));
 
 		// Setting the full bar size only once
 		if(mFullBarSize == 0){
@@ -353,12 +353,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	 * Returns the whole user expense list for this project
 	 * @return
 	 */
-	private List<UserExpense> getUserExpensesForCurrentProject(){
+	private List<UserExpense> getUserExpensesForCurrentProject(Calendar calendar){
 		List<UserExpense> userExpenseList = null;
 
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), mCalendar);
+			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), calendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -394,7 +394,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupUser> getUserExpenseGroupList(){
 		List<ExpenseGroupUser> expenseGroupList = new ArrayList<ExpenseGroupUser>();
 
-		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
+		List<UserExpense> userExpenseList = null;
+		if(isMonthlyProject()){
+			userExpenseList = getUserExpensesForCurrentProject(mCalendar);
+		} else {
+			userExpenseList = getUserExpensesForCurrentProject(null);
+		}
 		try {
 			for(User user:mBaseFragment.getHelper().getAllUsers()){
 				// Creating new ExpenseGroup object
@@ -442,7 +447,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupDate> getDateExpenseGroupList(){
 		List<ExpenseGroupDate> expenseGroupList = new ArrayList<ExpenseGroupDate>();
 
-		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
+		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject(null);
 		for(UserExpense userExpense:userExpenseList){
 			// Creating a userExpense calendar
 			Calendar userExpenseCalendar = Calendar.getInstance();
@@ -492,7 +497,12 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private List<ExpenseGroupCategory> getCategoryExpenseGroupList(){
 		List<ExpenseGroupCategory> expenseGroupList = new ArrayList<ExpenseGroupCategory>();
 
-		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject();
+		List<UserExpense> userExpenseList = null;
+		if(isMonthlyProject()){
+			userExpenseList = getUserExpensesForCurrentProject(mCalendar);
+		} else {
+			userExpenseList = getUserExpensesForCurrentProject(null);
+		}
 		for(ExpenseCategoryMapper expenseCategoryMapper:ExpenseCategoryMapper.values()){
 			// Creating new ExpenseGroup object
 			ExpenseGroupCategory expenseGroup = new ExpenseGroupCategory();
@@ -567,6 +577,14 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 			mShowPrimaryView = true;
 		}
 	}
+	
+	/**
+	 * Returns a boolean indicating whether this is a monthly project
+	 * @return
+	 */
+	private boolean isMonthlyProject(){
+		return mCurrentProject.getProjectType().getCod().equals(ProjectTypeMapper.monthly.toString());
+	}
 
 	/**
 	 * Updates the content of the recycler
@@ -580,6 +598,14 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 		// Notify of all the ViewHolders that are going to be removed
 		notifyDataSetChanged();
 	}
+	
+	/**
+	 * Sets the ShowPrimaryView boolean
+	 * @param showPrimaryView
+	 */
+	public void setShowPrimaryView(boolean showPrimaryView){
+		mShowPrimaryView = showPrimaryView;
+	}
 
 	/**
 	 * Sets the BalanceMode for the expense group adapter
@@ -587,5 +613,13 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	 */
 	public void setBalanceMode(BalanceMode balanceMode) {
 		mBalanceMode = balanceMode;
+	}
+	
+	/**
+	 * Gets the BalanceMode for the expense group adapter
+	 * @param balanceMode
+	 */
+	public BalanceMode getBalanceMode() {
+		return mBalanceMode;
 	}
 }
