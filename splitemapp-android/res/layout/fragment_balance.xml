@@ -181,7 +181,7 @@
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
                         android:text="@string/b_balance_placeholder"
-                        android:textColor="@color/seagreen"
+                        android:textColor="@color/green"
                         android:textSize="18sp" />
                 </LinearLayout>
             </RelativeLayout>

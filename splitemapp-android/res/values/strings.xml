@@ -28,6 +28,7 @@
     <!-- Welcome Screen -->
     <string name="w_login">LOGIN</string>
     <string name="w_create_account">CREATE ACCOUNT</string>
+    <string name="w_app_logo_description">Application Logo</string>
     
     <!-- Login Screen -->
     <string name="li_username_hint">Username or Email</string>
