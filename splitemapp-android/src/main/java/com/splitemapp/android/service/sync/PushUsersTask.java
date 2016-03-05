@@ -80,8 +80,6 @@ public class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
 		idReferenceList.add(new IdReference(TableName.USER_AVATAR, TableField.USER_AVATAR_USER_ID));
 
 		//We update all references to this ID
-		for(IdUpdate<Long> idUpdate:idUpdateList){
-			getHelper().updateIdReferences(idUpdate, idReferenceList);
-		}
+		updateIdReferences(idUpdateList, idReferenceList);
 	}
 }

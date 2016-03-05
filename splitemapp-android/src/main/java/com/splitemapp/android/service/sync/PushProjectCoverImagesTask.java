@@ -75,9 +75,7 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, L
 		idReferenceList.add(new IdReference(TableName.PROJECT_COVER_IMAGE, TableField.PROJECT_COVER_IMAGE_ID));
 
 		//We update all references to this ID
-		for(IdUpdate<Long> idUpdate:idUpdateList){
-			getHelper().updateIdReferences(idUpdate, idReferenceList);
-		}
+		updateIdReferences(idUpdateList, idReferenceList);
 	}
 
 }

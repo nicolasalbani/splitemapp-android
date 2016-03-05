@@ -1,6 +1,7 @@
 package com.splitemapp.android.service.sync;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
+import com.splitemapp.commons.domain.id.IdReference;
+import com.splitemapp.commons.domain.id.IdUpdate;
+import com.splitemapp.commons.domain.id.IdUpdateComparator;
 
 public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseTask {
 
@@ -117,4 +121,12 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 		}
 	}
 
+	protected void updateIdReferences(List<IdUpdate<Long>> idUpdateList, List<IdReference> idReferenceList) throws SQLException{
+		// We update all references to this ID ordering OldIds from greater to smaller to avoid trying to set an ID
+		// to an already existing ID
+		Collections.sort(idUpdateList, new IdUpdateComparator());
+		for(IdUpdate<Long> idUpdate:idUpdateList){
+			getHelper().updateIdReferences(idUpdate, idReferenceList);
+		}
+	}
 }

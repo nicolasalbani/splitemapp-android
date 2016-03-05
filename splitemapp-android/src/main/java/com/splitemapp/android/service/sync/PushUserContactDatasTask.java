@@ -75,8 +75,6 @@ public class PushUserContactDatasTask extends PushTask<UserContactDataDTO, Long,
 		idReferenceList.add(new IdReference(TableName.USER_CONTACT_DATA, TableField.USER_CONTACT_DATA_ID));
 
 		//We update all references to this ID
-		for(IdUpdate<Long> idUpdate:idUpdateList){
-			getHelper().updateIdReferences(idUpdate, idReferenceList);
-		}
+		updateIdReferences(idUpdateList, idReferenceList);
 	}
 }

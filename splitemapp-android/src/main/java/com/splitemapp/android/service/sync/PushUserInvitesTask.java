@@ -75,8 +75,6 @@ public class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, PushLongR
 		idReferenceList.add(new IdReference(TableName.USER_INVITE, TableField.USER_INVITE_ID));
 
 		//We update all references to this ID
-		for(IdUpdate<Long> idUpdate:idUpdateList){
-			getHelper().updateIdReferences(idUpdate, idReferenceList);
-		}
+		updateIdReferences(idUpdateList, idReferenceList);
 	}
 }

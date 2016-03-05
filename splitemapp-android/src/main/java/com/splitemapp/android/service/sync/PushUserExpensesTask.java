@@ -76,9 +76,7 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		idReferenceList.add(new IdReference(TableName.USER_EXPENSE, TableField.USER_EXPENSE_ID));
 
 		//We update all references to this ID
-		for(IdUpdate<Long> idUpdate:idUpdateList){
-			getHelper().updateIdReferences(idUpdate, idReferenceList);
-		}
+		updateIdReferences(idUpdateList, idReferenceList);
 		
 		//We notify the update was successful
 		broadcastMessage(BaseTask.EXPENSES_PUSHED, ServiceConstants.UI_MESSAGE);
