@@ -70,6 +70,17 @@
                         android:layout_toStartOf="@id/menu_action_imageView"
                         android:contentDescription="@string/ab_menu_description"
                         android:src="@drawable/ic_chart_bar_24dp" />
+                    
+                    <ImageView
+                        android:id="@+id/p_filter_imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toLeftOf="@id/p_chart_imageView"
+                        android:layout_toStartOf="@id/p_chart_imageView"
+                        android:contentDescription="@string/ab_menu_description"
+                        android:src="@drawable/ic_filter_24dp" />
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
         </LinearLayout>

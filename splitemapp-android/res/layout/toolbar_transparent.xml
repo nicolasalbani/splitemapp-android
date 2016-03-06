@@ -9,35 +9,33 @@
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-10dp"
         android:layout_marginBottom="-10dp"
+        android:layout_marginTop="-10dp"
         app:contentInsetStart="0dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingStart="10dp"
-            android:paddingRight="10dp"
-            android:paddingEnd="10dp" >
+            android:layout_height="wrap_content" >
 
             <ImageView
                 android:id="@+id/back_action_imageView"
-                android:src="@drawable/ic_arrow_back_white_24dp"
-                android:contentDescription="@string/ab_back_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/ab_back_description"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
 
             <ImageView
                 android:id="@+id/menu_action_imageView"
-                android:src="@drawable/ic_more_vert_white_24dp"
-                android:contentDescription="@string/ab_menu_description"
+                android:padding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/ab_menu_description"
+                android:src="@drawable/ic_more_vert_white_24dp" />
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 

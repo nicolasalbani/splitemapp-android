@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -45,8 +44,8 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private TextView mBudgetTextView;
 	private TextView mBalanceTextView;
 
-	private ImageView mLeftArrowImageView;
-	private ImageView mRightArrowImageView;
+	private View mLeftArrowView;
+	private View mRightArrowView;
 
 	private Calendar mCalendar;
 
@@ -96,8 +95,8 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		}
 
 		// Set onClick listener for right/left arrows
-		mLeftArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_left_arrow_imageView);
-		mLeftArrowImageView.setOnClickListener(new OnClickListener() {
+		mLeftArrowView = mFragmentView.findViewById(R.id.b_left_arrow_imageView);
+		mLeftArrowView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				mCalendar.add(Calendar.MONTH, -1);
@@ -106,8 +105,8 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 				updateFragment();
 			}
 		});
-		mRightArrowImageView = (ImageView) mFragmentView.findViewById(R.id.b_right_arrow_imageView);
-		mRightArrowImageView.setOnClickListener(new OnClickListener() {
+		mRightArrowView = mFragmentView.findViewById(R.id.b_right_arrow_imageView);
+		mRightArrowView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				mCalendar.add(Calendar.MONTH, 1);

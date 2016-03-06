@@ -2,6 +2,7 @@ package com.splitemapp.android.screen.project;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 
 	private List<SingleUserExpenses> mSingleUserExpenseList;
 	private Project mCurrentProject;
+	private Calendar mCalendar;
 	private BaseFragment mBaseFragment;
 	private View mView;
 
@@ -68,9 +70,10 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SingleUserExpenseAdapter(Project currentProject, BaseFragment baseFragment) {
+	public SingleUserExpenseAdapter(Project currentProject, BaseFragment baseFragment, Calendar calendar) {
 		this.mCurrentProject = currentProject;
 		this.mBaseFragment = baseFragment;
+		this.mCalendar = calendar;
 		this.mSingleUserExpenseList = getSingleUserExpenseList();
 	}
 
@@ -113,18 +116,6 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		notifyDataSetChanged();
 	}
 
-	/**
-	 * Add item to recycler view
-	 * @param project
-	 */
-	//	public void addItem(Project project){
-	//		if(!mProjects.contains(project)){
-	//			int position = getItemCount();
-	//			mProjects.add(position, project);
-	//			notifyItemInserted(position);
-	//		}
-	//	}
-
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
 	public void onBindViewHolder(ViewHolder viewHolder, int position) {
@@ -159,12 +150,12 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	 * Returns the whole user expense list for this project
 	 * @return
 	 */
-	private List<UserExpense> getUserExpenseList(){
+	private List<UserExpense> getUserExpensesForCurrentProject(Calendar calendar){
 		List<UserExpense> userExpenseList = null;
 
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId());
+			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), calendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -182,7 +173,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	private List<SingleUserExpenses> getSingleUserExpenseList(){
 		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
 
-		List<UserExpense> userExpenseList = getUserExpenseList();
+		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject(mCalendar);
 
 		// Creating the users ID list
 		List<Long> userIdList = new ArrayList<Long>();

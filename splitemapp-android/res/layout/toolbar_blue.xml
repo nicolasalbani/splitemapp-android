@@ -10,16 +10,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/seablue"
-        android:paddingEnd="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingStart="10dp" >
+        android:background="@color/seablue">
 
         <TextView
             android:id="@+id/cancel_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="@color/seablue"
@@ -37,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:padding="10dp"
             android:background="@color/seablue"
             android:text="@string/ab_done"
             android:textColor="@color/white"

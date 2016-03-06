@@ -115,6 +115,12 @@
     <string name="p_more_option_balance">Balance</string>
     <string name="p_more_option_archive">Archive</string>
     
+    <!-- Project Screen Expense Filter -->
+    <string name="pef_filter_description">Filter</string>
+    <string name="pef_title">Filter Expenses</string>
+    <string name="pef_date">Date</string>
+    <string name="pef_category">Category</string>
+    
     <!-- Expense Screen -->
     <string name="e_new_title">New Expense</string>
     <string name="e_edit_title">Edit Expense</string>

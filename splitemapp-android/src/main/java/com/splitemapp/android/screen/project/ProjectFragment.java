@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen.project;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.balance.BalanceActivity;
+import com.splitemapp.android.screen.balance.MonthMapper;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.utils.ImageUtils;
@@ -38,8 +40,16 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 	private TextView mProjectTitleTextView;
 	private ImageView mProjectCoverImageView;
-	private ImageView mChartImageView;
+	private View mChartImageView;
+	private View mFilterImageView;
 	private FloatingActionButton mFab;
+
+	private TextView mMonthTextView;
+	private TextView mYearTextView;
+	private View mLeftArrowView;
+	private View mRightArrowView;
+
+	private Calendar mCalendar;
 
 	private TextView mEmptyListHintTextView;
 
@@ -57,6 +67,9 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
+
+		// We get the current date by default
+		mCalendar = Calendar.getInstance();
 	}
 
 	@Override
@@ -69,9 +82,9 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		// Populating the project title
 		mProjectTitleTextView = (TextView) v.findViewById(R.id.p_project_title_textView);
 		mProjectTitleTextView.setText(mCurrentProject.getTitle());
-		
+
 		// Adding an OnClickListener to the chart image view
-		mChartImageView = (ImageView) v.findViewById(R.id.p_chart_imageView);
+		mChartImageView = v.findViewById(R.id.p_chart_imageView);
 		mChartImageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -81,12 +94,55 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			}
 		});
 
+		// Adding an OnClickListener to the filter image view
+		mFilterImageView = v.findViewById(R.id.p_filter_imageView);
+		mFilterImageView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				final ExpenseFilterDialog expenseFilterDialog = new ExpenseFilterDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.fragment_expense_filter;
+					}
+				};
+
+				// Updating month and year
+				updateExpenseFilterDialog(expenseFilterDialog);
+
+				// Set onClick listener for right/left arrows
+				mLeftArrowView = expenseFilterDialog.findViewById(R.id.pef_left_arrow_imageView);
+				mLeftArrowView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						mCalendar.add(Calendar.MONTH, -1);
+
+						// Updating the filter and fragment
+						updateExpenseFilterDialog(expenseFilterDialog);
+						updateFragment();
+					}
+				});
+				mRightArrowView = expenseFilterDialog.findViewById(R.id.pef_right_arrow_imageView);
+				mRightArrowView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						mCalendar.add(Calendar.MONTH, 1);
+
+						// Updating the filter and fragment
+						updateExpenseFilterDialog(expenseFilterDialog);
+						updateFragment();
+					}
+				});
+
+				expenseFilterDialog.show();
+			}
+		});
+
 		// Populating the project cover image
 		mProjectCoverImageView = (ImageView) v.findViewById(R.id.p_project_cover_image_imageView);
 		setProjectCoverImage(mProjectCoverImageView, mCurrentProject, ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Creating a single user expense adapter to be used in the recycler view
-		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(mCurrentProject, this);
+		mSingleUserExpenseAdapter = new SingleUserExpenseAdapter(mCurrentProject, this, mCalendar);
 
 		// We populate the list of projects for this user
 		mSingleUserExpenseRecycler = (RecyclerView) v.findViewById(R.id.p_expense_list_recyclerView);
@@ -133,6 +189,20 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 				);
 
 		return v;
+	}
+
+	/**
+	 * Updates the month and year in the expense filter dialog
+	 * @param expenseFilterDialog
+	 */
+	private void updateExpenseFilterDialog(ExpenseFilterDialog expenseFilterDialog){
+		// Setting month
+		mMonthTextView = (TextView) expenseFilterDialog.findViewById(R.id.pef_monthTextView);
+		mMonthTextView.setText(MonthMapper.values()[mCalendar.get(Calendar.MONTH)].getStringId());
+
+		// Setting year
+		mYearTextView = (TextView) expenseFilterDialog.findViewById(R.id.pef_yearTextView);
+		mYearTextView.setText(String.valueOf(mCalendar.get(Calendar.YEAR)));
 	}
 
 	/**
@@ -259,7 +329,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
 		});;
-		
+
 		// Setting OnClickListener for archive action
 		listAlertDialog.findViewById(R.id.p_option_edit).setOnClickListener(new OnClickListener() {
 			@Override
@@ -274,7 +344,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 				getContext().startActivity(intent);
 			}
 		});;
-		
+
 		// Showing alert dialog
 		listAlertDialog.show();
 	}
