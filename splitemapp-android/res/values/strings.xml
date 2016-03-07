@@ -83,7 +83,7 @@
 
     <!-- Home Screen Project Filter -->
     <string name="hpf_filter_description">Project Filter</string>
-    <string name="hpf_title">Project Filter</string>
+    <string name="hpf_title">Filter Projects</string>
     <string name="hpf_project_status">Project Status</string>
     <string name="hpf_project_type">Project Type</string>
     <string name="hpf_show_archived">Archived projects</string>
