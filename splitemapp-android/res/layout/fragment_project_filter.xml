@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_rectangle"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/seablue"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/hpf_filter_description"
+            android:src="@drawable/ic_filter_white_18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="100dp"
+            android:layout_marginRight="100dp"
+            android:text="@string/hpf_title"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/shape_toolbar_dropshadow" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <TextView
+            style="@style/CustomTextView"
+            android:layout_width="wrap_content"
+            android:text="@string/hpf_project_status" />
+
+        <View
+            style="@style/BottomLine"
+            android:layout_marginBottom="5dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/hpf_show_archived"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hpf_show_archived"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:padding="5dp" />
+        </RelativeLayout>
+
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/hpf_project_type" />
+
+        <View
+            style="@style/BottomLine"
+            android:layout_marginBottom="5dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/hpf_show_monthly"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hpf_show_monthly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:padding="5dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="15dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:text="@string/hpf_show_one_time"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/hpf_show_one_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:padding="5dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

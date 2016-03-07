@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +23,7 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
+import com.splitemapp.android.screen.project.ExpenseFilterDialog;
 import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
@@ -41,6 +43,9 @@ public class HomeFragment extends RestfulFragment {
 	private TextView mMainFullName;
 	private TextView mMainEmail;
 	private FloatingActionButton mFab;
+
+	private View mFilterView;
+	private View mMoreView;
 
 	private RecyclerView mProjectsRecycler;
 	private SwipeProjectsAdapter mProjectsAdapter;
@@ -117,6 +122,33 @@ public class HomeFragment extends RestfulFragment {
 
 		// Getting the hint if project list is empty
 		mEmptyListHintTextView = (TextView) v.findViewById(R.id.h_empty_list_hint_textView);
+
+		// Adding OnClickListener to the more item
+		mMoreView = v.findViewById(R.id.h_more_imageView);
+		mMoreView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// Opening the drawer
+				mDrawerLayout.openDrawer(Gravity.LEFT);
+			}
+		});
+
+		// Adding OnClickListener to the filter item
+		mFilterView = v.findViewById(R.id.h_filter_imageView);
+		mFilterView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// Opening project filter
+				final ProjectFilterDialog projectFilterDialog = new ProjectFilterDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.fragment_project_filter;
+					}
+				};
+				
+				projectFilterDialog.show();
+			}
+		});
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
