@@ -13,7 +13,12 @@ public class PreferencesManager {
 	public static final String NOTIFY_NEW_PROJECT = "NOTIFY_NEW_PROJECT";
 	public static final String NOTIFY_NEW_EXPENSE = "NOTIFY_NEW_EXPENSE";
 	public static final String NOTIFY_UPDATED_PROJECT_COVER = "NOTIFY_UPDATED_PROJECT_COVER";
-
+	
+	public static final String SHOW_ACTIVE_PROJECTS = "SHOW_ACTIVE_PROJECTS";
+	public static final String SHOW_ARCHIVED_PROJECTS = "SHOW_ARCHIVED_PROJECTS";
+	public static final String SHOW_MONTHLY_PROJECTS = "SHOW_MONTHLY_PROJECTS";
+	public static final String SHOW_ONE_TIME_PROJECTS = "SHOW_ONE_TIME_PROJECTS";
+	
 	private SharedPreferences settings;
 
 	public PreferencesManager(Context context){
@@ -28,10 +33,16 @@ public class PreferencesManager {
 			// Updating initialized status
 			setBoolean(SETTINGS_INITIALIZED, true);
 
-			// Initializing settings 
+			// Initializing notification settings 
 			setBoolean(NOTIFY_NEW_EXPENSE, true);
 			setBoolean(NOTIFY_NEW_PROJECT, true);
 			setBoolean(NOTIFY_UPDATED_PROJECT_COVER, true);
+			
+			// Initializing project filter settings
+			setBoolean(SHOW_ACTIVE_PROJECTS, true);
+			setBoolean(SHOW_ARCHIVED_PROJECTS, false);
+			setBoolean(SHOW_MONTHLY_PROJECTS, true);
+			setBoolean(SHOW_ONE_TIME_PROJECTS, true);
 		}
 	}
 

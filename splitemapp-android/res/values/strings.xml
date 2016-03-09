@@ -86,6 +86,7 @@
     <string name="hpf_title">Filter Projects</string>
     <string name="hpf_project_status">Project Status</string>
     <string name="hpf_project_type">Project Type</string>
+    <string name="hpf_show_active">Active projects</string>
     <string name="hpf_show_archived">Archived projects</string>
     <string name="hpf_show_monthly">Monthly projects</string>
     <string name="hpf_show_one_time">One time projects</string>

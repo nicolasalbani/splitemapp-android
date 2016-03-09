@@ -1,6 +1,7 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +10,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,9 +27,9 @@ import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
-import com.splitemapp.android.screen.project.ExpenseFilterDialog;
 import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.User;
 
@@ -57,6 +61,11 @@ public class HomeFragment extends RestfulFragment {
 	private View mManageContactsButton;
 	private View mSynchronizeButton;
 	private View mSettingsButton;
+	
+	private SwitchCompat mShowOpenProjects;
+	private SwitchCompat mShowArchivedProjects;
+	private SwitchCompat mShowMonthlyProjects;
+	private SwitchCompat mOneTimeProjects;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +154,54 @@ public class HomeFragment extends RestfulFragment {
 						return R.layout.fragment_project_filter;
 					}
 				};
+				
+				// Set ShowOpenProjects
+				mShowOpenProjects = (SwitchCompat) projectFilterDialog.findViewById(R.id.hpf_show_open);
+				mShowOpenProjects.setChecked(getPrefsManager().getBoolean(PreferencesManager.SHOW_ACTIVE_PROJECTS));
+				mShowOpenProjects.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						// Updating setting and refreshing the recycler view
+						getPrefsManager().setBoolean(PreferencesManager.SHOW_ACTIVE_PROJECTS, isChecked);
+						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+					}
+				});
+				
+				// Set ShowArchivedProjects
+				mShowArchivedProjects = (SwitchCompat) projectFilterDialog.findViewById(R.id.hpf_show_archived);
+				mShowArchivedProjects.setChecked(getPrefsManager().getBoolean(PreferencesManager.SHOW_ARCHIVED_PROJECTS));
+				mShowArchivedProjects.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						// Updating setting and refreshing the recycler view
+						getPrefsManager().setBoolean(PreferencesManager.SHOW_ARCHIVED_PROJECTS, isChecked);
+						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+					}
+				});
+				
+				// Set ShowMonthlyProjects
+				mShowMonthlyProjects = (SwitchCompat) projectFilterDialog.findViewById(R.id.hpf_show_monthly);
+				mShowMonthlyProjects.setChecked(getPrefsManager().getBoolean(PreferencesManager.SHOW_MONTHLY_PROJECTS));
+				mShowMonthlyProjects.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						// Updating setting and refreshing the recycler view
+						getPrefsManager().setBoolean(PreferencesManager.SHOW_MONTHLY_PROJECTS, isChecked);
+						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+					}
+				});
+				
+				// Set ShowOpenProjects
+				mOneTimeProjects = (SwitchCompat) projectFilterDialog.findViewById(R.id.hpf_show_one_time);
+				mOneTimeProjects.setChecked(getPrefsManager().getBoolean(PreferencesManager.SHOW_ONE_TIME_PROJECTS));
+				mOneTimeProjects.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						// Updating setting and refreshing the recycler view
+						getPrefsManager().setBoolean(PreferencesManager.SHOW_ONE_TIME_PROJECTS, isChecked);
+						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+					}
+				});
 				
 				projectFilterDialog.show();
 			}

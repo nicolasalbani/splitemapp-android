@@ -21,6 +21,7 @@ import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.Project;
 
@@ -33,7 +34,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	// Provide a suitable constructor (depends on the kind of dataset)
 	public SwipeProjectsAdapter(BaseFragment baseFragment) {
 		this.baseFragment = baseFragment;
-		this.mProjects = getActiveProjectsList(baseFragment);
+		this.mProjects = getProjectsList(baseFragment);
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -142,7 +143,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	 * @param project
 	 */
 	public void updateRecycler(RecyclerView mProjectsRecycler){
-		List<Project> updatedList = getActiveProjectsList(baseFragment);
+		List<Project> updatedList = getProjectsList(baseFragment);
 
 		// We update all projects in the list
 		for(Project project:mProjects){
@@ -188,11 +189,16 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	 * Returns the whole list of active projects for this user
 	 * @return
 	 */
-	private List<Project> getActiveProjectsList(BaseFragment baseFragment){
+	private List<Project> getProjectsList(BaseFragment baseFragment){
 		List<Project> projectList = null;
 
 		try {
-			projectList = baseFragment.getHelper().getActiveProjectsForLoggedUser();
+			boolean showOpenProjects = baseFragment.getPrefsManager().getBoolean(PreferencesManager.SHOW_ACTIVE_PROJECTS);
+			boolean showArchivedProjects = baseFragment.getPrefsManager().getBoolean(PreferencesManager.SHOW_ARCHIVED_PROJECTS);
+			boolean showMonthlyProjects = baseFragment.getPrefsManager().getBoolean(PreferencesManager.SHOW_MONTHLY_PROJECTS);
+			boolean showOneTimeProjects = baseFragment.getPrefsManager().getBoolean(PreferencesManager.SHOW_ONE_TIME_PROJECTS);
+			
+			projectList = baseFragment.getHelper().getProjectsForLoggedUser(showOpenProjects, showArchivedProjects, showMonthlyProjects, showOneTimeProjects);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}

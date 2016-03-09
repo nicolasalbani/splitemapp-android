@@ -554,7 +554,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		project.setUpdatedAt(new Date());
 		getProjectDao().update(project);
 	}
-	
+
 	/**
 	 * Updates the User in the database
 	 * @param project
@@ -564,7 +564,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		user.setUpdatedAt(new Date());
 		getUserDao().update(user);
 	}
-	
+
 	/**
 	 * Updates the UserAvatar in the database
 	 * @param project
@@ -655,7 +655,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
 		return getUserExpensesByProjectId(projectId, null);
 	}
-	
+
 	/**
 	 * Gets the list of user expense associated to a project id for the month specified in Calendar 
 	 * @param projectId
@@ -665,34 +665,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public List<UserExpense> getUserExpensesByProjectId(Long projectId, Calendar calendar) throws SQLException{
 		List<UserExpense> userExpenseList = new ArrayList<UserExpense>();
-		
+
 		List<UserExpense> fullList =  getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
-		
+
 		if(calendar != null){
 			userExpenseList = new ArrayList<UserExpense>();
-			
+
 			int calendarMonth = calendar.get(Calendar.MONTH);
 			int calendarYear = calendar.get(Calendar.YEAR);
-			
+
 			for(UserExpense userExpense:fullList){
 				Calendar expenseCal = Calendar.getInstance();
 				expenseCal.setTime(userExpense.getExpenseDate());
-				
+
 				int expenseMonth = expenseCal.get(Calendar.MONTH);
 				int expenseYear = expenseCal.get(Calendar.YEAR);
-				
+
 				if(expenseMonth == calendarMonth && expenseYear == calendarYear){
 					userExpenseList.add(userExpense);
 				}
 			}
-			
+
 		} else {
 			userExpenseList = fullList;
 		}
-		
+
 		return userExpenseList;
 	}
-	
+
 	/**
 	 * Gets the total expense value associated to a project id
 	 * @param projectId
@@ -701,13 +701,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public BigDecimal getTotalExpenseValueByProjectId(Long projectId, Calendar calendar) throws SQLException{
 		BigDecimal totalExpenseValue = new BigDecimal(0);
-		
+
 		List<UserExpense> userExpenses = getUserExpensesByProjectId(projectId, calendar);
-		
+
 		for(UserExpense userExpense:userExpenses){
 			totalExpenseValue = totalExpenseValue.add(userExpense.getExpense());
 		}
-		
+
 		return totalExpenseValue;
 	}
 
@@ -720,7 +720,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			getUserSessionDao().delete(userSession);
 		}
 	}
-	
+
 	/**
 	 * Deletes all existing information in the database
 	 * @throws SQLException
@@ -791,7 +791,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			dao.create(project);
 		}
 	}
-	
+
 	/**
 	 * Returns the UserToProject object for the specified projedt and user ids
 	 * @param projectId
@@ -802,14 +802,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public UserToProject getUserToProject(Long projectId, Long userId) throws SQLException{
 		// Creating query
 		QueryBuilder<UserToProject, Long> qb = getUserToProjectDao().queryBuilder();
-		
+
 		// Setting where conditions
 		Where<UserToProject, Long> where = qb.where();
 		where.eq(TableField.USER_TO_PROJECT_PROJECT_ID, projectId);
 		where.and();
 		where.eq(TableField.USER_TO_PROJECT_USER_ID, userId);
 		qb.setWhere(where);
-		
+
 		// Executing query
 		return qb.queryForFirst();
 	}
@@ -1029,11 +1029,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			// Setting pull entries to the oldest time
 			syncStatus.setLastPullAt(new Date(0));
 			syncStatus.setLastPullSuccessAt(new Date(0));
-			
+
 			// Setting push entries to the current time
 			syncStatus.setLastPushAt(new Date());
 			syncStatus.setLastPushSuccessAt(new Date());
-			
+
 			// Persisting changes
 			getSyncStatusDao().update(syncStatus);
 		}
@@ -1194,14 +1194,28 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Project> getActiveProjectsForLoggedUser() throws SQLException{
+	public List<Project> getProjectsForLoggedUser(boolean showActiveProjects, 
+			boolean showArchivedProjects, 
+			boolean showMonthlyProjects, 
+			boolean showOneTimeProjects) throws SQLException{
+
 		ArrayList<Project> result = new ArrayList<Project>();
 
 		List<UserToProject> userToProjectList = getAllUserToProjectsForLoggedUser();
 		for(UserToProject userToProject:userToProjectList){
 			UserToProjectStatus userToProjectStatus = getUserToProjectStatusDao().queryForId(userToProject.getUserToProjectStatus().getId());
-			if(userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE)){
-				result.add(getProjectDao().queryForId(userToProject.getProject().getId()));
+			boolean isActive = userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ACTIVE);
+			boolean isArchived = userToProjectStatus.getCod().equals(TableFieldCod.USER_TO_PROJECT_STATUS_ARCHIVED);
+
+			if((showActiveProjects && isActive) || (showArchivedProjects && isArchived)){
+				Project project = getProjectDao().queryForId(userToProject.getProject().getId());
+				ProjectType projectType = getProjectTypeDao().queryForId(project.getProjectType().getId());
+				boolean isMonthly = projectType.getCod().equals(TableFieldCod.PROJECT_TYPE_MONTHLY);
+				boolean isOneTime = projectType.getCod().equals(TableFieldCod.PROJECT_TYPE_ONE_TIME);
+
+				if((showMonthlyProjects && isMonthly) || (showOneTimeProjects && isOneTime)){
+					result.add(project);
+				}
 			}
 		}
 
@@ -1229,7 +1243,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return user;
 	}
-	
+
 	/**
 	 * Indicates whether this particular userExpense was pushed to the server
 	 * @param userExpense
