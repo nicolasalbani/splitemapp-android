@@ -10,6 +10,7 @@ import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
+import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.dto.ProjectDTO;
 import com.splitemapp.commons.domain.dto.response.PullProjectResponse;
 
@@ -47,8 +48,12 @@ public class PullProjectsTask extends PullTask<ProjectDTO, PullProjectResponse> 
 			ProjectStatus projectStatus = getHelper().getProjectStatus(projectDTO.getProjectStatusId().shortValue());
 			ProjectType projectType = getHelper().getProjectType(projectDTO.getProjectTypeId().shortValue());
 
+			// Obtaining updatedBy and pushedBy fields
+			User updatedBy = getHelper().getUser(projectDTO.getUpdatedBy());
+			User pushedBy = getHelper().getUser(projectDTO.getPushedBy());
+
 			// We create the new entity and store it into the local database
-			Project project = new Project(projectType, projectStatus, projectDTO);
+			Project project = new Project(projectType, projectStatus, updatedBy, pushedBy, projectDTO);
 			getHelper().createOrUpdateProject(project);
 		}
 	}

@@ -21,7 +21,7 @@ public class PullUserToProjectsTask extends PullTask<UserToProjectDTO, PullUserT
 	public PullUserToProjectsTask(Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	protected String getTableName(){
 		return TableName.USER_TO_PROJECT;
@@ -49,8 +49,12 @@ public class PullUserToProjectsTask extends PullTask<UserToProjectDTO, PullUserT
 			Project project = getHelper().getProject(userToProjectDTO.getProjectId().longValue());
 			UserToProjectStatus userToProjectStatus = getHelper().getUserToProjectStatus(userToProjectDTO.getUserToProjectStatusId().shortValue());
 
+			// Obtaining updatedBy and pushedBy fields
+			User updatedBy = getHelper().getUser(userToProjectDTO.getUpdatedBy());
+			User pushedBy = getHelper().getUser(userToProjectDTO.getPushedBy());
+
 			// We create the new entity and store it into the local database
-			UserToProject userToProject = new UserToProject(user, project, userToProjectStatus, userToProjectDTO);
+			UserToProject userToProject = new UserToProject(user, project, userToProjectStatus, updatedBy, pushedBy, userToProjectDTO);
 			getHelper().createOrUpdateUserToProject(userToProject);
 		}
 	}

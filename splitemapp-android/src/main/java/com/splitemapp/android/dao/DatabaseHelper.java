@@ -520,6 +520,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void persistProject(Project project) throws SQLException{
 		project.setCreatedAt(new Date());
 		project.setUpdatedAt(new Date());
+		project.setUpdatedBy(getLoggedUser());
 		getProjectDao().create(project);
 	}
 
@@ -531,6 +532,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void persistUserExpense(UserExpense userExpense) throws SQLException{
 		userExpense.setCreatedAt(new Date());
 		userExpense.setUpdatedAt(new Date());
+		userExpense.setUpdatedBy(getLoggedUser());
 		getUserExpenseDao().create(userExpense);
 	}
 
@@ -542,6 +544,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void persistProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
 		projectCoverImage.setCreatedAt(new Date());
 		projectCoverImage.setUpdatedAt(new Date());
+		projectCoverImage.setUpdatedBy(getLoggedUser());
 		getProjectCoverImageDao().create(projectCoverImage);
 	}
 
@@ -552,6 +555,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public void updateProject(Project project) throws SQLException{
 		project.setUpdatedAt(new Date());
+		project.setUpdatedBy(getLoggedUser());
 		getProjectDao().update(project);
 	}
 
@@ -582,6 +586,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public void updateUserToProject(UserToProject userToProject) throws SQLException{
 		userToProject.setUpdatedAt(new Date());
+		userToProject.setUpdatedBy(getLoggedUser());
 		getUserToProjectDao().update(userToProject);
 	}
 
@@ -592,6 +597,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public void updateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
 		projectCoverImage.setUpdatedAt(new Date());
+		projectCoverImage.setUpdatedBy(getLoggedUser());
 		getProjectCoverImageDao().update(projectCoverImage);
 	}
 
@@ -602,6 +608,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public void updateUserExpense(UserExpense userExpense) throws SQLException{
 		userExpense.setUpdatedAt(new Date());
+		userExpense.setUpdatedBy(getLoggedUser());
 		getUserExpenseDao().update(userExpense);
 	}
 
@@ -1136,6 +1143,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// Getting project type
 		ProjectType projectType = getProjectTypeDao().queryForId(project.getProjectType().getId());
 		project.setProjectType(projectType);
+		
+		// Getting updatedBy and pushedBy
+		project.setUpdatedBy(getUserDao().queryForId(project.getUpdatedBy().getId()));
+		if(project.getPushedBy() != null){
+			project.setPushedBy(getUserDao().queryForId(project.getPushedBy().getId()));
+		}
 
 		// Getting project avatar
 		Set<ProjectCoverImage> projectCoverImageSet = new HashSet<ProjectCoverImage>();
@@ -1299,6 +1312,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			userToProject.setProject(project);
 			userToProject.setUser(user);
 			userToProject.setExpensesShare(expenseShare);
+			userToProject.setUpdatedBy(getLoggedUser());
 			getUserToProjectDao().create(userToProject);
 		}
 	}
@@ -1425,10 +1439,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		if(entity instanceof Project){
 			Project project = (Project)entity;
 			project.setPushedAt(pushedAt);
+			project.setPushedBy(getLoggedUser());
 			getProjectDao().update(project);
 		} else if (entity instanceof ProjectCoverImage){
 			ProjectCoverImage projectCoverImage = (ProjectCoverImage)entity;
 			projectCoverImage.setPushedAt(pushedAt);
+			projectCoverImage.setPushedBy(getLoggedUser());
 			getProjectCoverImageDao().update(projectCoverImage);
 		} else if (entity instanceof User){
 			User user = (User)entity;
@@ -1445,14 +1461,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		} else if (entity instanceof UserExpense){
 			UserExpense userExpense = (UserExpense)entity;
 			userExpense.setPushedAt(pushedAt);
+			userExpense.setPushedBy(getLoggedUser());
 			getUserExpenseDao().update(userExpense);
 		} else if (entity instanceof UserInvite){
 			UserInvite userInvite = (UserInvite)entity;
 			userInvite.setPushedAt(pushedAt);
+			userInvite.setPushedBy(getLoggedUser());
 			getUserInviteDao().update(userInvite);
 		} else if (entity instanceof UserToProject){
 			UserToProject userToProject = (UserToProject)entity;
 			userToProject.setPushedAt(pushedAt);
+			userToProject.setPushedBy(getLoggedUser());
 			getUserToProjectDao().update(userToProject);
 		} else {
 			throw new SQLException("Entity provided is not a valid database instance!");

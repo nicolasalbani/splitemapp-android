@@ -51,6 +51,8 @@ public class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongRespons
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 		for(Project project:projectList){
 			if((project.getPushedAt() == null) || project.getUpdatedAt().after(project.getPushedAt())){
+				// Setting the user that pushes the record
+				project.setPushedBy(getHelper().getLoggedUser());
 				// Adding item to the list
 				projectDTOList.add(new ProjectDTO(project));
 			}

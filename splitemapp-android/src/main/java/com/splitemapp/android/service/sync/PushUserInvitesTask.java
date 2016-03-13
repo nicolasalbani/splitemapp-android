@@ -51,6 +51,8 @@ public class PushUserInvitesTask extends PushTask<UserInviteDTO, Long, PushLongR
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
 		for(UserInvite userInvite:userInviteList){
 			if((userInvite.getPushedAt() == null) || userInvite.getUpdatedAt().after(userInvite.getPushedAt())){
+				// Setting the user that pushes the record
+				userInvite.setPushedBy(getHelper().getLoggedUser());
 				// Adding item to the list
 				userInviteDTOList.add(new UserInviteDTO(userInvite));
 			}

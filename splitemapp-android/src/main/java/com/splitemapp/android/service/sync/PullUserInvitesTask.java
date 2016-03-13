@@ -49,8 +49,12 @@ public class PullUserInvitesTask extends PullTask<UserInviteDTO, PullUserInviteR
 			Project project = getHelper().getProject(userInviteDTO.getProjectId().longValue());
 			InviteStatus inviteStatus = getHelper().getInviteStatus(userInviteDTO.getInviteStatusId().shortValue());
 
+			// Obtaining updatedBy and pushedBy fields
+			User updatedBy = getHelper().getUser(userInviteDTO.getUpdatedBy());
+			User pushedBy = getHelper().getUser(userInviteDTO.getPushedBy());
+
 			// We create the new entity and store it into the local database
-			UserInvite userInvite = new UserInvite(user, project, inviteStatus, userInviteDTO);
+			UserInvite userInvite = new UserInvite(user, project, inviteStatus, updatedBy, pushedBy, userInviteDTO);
 			getHelper().createOrUpdateUserInvite(userInvite);
 		}
 	}

@@ -51,6 +51,8 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImageDTO, L
 		ArrayList<ProjectCoverImageDTO> projectCoverImageDTOList = new ArrayList<ProjectCoverImageDTO>();
 		for(ProjectCoverImage projectCoverImage:projectCoverImageList){
 			if((projectCoverImage.getPushedAt() == null) || projectCoverImage.getUpdatedAt().after(projectCoverImage.getPushedAt())){
+				// Setting the user that pushes the record
+				projectCoverImage.setPushedBy(getHelper().getLoggedUser());
 				// Adding item to the list
 				projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
 			}

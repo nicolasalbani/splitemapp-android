@@ -52,6 +52,8 @@ public class PushUserExpensesTask extends PushTask<UserExpenseDTO, Long, PushLon
 		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
 		for(UserExpense userExpense:userExpenseList){
 			if((userExpense.getPushedAt() == null) || userExpense.getUpdatedAt().after(userExpense.getPushedAt())){
+				// Setting the user that pushes the record
+				userExpense.setPushedBy(getHelper().getLoggedUser());
 				// Adding item to the list
 				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 			}

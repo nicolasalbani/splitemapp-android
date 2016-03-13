@@ -49,8 +49,12 @@ public class PullUserExpensesTask extends PullTask<UserExpenseDTO, PullUserExpen
 			Project project = getHelper().getProject(userExpenseDTO.getProjectId());
 			ExpenseCategory expenseCategory = getHelper().getExpenseCategory(userExpenseDTO.getExpenseCategoryId().shortValue());
 
+			// Obtaining updatedBy and pushedBy fields
+			User updatedBy = getHelper().getUser(userExpenseDTO.getUpdatedBy());
+			User pushedBy = getHelper().getUser(userExpenseDTO.getPushedBy());
+
 			// We create the new entity and store it into the local database
-			UserExpense userExpense = new UserExpense(user, project, expenseCategory, userExpenseDTO);
+			UserExpense userExpense = new UserExpense(user, project, expenseCategory, updatedBy, pushedBy, userExpenseDTO);
 			getHelper().createOrUpdateUserExpense(userExpense);
 		}
 	}

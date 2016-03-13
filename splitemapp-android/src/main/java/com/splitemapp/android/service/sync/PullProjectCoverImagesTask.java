@@ -9,6 +9,7 @@ import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
+import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.dto.ProjectCoverImageDTO;
 import com.splitemapp.commons.domain.dto.response.PullProjectCoverImageResponse;
 
@@ -44,9 +45,13 @@ public class PullProjectCoverImagesTask extends PullTask<ProjectCoverImageDTO, P
 		for(ProjectCoverImageDTO projectCoverImageDTO:projectCoverImageDTOs){
 			// We obtain the required parameters for the object creation from the local database
 			Project project = getHelper().getProject(projectCoverImageDTO.getProjectId());
+			
+			// Obtaining updatedBy and pushedBy fields
+			User updatedBy = getHelper().getUser(projectCoverImageDTO.getUpdatedBy());
+			User pushedBy = getHelper().getUser(projectCoverImageDTO.getPushedBy());
 
 			// We create the new entity and store it into the local database
-			ProjectCoverImage projectCoverImage = new ProjectCoverImage(project, projectCoverImageDTO);
+			ProjectCoverImage projectCoverImage = new ProjectCoverImage(project, updatedBy, pushedBy, projectCoverImageDTO);
 			getHelper().createOrUpdateProjectCoverImage(projectCoverImage);
 		}
 	}
