@@ -44,9 +44,11 @@ public class PullUserAvatarsTask extends PullTask<UserAvatarDTO, PullUserAvatarR
 		for(UserAvatarDTO userAvatarDTO:userAvatarDTOs){
 			// We obtain the required parameters for the object creation from the local database
 			User user = getHelper().getUser(userAvatarDTO.getUserId().longValue());
+			User updatedBy = getHelper().getUser(userAvatarDTO.getUpdatedBy().longValue());
+			User pushedBy = getHelper().getUser(userAvatarDTO.getPushedBy().longValue());
 
 			// We create the new entity and store it into the local database
-			UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
+			UserAvatar userAvatar = new UserAvatar(user,updatedBy,pushedBy,userAvatarDTO);
 			getHelper().createOrUpdateUserAvatar(userAvatar);
 		}
 	}

@@ -13,6 +13,8 @@ import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.UserAvatarDTO;
+import com.splitemapp.commons.domain.dto.UserContactDataDTO;
 import com.splitemapp.commons.domain.dto.request.LoginRequest;
 import com.splitemapp.commons.domain.dto.response.LoginResponse;
 import com.splitemapp.commons.utils.Utils;
@@ -91,7 +93,10 @@ public abstract class LoginRequestTask extends BaseAsyncTask<Void, Void, LoginRe
 				databaseHelper.createOrUpdateUserSession(userSession);
 
 				// Reconstructing the user contact data object
-				UserContactData userContactData = new UserContactData(user, loginResponse.getUserContactDataDTO());
+				UserContactDataDTO userContactDataDTO = loginResponse.getUserContactDataDTO();
+				User ucdUpdatedBy = databaseHelper.getUser(userContactDataDTO.getUpdatedBy().longValue());
+				User ucdPushedBy = databaseHelper.getUser(userContactDataDTO.getPushedBy().longValue());
+				UserContactData userContactData = new UserContactData(user,ucdUpdatedBy,ucdPushedBy,userContactDataDTO);
 				// Replacing user contact data if email already exists
 				UserContactData existingUserContactData = databaseHelper.getUserContactData(userContactData.getContactData());
 				if(existingUserContactData != null){
@@ -100,7 +105,10 @@ public abstract class LoginRequestTask extends BaseAsyncTask<Void, Void, LoginRe
 				databaseHelper.createOrUpdateUserContactData(userContactData);
 
 				// Reconstructing the user avatar object
-				UserAvatar userAvatar = new UserAvatar(user, loginResponse.getUserAvatarDTO());
+				UserAvatarDTO userAvatarDTO = loginResponse.getUserAvatarDTO();
+				User uaUpdatedBy = databaseHelper.getUser(userAvatarDTO.getUpdatedBy().longValue());
+				User uaPushedBy = databaseHelper.getUser(userAvatarDTO.getPushedBy().longValue());
+				UserAvatar userAvatar = new UserAvatar(user,uaUpdatedBy,uaPushedBy,userAvatarDTO);
 				// Replacing user avatar if it already exists
 				UserAvatar existingUserAvatar = databaseHelper.getUserAvatarByUserId(user.getId());
 				if(existingUserAvatar != null){

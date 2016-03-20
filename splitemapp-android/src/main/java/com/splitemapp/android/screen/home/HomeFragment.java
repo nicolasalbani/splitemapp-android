@@ -1,7 +1,6 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -12,6 +12,7 @@ import android.util.Log;
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.domain.PushableEntity;
 import com.splitemapp.commons.domain.dto.request.PushRequest;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.dto.response.PushResponse;
@@ -19,7 +20,7 @@ import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 import com.splitemapp.commons.domain.id.IdUpdateComparator;
 
-public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> extends BaseTask {
+public abstract class PushTask <G extends PushableEntity, F, E extends Number, R extends PushResponse<E>> extends BaseTask {
 
 	public PushTask(Context context) {
 		super(context);
@@ -119,6 +120,22 @@ public abstract class PushTask <F, E extends Number, R extends PushResponse<E>> 
 		} finally {
 			Log.i(getLoggingTag(), getServicePath() +" END");
 		}
+	}
+	
+	/**
+	 * Indicates whether we should push this entity
+	 * @param entity
+	 * @return
+	 * @throws SQLException 
+	 */
+	protected boolean shouldPushEntity(G entity) throws SQLException{
+		// Calculating booleans for logic
+		boolean neverPushed = entity.getPushedAt() == null;
+		boolean updatedAfterPushDate = !neverPushed && entity.getUpdatedAt().after(entity.getPushedAt());
+		boolean updatedByCurrentUser = entity.getUpdatedBy().getId().equals(getHelper().getLoggedUser().getId());
+		
+		// Returning whether this entity should be pushed or not
+		return (updatedByCurrentUser && (neverPushed || updatedAfterPushDate));
 	}
 
 	protected void updateIdReferences(List<IdUpdate<Long>> idUpdateList, List<IdReference> idReferenceList) throws SQLException{

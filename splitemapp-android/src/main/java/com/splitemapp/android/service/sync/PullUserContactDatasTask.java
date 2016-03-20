@@ -44,9 +44,11 @@ public class PullUserContactDatasTask extends PullTask<UserContactDataDTO, PullU
 		for(UserContactDataDTO userContactDataDTO:userContactDataDTOs){
 			// We obtain the required parameters for the object creation from the local database
 			User user = getHelper().getUser(userContactDataDTO.getUserId().longValue());
-
+			User updatedBy = getHelper().getUser(userContactDataDTO.getUpdatedBy().longValue());
+			User pushedBy = getHelper().getUser(userContactDataDTO.getPushedBy().longValue());
+			
 			// We create the new entity and store it into the local database
-			UserContactData userContactData = new UserContactData(user, userContactDataDTO);
+			UserContactData userContactData = new UserContactData(user, updatedBy, pushedBy, userContactDataDTO);
 			getHelper().createOrUpdateUserContactData(userContactData);
 		}
 	}

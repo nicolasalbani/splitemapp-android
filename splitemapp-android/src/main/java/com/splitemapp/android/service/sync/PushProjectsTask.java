@@ -15,7 +15,7 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-public class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongResponse> {
+public class PushProjectsTask extends PushTask<Project, ProjectDTO, Long, PushLongResponse> {
 
 	private static final String TAG = PushProjectsTask.class.getSimpleName();
 
@@ -50,7 +50,7 @@ public class PushProjectsTask extends PushTask<ProjectDTO, Long, PushLongRespons
 		// and that they were not updated by someone else
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 		for(Project project:projectList){
-			if((project.getPushedAt() == null) || project.getUpdatedAt().after(project.getPushedAt())){
+			if(shouldPushEntity(project)){
 				// Setting the user that pushes the record
 				project.setPushedBy(getHelper().getLoggedUser());
 				// Adding item to the list

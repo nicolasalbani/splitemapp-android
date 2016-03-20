@@ -13,11 +13,12 @@ import com.google.android.gms.iid.InstanceID;
 import com.splitemapp.android.service.sync.PushTask;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
+import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserSession;
 import com.splitemapp.commons.domain.dto.UserSessionDTO;
 import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 
-public class GcmRegistrationTask extends PushTask<UserSessionDTO, Long, PushLongResponse> {
+public class GcmRegistrationTask extends PushTask<User, UserSessionDTO, Long, PushLongResponse> {
 
 	private static final String TAG = GcmRegistrationTask.class.getSimpleName();
 

@@ -15,7 +15,7 @@ import com.splitemapp.commons.domain.dto.response.PushLongResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 
-public class PushUsersTask extends PushTask<UserDTO, Long, PushLongResponse> {
+public class PushUsersTask extends PushTask<User, UserDTO, Long, PushLongResponse> {
 
 	private static final String TAG = PushUsersTask.class.getSimpleName();
 

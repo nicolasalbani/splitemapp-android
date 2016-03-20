@@ -11,6 +11,8 @@ import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserContactData;
 import com.splitemapp.commons.domain.UserStatus;
+import com.splitemapp.commons.domain.dto.UserAvatarDTO;
+import com.splitemapp.commons.domain.dto.UserContactDataDTO;
 import com.splitemapp.commons.domain.dto.request.CreateAccountRequest;
 import com.splitemapp.commons.domain.dto.response.CreateAccountResponse;
 import com.splitemapp.commons.utils.Utils;
@@ -87,11 +89,17 @@ public abstract class CreateAccountRequestTask extends BaseAsyncTask<Void, Void,
 				databaseHelper.createOrUpdateUser(user);
 
 				// We reconstruct the UserContactData object
-				UserContactData userContactData = new UserContactData(user,createAccountResponse.getUserContactDataDTO());
+				UserContactDataDTO userContactDataDTO = createAccountResponse.getUserContactDataDTO();
+				User ucdUpdatedBy = databaseHelper.getUser(userContactDataDTO.getUpdatedBy().longValue());
+				User ucdPushedBy = databaseHelper.getUser(userContactDataDTO.getPushedBy().longValue());
+				UserContactData userContactData = new UserContactData(user,ucdUpdatedBy,ucdPushedBy,userContactDataDTO);
 				databaseHelper.createOrUpdateUserContactData(userContactData);
 
 				// We reconstruct the UserAvatar object
-				UserAvatar userAvatar = new UserAvatar(user, createAccountResponse.getUserAvatarDTO());
+				UserAvatarDTO userAvatarDTO = createAccountResponse.getUserAvatarDTO();
+				User uaUpdatedBy = databaseHelper.getUser(userAvatarDTO.getUpdatedBy().longValue());
+				User uaPushedBy = databaseHelper.getUser(userAvatarDTO.getPushedBy().longValue());
+				UserAvatar userAvatar = new UserAvatar(user,uaUpdatedBy,uaPushedBy,userAvatarDTO);
 				databaseHelper.createOrUpdateUserAvatar(userAvatar);
 
 				// We execute tasks on success

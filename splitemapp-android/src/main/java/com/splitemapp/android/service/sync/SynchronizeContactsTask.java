@@ -76,7 +76,9 @@ public class SynchronizeContactsTask extends BaseTask {
 					for(UserContactDataDTO userContactDataDTO:response.getUserContactDataDTOList()){
 						// Matching the appropriate user contact data
 						if(userDTO.getId() == userContactDataDTO.getUserId()){
-							UserContactData userContactData = new UserContactData(user,userContactDataDTO);
+							User updatedBy = getHelper().getUser(userContactDataDTO.getUpdatedBy().longValue());
+							User pushedBy = getHelper().getUser(userContactDataDTO.getPushedBy().longValue());
+							UserContactData userContactData = new UserContactData(user,updatedBy,pushedBy,userContactDataDTO);
 							getHelper().createOrUpdateUserContactData(userContactData);
 						}
 					}
@@ -85,7 +87,9 @@ public class SynchronizeContactsTask extends BaseTask {
 					for(UserAvatarDTO userAvatarDTO:response.getUserAvatarDTOList()){
 						// Matching the appropriate user avatar
 						if(userDTO.getId() == userAvatarDTO.getUserId()){
-							UserAvatar userAvatar = new UserAvatar(user, userAvatarDTO);
+							User updatedBy = getHelper().getUser(userAvatarDTO.getUpdatedBy().longValue());
+							User pushedBy = getHelper().getUser(userAvatarDTO.getPushedBy().longValue());
+							UserAvatar userAvatar = new UserAvatar(user,updatedBy,pushedBy,userAvatarDTO);
 							getHelper().createOrUpdateUserAvatar(userAvatar);
 						}
 					}
