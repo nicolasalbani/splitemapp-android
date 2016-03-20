@@ -50,7 +50,7 @@ public class PushUsersTask extends PushTask<User, UserDTO, Long, PushLongRespons
 		// and that they were not updated by someone else
 		ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		for(User user:userList){
-			if((user.getPushedAt() == null) || user.getUpdatedAt().after(user.getPushedAt())){
+			if(shouldPushEntity(user)){
 				// Adding item to the list
 				userDTOList.add(new UserDTO(user));
 			}

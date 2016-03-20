@@ -50,7 +50,7 @@ public class PushUserContactDatasTask extends PushTask<UserContactData, UserCont
 		// and that they were not updated by someone else
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
-			if((userContactData.getPushedAt() == null) || userContactData.getUpdatedAt().after(userContactData.getPushedAt())){
+			if(shouldPushEntity(userContactData)){
 				// Adding item to the list
 				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 			}

@@ -50,7 +50,7 @@ public class PushUserAvatarsTask extends PushTask<UserAvatar, UserAvatarDTO, Lon
 		// and that they were not updated by someone else
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
-			if((userAvatar.getPushedAt() == null) || userAvatar.getUpdatedAt().after(userAvatar.getPushedAt())){
+			if(shouldPushEntity(userAvatar)){
 				// Adding item to the list
 				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 			}
