@@ -1264,8 +1264,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException 
 	 */
 	public boolean isExpensePushed(UserExpense userExpense) throws SQLException{
-		Date lastSuccessPushAt = getLastSuccessPushAt(TableName.USER_EXPENSE);
-		return lastSuccessPushAt.after(userExpense.getUpdatedAt());
+		boolean updatedByLoggedUser = userExpense.getUpdatedBy().getId().equals(getLoggedUser().getId());
+		
+		if(!updatedByLoggedUser){
+			return true;
+		} else {
+			Date lastSuccessPushAt = getLastSuccessPushAt(TableName.USER_EXPENSE);
+			return lastSuccessPushAt.after(userExpense.getUpdatedAt());
+		}
 	}
 
 	/**
