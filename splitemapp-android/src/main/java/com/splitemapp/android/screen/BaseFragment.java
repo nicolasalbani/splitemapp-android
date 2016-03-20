@@ -32,6 +32,7 @@ import com.splitemapp.android.dao.DatabaseHelper;
 import com.splitemapp.android.screen.home.HomeActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.PreferencesManager;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
@@ -86,6 +87,22 @@ public abstract class BaseFragment extends Fragment {
 			preferencesManager = new PreferencesManager(getContext());
 		}
 		return preferencesManager;
+	}
+	
+	/**
+	 * Shows a particular toast based on the received error message
+	 * @param message
+	 */
+	public void showToastForMessage(String message){
+		if(message.equals(ServiceConstants.ERROR_MESSAGE_ACCOUNT_EXISTS)){
+			showToast(getResources().getString(R.string.account_exists));
+		} else if (message.equals(ServiceConstants.ERROR_MESSAGE_LOGIN_FAILED)){
+			showToast(getResources().getString(R.string.login_failed));
+		} else if (message.equals(ServiceConstants.ERROR_MESSAGE_SERVER_ERROR)){
+			showToast(getResources().getString(R.string.server_error));
+		} else if (message.equals(ServiceConstants.ERROR_MESSAGE_NETWORK_ERROR)){
+			showToast(getResources().getString(R.string.network_error));
+		}
 	}
 
 	/**

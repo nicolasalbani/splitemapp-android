@@ -1,5 +1,7 @@
 package com.splitemapp.android.service;
 
+import java.util.concurrent.TimeoutException;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
@@ -97,9 +99,13 @@ public class BaseIntentService extends IntentService {
 			if(task != null){
 				task.executeService(intent);
 			}
-		} catch (Exception e) {
-			Log.e(TAG, "Network error detected", e);
+		} catch (TimeoutException e) {
+			Log.e(TAG, "TimeoutException detected", e);
 			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);
+			isConnectedToServer = false;
+		} catch (Exception e) {
+			Log.e(TAG, "Generic Exception detected", e);
+			task.broadcastMessage(BaseTask.GENERIC_ERROR, ServiceConstants.UI_MESSAGE);
 			isConnectedToServer = false;
 		}
 	}

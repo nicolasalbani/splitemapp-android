@@ -150,6 +150,8 @@ public abstract class RestfulFragment extends BaseFragment {
 						onRefresh(response);
 					} else if (response.equals(BaseTask.NETWORK_ERROR)){
 						showToast(getResources().getString(R.string.network_error));
+					} else if (response.equals(BaseTask.GENERIC_ERROR)){
+						showToast(getResources().getString(R.string.generic_error));
 					} else if(response.equals(BaseTask.EXPENSES_PUSHED)){
 						// We call the overridden onRefresh method
 						onRefresh(response);
@@ -230,9 +232,9 @@ public abstract class RestfulFragment extends BaseFragment {
 				login(email, password);
 			}
 			@Override
-			public void executeOnFail() {
+			public void executeOnFail(String message) {
 				hideProgressIndicator();
-				showToast(getResources().getString(R.string.network_error));
+				showToastForMessage(message);
 			}
 		};
 		createAccountRequestTask.execute();
@@ -256,9 +258,9 @@ public abstract class RestfulFragment extends BaseFragment {
 				startActivity(new Intent(getActivity(), WelcomeActivity.class));
 			}
 			@Override
-			public void executeOnFail() {
+			public void executeOnFail(String message) {
 				hideProgressIndicator();
-				showToast(getResources().getString(R.string.network_error));
+				showToastForMessage(message);
 			}
 		};
 		logoutRequestTask.execute();
@@ -296,9 +298,9 @@ public abstract class RestfulFragment extends BaseFragment {
 				Globals.setIsConnectedToServer(true);
 			}
 			@Override
-			public void executeOnFail() {
+			public void executeOnFail(String message) {
 				hideProgressIndicator();
-				showToast(getResources().getString(R.string.network_error));
+				showToastForMessage(message);
 			}
 		};
 		loginRequestTask.execute();

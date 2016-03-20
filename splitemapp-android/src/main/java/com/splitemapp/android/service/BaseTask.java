@@ -16,6 +16,7 @@ public abstract class BaseTask {
 	public static final String STOP_ANIMATION = "stop_animation";
 	public static final String EXPENSES_PUSHED = "expenses_pushed";
 	public static final String NETWORK_ERROR = "network_error";
+	public static final String GENERIC_ERROR = "generic_error";
 	
 	private DatabaseHelper databaseHelper = null;
 	private Context context = null;

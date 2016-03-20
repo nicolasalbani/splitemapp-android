@@ -25,5 +25,5 @@ public abstract class BaseAsyncTask <F, E, R> extends AsyncTask<Void, Void, R>{
 	/**
 	 * Executes a required action on fail. This code executes after the processResult method.
 	 */
-	public abstract void executeOnFail();
+	public abstract void executeOnFail(String message);
 }

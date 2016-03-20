@@ -67,36 +67,39 @@ public abstract class CreateAccountRequestTask extends BaseAsyncTask<Void, Void,
 	}
 
 	@Override
-	public void onPostExecute(CreateAccountResponse createAccountResponse) {
+	public void onPostExecute(CreateAccountResponse response) {
 		boolean success = false;
 
 		// We validate the response
-		if(createAccountResponse != null){
-			success = createAccountResponse.getSuccess();
+		if(response != null){
+			success = response.getSuccess();
+		} else {
+			executeOnFail(ServiceConstants.ERROR_MESSAGE_NETWORK_ERROR);
+			return;
 		}
 
 		// We show the status toast if it failed
 		if(!success){
-			executeOnFail();
+			executeOnFail(response.getMessage());
 		} else {
 			// Saving the information returned by the back-end
 			try {
 				// We reconstruct the UserStatus object
-				UserStatus userStatus = new UserStatus(createAccountResponse.getUserStatusDTO());
+				UserStatus userStatus = new UserStatus(response.getUserStatusDTO());
 
 				// We reconstruct the User object
-				User user = new User(userStatus, createAccountResponse.getUserDTO());
+				User user = new User(userStatus, response.getUserDTO());
 				databaseHelper.createOrUpdateUser(user);
 
 				// We reconstruct the UserContactData object
-				UserContactDataDTO userContactDataDTO = createAccountResponse.getUserContactDataDTO();
+				UserContactDataDTO userContactDataDTO = response.getUserContactDataDTO();
 				User ucdUpdatedBy = databaseHelper.getUser(userContactDataDTO.getUpdatedBy().longValue());
 				User ucdPushedBy = databaseHelper.getUser(userContactDataDTO.getPushedBy().longValue());
 				UserContactData userContactData = new UserContactData(user,ucdUpdatedBy,ucdPushedBy,userContactDataDTO);
 				databaseHelper.createOrUpdateUserContactData(userContactData);
 
 				// We reconstruct the UserAvatar object
-				UserAvatarDTO userAvatarDTO = createAccountResponse.getUserAvatarDTO();
+				UserAvatarDTO userAvatarDTO = response.getUserAvatarDTO();
 				User uaUpdatedBy = databaseHelper.getUser(userAvatarDTO.getUpdatedBy().longValue());
 				User uaPushedBy = databaseHelper.getUser(userAvatarDTO.getPushedBy().longValue());
 				UserAvatar userAvatar = new UserAvatar(user,uaUpdatedBy,uaPushedBy,userAvatarDTO);

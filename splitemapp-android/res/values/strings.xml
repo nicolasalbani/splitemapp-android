@@ -7,6 +7,10 @@
     
     <!-- Messages -->
     <string name="network_error">Check your network connection</string>
+    <string name="generic_error">Oops! We detected a generic error</string>
+    <string name="login_failed">Username or password invalid</string>
+    <string name="account_exists">This account already exists</string>
+    <string name="server_error">Oops! We detected a server error</string>
     
     <!-- Action Bar -->
     <string name="ab_title">Title</string>

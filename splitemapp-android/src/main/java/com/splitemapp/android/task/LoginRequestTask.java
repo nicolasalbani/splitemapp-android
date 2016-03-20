@@ -64,36 +64,39 @@ public abstract class LoginRequestTask extends BaseAsyncTask<Void, Void, LoginRe
 	}
 
 	@Override
-	public void onPostExecute(LoginResponse loginResponse) {
+	public void onPostExecute(LoginResponse response) {
 		boolean success = false;
 
 		// Validating the response
-		if(loginResponse != null){
-			success = loginResponse.getSuccess();
+		if(response != null){
+			success = response.getSuccess();
+		} else {
+			executeOnFail(ServiceConstants.ERROR_MESSAGE_NETWORK_ERROR);
+			return;
 		}
 
 		// We show the status toast if it failed
 		if(!success){
-			executeOnFail();
+			executeOnFail(response.getMessage());
 		} else {
 			// Saving the information returned by the back-end
 			try {
 				// Reconstructing the user status object
-				UserStatus userStatus = new UserStatus(loginResponse.getUserStatusDTO());
+				UserStatus userStatus = new UserStatus(response.getUserStatusDTO());
 
 				// Reconstructing the user object
-				User user = new User(userStatus, loginResponse.getUserDTO());
+				User user = new User(userStatus, response.getUserDTO());
 				databaseHelper.createOrUpdateUser(user);
 
 				// Clearing all previous session records
 				databaseHelper.deleteAllUserSessions();
 
 				// Reconstructing the user session object
-				UserSession userSession = new UserSession(user, loginResponse.getUserSessionDTO());
+				UserSession userSession = new UserSession(user, response.getUserSessionDTO());
 				databaseHelper.createOrUpdateUserSession(userSession);
 
 				// Reconstructing the user contact data object
-				UserContactDataDTO userContactDataDTO = loginResponse.getUserContactDataDTO();
+				UserContactDataDTO userContactDataDTO = response.getUserContactDataDTO();
 				User ucdUpdatedBy = databaseHelper.getUser(userContactDataDTO.getUpdatedBy().longValue());
 				User ucdPushedBy = databaseHelper.getUser(userContactDataDTO.getPushedBy().longValue());
 				UserContactData userContactData = new UserContactData(user,ucdUpdatedBy,ucdPushedBy,userContactDataDTO);
@@ -105,7 +108,7 @@ public abstract class LoginRequestTask extends BaseAsyncTask<Void, Void, LoginRe
 				databaseHelper.createOrUpdateUserContactData(userContactData);
 
 				// Reconstructing the user avatar object
-				UserAvatarDTO userAvatarDTO = loginResponse.getUserAvatarDTO();
+				UserAvatarDTO userAvatarDTO = response.getUserAvatarDTO();
 				User uaUpdatedBy = databaseHelper.getUser(userAvatarDTO.getUpdatedBy().longValue());
 				User uaPushedBy = databaseHelper.getUser(userAvatarDTO.getPushedBy().longValue());
 				UserAvatar userAvatar = new UserAvatar(user,uaUpdatedBy,uaPushedBy,userAvatarDTO);

@@ -47,17 +47,20 @@ public abstract class LogoutRequestTask extends BaseAsyncTask<Void, Void, Servic
 	}
 
 	@Override
-	public void onPostExecute(ServiceResponse logoutResponse) {
+	public void onPostExecute(ServiceResponse response) {
 		boolean success = false;
 
 		// Validating the response
-		if(logoutResponse != null){
-			success = logoutResponse.getSuccess();
+		if(response != null){
+			success = response.getSuccess();
+		} else {
+			executeOnFail(ServiceConstants.ERROR_MESSAGE_NETWORK_ERROR);
+			return;
 		}
 
 		// We show the status toast if it failed
 		if(!success){
-			executeOnFail();
+			executeOnFail(response.getMessage());
 		} else {
 			try {
 				// Clearing all tables in database
