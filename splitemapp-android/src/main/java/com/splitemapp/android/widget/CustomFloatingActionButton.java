@@ -205,7 +205,15 @@ public class CustomFloatingActionButton {
 
 		fabLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		fabLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		fabLayoutParams.setMargins(-15, -25, 0, -25);
+		if(ViewUtils.isOldVersion()){
+			fabLayoutParams.setMargins(-15, -25, 0, -25);
+		} else {
+			if(actionFabList.size() == 0){
+				fabLayoutParams.setMargins(10, 0, 23, 50);
+			} else {
+				fabLayoutParams.setMargins(10, 0, 23, 20);
+			}
+		}
 		actionFab.setLayoutParams(fabLayoutParams);
 
 		// Assigning the provided onClickListener

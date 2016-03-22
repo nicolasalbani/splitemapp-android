@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.balance.ProjectTypeMapper;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -166,6 +168,10 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.cp_fab);
+		if(!ViewUtils.isOldVersion()){
+			CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFab.getLayoutParams();
+			layoutParams.setMargins(10, 20, 10, 10);
+		}
 		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
 
 		// Adding add contact FAB

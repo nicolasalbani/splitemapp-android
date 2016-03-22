@@ -16,9 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -29,6 +31,7 @@ import com.splitemapp.android.screen.managecontacts.ManageContactsActivity;
 import com.splitemapp.android.screen.settings.SettingsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.PreferencesManager;
+import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.User;
 
@@ -208,6 +211,10 @@ public class HomeFragment extends RestfulFragment {
 
 		// Adding action FABs to the main FAB
 		mFab = (FloatingActionButton) v.findViewById(R.id.h_fab);
+		if(!ViewUtils.isOldVersion()){
+			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFab.getLayoutParams();
+			layoutParams.setMargins(10, 20, 10, 10);
+		}
 		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {

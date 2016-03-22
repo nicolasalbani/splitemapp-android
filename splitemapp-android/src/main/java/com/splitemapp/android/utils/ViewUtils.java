@@ -2,6 +2,10 @@ package com.splitemapp.android.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.splitemapp.android.constants.Constants;
+
+import android.os.Build;
+
 public class ViewUtils {
 	
 	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
@@ -24,4 +28,16 @@ public class ViewUtils {
         }
     }
 
+    /**
+     * Indicates whether custom padding should be used to correctly show layouts for
+     * different Android versions
+     * @return
+     */
+    public static boolean isOldVersion(){
+    	if(Build.VERSION.SDK_INT > Constants.SDK_VERSION_THRESHOLD){
+    		return false;
+    	}
+    	
+    	return true;
+    }
 }
