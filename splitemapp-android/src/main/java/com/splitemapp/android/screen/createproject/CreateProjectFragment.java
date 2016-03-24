@@ -2,7 +2,6 @@ package com.splitemapp.android.screen.createproject;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,10 +26,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.balance.ProjectTypeMapper;
+import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.ViewUtils;
@@ -53,7 +52,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 	private EditText mProjectTitle;
 	private Spinner mProjectType;
 	private EditText mProjectBudget;
-	private DecimalFormat mProjectBudgetFormat;
+	private ExpenseAmountFormat mProjectBudgetFormat;
 	private FloatingActionButton mFab;
 
 	private RecyclerView mMembersRecycler;
@@ -80,9 +79,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		}
 
 		// Setting the project budget format
-		mProjectBudgetFormat = new DecimalFormat();
-		mProjectBudgetFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
-		mProjectBudgetFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+		mProjectBudgetFormat = new ExpenseAmountFormat();
 
 		if(isNewProject()){
 			// We only add the current user to the users list at first
@@ -116,7 +113,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We get the project budget field
 		mProjectBudget = (EditText) v.findViewById(R.id.cp_budget_editText);
-		mProjectBudget.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(Constants.MAX_DIGITS_BEFORE_DECIMAL,Constants.MAX_DIGITS_AFTER_DECIMAL)});
+		mProjectBudget.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
 
 		// We get and populate the spinner
 		mProjectType = (Spinner) v.findViewById(R.id.cp_project_type_spinner);

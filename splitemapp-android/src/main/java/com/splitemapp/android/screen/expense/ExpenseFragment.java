@@ -3,7 +3,6 @@ package com.splitemapp.android.screen.expense;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
@@ -46,7 +44,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	private short mSelectedCategory;
 
 	private EditText mExpenseAmount;
-	private DecimalFormat mExpenseAmountFormat;
+	private ExpenseAmountFormat mExpenseAmountFormat;
 	private TextView mExpenseDateText;
 
 	private RecyclerView mExpenseCategoryRecycler;
@@ -66,9 +64,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 
 			// Setting the expense amount format
-			mExpenseAmountFormat = new DecimalFormat();
-			mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
-			mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+			mExpenseAmountFormat = new ExpenseAmountFormat();
 			
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
@@ -128,7 +124,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
-		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(Constants.MAX_DIGITS_BEFORE_DECIMAL,Constants.MAX_DIGITS_AFTER_DECIMAL)});
+		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
 
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){

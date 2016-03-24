@@ -1,7 +1,6 @@
 package com.splitemapp.android.screen.balance;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +12,12 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
+import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 
 public class ViewHolderUserSecondary extends RecyclerView.ViewHolder implements OnClickListener{
 
 	private static BigDecimal mTotalExpenseValue;
-	private static DecimalFormat mExpenseAmountFormat;
+	private static ExpenseAmountFormat mExpenseAmountFormat;
 
 	// Each data item is a project
 	public boolean mInitializedSeekBar;
@@ -29,7 +29,7 @@ public class ViewHolderUserSecondary extends RecyclerView.ViewHolder implements 
 	public SeekBar mSeekBar;
 	public IExpenseGroupClickListener mClickListener;
 
-	public ViewHolderUserSecondary(View view, BigDecimal totalExpenseValue, DecimalFormat expenseAmountFormat, IExpenseGroupClickListener clickListener) {
+	public ViewHolderUserSecondary(View view, BigDecimal totalExpenseValue, ExpenseAmountFormat expenseAmountFormat, IExpenseGroupClickListener clickListener) {
 		super(view);
 		mTotalExpenseValue = totalExpenseValue;
 		mExpenseAmountFormat = expenseAmountFormat;

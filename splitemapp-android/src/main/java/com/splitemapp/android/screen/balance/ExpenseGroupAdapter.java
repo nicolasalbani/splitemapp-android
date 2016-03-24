@@ -3,7 +3,6 @@ package com.splitemapp.android.screen.balance;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -19,8 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.comparator.UserExpenseComparator;
@@ -42,7 +41,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 	private static final String CURRENCY_SIGN = "$";
 
 	private static BigDecimal mTotalExpenseValue;
-	private static DecimalFormat mExpenseAmountFormat;
+	private static ExpenseAmountFormat mExpenseAmountFormat;
 
 	private List<? extends ExpenseGroup> mExpenseGroupList;
 	private Project mCurrentProject;
@@ -68,9 +67,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 		this.mShowPrimaryView = true;
 
 		// Setting the expense amount format
-		mExpenseAmountFormat = new DecimalFormat();
-		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
-		mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+		mExpenseAmountFormat = new ExpenseAmountFormat();
 	}
 
 	// Create new views (invoked by the layout manager)

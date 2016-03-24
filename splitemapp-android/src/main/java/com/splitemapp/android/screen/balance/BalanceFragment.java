@@ -3,7 +3,6 @@ package com.splitemapp.android.screen.balance;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 
 import android.os.Bundle;
@@ -17,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
+import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 import com.splitemapp.android.widget.LinearLayoutManager;
 import com.splitemapp.commons.domain.Project;
 
@@ -37,7 +36,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private View mTopMonthView;
 	private View mTopAverageView;
 
-	private DecimalFormat mExpenseAmountFormat;
+	private ExpenseAmountFormat mExpenseAmountFormat;
 	private TextView mMonthTextView;
 	private TextView mYearTextView;
 	private TextView mTotalTextView;
@@ -80,9 +79,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 		mFragmentView = super.onCreateView(inflater, container, savedInstanceState);
 
 		// Setting the expense amount format
-		mExpenseAmountFormat = new DecimalFormat();
-		mExpenseAmountFormat.setMaximumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
-		mExpenseAmountFormat.setMinimumFractionDigits(Constants.MAX_DIGITS_AFTER_DECIMAL);
+		mExpenseAmountFormat = new ExpenseAmountFormat();
 
 		// Getting top layouts
 		mTopMonthView = mFragmentView.findViewById(R.id.b_top_month_view);

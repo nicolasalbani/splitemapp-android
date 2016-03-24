@@ -12,14 +12,13 @@ public class Constants {
 	public static final String OS_VERSION="Android " +Build.VERSION.CODENAME+"-"+Build.VERSION.RELEASE+ " SDK-" +Build.VERSION.SDK_INT;
 	public static final String LOOPBACK_ADDRESS = "127.0.0.1";
 	
+	// Version threshold information for customizing layouts
+	public static final int SDK_VERSION_THRESHOLD = 20;
+	
 	// Backend constants
 	public static final String BACKEND_HOST="ec2-52-27-108-212.us-west-2.compute.amazonaws.com";
 	public static final String BACKEND_PORT="8080";
 	public static final String BACKEND_PATH="splitemapp-backend-rest";
-	
-	// Decimal number entry
-	public static final int MAX_DIGITS_BEFORE_DECIMAL = 5;
-	public static final int MAX_DIGITS_AFTER_DECIMAL = 2;
 	
 	// Request codes
 	public static final int SELECT_PICTURE_REQUEST_CODE = 1;
