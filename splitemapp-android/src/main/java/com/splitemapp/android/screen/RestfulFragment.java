@@ -49,6 +49,7 @@ import com.splitemapp.commons.constants.ServiceConstants;
 public abstract class RestfulFragment extends BaseFragment {
 
 	private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+	private static boolean syncInProgress;
 	private CustomProgressDialog waitDialog = null;
 	private BroadcastReceiver mRestBroadcastReceiver;
 	private BroadcastReceiver mUiBroadcastReceiver;
@@ -83,7 +84,7 @@ public abstract class RestfulFragment extends BaseFragment {
 				// If the message contains an action, execute the proper method
 				if(action != null){
 					// Starting refresh animation
-					startRefreshAnimation();
+					triggerStartRefreshAnimation();
 
 					// Checking for SYNC actions
 					if(action.equals(Action.UPDATE_USER)){
@@ -120,7 +121,7 @@ public abstract class RestfulFragment extends BaseFragment {
 					}
 
 					// Stopping refresh animation
-					stopRefreshAnimation();
+					triggerStopRefreshAnimation();
 				}
 			}
 		};
@@ -137,28 +138,50 @@ public abstract class RestfulFragment extends BaseFragment {
 				if(response!=null){
 					// If there is a swipe refresh layout set, we update animation if required
 					if(response.equals(BaseTask.START_ANIMATION)){
-						if(mSwipeRefresh != null){
-							mSwipeRefresh.setEnabled(false);
-							mSwipeRefresh.setRefreshing(true);
-						}
+						syncInProgress = true;
+						startRefreshAnimation();
 					} else if (response.equals(BaseTask.STOP_ANIMATION)){
-						if(mSwipeRefresh != null){
-							mSwipeRefresh.setEnabled(true);
-							mSwipeRefresh.setRefreshing(false);
-						}
+						syncInProgress = false;
+						stopRefreshAnimation();
 						// We call the overridden onRefresh method
 						onRefresh(response);
 					} else if (response.equals(BaseTask.NETWORK_ERROR)){
+						syncInProgress = false;
+						stopRefreshAnimation();
 						showToast(getResources().getString(R.string.network_error));
 					} else if (response.equals(BaseTask.GENERIC_ERROR)){
+						syncInProgress = false;
+						stopRefreshAnimation();
 						showToast(getResources().getString(R.string.generic_error));
 					} else if(response.equals(BaseTask.EXPENSES_PUSHED)){
+						syncInProgress = false;
+						stopRefreshAnimation();
 						// We call the overridden onRefresh method
 						onRefresh(response);
 					}
 				}
 			}
 		};
+	}
+
+	/**
+	 * Starts the refresh animation and disables the refresh swipe
+	 */
+	private void startRefreshAnimation(){
+		if(mSwipeRefresh != null){
+			mSwipeRefresh.setEnabled(false);
+			mSwipeRefresh.setRefreshing(true);
+		}
+	}
+
+	/**
+	 * Stops the refresh animation and enables the refresh swipe
+	 */
+	private void stopRefreshAnimation(){
+		if(mSwipeRefresh != null){
+			mSwipeRefresh.setEnabled(true);
+			mSwipeRefresh.setRefreshing(false);
+		}
 	}
 
 	/**
@@ -170,11 +193,29 @@ public abstract class RestfulFragment extends BaseFragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		if(syncInProgress){
+			startRefreshAnimation();
+		} else {
+			stopRefreshAnimation();
+		}
+
 		// Registering broadcast receiver
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mRestBroadcastReceiver), 
 				new IntentFilter(ServiceConstants.REST_MESSAGE));
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mUiBroadcastReceiver), 
 				new IntentFilter(ServiceConstants.UI_MESSAGE));
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if(syncInProgress){
+			startRefreshAnimation();
+		} else {
+			stopRefreshAnimation();
+		}
 	}
 
 	@Override
@@ -329,7 +370,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 */
 	protected void syncAllTables(){
 		// Starting refresh animation
-		startRefreshAnimation();
+		triggerStartRefreshAnimation();
 
 		// Calling all push services
 		pushUsers();
@@ -352,7 +393,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserExpenses();
 
 		// Stopping refresh animation
-		stopRefreshAnimation();
+		triggerStopRefreshAnimation();
 	}
 
 	/**
@@ -360,7 +401,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 */
 	protected void pullAllTables(){
 		// Starting refresh animation
-		startRefreshAnimation();
+		triggerStartRefreshAnimation();
 
 		// Calling all pull services
 		pullUsers();
@@ -373,7 +414,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		pullUserExpenses();
 
 		// Stopping refresh animation
-		stopRefreshAnimation();
+		triggerStopRefreshAnimation();
 	}
 
 	/**
@@ -381,7 +422,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	 */
 	protected void syncContacts(){
 		// Starting refresh animation
-		startRefreshAnimation();
+		triggerStartRefreshAnimation();
 
 		// Starting sync contacts activity
 		Intent intent = new Intent(getActivity(), BaseIntentService.class);
@@ -389,7 +430,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		getActivity().startService(intent);
 
 		// Stopping refresh animation
-		stopRefreshAnimation();
+		triggerStopRefreshAnimation();
 	}
 
 	/**
@@ -410,7 +451,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	/**
 	 * Starts the refresh animation
 	 */
-	protected void startRefreshAnimation(){
+	protected void triggerStartRefreshAnimation(){
 		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, StartRefreshAnimationTask.class.getSimpleName());
 		getActivity().startService(intent);
@@ -419,7 +460,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	/**
 	 * Stops the refresh animation
 	 */
-	protected void stopRefreshAnimation(){
+	protected void triggerStopRefreshAnimation(){
 		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, StopRefreshAnimationTask.class.getSimpleName());
 		getActivity().startService(intent);
@@ -535,7 +576,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		intent.putExtra(BaseTask.TASK_NAME, PushUserAvatarsTask.class.getSimpleName());
 		getActivity().startService(intent);
 	}
-	
+
 	/**
 	 * Creates a GCM token registration request
 	 */
