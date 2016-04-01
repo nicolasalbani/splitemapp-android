@@ -19,6 +19,7 @@ import com.splitemapp.commons.domain.dto.response.PushResponse;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
 import com.splitemapp.commons.domain.id.IdUpdateComparator;
+import com.splitemapp.commons.utils.TimeUtils;
 
 public abstract class PushTask <G extends PushableEntity, F, E extends Number, R extends PushResponse<E>> extends BaseTask {
 
@@ -72,7 +73,7 @@ public abstract class PushTask <G extends PushableEntity, F, E extends Number, R
 
 			// We get the date in which this table was last successfully pushed
 			Date lastPushSuccessAt = getHelper().getLastSuccessPushAt(getTableName());
-			pushRequest.setLastPushSuccessAt(lastPushSuccessAt);
+			pushRequest.setLastPushSuccessAt(TimeUtils.getUTCDate(lastPushSuccessAt));
 
 			// Getting the list of items to push
 			List<F> requestItemList = getRequestItemList();

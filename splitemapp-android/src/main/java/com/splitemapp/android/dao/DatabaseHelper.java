@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -47,6 +49,7 @@ import com.splitemapp.commons.domain.UserToProject;
 import com.splitemapp.commons.domain.UserToProjectStatus;
 import com.splitemapp.commons.domain.id.IdReference;
 import com.splitemapp.commons.domain.id.IdUpdate;
+import com.splitemapp.commons.utils.TimeUtils;
 import com.splitemapp.commons.utils.Utils;
 
 /**
@@ -518,8 +521,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void persistProject(Project project) throws SQLException{
-		project.setCreatedAt(new Date());
-		project.setUpdatedAt(new Date());
+		project.setCreatedAt(TimeUtils.getUTCDate());
+		project.setUpdatedAt(TimeUtils.getUTCDate());
 		project.setUpdatedBy(getLoggedUser());
 		getProjectDao().create(project);
 	}
@@ -530,8 +533,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void persistUserExpense(UserExpense userExpense) throws SQLException{
-		userExpense.setCreatedAt(new Date());
-		userExpense.setUpdatedAt(new Date());
+		userExpense.setCreatedAt(TimeUtils.getUTCDate());
+		userExpense.setUpdatedAt(TimeUtils.getUTCDate());
 		userExpense.setUpdatedBy(getLoggedUser());
 		getUserExpenseDao().create(userExpense);
 	}
@@ -542,8 +545,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void persistProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
-		projectCoverImage.setCreatedAt(new Date());
-		projectCoverImage.setUpdatedAt(new Date());
+		projectCoverImage.setCreatedAt(TimeUtils.getUTCDate());
+		projectCoverImage.setUpdatedAt(TimeUtils.getUTCDate());
 		projectCoverImage.setUpdatedBy(getLoggedUser());
 		getProjectCoverImageDao().create(projectCoverImage);
 	}
@@ -554,7 +557,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateProject(Project project) throws SQLException{
-		project.setUpdatedAt(new Date());
+		project.setUpdatedAt(TimeUtils.getUTCDate());
 		project.setUpdatedBy(getLoggedUser());
 		getProjectDao().update(project);
 	}
@@ -565,7 +568,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateUser(User user) throws SQLException{
-		user.setUpdatedAt(new Date());
+		user.setUpdatedAt(TimeUtils.getUTCDate());
 		getUserDao().update(user);
 	}
 
@@ -575,7 +578,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateUserAvatar(UserAvatar userAvatar) throws SQLException{
-		userAvatar.setUpdatedAt(new Date());
+		userAvatar.setUpdatedAt(TimeUtils.getUTCDate());
 		getUserAvatarDao().update(userAvatar);
 	}
 
@@ -585,7 +588,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateUserToProject(UserToProject userToProject) throws SQLException{
-		userToProject.setUpdatedAt(new Date());
+		userToProject.setUpdatedAt(TimeUtils.getUTCDate());
 		userToProject.setUpdatedBy(getLoggedUser());
 		getUserToProjectDao().update(userToProject);
 	}
@@ -596,7 +599,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateProjectCoverImage(ProjectCoverImage projectCoverImage) throws SQLException{
-		projectCoverImage.setUpdatedAt(new Date());
+		projectCoverImage.setUpdatedAt(TimeUtils.getUTCDate());
 		projectCoverImage.setUpdatedBy(getLoggedUser());
 		getProjectCoverImageDao().update(projectCoverImage);
 	}
@@ -607,7 +610,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public void updateUserExpense(UserExpense userExpense) throws SQLException{
-		userExpense.setUpdatedAt(new Date());
+		userExpense.setUpdatedAt(TimeUtils.getUTCDate());
 		userExpense.setUpdatedBy(getLoggedUser());
 		getUserExpenseDao().update(userExpense);
 	}
@@ -1034,12 +1037,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		List<SyncStatus> syncStatusList = getSyncStatusDao().queryForAll();
 		for(SyncStatus syncStatus:syncStatusList){
 			// Setting pull entries to the oldest time
-			syncStatus.setLastPullAt(new Date(0));
-			syncStatus.setLastPullSuccessAt(new Date(0));
+			syncStatus.setLastPullAt(TimeUtils.getUTCDate(new Date(0)));
+			syncStatus.setLastPullSuccessAt(TimeUtils.getUTCDate(new Date(0)));
 
 			// Setting push entries to the current time
-			syncStatus.setLastPushAt(new Date());
-			syncStatus.setLastPushSuccessAt(new Date());
+			syncStatus.setLastPushAt(TimeUtils.getUTCDate(new Date(0)));
+			syncStatus.setLastPushSuccessAt(TimeUtils.getUTCDate(new Date(0)));
 
 			// Persisting changes
 			getSyncStatusDao().update(syncStatus);

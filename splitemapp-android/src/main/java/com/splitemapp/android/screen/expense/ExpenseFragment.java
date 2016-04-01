@@ -31,6 +31,7 @@ import com.splitemapp.commons.domain.ExpenseCategory;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
+import com.splitemapp.commons.utils.TimeUtils;
 
 public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	
@@ -69,7 +70,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
 				mUserExpense = new UserExpense();
-				mUserExpense.setExpenseDate(new Date());
+				mUserExpense.setExpenseDate(TimeUtils.getUTCDate());
 			} else {
 				mUserExpense = getHelper().getUserExpenseById(Globals.getExpenseActivityExpenseId());
 			}
@@ -183,7 +184,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			// We save the user expense to the DB
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
-			mUserExpense.setUpdatedAt(new Date());
+			mUserExpense.setUpdatedAt(TimeUtils.getUTCDate());
 
 			// TODO Only set the user if we are owning the expense
 			// mUserExpense.setUser(mCurrentUser);

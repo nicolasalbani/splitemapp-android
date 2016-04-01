@@ -3,7 +3,6 @@ package com.splitemapp.android.screen.createproject;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -41,6 +40,7 @@ import com.splitemapp.commons.domain.ProjectCoverImage;
 import com.splitemapp.commons.domain.ProjectStatus;
 import com.splitemapp.commons.domain.ProjectType;
 import com.splitemapp.commons.domain.User;
+import com.splitemapp.commons.utils.TimeUtils;
 
 public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
@@ -261,7 +261,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			if(mAvatarData != null){
 				projectCoverImage.setAvatarData(mAvatarData);
 			}
-			projectCoverImage.setUpdatedAt(new Date());
+			projectCoverImage.setUpdatedAt(TimeUtils.getUTCDate());
 			getHelper().updateProjectCoverImage(projectCoverImage);
 
 			// Updating user to project relationships
