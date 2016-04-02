@@ -16,6 +16,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.globals.Globals;
+import com.splitemapp.android.screen.settings.QuestionsDialog;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.service.BaseIntentService;
 import com.splitemapp.android.service.BaseTask;
@@ -43,6 +44,7 @@ import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.LogoutRequestTask;
+import com.splitemapp.android.task.QuestionsTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 
@@ -431,6 +433,38 @@ public abstract class RestfulFragment extends BaseFragment {
 
 		// Stopping refresh animation
 		triggerStopRefreshAnimation();
+	}
+	
+	/**
+	 * Sends the question contained in the message parameter
+	 * @param message
+	 */
+	protected void sendQuestion(String message){
+		// Creating the LogoutRequestTask instance
+		QuestionsTask questionsTask = new QuestionsTask(getHelper(),message){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				
+				// Showing success dialog
+				new QuestionsDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.dialog_questions_success;
+					}
+				}.show();;
+			}
+			@Override
+			public void executeOnFail(String message) {
+				hideProgressIndicator();
+				showToastForMessage(message);
+			}
+		};
+		questionsTask.execute();
 	}
 
 	/**

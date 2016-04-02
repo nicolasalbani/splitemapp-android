@@ -104,7 +104,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 				final ExpenseFilterDialog expenseFilterDialog = new ExpenseFilterDialog(getActivity()) {
 					@Override
 					public int getLinearLayoutView() {
-						return R.layout.fragment_expense_filter;
+						return R.layout.dialog_expense_filter;
 					}
 				};
 
@@ -284,7 +284,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		final ListAlertDialog listAlertDialog = new ListAlertDialog(getActivity()) {
 			@Override
 			public int getLinearLayoutView() {
-				return R.layout.options_project;
+				return R.layout.dialog_options_project;
 			}
 		};
 

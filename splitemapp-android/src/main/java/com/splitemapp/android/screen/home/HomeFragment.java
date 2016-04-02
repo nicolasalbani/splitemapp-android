@@ -1,7 +1,7 @@
 package com.splitemapp.android.screen.home;
 
 import java.sql.SQLException;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,13 +16,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
 import com.splitemapp.android.screen.RestfulFragment;
@@ -137,6 +135,7 @@ public class HomeFragment extends RestfulFragment {
 		// Adding OnClickListener to the more item
 		mMoreView = v.findViewById(R.id.h_more_imageView);
 		mMoreView.setOnClickListener(new View.OnClickListener() {
+			@SuppressLint("RtlHardcoded")
 			@Override
 			public void onClick(View arg0) {
 				// Opening the drawer
@@ -153,7 +152,7 @@ public class HomeFragment extends RestfulFragment {
 				final ProjectFilterDialog projectFilterDialog = new ProjectFilterDialog(getActivity()) {
 					@Override
 					public int getLinearLayoutView() {
-						return R.layout.fragment_project_filter;
+						return R.layout.dialog_project_filter;
 					}
 				};
 				

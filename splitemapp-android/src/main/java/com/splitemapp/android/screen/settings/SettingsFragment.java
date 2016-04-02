@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +35,10 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 	private SwitchCompat mNewProjectSwitchCompat;
 	private SwitchCompat mNewExpenseSwitchCompat;
 	private SwitchCompat mUpdatedProjectSwitchCompat;
+	
+	private Button mAskAQuestionButton;
+	private EditText mMessageEditText;
+	private Button mSendButton;
 
 	private boolean avatarChanged;
 	private byte[] mAvatarData;
@@ -86,6 +91,36 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		mUpdatedProjectSwitchCompat = (SwitchCompat) v.findViewById(R.id.s_updated_cover_switch);
 		mUpdatedProjectSwitchCompat.setChecked(getPrefsManager().getBoolean(PreferencesManager.NOTIFY_UPDATED_PROJECT_COVER));
 
+		// We set the Ask a question button
+		mAskAQuestionButton = (Button) v.findViewById(R.id.s_ask_a_question_button);
+		mAskAQuestionButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// Opening project filter
+				final QuestionsDialog questionsDialog = new QuestionsDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.dialog_questions;
+					}
+				};
+				
+				// Getting the message
+				mMessageEditText = (EditText) questionsDialog.findViewById(R.id.aaq_message_EditText);
+				
+				// Creating the OnClickListener for the send button
+				mSendButton = (Button) questionsDialog.findViewById(R.id.aaq_send_button);
+				mSendButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						questionsDialog.hide();
+						sendQuestion(mMessageEditText.getText().toString());
+					}
+				});
+				
+				questionsDialog.show();
+			}
+		});
+		
 		return v;
 	}
 

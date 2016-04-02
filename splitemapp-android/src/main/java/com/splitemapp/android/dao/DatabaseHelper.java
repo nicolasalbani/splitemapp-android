@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.DateTime;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;

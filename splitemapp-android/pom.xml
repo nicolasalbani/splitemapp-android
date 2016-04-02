@@ -179,6 +179,10 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-web</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>

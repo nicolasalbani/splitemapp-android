@@ -54,6 +54,14 @@
     <string name="s_updated_cover">Updated project cover</string>
     <string name="s_ask_a_question">Have a question?</string>
     <string name="s_splitemapp_faq">SplitemApp FAQ</string>
+    
+    <!-- Ask a Question -->
+    <string name="aaq_questions">Questions</string>
+    <string name="aaq_question_description">Question Icon</string>
+    <string name="aaq_send">Send</string>
+    <string name="aaq_question_hint">What\'s up?</string>
+    <string name="aaq_question_sent">Question sent!</string>
+    <string name="aaq_question_get_back">We\'ll get back to you shortly :)</string>
 
     <!-- Create Account Screen -->
     <string name="ca_avatar_description">Avatar</string>
