@@ -18,8 +18,8 @@
             android:layout_gravity="center"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:contentDescription="@string/aaq_question_description"
-            android:src="@drawable/ic_question_18dp" />
+            android:contentDescription="@string/mc_add_contact_description"
+            android:src="@drawable/ic_account_plus_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="100dp"
             android:layout_marginRight="100dp"
-            android:text="@string/aaq_questions"
+            android:text="@string/mc_add_contact"
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
@@ -45,42 +45,84 @@
         android:orientation="vertical" >
 
         <LinearLayout
-         android:id="@+id/aaq_message_view"
+            android:id="@+id/ac_email_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="visible" >
 
             <EditText
-                android:id="@+id/aaq_message_EditText"
+                android:id="@+id/ac_email_editText"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/shape_bordered_rectangle"
                 android:gravity="top|start"
-                android:hint="@string/aaq_question_hint"
+                android:hint="@string/mc_email_hint"
+                android:inputType="textEmailAddress"
                 android:padding="5dp"
                 android:textColor="@color/black"
                 android:textColorHint="@color/grey" >
             </EditText>
 
             <Button
-                android:id="@+id/aaq_send_button"
+                android:id="@+id/ac_search_button"
                 style="@style/Button"
                 android:layout_marginTop="15dp"
-                android:text="@string/aaq_send" />
+                android:text="@string/mc_search" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/aaq_success_view"
+            android:id="@+id/ac_add_success_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:drawableTop="@drawable/ic_account_circle_36dp"
+            android:text="@string/mc_contact_added"
+            android:textColor="@color/hard_grey"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/ac_not_found_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_alert_circle_36dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_alert_circle_36dp"
+                android:text="@string/mc_not_found"
+                android:textColor="@color/hard_grey"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/ac_invite_button"
+                style="@style/Button"
+                android:layout_marginTop="15dp"
+                android:text="@string/mc_invite" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ac_invite_success_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="10dp"
             android:drawableTop="@drawable/ic_send_36dp"
-            android:text="@string/aaq_question_sent"
+            android:text="@string/mc_invite_sent"
             android:textColor="@color/hard_grey"
             android:textSize="16sp"
             android:visibility="gone" />

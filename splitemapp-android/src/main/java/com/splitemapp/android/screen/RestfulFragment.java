@@ -10,13 +10,14 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
 import com.splitemapp.android.globals.Globals;
-import com.splitemapp.android.screen.settings.QuestionsDialog;
+import com.splitemapp.android.screen.managecontacts.ManageContactsFragment;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.service.BaseIntentService;
 import com.splitemapp.android.service.BaseTask;
@@ -41,6 +42,7 @@ import com.splitemapp.android.service.sync.PushUsersTask;
 import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
 import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
+import com.splitemapp.android.task.AddContactTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.LogoutRequestTask;
@@ -436,10 +438,50 @@ public abstract class RestfulFragment extends BaseFragment {
 	}
 	
 	/**
+	 * Adds the contact corresponding to the email address if found
+	 * @param message
+	 */
+	protected void addContact(String email, final View emailView, final View successView, final View notFoundView, final ManageContactsFragment fragment){
+		// Creating the LogoutRequestTask instance
+		AddContactTask addContactTask = new AddContactTask(getHelper(),email){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				
+				// Showing success dialog
+				emailView.setVisibility(View.GONE);
+				successView.setVisibility(View.VISIBLE);
+				
+				// Refreshing list
+				fragment.refreshFragment();
+			}
+			@Override
+			public void executeOnFail(String message) {
+				hideProgressIndicator();
+				showToastForMessage(message);
+			}
+			@Override
+			protected void executeOnUserNotFound() {
+				hideProgressIndicator();
+				
+				// Showing user not found dialog
+				emailView.setVisibility(View.GONE);
+				notFoundView.setVisibility(View.VISIBLE);
+				
+			}
+		};
+		addContactTask.execute();
+	}
+	
+	/**
 	 * Sends the question contained in the message parameter
 	 * @param message
 	 */
-	protected void sendQuestion(String message){
+	protected void sendQuestion(String message, final View messageView, final View successView){
 		// Creating the LogoutRequestTask instance
 		QuestionsTask questionsTask = new QuestionsTask(getHelper(),message){
 			@Override
@@ -451,12 +493,8 @@ public abstract class RestfulFragment extends BaseFragment {
 				hideProgressIndicator();
 				
 				// Showing success dialog
-				new QuestionsDialog(getActivity()) {
-					@Override
-					public int getLinearLayoutView() {
-						return R.layout.dialog_questions_success;
-					}
-				}.show();;
+				messageView.setVisibility(View.GONE);
+				successView.setVisibility(View.VISIBLE);
 			}
 			@Override
 			public void executeOnFail(String message) {

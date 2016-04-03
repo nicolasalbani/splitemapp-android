@@ -112,8 +112,10 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				mSendButton.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						questionsDialog.hide();
-						sendQuestion(mMessageEditText.getText().toString());
+						View messageView = questionsDialog.findViewById(R.id.aaq_message_view);
+						View successView = questionsDialog.findViewById(R.id.aaq_success_view);
+						
+						sendQuestion(mMessageEditText.getText().toString(), messageView, successView);
 					}
 				});
 				

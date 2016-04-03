@@ -9,10 +9,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,6 +31,11 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 
 	private List<User> mContacts;
 	private ListView mContactsList;
+	private View mAddContactView;
+	
+	private Button mSearchButton;
+	private Button mInviteButton;
+	private EditText mEmailEditText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +71,52 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 				//TODO Do something when clicking a user in the list
 			}
 		});
+		
+		// Setting the OnClickListener for the add contact view
+		mAddContactView = v.findViewById(R.id.mc_add_contact_view);
+		mAddContactView.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// Opening add contacts dialog
+				final AddContactsDialog addContactDialog = new AddContactsDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.dialog_add_contacts;
+					}
+				};
+				
+				// Getting the email address
+				mEmailEditText = (EditText) addContactDialog.findViewById(R.id.ac_email_editText);
+				
+				// Creating the OnClickListener for the send button
+				mSearchButton = (Button) addContactDialog.findViewById(R.id.ac_search_button);
+				mSearchButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						View emailView = addContactDialog.findViewById(R.id.ac_email_view);
+						View successView = addContactDialog.findViewById(R.id.ac_add_success_view);
+						View notFoundView = addContactDialog.findViewById(R.id.ac_not_found_view);
+						
+						// Calling the add contact task
+						addContact(mEmailEditText.getText().toString(), emailView, successView, notFoundView, getCurrentFragment());
+					}
+				});
+				
+				// Creating the OnClickListener for the invite button
+				mInviteButton = (Button) addContactDialog.findViewById(R.id.ac_invite_button);
+				mInviteButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						View emailView = addContactDialog.findViewById(R.id.ac_email_view);
+						View successView = addContactDialog.findViewById(R.id.ac_invite_success_view);
+						
+						//TODO call the invite service and update the dialog
+					}
+				});
+				
+				addContactDialog.show();
+			}
+		});
 
 		// Setting a swipe refresh listener
 		setSwipeRefresh((SwipeRefreshLayout) v.findViewById(R.id.mc_swipe_refresh));
@@ -79,6 +133,10 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 				);
 		
 		return v;
+	}
+	
+	private ManageContactsFragment getCurrentFragment(){
+		return this;
 	}
 
 	private class UserAdapter extends ArrayAdapter<User>{

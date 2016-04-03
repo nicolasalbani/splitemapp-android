@@ -164,8 +164,16 @@
     <string name="mc_title">Manage Contacts</string>
     <string name="mc_back_action">Back</string>
     <string name="mc_contacts">Contacts</string>
+    <string name="mc_add_contact">Add Contact</string>
+    <string name="mc_contact_added">Contact added!</string>
+    <string name="mc_email_hint">Email address?</string>
+    <string name="mc_search">Search</string>
+    <string name="mc_not_found">User not found. Do you want to send an invite?</string>
+    <string name="mc_invite">Invite</string>
+    <string name="mc_invite_sent">Invite sent!</string>
     <string name="mc_synchronize_contacts_button">Synchronize Contacts</string>
     <string name="mc_avatar_description">Contact Avatar</string>
+    <string name="mc_add_contact_description">Add Contact</string>
     
     <!-- Balance -->
     <string name="b_title">Balance</string>
