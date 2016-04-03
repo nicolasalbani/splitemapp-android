@@ -107,10 +107,11 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 				mInviteButton.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						View emailView = addContactDialog.findViewById(R.id.ac_email_view);
+						View notFoundView = addContactDialog.findViewById(R.id.ac_not_found_view);
 						View successView = addContactDialog.findViewById(R.id.ac_invite_success_view);
 						
-						//TODO call the invite service and update the dialog
+						// Calling the invite service and update the dialog
+						sendInvite(mEmailEditText.getText().toString(), notFoundView, successView);
 					}
 				});
 				

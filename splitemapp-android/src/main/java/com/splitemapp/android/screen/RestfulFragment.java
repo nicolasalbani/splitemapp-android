@@ -44,6 +44,7 @@ import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 import com.splitemapp.android.task.AddContactTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
+import com.splitemapp.android.task.InviteTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.LogoutRequestTask;
 import com.splitemapp.android.task.QuestionsTask;
@@ -439,7 +440,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	
 	/**
 	 * Adds the contact corresponding to the email address if found
-	 * @param message
+	 * @param email
 	 */
 	protected void addContact(String email, final View emailView, final View successView, final View notFoundView, final ManageContactsFragment fragment){
 		// Creating the LogoutRequestTask instance
@@ -503,6 +504,34 @@ public abstract class RestfulFragment extends BaseFragment {
 			}
 		};
 		questionsTask.execute();
+	}
+	
+	/**
+	 * Sends the invite for the appropriate email address
+	 * @param message
+	 */
+	protected void sendInvite(String email, final View notFoundView, final View successView){
+		// Creating the LogoutRequestTask instance
+		InviteTask inviteTask = new InviteTask(getHelper(),email){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				
+				// Showing success dialog
+				notFoundView.setVisibility(View.GONE);
+				successView.setVisibility(View.VISIBLE);
+			}
+			@Override
+			public void executeOnFail(String message) {
+				hideProgressIndicator();
+				showToastForMessage(message);
+			}
+		};
+		inviteTask.execute();
 	}
 
 	/**
