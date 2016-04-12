@@ -8,6 +8,7 @@ import android.content.Context;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
+import com.splitemapp.commons.domain.ExpenseStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
@@ -48,13 +49,14 @@ public class PullUserExpensesTask extends PullTask<UserExpenseDTO, PullUserExpen
 			User user = getHelper().getUser(userExpenseDTO.getUserId());
 			Project project = getHelper().getProject(userExpenseDTO.getProjectId());
 			ExpenseCategory expenseCategory = getHelper().getExpenseCategory(userExpenseDTO.getExpenseCategoryId().shortValue());
+			ExpenseStatus expenseStatus = getHelper().getExpenseStatus(userExpenseDTO.getExpenseStatusId().shortValue());
 
 			// Obtaining updatedBy and pushedBy fields
 			User updatedBy = getHelper().getUser(userExpenseDTO.getUpdatedBy());
 			User pushedBy = getHelper().getUser(userExpenseDTO.getPushedBy());
 
 			// We create the new entity and store it into the local database
-			UserExpense userExpense = new UserExpense(user, project, expenseCategory, updatedBy, pushedBy, userExpenseDTO);
+			UserExpense userExpense = new UserExpense(user, project, expenseCategory, expenseStatus, updatedBy, pushedBy, userExpenseDTO);
 			getHelper().createOrUpdateUserExpense(userExpense);
 		}
 	}

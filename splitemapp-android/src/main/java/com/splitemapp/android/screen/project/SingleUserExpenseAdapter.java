@@ -44,7 +44,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		public TextView mFullNameTextView;
 		public TextView mFullAmountTextView;
 		public RecyclerView mUserExpenseRecyclerView;
-		public UserExpenseAdapter mUserExpenseAdapter;
+		public SwipeUserExpenseAdapter mUserExpenseAdapter;
 		public RecyclerView.LayoutManager mLayoutManager;
 		public IUserExpenseClickListener mClickListener;
 
@@ -127,7 +127,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		viewHolder.mFullAmountTextView.setText(String.format("%.2f", mSingleUserExpenseList.get(position).getFullAmount()));
 
 		// Creating a single user expense adapter to be used in the recycler view
-		viewHolder.mUserExpenseAdapter = new UserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), mBaseFragment);
+		viewHolder.mUserExpenseAdapter = new SwipeUserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), mBaseFragment);
 
 		// We populate the list of user expenses for this user
 		viewHolder.mUserExpenseRecyclerView.setAdapter(viewHolder.mUserExpenseAdapter);

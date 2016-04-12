@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,16 +15,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
-import com.splitemapp.android.screen.project.UserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
+import com.splitemapp.android.screen.home.SwipeProjectsAdapter;
+import com.splitemapp.android.screen.project.SwipeUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
+import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.UserExpense;
 
-public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.ViewHolder> {
+public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpenseAdapter.ViewHolder> {
 
+	private static final String TAG = SwipeUserExpenseAdapter.class.getSimpleName();
+	
 	private List<UserExpense> mUserExpenseList;
 	private BaseFragment baseFragment;
 	private View mView;
@@ -39,12 +45,16 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		public TextView mAmountTextView;
 		public IUserExpenseClickListener mClickListener;
 
+		// Declaring all the actions in the bottom view
+		ImageView mActionArchive;
+
 		public ViewHolder(View view, IUserExpenseClickListener clickListener) {
 			super(view);
 			mIconImageView = (ImageView)view.findViewById(R.id.ue_icon_imageView);
 			mCategoryTextView = (TextView)view.findViewById(R.id.ue_category_textView);
 			mDateTextView = (TextView)view.findViewById(R.id.ue_date_textView);
 			mAmountTextView = (TextView)view.findViewById(R.id.ue_amount_textView);
+			mActionArchive = (ImageView)view.findViewById(R.id.ue_action_archive_imageView);
 			mClickListener = clickListener;
 			view.setOnClickListener(this);
 		}
@@ -61,14 +71,14 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public UserExpenseAdapter(List<UserExpense> userExpenseList, BaseFragment baseFragment) {
+	public SwipeUserExpenseAdapter(List<UserExpense> userExpenseList, BaseFragment baseFragment) {
 		this.baseFragment = baseFragment;
 		this.mUserExpenseList = userExpenseList;
 	}
 
 	// Create new views (invoked by the layout manager)
 	@Override
-	public UserExpenseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public SwipeUserExpenseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// Creating a new view
 		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_user_expense, parent, false);
 
@@ -110,7 +120,7 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 		String date = dateFormat.format(userExpense.getExpenseDate());
 		viewHolder.mDateTextView.setText(date);
-		
+
 		// Setting icon which indicates whether this expense was pushed to server already
 		try {
 			if(baseFragment.getHelper().isExpensePushed(userExpense)){
@@ -122,6 +132,40 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 			// Do nothing
 		}
 
+		// Setting archive on click listener
+		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				// Showing custom alert to let the user confirm action
+				new ConfirmationAlertDialog(baseFragment.getContext()) {
+					@Override
+					public String getPositiveButtonText() {
+						return baseFragment.getResources().getString(R.string.confirmation_positive_text);
+					}
+					@Override
+					public String getNegativeButtonText() {
+						return baseFragment.getResources().getString(R.string.confirmation_negative_text);
+					}
+					@Override
+					public String getMessage() {
+						return baseFragment.getResources().getString(R.string.confirmation_archive_expense);
+					}
+					@Override
+					public void executeOnPositiveAnswer() {
+						try {
+							//TODO
+						} catch (SQLException e) {
+							Log.e(TAG, "SQLException caught!", e);
+						}
+					}
+					@Override
+					public void executeOnNegativeAnswer() {
+						// We do nothing
+					}
+				}.show();
+
+			}});
+
 		// Setting amount
 		viewHolder.mAmountTextView.setText(String.format("%.2f", userExpense.getExpense()));
 	}
@@ -129,6 +173,11 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
 	@Override
 	public int getItemCount() {
 		return mUserExpenseList.size();
+	}
+
+	@Override
+	public int getSwipeLayoutResourceId(int position) {
+		return R.id.ue_swipeLayout;
 	}
 
 }

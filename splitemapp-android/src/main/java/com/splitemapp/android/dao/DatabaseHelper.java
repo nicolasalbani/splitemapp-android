@@ -30,6 +30,7 @@ import com.splitemapp.commons.constants.TableField;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.constants.TableName;
 import com.splitemapp.commons.domain.ExpenseCategory;
+import com.splitemapp.commons.domain.ExpenseStatus;
 import com.splitemapp.commons.domain.InviteStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.ProjectCoverImage;
@@ -70,6 +71,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	// The list of DAO object we need to access different tables in the database
 	private Dao<UserStatus, Short> userStatusDao = null;
 	private Dao<ProjectStatus, Short> projectStatusDao = null;
+	private Dao<ExpenseStatus, Short> expenseStatusDao = null;
 	private Dao<ProjectType, Short> projectTypeDao = null;
 	private Dao<UserToProjectStatus, Short> userToProjectStatusDao = null;
 	private Dao<InviteStatus, Short> inviteStatusDao = null;
@@ -102,6 +104,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			// We create all the required tables in the domain
 			TableUtils.createTable(connectionSource, UserStatus.class);
 			TableUtils.createTable(connectionSource, ProjectStatus.class);
+			TableUtils.createTable(connectionSource, ExpenseStatus.class);
 			TableUtils.createTable(connectionSource, ProjectType.class);
 			TableUtils.createTable(connectionSource, UserToProjectStatus.class);
 			TableUtils.createTable(connectionSource, InviteStatus.class);
@@ -138,6 +141,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			// We drop all the tables
 			TableUtils.dropTable(connectionSource, UserStatus.class, true);
 			TableUtils.dropTable(connectionSource, ProjectStatus.class, true);
+			TableUtils.dropTable(connectionSource, ExpenseStatus.class, true);
 			TableUtils.dropTable(connectionSource, ProjectType.class, true);
 			TableUtils.dropTable(connectionSource, UserToProjectStatus.class, true);
 			TableUtils.dropTable(connectionSource, InviteStatus.class, true);
@@ -245,6 +249,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			expenseCategoryDao = getDao(ExpenseCategory.class);
 		}
 		return expenseCategoryDao;
+	}
+	
+	/**
+	 * Returns the Database Access Object (DAO) for the ExpenseStatus class. It will create it or just give the cached
+	 * value.
+	 */
+	private Dao<ExpenseStatus, Short> getExpenseStatusDao() throws SQLException {
+		if (expenseStatusDao == null) {
+			expenseStatusDao = getDao(ExpenseStatus.class);
+		}
+		return expenseStatusDao;
 	}
 
 	/**
@@ -365,6 +380,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		super.close();
 		userStatusDao = null;
 		projectStatusDao = null;
+		expenseStatusDao = null;
 		projectTypeDao = null;
 		userToProjectStatusDao = null;
 		inviteStatusDao = null;
@@ -416,6 +432,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 */
 	public ProjectStatus getProjectStatus(String projectStatusCod) throws SQLException{
 		return getProjectStatusDao().queryForEq(TableField.ALTER_TABLE_COD, projectStatusCod).get(0);
+	}
+	
+	/**
+	 * Gets the expense status by id
+	 * @param expenseStatusId
+	 * @return
+	 * @throws SQLException 
+	 */
+	public ExpenseStatus getExpenseStatus(short expenseStatusId) throws SQLException{
+		return getExpenseStatusDao().queryForId(expenseStatusId);
+	}
+
+	/**
+	 * Gets the expense status by cod
+	 * @param expenseStatusCod
+	 * @return
+	 * @throws SQLException
+	 */
+	public ExpenseStatus getExpenseStatus(String expenseStatusCod) throws SQLException{
+		return getExpenseStatusDao().queryForEq(TableField.ALTER_TABLE_COD, expenseStatusCod).get(0);
 	}
 
 	/**

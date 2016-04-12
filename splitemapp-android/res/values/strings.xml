@@ -26,6 +26,7 @@
     <!-- Confirmations -->
     <string name="confirmation_logout">Are you sure you want to logout?</string>
     <string name="confirmation_archive_project">Are you sure you want to archive this project?</string>
+    <string name="confirmation_archive_expense">Are you sure you want to archive this expense?</string>
     <string name="confirmation_positive_text">Yes</string>
     <string name="confirmation_negative_text">No</string>
     
@@ -126,6 +127,7 @@
     <string name="ue_amount_placeholder">30,5%</string>
     <string name="ue_fullName_placeholder">Full Name</string>
     <string name="ue_fullAmount_placeholder">405.50</string>
+    <string name="ue_action_archive">Archive</string>
     
     <!-- Project Screen -->
     <string name="p_add_expense_button">Add an expense</string>
