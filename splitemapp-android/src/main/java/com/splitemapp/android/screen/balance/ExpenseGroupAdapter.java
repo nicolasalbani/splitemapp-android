@@ -355,7 +355,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), calendar);
+			userExpenseList = mBaseFragment.getHelper().getActiveUserExpensesByProjectId(mCurrentProject.getId(), calendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}

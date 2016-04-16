@@ -323,7 +323,7 @@ public abstract class BaseFragment extends Fragment {
 	public float getTotalExpenseForProject(Long projectId){
 		float total = 0;
 		try {
-			for(UserExpense userExpense:getHelper().getAllUserExpenseForProject(projectId)){
+			for(UserExpense userExpense:getHelper().getActiveUserExpensesByProjectId(projectId, null)){
 				if(userExpense.getProject().getId() == projectId){
 					total += userExpense.getExpense().floatValue();
 				}

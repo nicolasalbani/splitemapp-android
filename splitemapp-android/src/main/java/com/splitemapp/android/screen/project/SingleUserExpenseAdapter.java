@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.project.SingleUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
 import com.splitemapp.android.widget.LinearLayoutManager;
 import com.splitemapp.commons.comparator.SingleUserExpensesComparator;
@@ -33,7 +33,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	private List<SingleUserExpenses> mSingleUserExpenseList;
 	private Project mCurrentProject;
 	private Calendar mCalendar;
-	private BaseFragment mBaseFragment;
+	private RestfulFragment mRestfulFragment;
 	private View mView;
 
 	// Provide a reference to the views for each data item
@@ -70,9 +70,9 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SingleUserExpenseAdapter(Project currentProject, BaseFragment baseFragment, Calendar calendar) {
+	public SingleUserExpenseAdapter(Project currentProject, RestfulFragment restfulFragment, Calendar calendar) {
 		this.mCurrentProject = currentProject;
-		this.mBaseFragment = baseFragment;
+		this.mRestfulFragment = restfulFragment;
 		this.mCalendar = calendar;
 		this.mSingleUserExpenseList = getSingleUserExpenseList();
 	}
@@ -92,11 +92,11 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 				ImageView arrowImageView = (ImageView)view.findViewById(R.id.ue_arrow_imageView);
 				switch (recyclerView.getVisibility()){
 				case View.VISIBLE:
-					mBaseFragment.rotateImageViewAntiClockwise(arrowImageView);
+					mRestfulFragment.rotateImageViewAntiClockwise(arrowImageView);
 					recyclerView.setVisibility(View.GONE);
 					break;
 				default :
-					mBaseFragment.rotateImageViewClockwise(arrowImageView);
+					mRestfulFragment.rotateImageViewClockwise(arrowImageView);
 					recyclerView.setVisibility(View.VISIBLE);
 					break;
 				}
@@ -127,7 +127,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		viewHolder.mFullAmountTextView.setText(String.format("%.2f", mSingleUserExpenseList.get(position).getFullAmount()));
 
 		// Creating a single user expense adapter to be used in the recycler view
-		viewHolder.mUserExpenseAdapter = new SwipeUserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), mBaseFragment);
+		viewHolder.mUserExpenseAdapter = new SwipeUserExpenseAdapter(mSingleUserExpenseList.get(position).getExpenseList(), mRestfulFragment, this);
 
 		// We populate the list of user expenses for this user
 		viewHolder.mUserExpenseRecyclerView.setAdapter(viewHolder.mUserExpenseAdapter);
@@ -137,7 +137,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 		viewHolder.mUserExpenseRecyclerView.setHasFixedSize(true);
 
 		// Using a linear layout manager
-		viewHolder.mLayoutManager = new LinearLayoutManager(mBaseFragment.getActivity());
+		viewHolder.mLayoutManager = new LinearLayoutManager(mRestfulFragment.getActivity());
 		viewHolder.mUserExpenseRecyclerView.setLayoutManager(viewHolder.mLayoutManager);
 	}
 
@@ -150,12 +150,12 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	 * Returns the whole user expense list for this project
 	 * @return
 	 */
-	private List<UserExpense> getUserExpensesForCurrentProject(Calendar calendar){
+	private List<UserExpense> getActiveUserExpensesForCurrentProject(Calendar calendar){
 		List<UserExpense> userExpenseList = null;
 
 		// Getting the UserExpense list from the database
 		try {
-			userExpenseList = mBaseFragment.getHelper().getUserExpensesByProjectId(mCurrentProject.getId(), calendar);
+			userExpenseList = mRestfulFragment.getHelper().getActiveUserExpensesByProjectId(mCurrentProject.getId(), calendar);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -173,7 +173,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 	private List<SingleUserExpenses> getSingleUserExpenseList(){
 		List<SingleUserExpenses> singleUserExpenseList = new ArrayList<SingleUserExpenses>();
 
-		List<UserExpense> userExpenseList = getUserExpensesForCurrentProject(mCalendar);
+		List<UserExpense> userExpenseList = getActiveUserExpensesForCurrentProject(mCalendar);
 
 		// Creating the users ID list
 		List<Long> userIdList = new ArrayList<Long>();
@@ -194,7 +194,7 @@ public class SingleUserExpenseAdapter extends RecyclerView.Adapter<SingleUserExp
 			if(filteredUserExpenseList.size()>0){
 				try {
 					Long uid = filteredUserExpenseList.get(0).getUser().getId();
-					User user = mBaseFragment.getHelper().getUser(uid);
+					User user = mRestfulFragment.getHelper().getUser(uid);
 					singleUserExpenseList.add(new SingleUserExpenses(user.getFullName(), filteredUserExpenseList));
 				} catch (SQLException e) {
 					Log.e(TAG, "SQLException caught!", e);

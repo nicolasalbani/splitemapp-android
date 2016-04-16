@@ -654,7 +654,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	/**
 	 * Creates a service user table push request
 	 */
-	protected void pushUserExpenses(){
+	public void pushUserExpenses(){
 		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserExpensesTask.class.getSimpleName());
 		getActivity().startService(intent);
@@ -708,7 +708,7 @@ public abstract class RestfulFragment extends BaseFragment {
 	/**
 	 * Creates a service user_to_project table push request
 	 */
-	protected void pushUserToProjects(){
+	public void pushUserToProjects(){
 		Intent intent = new Intent(getActivity(), BaseIntentService.class);
 		intent.putExtra(BaseTask.TASK_NAME, PushUserToProjectsTask.class.getSimpleName());
 		getActivity().startService(intent);

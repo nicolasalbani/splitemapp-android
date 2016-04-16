@@ -696,21 +696,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<UserExpense> getUserExpensesByProjectId(Long projectId) throws SQLException{
-		return getUserExpensesByProjectId(projectId, null);
+	public List<UserExpense> getActiveUserExpensesByProjectId(Long projectId) throws SQLException{
+		return getActiveUserExpensesByProjectId(projectId, null);
 	}
 
 	/**
-	 * Gets the list of user expense associated to a project id for the month specified in Calendar 
+	 * Gets the list of active user expense associated to a project id for the month specified in Calendar 
 	 * @param projectId
 	 * @param calendar
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<UserExpense> getUserExpensesByProjectId(Long projectId, Calendar calendar) throws SQLException{
+	public List<UserExpense> getActiveUserExpensesByProjectId(Long projectId, Calendar calendar) throws SQLException{
 		List<UserExpense> userExpenseList = new ArrayList<UserExpense>();
 
+		// We obtain the full user expense list (including archived items)
 		List<UserExpense> fullList =  getUserExpenseDao().queryForEq(TableField.USER_EXPENSE_PROJECT_ID, projectId);
+		
+		// We remove all archived items from the list
+		removeArchivedUserExpenses(fullList);
 
 		if(calendar != null){
 			userExpenseList = new ArrayList<UserExpense>();
@@ -736,6 +740,25 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 		return userExpenseList;
 	}
+	
+	/**
+	 * Recursive method to remove all archived user expenses from the list
+	 * @param userExpenseList
+	 */
+	private void removeArchivedUserExpenses(List<UserExpense> userExpenseList){
+		for(int i=0; i<userExpenseList.size(); i++){
+			try {
+				ExpenseStatus expenseStatus = getExpenseStatusDao().queryForId(userExpenseList.get(i).getExpenseStatus().getId());
+				if(expenseStatus.getCod().equals(TableFieldCod.EXPENSE_STATUS_ARCHIVED)){
+					userExpenseList.remove(i);
+					removeArchivedUserExpenses(userExpenseList);
+					return;
+				}
+			} catch (SQLException e) {
+				logger.error("SQLException caught while removing archived user expenses", e);
+			}
+		}
+	}
 
 	/**
 	 * Gets the total expense value associated to a project id
@@ -746,7 +769,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public BigDecimal getTotalExpenseValueByProjectId(Long projectId, Calendar calendar) throws SQLException{
 		BigDecimal totalExpenseValue = new BigDecimal(0);
 
-		List<UserExpense> userExpenses = getUserExpensesByProjectId(projectId, calendar);
+		List<UserExpense> userExpenses = getActiveUserExpensesByProjectId(projectId, calendar);
 
 		for(UserExpense userExpense:userExpenses){
 			totalExpenseValue = totalExpenseValue.add(userExpense.getExpense());
@@ -1238,6 +1261,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			}
 		}
 	}
+	
+	/**
+	 * Archive the provided user expense
+	 * @param userExpense
+	 * @throws SQLException
+	 */
+	public void archiveUserExpense(UserExpense userExpense) throws SQLException{
+		ExpenseStatus archivedStatus = getExpenseStatusDao().queryForEq(TableField.EXPENSE_STATUS_COD, TableFieldCod.EXPENSE_STATUS_ARCHIVED).get(0);
+		userExpense.setExpenseStatus(archivedStatus);
+		updateUserExpense(userExpense);
+	}
 
 	/**
 	 * Gets the list of Projects actively associated with the currently logged user
@@ -1451,25 +1485,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 
 		return userSession;
-	}
-
-	/**
-	 * Gets the sum of all UserExpense items for a particular project
-	 * @param projectId
-	 * @return
-	 * @throws SQLException
-	 */
-	public List<UserExpense> getAllUserExpenseForProject(Long projectId) throws SQLException{
-		List<UserExpense> userExpenseList = getUserExpenseList();
-
-		List<UserExpense> filteredUserExpenseList = new ArrayList<UserExpense>(); 
-		for(UserExpense userExpense:userExpenseList){
-			if(userExpense.getProject().getId() == projectId){
-				filteredUserExpenseList.add(userExpense);
-			}
-		}
-
-		return filteredUserExpenseList;
 	}
 
 	/**

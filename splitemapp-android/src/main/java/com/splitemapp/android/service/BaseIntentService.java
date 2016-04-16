@@ -1,6 +1,10 @@
 package com.splitemapp.android.service;
 
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
+
+import org.springframework.web.client.ResourceAccessException;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -99,6 +103,18 @@ public class BaseIntentService extends IntentService {
 			if(task != null){
 				task.executeService(intent);
 			}
+		} catch (ResourceAccessException e) {
+			Log.e(TAG, "ResourceAccessException detected", e);
+			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);
+			isConnectedToServer = false;
+		} catch (SocketException e) {
+			Log.e(TAG, "SocketException detected", e);
+			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);
+			isConnectedToServer = false;
+		} catch (SocketTimeoutException e) {
+			Log.e(TAG, "SocketTimeoutException detected", e);
+			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);
+			isConnectedToServer = false;
 		} catch (TimeoutException e) {
 			Log.e(TAG, "TimeoutException detected", e);
 			task.broadcastMessage(BaseTask.NETWORK_ERROR, ServiceConstants.UI_MESSAGE);

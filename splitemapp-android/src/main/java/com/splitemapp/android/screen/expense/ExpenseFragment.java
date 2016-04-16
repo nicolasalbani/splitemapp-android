@@ -27,7 +27,9 @@ import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
+import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.ExpenseCategory;
+import com.splitemapp.commons.domain.ExpenseStatus;
 import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserExpense;
@@ -155,6 +157,9 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 	private void persistExpense(){
 		try {
+			// We get an instance of the expense status
+			ExpenseStatus expenseStatus = getHelper().getExpenseStatus(TableFieldCod.EXPENSE_STATUS_ACTIVE);
+			
 			// We get an instance of the expense category
 			ExpenseCategory expenseCategory = getHelper().getExpenseCategory((short)(mSelectedCategory+1));
 
@@ -163,6 +168,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);
 			mUserExpense.setUser(mCurrentUser);
+			mUserExpense.setExpenseStatus(expenseStatus);
 			getHelper().persistUserExpense(mUserExpense);
 
 			// Pushing the changes

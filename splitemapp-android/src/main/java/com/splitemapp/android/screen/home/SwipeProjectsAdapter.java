@@ -18,6 +18,7 @@ import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
 import com.splitemapp.android.utils.ImageUtils;
@@ -29,12 +30,12 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	private static final String TAG = SwipeProjectsAdapter.class.getSimpleName();
 
 	private List<Project> mProjects;
-	private BaseFragment baseFragment;
+	private RestfulFragment restfulFragment;
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SwipeProjectsAdapter(BaseFragment baseFragment) {
-		this.baseFragment = baseFragment;
-		this.mProjects = getProjectsList(baseFragment);
+	public SwipeProjectsAdapter(RestfulFragment restfulFragment) {
+		this.restfulFragment = restfulFragment;
+		this.mProjects = getProjectsList(restfulFragment);
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -52,15 +53,15 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.project = mProjects.get(position);
 
 		// Getting the title directly from the database since android doesn't update the ViewHolder payload
-		String projectTitle = baseFragment.getProjectTitle(mProjects.get(position).getId());
+		String projectTitle = restfulFragment.getProjectTitle(mProjects.get(position).getId());
 		viewHolder.mProjectTitleTextView.setText(projectTitle);
 		
 		// Setting the total value for the project
-		float total = baseFragment.getTotalExpenseForProject(mProjects.get(position).getId());
+		float total = restfulFragment.getTotalExpenseForProject(mProjects.get(position).getId());
 		viewHolder.mProjectTotalValueTextView.setText(String.format("%.2f", total));
 
 		// Setting the project image cover
-		baseFragment.setProjectAvatar(viewHolder.mProjectCoverImageView, mProjects.get(position).getId(), ImageUtils.IMAGE_QUALITY_MAX);
+		restfulFragment.setProjectAvatar(viewHolder.mProjectCoverImageView, mProjects.get(position).getId(), ImageUtils.IMAGE_QUALITY_MAX);
 
 		// Setting swipe
 		viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
@@ -96,24 +97,27 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 			@Override
 			public void onClick(View view) {
 				// Showing custom alert to let the user confirm action
-				new ConfirmationAlertDialog(baseFragment.getContext()) {
+				new ConfirmationAlertDialog(restfulFragment.getContext()) {
 					@Override
 					public String getPositiveButtonText() {
-						return baseFragment.getResources().getString(R.string.confirmation_positive_text);
+						return restfulFragment.getResources().getString(R.string.confirmation_positive_text);
 					}
 					@Override
 					public String getNegativeButtonText() {
-						return baseFragment.getResources().getString(R.string.confirmation_negative_text);
+						return restfulFragment.getResources().getString(R.string.confirmation_negative_text);
 					}
 					@Override
 					public String getMessage() {
-						return baseFragment.getResources().getString(R.string.confirmation_archive_project);
+						return restfulFragment.getResources().getString(R.string.confirmation_archive_project);
 					}
 					@Override
 					public void executeOnPositiveAnswer() {
 						try {
-							baseFragment.getHelper().archiveCurrentUserToProject(viewHolder.project.getId());
+							restfulFragment.getHelper().archiveCurrentUserToProject(viewHolder.project.getId());
 							removeItem(viewHolder);
+							
+							// Pushing the changes
+							restfulFragment.pushUserToProjects();
 						} catch (SQLException e) {
 							Log.e(TAG, "SQLException caught!", e);
 						}
@@ -143,7 +147,7 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 	 * @param project
 	 */
 	public void updateRecycler(RecyclerView mProjectsRecycler){
-		List<Project> updatedList = getProjectsList(baseFragment);
+		List<Project> updatedList = getProjectsList(restfulFragment);
 
 		// We update all projects in the list
 		for(Project project:mProjects){

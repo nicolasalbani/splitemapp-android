@@ -11,6 +11,10 @@ insert into project_status(id,cod,title) values(2,"closed","Cerrado");
 insert into project_type(id,cod,title) values(1,"monthly","Mensual");
 insert into project_type(id,cod,title) values(2,"one_time","Solo una vez");
 
+-- Data for expense_status table
+insert into expense_status(id,cod,title) values(1,"active","Activo");
+insert into expense_status(id,cod,title) values(2,"archived","Archivado");
+
 -- Data for user_to_project_status table
 insert into user_to_project_status(id,cod,title) values(1,"active","Activo");
 insert into user_to_project_status(id,cod,title) values(2,"archived","Archivado");

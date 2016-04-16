@@ -15,65 +15,60 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
-import com.splitemapp.android.screen.BaseFragment;
+import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
-import com.splitemapp.android.screen.home.SwipeProjectsAdapter;
-import com.splitemapp.android.screen.project.SwipeUserExpenseAdapter.ViewHolder.IUserExpenseClickListener;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.UserExpense;
 
 public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpenseAdapter.ViewHolder> {
 
 	private static final String TAG = SwipeUserExpenseAdapter.class.getSimpleName();
-	
+
 	private List<UserExpense> mUserExpenseList;
-	private BaseFragment baseFragment;
+	private RestfulFragment restfulFragment;
+	private SingleUserExpenseAdapter singleUserExpenseAdapter;
 	private View mView;
 
 	// Provide a reference to the views for each data item
 	// Complex data items may need more than one view per item, and
 	// you provide access to all the views for a data item in a view holder
-	public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 		// Each data item is a project
+		public UserExpense mUserExpense;
 		public ImageView mIconImageView;
 		public TextView mCategoryTextView;
 		public TextView mDateTextView;
 		public TextView mAmountTextView;
-		public IUserExpenseClickListener mClickListener;
+
+		// Declaring the swipe layout
+		SwipeLayout mSwipeLayout;
 
 		// Declaring all the actions in the bottom view
 		ImageView mActionArchive;
 
-		public ViewHolder(View view, IUserExpenseClickListener clickListener) {
+		public ViewHolder(View view) {
 			super(view);
 			mIconImageView = (ImageView)view.findViewById(R.id.ue_icon_imageView);
 			mCategoryTextView = (TextView)view.findViewById(R.id.ue_category_textView);
 			mDateTextView = (TextView)view.findViewById(R.id.ue_date_textView);
 			mAmountTextView = (TextView)view.findViewById(R.id.ue_amount_textView);
 			mActionArchive = (ImageView)view.findViewById(R.id.ue_action_archive_imageView);
-			mClickListener = clickListener;
-			view.setOnClickListener(this);
-		}
 
-		@Override
-		public void onClick(View view) {
-			// Calling the custom on click listener
-			mClickListener.onItemClick(view, getAdapterPosition());
-		}
-
-		public static interface IUserExpenseClickListener {
-			public void onItemClick(View view, int position);
+			// Getting instance for swipe layout
+			mSwipeLayout = (SwipeLayout)view.findViewById(R.id.ue_swipeLayout);
 		}
 	}
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public SwipeUserExpenseAdapter(List<UserExpense> userExpenseList, BaseFragment baseFragment) {
-		this.baseFragment = baseFragment;
+	public SwipeUserExpenseAdapter(List<UserExpense> userExpenseList, RestfulFragment restfulFragment, SingleUserExpenseAdapter singleUserExpenseAdapter) {
+		this.restfulFragment = restfulFragment;
 		this.mUserExpenseList = userExpenseList;
+		this.singleUserExpenseAdapter = singleUserExpenseAdapter;
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -83,15 +78,7 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 		mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_user_expense, parent, false);
 
 		// Creating a new view holder
-		ViewHolder viewHolder = new ViewHolder(mView, new IUserExpenseClickListener() {
-			@Override
-			public void onItemClick(View view, int position) {
-				// Creating an intent to the ProjectActivity sending the information from the clicked project
-				Intent intent = new Intent(baseFragment.getActivity(), ExpenseActivity.class);
-				Globals.setExpenseActivityExpenseId(mUserExpenseList.get(position).getId());
-				baseFragment.startActivity(intent);
-			}
-		});
+		ViewHolder viewHolder = new ViewHolder(mView);
 		return viewHolder;
 	}
 
@@ -109,21 +96,21 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 
 	// Replace the contents of a view (invoked by the layout manager)
 	@Override
-	public void onBindViewHolder(ViewHolder viewHolder, int position) {
-		UserExpense userExpense = mUserExpenseList.get(position);
+	public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+		viewHolder.mUserExpense = mUserExpenseList.get(position);
 
 		// Setting category title
-		Short expenseCategoryId = userExpense.getExpenseCategory().getId();
+		Short expenseCategoryId = viewHolder.mUserExpense.getExpenseCategory().getId();
 		viewHolder.mCategoryTextView.setText(ExpenseCategoryMapper.values()[expenseCategoryId-1].getTitleId());
 
 		// Setting date
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-		String date = dateFormat.format(userExpense.getExpenseDate());
+		String date = dateFormat.format(viewHolder.mUserExpense.getExpenseDate());
 		viewHolder.mDateTextView.setText(date);
 
 		// Setting icon which indicates whether this expense was pushed to server already
 		try {
-			if(baseFragment.getHelper().isExpensePushed(userExpense)){
+			if(restfulFragment.getHelper().isExpensePushed(viewHolder.mUserExpense)){
 				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_marked_circle_24dp);
 			} else {
 				viewHolder.mIconImageView.setImageResource(R.drawable.ic_checkbox_blank_circle_outline_24dp);
@@ -132,28 +119,47 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 			// Do nothing
 		}
 
+		// Setting swipe
+		viewHolder.mSwipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+		viewHolder.mSwipeLayout.addDrag(SwipeLayout.DragEdge.Right, viewHolder.mSwipeLayout.findViewById(R.id.h_bottomView));
+
+		// Setting on click listener
+		viewHolder.mSwipeLayout.getSurfaceView().setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View view) {
+				// Creating an intent to the ProjectActivity sending the information from the clicked project
+				Intent intent = new Intent(restfulFragment.getActivity(), ExpenseActivity.class);
+				Globals.setExpenseActivityExpenseId(mUserExpenseList.get(position).getId());
+				restfulFragment.startActivity(intent);
+			}
+		});
+
 		// Setting archive on click listener
 		viewHolder.mActionArchive.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
 				// Showing custom alert to let the user confirm action
-				new ConfirmationAlertDialog(baseFragment.getContext()) {
+				new ConfirmationAlertDialog(restfulFragment.getContext()) {
 					@Override
 					public String getPositiveButtonText() {
-						return baseFragment.getResources().getString(R.string.confirmation_positive_text);
+						return restfulFragment.getResources().getString(R.string.confirmation_positive_text);
 					}
 					@Override
 					public String getNegativeButtonText() {
-						return baseFragment.getResources().getString(R.string.confirmation_negative_text);
+						return restfulFragment.getResources().getString(R.string.confirmation_negative_text);
 					}
 					@Override
 					public String getMessage() {
-						return baseFragment.getResources().getString(R.string.confirmation_archive_expense);
+						return restfulFragment.getResources().getString(R.string.confirmation_archive_expense);
 					}
 					@Override
 					public void executeOnPositiveAnswer() {
 						try {
-							//TODO
+							restfulFragment.getHelper().archiveUserExpense(viewHolder.mUserExpense);
+							removeItem(viewHolder);
+							
+							// Pushing the changes
+							restfulFragment.pushUserExpenses();
 						} catch (SQLException e) {
 							Log.e(TAG, "SQLException caught!", e);
 						}
@@ -167,7 +173,19 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 			}});
 
 		// Setting amount
-		viewHolder.mAmountTextView.setText(String.format("%.2f", userExpense.getExpense()));
+		viewHolder.mAmountTextView.setText(String.format("%.2f", viewHolder.mUserExpense.getExpense()));
+	}
+
+	/**
+	 * Remove item from Recycler view
+	 */
+	public void removeItem(ViewHolder viewHolder){
+		mUserExpenseList.remove(viewHolder.mUserExpense);
+		notifyItemRemoved(viewHolder.getAdapterPosition());
+
+		//TODO We need to change the way we show expenses. It needs to be a single recycler with more than one
+		// type of container. That way we don't need nested stuff and we can even use animations.
+		singleUserExpenseAdapter.updateRecycler();
 	}
 
 	@Override
