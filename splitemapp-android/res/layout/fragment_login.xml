@@ -1,42 +1,37 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        style="@style/NoActionBarTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+    <TextView
+        style="@style/CustomTextView"
+        android:text="@string/li_username_hint" />
 
-        <TextView
-            style="@style/CustomTextView"
-            android:text="@string/li_username_hint" />
+    <EditText
+        android:id="@+id/li_username_editText"
+        style="@style/CustomEditText"
+        android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/li_username_editText"
-            style="@style/CustomEditText"
-            android:inputType="textEmailAddress" />
+    <View style="@style/BottomLine" />
 
-        <View style="@style/BottomLine" />
+    <TextView
+        style="@style/CustomTextView"
+        android:text="@string/li_password_hint" />
 
-        <TextView
-            style="@style/CustomTextView"
-            android:text="@string/li_password_hint" />
+    <EditText
+        android:id="@+id/li_password_editText"
+        style="@style/CustomEditText"
+        android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/li_password_editText"
-            style="@style/CustomEditText"
-            android:inputType="textPassword" />
+    <View style="@style/BottomLine" />
 
-        <View style="@style/BottomLine" />
+    <Button
+        android:id="@+id/li_login_button"
+        style="@style/Button"
+        android:layout_marginBottom="22dp"
+        android:layout_marginTop="22dp"
+        android:text="@string/li_log_in_button" />
 
-        <Button
-            android:id="@+id/li_login_button"
-            style="@style/Button"
-            android:layout_marginBottom="22dp"
-            android:layout_marginTop="22dp"
-            android:text="@string/li_log_in_button" />
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>
