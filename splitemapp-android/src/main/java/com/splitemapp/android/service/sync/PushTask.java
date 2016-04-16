@@ -132,11 +132,26 @@ public abstract class PushTask <G extends PushableEntity, F, E extends Number, R
 	protected boolean shouldPushEntity(G entity) throws SQLException{
 		// Calculating booleans for logic
 		boolean neverPushed = entity.getPushedAt() == null;
-		boolean updatedAfterPushDate = !neverPushed && entity.getUpdatedAt().after(entity.getPushedAt());
+		boolean updatedAfterPushDate = !neverPushed && TimeUtils.isDateAfter(entity.getUpdatedAt(), entity.getPushedAt());
 		boolean updatedByCurrentUser = entity.getUpdatedBy().getId().equals(getHelper().getLoggedUser().getId());
 		
 		// Returning whether this entity should be pushed or not
 		return (updatedByCurrentUser && (neverPushed || updatedAfterPushDate));
+	}
+	
+	/**
+	 * Clears the list so only the items that should be pushed remain
+	 * @param entityList
+	 * @throws SQLException 
+	 */
+	protected void removeNotPushable(List<G> entityList) throws SQLException{
+		for(int i=0;i<entityList.size();i++){
+			if(!shouldPushEntity(entityList.get(i))){
+				entityList.remove(i);
+				removeNotPushable(entityList);
+				return;
+			}
+		}
 	}
 
 	protected void updateIdReferences(List<IdUpdate<Long>> idUpdateList, List<IdReference> idReferenceList) throws SQLException{

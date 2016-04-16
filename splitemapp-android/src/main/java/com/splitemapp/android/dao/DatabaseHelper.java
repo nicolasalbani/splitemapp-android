@@ -1341,7 +1341,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			return true;
 		} else {
 			Date lastSuccessPushAt = getLastSuccessPushAt(TableName.USER_EXPENSE);
-			return lastSuccessPushAt.after(userExpense.getUpdatedAt());
+			return TimeUtils.isDateAfter(lastSuccessPushAt, userExpense.getUpdatedAt());
 		}
 	}
 

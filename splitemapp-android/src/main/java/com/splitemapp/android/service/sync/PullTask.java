@@ -12,7 +12,6 @@ import com.splitemapp.android.utils.NetworkUtils;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.domain.dto.request.PullRequest;
 import com.splitemapp.commons.domain.dto.response.PullResponse;
-import com.splitemapp.commons.utils.TimeUtils;
 
 public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 	
@@ -60,7 +59,7 @@ public abstract class PullTask <E, R extends PullResponse<E>> extends BaseTask {
 		Log.i(getLoggingTag(), getServicePath() +" START");
 		try {
 			// We get the date in which this table was last successfully pulled
-			Date lastPullSuccessAt = TimeUtils.getUTCDate(getHelper().getLastSuccessPullAt(getTableName()));
+			Date lastPullSuccessAt = getHelper().getLastSuccessPullAt(getTableName());
 
 			// We get the session token
 			String sessionToken = getHelper().getSessionToken();

@@ -190,7 +190,6 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			// We save the user expense to the DB
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
 			mUserExpense.setExpenseCategory(expenseCategory);
-			mUserExpense.setUpdatedAt(TimeUtils.getUTCDate());
 
 			// TODO Only set the user if we are owning the expense
 			// mUserExpense.setUser(mCurrentUser);

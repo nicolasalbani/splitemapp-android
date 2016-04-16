@@ -46,14 +46,15 @@ public class PushUsersTask extends PushTask<User, UserDTO, Long, PushLongRespons
 		// TODO only get the ones marked for push
 		userList = getHelper().getUserList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userList);
+
 		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserDTO> userDTOList = new ArrayList<UserDTO>();
 		for(User user:userList){
-			if(shouldPushEntity(user)){
-				// Adding item to the list
-				userDTOList.add(new UserDTO(user));
-			}
+			// Adding item to the list
+			userDTOList.add(new UserDTO(user));
 		}
 		return userDTOList;
 	}
@@ -62,7 +63,7 @@ public class PushUsersTask extends PushTask<User, UserDTO, Long, PushLongRespons
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(User.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(User entity:userList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());

@@ -46,14 +46,15 @@ public class PushUserContactDatasTask extends PushTask<UserContactData, UserCont
 		// TODO only get the ones marked for push
 		userContactDataList = getHelper().getUserContactDataList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userContactDataList);
+
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserContactDataDTO> userContactDataDTOList = new ArrayList<UserContactDataDTO>();
 		for(UserContactData userContactData:userContactDataList){
-			if(shouldPushEntity(userContactData)){
-				// Adding item to the list
-				userContactDataDTOList.add(new UserContactDataDTO(userContactData));
-			}
+			// Adding item to the list
+			userContactDataDTOList.add(new UserContactDataDTO(userContactData));
 		}
 		return userContactDataDTOList;
 	}

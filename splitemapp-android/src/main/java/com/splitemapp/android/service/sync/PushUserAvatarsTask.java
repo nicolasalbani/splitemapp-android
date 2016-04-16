@@ -24,7 +24,7 @@ public class PushUserAvatarsTask extends PushTask<UserAvatar, UserAvatarDTO, Lon
 	public PushUserAvatarsTask(Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	protected String getLoggingTag() {
 		return TAG;
@@ -46,14 +46,15 @@ public class PushUserAvatarsTask extends PushTask<UserAvatar, UserAvatarDTO, Lon
 		// TODO only get the ones marked for push
 		userAvatarList = getHelper().getUserAvatarList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userAvatarList);
+
 		// We add to the user_contact_data DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserAvatarDTO> userAvatarDTOList = new ArrayList<UserAvatarDTO>();
 		for(UserAvatar userAvatar:userAvatarList){
-			if(shouldPushEntity(userAvatar)){
-				// Adding item to the list
-				userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
-			}
+			// Adding item to the list
+			userAvatarDTOList.add(new UserAvatarDTO(userAvatar));
 		}
 		return userAvatarDTOList;
 	}
@@ -62,7 +63,7 @@ public class PushUserAvatarsTask extends PushTask<UserAvatar, UserAvatarDTO, Lon
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(UserAvatar.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(UserAvatar entity:userAvatarList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());

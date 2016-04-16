@@ -47,16 +47,17 @@ public class PushUserExpensesTask extends PushTask<UserExpense, UserExpenseDTO, 
 		// TODO only get the ones marked for push
 		userExpenseList = getHelper().getUserExpenseList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userExpenseList);
+
 		// We add to the DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserExpenseDTO> userExpenseDTOList = new ArrayList<UserExpenseDTO>();
 		for(UserExpense userExpense:userExpenseList){
-			if(shouldPushEntity(userExpense)){
-				// Setting the user that pushes the record
-				userExpense.setPushedBy(getHelper().getLoggedUser());
-				// Adding item to the list
-				userExpenseDTOList.add(new UserExpenseDTO(userExpense));
-			}
+			// Setting the user that pushes the record
+			userExpense.setPushedBy(getHelper().getLoggedUser());
+			// Adding item to the list
+			userExpenseDTOList.add(new UserExpenseDTO(userExpense));
 		}
 		return userExpenseDTOList;
 	}
@@ -65,7 +66,7 @@ public class PushUserExpensesTask extends PushTask<UserExpense, UserExpenseDTO, 
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(UserExpense.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(UserExpense entity:userExpenseList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());
@@ -79,7 +80,7 @@ public class PushUserExpensesTask extends PushTask<UserExpense, UserExpenseDTO, 
 
 		//We update all references to this ID
 		updateIdReferences(idUpdateList, idReferenceList);
-		
+
 		//We notify the update was successful
 		broadcastMessage(BaseTask.EXPENSES_PUSHED, ServiceConstants.UI_MESSAGE);
 	}

@@ -46,16 +46,17 @@ public class PushUserInvitesTask extends PushTask<UserInvite, UserInviteDTO, Lon
 		// TODO only get the ones marked for push
 		userInviteList = getHelper().getUserInviteList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userInviteList);
+
 		// We add to the user_invite DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserInviteDTO> userInviteDTOList = new ArrayList<UserInviteDTO>();
 		for(UserInvite userInvite:userInviteList){
-			if(shouldPushEntity(userInvite)){
-				// Setting the user that pushes the record
-				userInvite.setPushedBy(getHelper().getLoggedUser());
-				// Adding item to the list
-				userInviteDTOList.add(new UserInviteDTO(userInvite));
-			}
+			// Setting the user that pushes the record
+			userInvite.setPushedBy(getHelper().getLoggedUser());
+			// Adding item to the list
+			userInviteDTOList.add(new UserInviteDTO(userInvite));
 		}
 		return userInviteDTOList;
 	}
@@ -64,7 +65,7 @@ public class PushUserInvitesTask extends PushTask<UserInvite, UserInviteDTO, Lon
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(UserInvite.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(UserInvite entity:userInviteList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());

@@ -24,7 +24,7 @@ public class PushProjectsTask extends PushTask<Project, ProjectDTO, Long, PushLo
 	public PushProjectsTask(Context context) {
 		super(context);
 	}
-	
+
 	@Override
 	protected String getLoggingTag() {
 		return TAG;
@@ -46,16 +46,17 @@ public class PushProjectsTask extends PushTask<Project, ProjectDTO, Long, PushLo
 		// TODO only get the ones marked for push
 		projectList = getHelper().getProjectList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(projectList);
+
 		// We add to the project DTO list the ones which were updated after the lastPushSuccessAt date 
 		// and that they were not updated by someone else
 		ArrayList<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
 		for(Project project:projectList){
-			if(shouldPushEntity(project)){
-				// Setting the user that pushes the record
-				project.setPushedBy(getHelper().getLoggedUser());
-				// Adding item to the list
-				projectDTOList.add(new ProjectDTO(project));
-			}
+			// Setting the user that pushes the record
+			project.setPushedBy(getHelper().getLoggedUser());
+			// Adding item to the list
+			projectDTOList.add(new ProjectDTO(project));
 		}
 		return projectDTOList;
 	}
@@ -64,7 +65,7 @@ public class PushProjectsTask extends PushTask<Project, ProjectDTO, Long, PushLo
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(Project.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(Project entity:projectList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());

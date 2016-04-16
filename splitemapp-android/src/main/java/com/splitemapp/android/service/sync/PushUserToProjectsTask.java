@@ -46,16 +46,17 @@ public class PushUserToProjectsTask extends PushTask<UserToProject, UserToProjec
 		// TODO only get the ones marked for push
 		userToProjectList = getHelper().getUserToProjectList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(userToProjectList);
+
 		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<UserToProjectDTO> userToProjectDTOList = new ArrayList<UserToProjectDTO>();
 		for(UserToProject userToProject:userToProjectList){
-			if(shouldPushEntity(userToProject)){
-				// Setting the user that pushes the record
-				userToProject.setPushedBy(getHelper().getLoggedUser());
-				// Adding item to the list
-				userToProjectDTOList.add(new UserToProjectDTO(userToProject));
-			}
+			// Setting the user that pushes the record
+			userToProject.setPushedBy(getHelper().getLoggedUser());
+			// Adding item to the list
+			userToProjectDTOList.add(new UserToProjectDTO(userToProject));
 		}
 		return userToProjectDTOList;
 	}
@@ -64,7 +65,7 @@ public class PushUserToProjectsTask extends PushTask<UserToProject, UserToProjec
 	protected void processResult(PushLongResponse response) throws SQLException {
 		// Updating sync status
 		getHelper().updateSyncStatusPushAt(UserToProject.class, response.getSuccess(), response.getPushedAt());
-		
+
 		// Updating pushedAt
 		for(UserToProject entity:userToProjectList){
 			getHelper().updatePushedAt(entity, response.getPushedAt());

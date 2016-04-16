@@ -46,16 +46,17 @@ public class PushProjectCoverImagesTask extends PushTask<ProjectCoverImage, Proj
 		// TODO only get the ones marked for push
 		projectCoverImageList = getHelper().getProjectCoverImageList();
 
+		// Removing items that should not be pushed
+		removeNotPushable(projectCoverImageList);
+
 		// We add to the project_cover_image DTO list the ones which were updated after the lastPushSuccessAt date
 		// and that they were not updated by someone else
 		ArrayList<ProjectCoverImageDTO> projectCoverImageDTOList = new ArrayList<ProjectCoverImageDTO>();
 		for(ProjectCoverImage projectCoverImage:projectCoverImageList){
-			if(shouldPushEntity(projectCoverImage)){
-				// Setting the user that pushes the record
-				projectCoverImage.setPushedBy(getHelper().getLoggedUser());
-				// Adding item to the list
-				projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
-			}
+			// Setting the user that pushes the record
+			projectCoverImage.setPushedBy(getHelper().getLoggedUser());
+			// Adding item to the list
+			projectCoverImageDTOList.add(new ProjectCoverImageDTO(projectCoverImage));
 		}
 		return projectCoverImageDTOList;
 	}
