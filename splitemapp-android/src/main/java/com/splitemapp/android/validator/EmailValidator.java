@@ -6,8 +6,12 @@ import android.widget.TextView;
 
 public abstract class EmailValidator extends TextValidator {
 
-	public EmailValidator(TextView textView) {
-		super(textView);
+	public EmailValidator(TextView textView,boolean showOkColor) {
+		super(textView,showOkColor);
+	}
+	
+	public EmailValidator(TextView textView,boolean showOkColor, int okDrawableResource) {
+		super(textView,showOkColor,okDrawableResource);
 	}
 
 	@Override

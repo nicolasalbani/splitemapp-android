@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,4 +64,34 @@ public abstract class RestfulFragmentWithBlueActionbar extends RestfulFragment {
 	 * Action to execute when pressing the DONE button
 	 */
 	protected abstract void doneAction();
+	
+	/**
+	 * Setting done action visibility to VISIBLE
+	 */
+	public void setDoneActionVisible(){
+		mDone.setVisibility(View.VISIBLE);
+	}
+	
+	/**
+	 * Setting done action visibility to GONE
+	 */
+	public void setDoneActionGone(){
+		mDone.setVisibility(View.GONE);
+	}
+	
+	/**
+	 * Disabling clicks on done action
+	 */
+	public void setDoneActionDisabled(){
+		mDone.setClickable(false);
+		mDone.setTextColor(Color.GRAY);
+	}
+	
+	/**
+	 * Enabling clicks on done action
+	 */
+	public void setDoneActionEnabled(){
+		mDone.setClickable(true);
+		mDone.setTextColor(Color.WHITE);
+	}
 }

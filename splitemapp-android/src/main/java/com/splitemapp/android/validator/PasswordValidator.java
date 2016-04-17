@@ -7,8 +7,8 @@ public abstract class PasswordValidator extends TextValidator {
 	static final int MIN_LENGTH = 8;
 	static final int MAX_LENGTH = 15;
 
-	public PasswordValidator(TextView textView) {
-		super(textView);
+	public PasswordValidator(TextView textView, boolean showOkColor) {
+		super(textView,showOkColor);
 	}
 
 	@Override

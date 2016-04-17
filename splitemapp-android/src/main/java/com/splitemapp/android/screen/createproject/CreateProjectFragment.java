@@ -32,6 +32,7 @@ import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.ViewUtils;
+import com.splitemapp.android.validator.EmptyValidator;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -54,6 +55,9 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 	private EditText mProjectBudget;
 	private ExpenseAmountFormat mProjectBudgetFormat;
 	private FloatingActionButton mFab;
+	
+	private boolean mProjectTitleValid;
+	private boolean mProjectBudgetValid;
 
 	private RecyclerView mMembersRecycler;
 	private ContactsAdapter mUsersAdapter;
@@ -83,7 +87,11 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 		if(isNewProject()){
 			// We only add the current user to the users list at first
-			Globals.getCreateProjectActivityUserList().add(mCurrentUser);	
+			Globals.getCreateProjectActivityUserList().add(mCurrentUser);
+			
+			// Setting default validator booleans
+			mProjectTitleValid = false;
+			mProjectBudgetValid = true;
 		} else {
 			try {
 				// Saving the project instance to edit
@@ -94,10 +102,16 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 				for(User user:activeUsersByProjectId){
 					Globals.getCreateProjectActivityUserList().add(user);
 				}
+				
+				// Setting default validator booleans
+				mProjectTitleValid = true;
+				mProjectBudgetValid = true;
 			} catch (SQLException e) {
 				Log.e(TAG, "SQLException caught!", e);
 			}
 		}
+		
+		
 
 		Globals.setCreateProjectFragment(this);
 	}
@@ -108,12 +122,33 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		// Inflating the action bar and obtaining the View object
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
+		// Enabling/Disabling the DONE button as required
+		if(isNewProject()){
+			setDoneActionDisabled();
+		} else {
+			setDoneActionEnabled();
+		}
+		
 		// We get the project name field
 		mProjectTitle = (EditText) v.findViewById(R.id.cp_project_name_editText);
+		mProjectTitle.addTextChangedListener(new EmptyValidator(mProjectTitle, false) {
+			@Override
+			public void onValidationAction(boolean isValid) {
+				mProjectTitleValid = isValid;
+				updateActionButton();
+			}
+		});
 
 		// We get the project budget field
 		mProjectBudget = (EditText) v.findViewById(R.id.cp_budget_editText);
 		mProjectBudget.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
+		mProjectBudget.addTextChangedListener(new EmptyValidator(mProjectBudget, false) {
+			@Override
+			public void onValidationAction(boolean isValid) {
+				mProjectBudgetValid = isValid;
+				updateActionButton();
+			}
+		});
 
 		// We get and populate the spinner
 		mProjectType = (Spinner) v.findViewById(R.id.cp_project_type_spinner);
@@ -191,6 +226,16 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		});
 
 		return v;
+	}
+	
+	private void updateActionButton(){
+		if(mProjectBudgetValid && mProjectTitleValid){
+			// Disabling DONE action
+			setDoneActionEnabled();
+		} else {
+			// Disabling DONE action
+			setDoneActionDisabled();
+		}
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.PreferencesManager;
+import com.splitemapp.android.validator.EmptyValidator;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 
@@ -74,6 +75,16 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		// We populate the first name in the main view
 		mFullNameEditText = (EditText) v.findViewById(R.id.s_full_name_editText);
 		mFullNameEditText.setText(mCurrentUser.getFullName());
+		mFullNameEditText.addTextChangedListener(new EmptyValidator(mFullNameEditText, false) {
+			@Override
+			public void onValidationAction(boolean isValid) {
+				if(isValid){
+					setDoneActionEnabled();
+				} else {
+					setDoneActionDisabled();
+				}
+			}
+		});
 
 		// We populate the email in the main view
 		mEmailTextView  = (TextView) v.findViewById(R.id.s_email_textView);
@@ -106,6 +117,12 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				
 				// Getting the message
 				mMessageEditText = (EditText) questionsDialog.findViewById(R.id.aaq_message_EditText);
+				mMessageEditText.addTextChangedListener(new EmptyValidator(mMessageEditText, true, R.drawable.shape_bordered_rectangle) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						mSendButton.setEnabled(isValid);
+					}
+				});
 				
 				// Creating the OnClickListener for the send button
 				mSendButton = (Button) questionsDialog.findViewById(R.id.aaq_send_button);
@@ -118,6 +135,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 						sendQuestion(mMessageEditText.getText().toString(), messageView, successView);
 					}
 				});
+				mSendButton.setEnabled(false);
 				
 				questionsDialog.show();
 			}

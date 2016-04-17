@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.validator.EmailValidator;
 import com.splitemapp.commons.domain.User;
 
 public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
@@ -32,10 +33,12 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 	private List<User> mContacts;
 	private ListView mContactsList;
 	private View mAddContactView;
-	
+
 	private Button mSearchButton;
 	private Button mInviteButton;
 	private EditText mEmailEditText;
+
+	private boolean mIsEmailValid;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,12 +74,15 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 				//TODO Do something when clicking a user in the list
 			}
 		});
-		
+
 		// Setting the OnClickListener for the add contact view
 		mAddContactView = v.findViewById(R.id.mc_add_contact_view);
 		mAddContactView.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
+				// Setting invalid email by default
+				mIsEmailValid = false;
+				
 				// Opening add contacts dialog
 				final AddContactsDialog addContactDialog = new AddContactsDialog(getActivity()) {
 					@Override
@@ -84,10 +90,17 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 						return R.layout.dialog_add_contacts;
 					}
 				};
-				
+
 				// Getting the email address
 				mEmailEditText = (EditText) addContactDialog.findViewById(R.id.ac_email_editText);
-				
+				mEmailEditText.addTextChangedListener(new EmailValidator(mEmailEditText,  true, R.drawable.shape_bordered_rectangle) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						mIsEmailValid = isValid;
+						updateActionButton();
+					}
+				});
+
 				// Creating the OnClickListener for the send button
 				mSearchButton = (Button) addContactDialog.findViewById(R.id.ac_search_button);
 				mSearchButton.setOnClickListener(new OnClickListener(){
@@ -96,12 +109,13 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 						View emailView = addContactDialog.findViewById(R.id.ac_email_view);
 						View successView = addContactDialog.findViewById(R.id.ac_add_success_view);
 						View notFoundView = addContactDialog.findViewById(R.id.ac_not_found_view);
-						
+
 						// Calling the add contact task
 						addContact(mEmailEditText.getText().toString(), emailView, successView, notFoundView, getCurrentFragment());
 					}
 				});
-				
+				updateActionButton();
+
 				// Creating the OnClickListener for the invite button
 				mInviteButton = (Button) addContactDialog.findViewById(R.id.ac_invite_button);
 				mInviteButton.setOnClickListener(new OnClickListener(){
@@ -109,12 +123,12 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 					public void onClick(View v) {
 						View notFoundView = addContactDialog.findViewById(R.id.ac_not_found_view);
 						View successView = addContactDialog.findViewById(R.id.ac_invite_success_view);
-						
+
 						// Calling the invite service and update the dialog
 						sendInvite(mEmailEditText.getText().toString(), notFoundView, successView);
 					}
 				});
-				
+
 				addContactDialog.show();
 			}
 		});
@@ -133,9 +147,16 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 				}
 				);
 		
+		// Disabling DONE action
+		setDoneActionGone();
+
 		return v;
 	}
-	
+
+	private void updateActionButton(){
+		mSearchButton.setEnabled(mIsEmailValid);
+	}
+
 	private ManageContactsFragment getCurrentFragment(){
 		return this;
 	}
@@ -163,7 +184,7 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 			// Setting the user full name
 			TextView userFullName = (TextView)convertView.findViewById(R.id.cp_user_name);
 			userFullName.setText(user.getFullName());
-			
+
 			// Setting the user e-mail address
 			TextView userEmail = (TextView)convertView.findViewById(R.id.cp_user_email);
 			userEmail.setText(user.getUsername());
@@ -171,7 +192,7 @@ public class ManageContactsFragment extends RestfulFragmentWithBlueActionbar {
 			return convertView;
 		}
 	}
-	
+
 	@Override
 	protected void onRefresh(String response) {
 		// Refreshing contacts list after making the sync

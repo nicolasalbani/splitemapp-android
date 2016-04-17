@@ -26,6 +26,7 @@ import com.splitemapp.android.R;
 import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
+import com.splitemapp.android.validator.EmptyValidator;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.ExpenseCategory;
@@ -88,7 +89,12 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		// Inflating the action bar and obtaining the View object
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 
-		// Setting already selected category
+		// Enabling/Disabling DONE by default
+		if(isNewExpense()){
+			setDoneActionDisabled();
+		} else {
+			setDoneActionEnabled();
+		}
 
 		// We inflate the expense date text view and load todays date by default
 		mExpenseDateText = (TextView) v.findViewById(R.id.e_expense_date_textView);
@@ -128,6 +134,16 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
 		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
+		mExpenseAmount.addTextChangedListener(new EmptyValidator(mExpenseAmount,false) {
+			@Override
+			public void onValidationAction(boolean isValid) {
+				if(isValid){
+					setDoneActionEnabled();
+				} else {
+					setDoneActionDisabled();
+				}
+			}
+		});
 
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){

@@ -4,8 +4,12 @@ import android.widget.TextView;
 
 public abstract class EmptyValidator extends TextValidator {
 
-	public EmptyValidator(TextView textView) {
-		super(textView);
+	public EmptyValidator(TextView textView, boolean showOkColor) {
+		super(textView,showOkColor);
+	}
+	
+	public EmptyValidator(TextView textView, boolean showOkColor, int okDrawableResource) {
+		super(textView,showOkColor,okDrawableResource);
 	}
 
 	@Override
