@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 
 import com.splitemapp.android.constants.Constants;
+import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.rest.RestUtils;
 
 public class NetworkUtils {
@@ -39,7 +40,7 @@ public class NetworkUtils {
 	 */
 	public static <E,T> T callRestService(String servicePath, E request, Class<T> responseType){
 		// We create the url based on the provider serviceName
-		String serviceUrl = "http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT+"/"+Constants.BACKEND_PATH+servicePath;
+		String serviceUrl = "http://"+ServiceConstants.BACKEND_HOST+":"+ServiceConstants.BACKEND_PORT+"/"+ServiceConstants.BACKEND_PATH+servicePath;
 
 		return RestUtils.callRestService(serviceUrl, request, responseType);
 	}
@@ -52,7 +53,7 @@ public class NetworkUtils {
 	 */
 	public static boolean isConnectedToServer() {
 		try{
-			URL myUrl = new URL("http://"+Constants.BACKEND_HOST+":"+Constants.BACKEND_PORT);
+			URL myUrl = new URL("http://"+ServiceConstants.BACKEND_HOST+":"+ServiceConstants.BACKEND_PORT);
 			URLConnection connection = myUrl.openConnection();
 			connection.setConnectTimeout(TIMEOUT);
 			connection.connect();
