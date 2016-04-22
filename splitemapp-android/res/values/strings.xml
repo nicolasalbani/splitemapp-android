@@ -38,7 +38,12 @@
     <!-- Login Screen -->
     <string name="li_username_hint">Username or Email</string>
     <string name="li_password_hint">Password</string>
+    <string name="li_forgot_password">Forgot your password?</string>
+    <string name="li_password_reset">Password reset</string>
+    <string name="li_reset_password">Reset</string>
     <string name="li_log_in_button">Login</string>
+    <string name="li_email_hint">Email address?</string>
+    <string name="li_password_reset_sent">Reset request sent!</string>
     <string name="li_sign_up_question">Don\'t have an account?</string>
     <string name="li_sign_up_link">Sign up</string>
     

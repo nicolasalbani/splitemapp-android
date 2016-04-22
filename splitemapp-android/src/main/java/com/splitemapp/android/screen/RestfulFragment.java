@@ -47,6 +47,7 @@ import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.InviteTask;
 import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.LogoutRequestTask;
+import com.splitemapp.android.task.PasswordResetTask;
 import com.splitemapp.android.task.QuestionsTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
@@ -532,6 +533,34 @@ public abstract class RestfulFragment extends BaseFragment {
 			}
 		};
 		inviteTask.execute();
+	}
+	
+	/**
+	 * Sends the password reset email for the appropriate email address
+	 * @param message
+	 */
+	protected void sendPasswordReset(String email, final View emailView, final View successView){
+		// Creating the PasswordResetTask instance
+		PasswordResetTask passwordResetTask = new PasswordResetTask(getHelper(),email){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+				
+				// Showing success dialog
+				emailView.setVisibility(View.GONE);
+				successView.setVisibility(View.VISIBLE);
+			}
+			@Override
+			public void executeOnFail(String message) {
+				hideProgressIndicator();
+				showToastForMessage(message);
+			}
+		};
+		passwordResetTask.execute();
 	}
 
 	/**

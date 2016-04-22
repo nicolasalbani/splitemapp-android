@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragment;
+import com.splitemapp.android.screen.managecontacts.AddContactsDialog;
+import com.splitemapp.android.validator.EmailValidator;
 import com.splitemapp.commons.domain.User;
 
 public class LoginFragment extends RestfulFragment {
@@ -21,6 +24,11 @@ public class LoginFragment extends RestfulFragment {
 	private Button mLogin;
 	private EditText mUserName;
 	private EditText mPassword;
+	private View mForgotPassword;
+
+	private boolean mIsEmailValid;
+	private EditText mEmailEditText;
+	private Button mResetButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -30,7 +38,7 @@ public class LoginFragment extends RestfulFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		// If there is a user logged in already we go directly to the home screen
 		User loggedUser = null;
 		try {
@@ -38,7 +46,7 @@ public class LoginFragment extends RestfulFragment {
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
-		
+
 		if(loggedUser != null){
 			// We open the home activity class
 			startHomeActivity();
@@ -65,7 +73,55 @@ public class LoginFragment extends RestfulFragment {
 			}
 		});
 
+		// We get the references for the forgot password view
+		mForgotPassword = v.findViewById(R.id.li_forgot_password);
+		mForgotPassword.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// Setting invalid email by default
+				mIsEmailValid = false;
+
+				// Opening add contacts dialog
+				final AddContactsDialog addContactDialog = new AddContactsDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.dialog_forgot_password;
+					}
+				};
+
+				// Getting the email address
+				mEmailEditText = (EditText) addContactDialog.findViewById(R.id.fp_email_editText);
+				mEmailEditText.addTextChangedListener(new EmailValidator(mEmailEditText,  true, R.drawable.shape_bordered_rectangle) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						mIsEmailValid = isValid;
+						updateActionButton();
+					}
+				});
+
+				// Creating the OnClickListener for the send button
+				mResetButton = (Button) addContactDialog.findViewById(R.id.fp_reset_password_button);
+				mResetButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						View emailView = addContactDialog.findViewById(R.id.fp_email_view);
+						View successView = addContactDialog.findViewById(R.id.fp_reset_success_view);
+
+						// Calling the reset password task
+						sendPasswordReset(mEmailEditText.getText().toString(), emailView, successView);
+					}
+				});
+				updateActionButton();
+
+				addContactDialog.show();
+			}
+		});
+
 		return v;
+	}
+
+	private void updateActionButton(){
+		mResetButton.setEnabled(mIsEmailValid);
 	}
 
 	@Override

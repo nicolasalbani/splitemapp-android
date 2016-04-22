@@ -15,11 +15,6 @@ public class Constants {
 	// Version threshold information for customizing layouts
 	public static final int SDK_VERSION_THRESHOLD = 20;
 	
-	// Backend constants
-	public static final String BACKEND_HOST="ec2-52-27-108-212.us-west-2.compute.amazonaws.com";
-	public static final String BACKEND_PORT="8080";
-	public static final String BACKEND_PATH="splitemapp-backend-rest";
-	
 	// Request codes
 	public static final int SELECT_PICTURE_REQUEST_CODE = 1;
 	public static final int CROP_PICTURE_REQUEST_CODE = 2;
