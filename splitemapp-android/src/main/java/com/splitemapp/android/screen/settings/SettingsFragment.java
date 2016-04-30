@@ -20,6 +20,7 @@ import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.android.validator.EmptyValidator;
+import com.splitemapp.android.validator.PasswordConfirmValidator;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 
@@ -36,10 +37,18 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 	private SwitchCompat mNewProjectSwitchCompat;
 	private SwitchCompat mNewExpenseSwitchCompat;
 	private SwitchCompat mUpdatedProjectSwitchCompat;
-	
+
 	private Button mAskAQuestionButton;
 	private EditText mMessageEditText;
 	private Button mSendButton;
+
+	private Button mChangePasswordButton;
+	private Button mChangeButton;
+	private EditText mCurrentPasswordText;
+	private EditText mNewPasswordText;
+	private EditText mNewPasswordConfirmationText;
+	private boolean isCurrentPasswordValid;
+	private boolean isNewPasswordConfirmationValid;
 
 	private boolean avatarChanged;
 	private byte[] mAvatarData;
@@ -103,18 +112,76 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		mUpdatedProjectSwitchCompat.setChecked(getPrefsManager().getBoolean(PreferencesManager.NOTIFY_UPDATED_PROJECT_COVER));
 
 		// We set the Ask a question button
+		mChangePasswordButton = (Button) v.findViewById(R.id.s_change_password_button);
+		mChangePasswordButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				// Opening dialog
+				final ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog(getActivity()) {
+					@Override
+					public int getLinearLayoutView() {
+						return R.layout.dialog_change_password;
+					}
+				};
+
+				// Getting the current password
+				mCurrentPasswordText = (EditText) changePasswordDialog.findViewById(R.id.pc_current_password_editText);
+				mCurrentPasswordText.addTextChangedListener(new EmptyValidator(mCurrentPasswordText, true) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						isCurrentPasswordValid = isValid;
+						updateChangePasswordButton();
+					}
+				});
+
+				// Getting the new password
+				mNewPasswordText = (EditText) changePasswordDialog.findViewById(R.id.pc_new_password_editText);
+				mNewPasswordConfirmationText = (EditText) changePasswordDialog.findViewById(R.id.pc_confirm_password_editText);
+				mNewPasswordText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						isNewPasswordConfirmationValid = isValid;
+						updateChangePasswordButton();
+					}
+				});
+				mNewPasswordConfirmationText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true) {
+					@Override
+					public void onValidationAction(boolean isValid) {
+						isNewPasswordConfirmationValid = isValid;
+						updateChangePasswordButton();
+					}
+				});
+				
+				// Creating the OnClickListener for the send button
+				mChangeButton = (Button) changePasswordDialog.findViewById(R.id.cp_change_password_button);
+				mChangeButton.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						View changePassView = changePasswordDialog.findViewById(R.id.cp_change_password_button);
+						View successView = changePasswordDialog.findViewById(R.id.cp_change_success_view);
+
+						changePassword(mCurrentPasswordText.getText().toString(), mNewPasswordText.getText().toString(), changePassView, successView);
+					}
+				});
+				mChangeButton.setEnabled(false);
+				
+				changePasswordDialog.show();
+			}
+		});
+
+		// We set the Ask a question button
 		mAskAQuestionButton = (Button) v.findViewById(R.id.s_ask_a_question_button);
 		mAskAQuestionButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				// Opening project filter
+				// Opening dialog
 				final QuestionsDialog questionsDialog = new QuestionsDialog(getActivity()) {
 					@Override
 					public int getLinearLayoutView() {
 						return R.layout.dialog_questions;
 					}
 				};
-				
+
 				// Getting the message
 				mMessageEditText = (EditText) questionsDialog.findViewById(R.id.aaq_message_EditText);
 				mMessageEditText.addTextChangedListener(new EmptyValidator(mMessageEditText, true, R.drawable.shape_bordered_rectangle) {
@@ -123,7 +190,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 						mSendButton.setEnabled(isValid);
 					}
 				});
-				
+
 				// Creating the OnClickListener for the send button
 				mSendButton = (Button) questionsDialog.findViewById(R.id.aaq_send_button);
 				mSendButton.setOnClickListener(new OnClickListener(){
@@ -131,17 +198,21 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 					public void onClick(View v) {
 						View messageView = questionsDialog.findViewById(R.id.aaq_message_view);
 						View successView = questionsDialog.findViewById(R.id.aaq_success_view);
-						
+
 						sendQuestion(mMessageEditText.getText().toString(), messageView, successView);
 					}
 				});
 				mSendButton.setEnabled(false);
-				
+
 				questionsDialog.show();
 			}
 		});
-		
+
 		return v;
+	}
+
+	private void updateChangePasswordButton(){
+		mChangeButton.setEnabled(isCurrentPasswordValid && isNewPasswordConfirmationValid);
 	}
 
 	@Override
@@ -207,7 +278,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				Log.e(TAG, "SQLException caught while updating UserAvatar entity!", e);
 			}
 		}
-		
+
 		// Updating notification preferences
 		getPrefsManager().setBoolean(PreferencesManager.NOTIFY_NEW_PROJECT, mNewProjectSwitchCompat.isChecked());
 		getPrefsManager().setBoolean(PreferencesManager.NOTIFY_NEW_EXPENSE, mNewExpenseSwitchCompat.isChecked());

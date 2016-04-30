@@ -38,11 +38,11 @@ public abstract class TextValidator implements TextWatcher {
 	@Override
 	final public void onTextChanged(CharSequence s, int start, int before, int count) { /* Don't care */ }
 
-	public void showInvalidColor(){
+	public void showInvalidColor(TextView textView){
 		textView.setBackgroundResource(R.drawable.shape_rectangle_warning);
 	}
 
-	public void showValidColor(){
+	public void showValidColor(TextView textView){
 		if(showOkColor){
 			if(okDrawableResource != 0){
 				textView.setBackgroundResource(okDrawableResource);

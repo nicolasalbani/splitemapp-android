@@ -170,6 +170,18 @@
 
             <TextView
                 style="@style/CustomTextView"
+                android:text="@string/s_account" />
+
+            <View style="@style/BottomLine" />
+
+            <Button
+                android:id="@+id/s_change_password_button"
+                style="@style/Button"
+                android:layout_marginTop="20dp"
+                android:text="@string/s_change_password" />
+
+            <TextView
+                style="@style/CustomTextView"
                 android:text="@string/s_help" />
 
             <View style="@style/BottomLine" />
@@ -178,16 +190,15 @@
                 android:id="@+id/s_ask_a_question_button"
                 style="@style/Button"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/s_ask_a_question" />
-            
+
             <Button
                 android:id="@+id/s_splitemapp_faq_button"
                 style="@style/Button"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:text="@string/s_splitemapp_faq"
                 android:visibility="gone" />
-            
         </LinearLayout>
     </ScrollView>
 

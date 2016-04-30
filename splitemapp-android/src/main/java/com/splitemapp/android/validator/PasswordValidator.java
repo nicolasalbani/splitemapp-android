@@ -20,9 +20,9 @@ public abstract class PasswordValidator extends TextValidator {
 		}
 
 		if(isValid){
-			showValidColor();
+			showValidColor(textView);
 		} else {
-			showInvalidColor();
+			showInvalidColor(textView);
 		}
 		
 		onValidationAction(isValid);

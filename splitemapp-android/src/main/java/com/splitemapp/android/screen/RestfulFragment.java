@@ -43,6 +43,7 @@ import com.splitemapp.android.service.sync.StartRefreshAnimationTask;
 import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 import com.splitemapp.android.task.AddContactTask;
+import com.splitemapp.android.task.ChangePasswordTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.InviteTask;
 import com.splitemapp.android.task.LoginRequestTask;
@@ -51,6 +52,7 @@ import com.splitemapp.android.task.PasswordResetTask;
 import com.splitemapp.android.task.QuestionsTask;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment {
 
@@ -212,11 +214,11 @@ public abstract class RestfulFragment extends BaseFragment {
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver((mUiBroadcastReceiver), 
 				new IntentFilter(ServiceConstants.UI_MESSAGE));
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		if(syncInProgress){
 			startRefreshAnimation();
 		} else {
@@ -438,7 +440,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		// Stopping refresh animation
 		triggerStopRefreshAnimation();
 	}
-	
+
 	/**
 	 * Adds the contact corresponding to the email address if found
 	 * @param email
@@ -453,11 +455,11 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
-				
+
 				// Showing success dialog
 				emailView.setVisibility(View.GONE);
 				successView.setVisibility(View.VISIBLE);
-				
+
 				// Refreshing list
 				fragment.refreshFragment();
 			}
@@ -469,16 +471,16 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			protected void executeOnUserNotFound() {
 				hideProgressIndicator();
-				
+
 				// Showing user not found dialog
 				emailView.setVisibility(View.GONE);
 				notFoundView.setVisibility(View.VISIBLE);
-				
+
 			}
 		};
 		addContactTask.execute();
 	}
-	
+
 	/**
 	 * Sends the question contained in the message parameter
 	 * @param message
@@ -493,7 +495,7 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
-				
+
 				// Showing success dialog
 				messageView.setVisibility(View.GONE);
 				successView.setVisibility(View.VISIBLE);
@@ -506,7 +508,48 @@ public abstract class RestfulFragment extends BaseFragment {
 		};
 		questionsTask.execute();
 	}
-	
+
+	/**
+	 * Changes the password for the logged user
+	 * @param currentPassword
+	 * @param newPassword
+	 * @param changePassView
+	 * @param successView
+	 */
+	protected void changePassword(String currentPassword, String newPassword, final View changePassView, final View successView){
+		try {
+			String currentPasswordHash = databaseHelper.getUser(databaseHelper.getCurrentUserSession().getUser().getId()).getPassword();
+			if(!currentPasswordHash.equals(Utils.hashPassword(currentPassword))){
+				showToast(getResources().getString(R.string.s_current_pass_invalid));
+				return;
+			}
+		} catch (SQLException e) {
+			Log.e(getLoggingTag(), "SQLException exception caught!", e);
+		}
+
+		// Creating the ChangePasswordTask instance
+		ChangePasswordTask changePasswordTask = new ChangePasswordTask(getHelper(),Utils.hashPassword(currentPassword),Utils.hashPassword(newPassword)){
+			@Override
+			public void executeOnStart() {
+				showProgressIndicator();
+			}
+			@Override
+			public void executeOnSuccess() {
+				hideProgressIndicator();
+
+				// Showing success dialog
+				changePassView.setVisibility(View.GONE);
+				successView.setVisibility(View.VISIBLE);
+			}
+			@Override
+			public void executeOnFail(String message) {
+				hideProgressIndicator();
+				showToastForMessage(message);
+			}
+		};
+		changePasswordTask.execute();
+	}
+
 	/**
 	 * Sends the invite for the appropriate email address
 	 * @param message
@@ -521,7 +564,7 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
-				
+
 				// Showing success dialog
 				notFoundView.setVisibility(View.GONE);
 				successView.setVisibility(View.VISIBLE);
@@ -534,7 +577,7 @@ public abstract class RestfulFragment extends BaseFragment {
 		};
 		inviteTask.execute();
 	}
-	
+
 	/**
 	 * Sends the password reset email for the appropriate email address
 	 * @param message
@@ -549,7 +592,7 @@ public abstract class RestfulFragment extends BaseFragment {
 			@Override
 			public void executeOnSuccess() {
 				hideProgressIndicator();
-				
+
 				// Showing success dialog
 				emailView.setVisibility(View.GONE);
 				successView.setVisibility(View.VISIBLE);

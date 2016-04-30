@@ -59,6 +59,13 @@
     <string name="s_new_expense">New expense created</string>
     <string name="s_updated_cover">Updated project cover</string>
     <string name="s_ask_a_question">Have a question?</string>
+    <string name="s_account">Account</string>
+    <string name="s_change_password">Change password</string>
+    <string name="s_current_password_hint">Current password</string>
+    <string name="s_new_password_hint">New password</string>
+    <string name="s_confirm_password_hint">Confirm password</string>
+    <string name="s_password_changed">Password changed!</string>
+    <string name="s_current_pass_invalid">Invalid current password</string>
     <string name="s_splitemapp_faq">SplitemApp FAQ</string>
     
     <!-- Ask a Question -->
