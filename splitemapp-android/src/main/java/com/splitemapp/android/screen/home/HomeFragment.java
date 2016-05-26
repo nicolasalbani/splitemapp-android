@@ -150,6 +150,7 @@ public class HomeFragment extends RestfulFragment {
 						// Updating setting and refreshing the recycler view
 						getPrefsManager().setBoolean(PreferencesManager.SHOW_ACTIVE_PROJECTS, isChecked);
 						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+						updateEmptyHint();
 					}
 				});
 				
@@ -162,6 +163,7 @@ public class HomeFragment extends RestfulFragment {
 						// Updating setting and refreshing the recycler view
 						getPrefsManager().setBoolean(PreferencesManager.SHOW_ARCHIVED_PROJECTS, isChecked);
 						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+						updateEmptyHint();
 					}
 				});
 				
@@ -174,6 +176,7 @@ public class HomeFragment extends RestfulFragment {
 						// Updating setting and refreshing the recycler view
 						getPrefsManager().setBoolean(PreferencesManager.SHOW_MONTHLY_PROJECTS, isChecked);
 						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+						updateEmptyHint();
 					}
 				});
 				
@@ -186,6 +189,7 @@ public class HomeFragment extends RestfulFragment {
 						// Updating setting and refreshing the recycler view
 						getPrefsManager().setBoolean(PreferencesManager.SHOW_ONE_TIME_PROJECTS, isChecked);
 						mProjectsAdapter.updateRecycler(mProjectsRecycler);
+						updateEmptyHint();
 					}
 				});
 				
@@ -317,11 +321,7 @@ public class HomeFragment extends RestfulFragment {
 		mProjectsAdapter.updateRecycler(mProjectsRecycler);
 
 		// Showing or hiding the empty list hint
-		if(mProjectsAdapter.getItemCount() == 0){
-			mEmptyListHintTextView.setVisibility(View.VISIBLE);
-		} else {
-			mEmptyListHintTextView.setVisibility(View.GONE);
-		}
+		updateEmptyHint();
 
 		// Updating the FullName
 		updateCurrentUser();
@@ -329,6 +329,14 @@ public class HomeFragment extends RestfulFragment {
 
 		// Updating the Avatar
 		setUsetAvatarToImageView(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+	}
+	
+	private void updateEmptyHint(){
+		if(mProjectsAdapter.getItemCount() == 0){
+			mEmptyListHintTextView.setVisibility(View.VISIBLE);
+		} else {
+			mEmptyListHintTextView.setVisibility(View.GONE);
+		}
 	}
 
 	@Override

@@ -189,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_recycler_color"
-                android:drawableLeft="@drawable/ic_synchronize_24dp"
+                android:drawableLeft="@drawable/ic_settings_24dp"
                 android:drawablePadding="10dp"
                 android:drawableStart="@drawable/ic_settings_24dp"
                 android:gravity="center_vertical|start"

@@ -384,7 +384,7 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	public void rotateImageViewClockwise(ImageView imageView){
 		// Creating anti-clockwise rotation animation
-		rotateImageView(imageView, 90f, 100);
+		rotateImageView(imageView, 0f, 100);
 	}
 
 	/**
@@ -404,28 +404,6 @@ public abstract class BaseFragment extends Fragment {
 		anim.setDuration(duration);
 		anim.setFillAfter(true);
 		anim.setFillEnabled(true);
-
-		// Setting animation end listener
-		anim.setAnimationListener(new AnimationListener(){
-			@Override
-			public void onAnimationEnd(Animation arg0) {
-				// Actually rotating the image after the animation ends so it stays there for future animations
-				Matrix mat = imageView.getImageMatrix();
-				mat.postRotate(rotationDegree, hCenter, vCenter);
-				imageView.setScaleType(ScaleType.MATRIX);
-				imageView.setImageMatrix(mat);
-			}
-			@Override
-			public void onAnimationRepeat(Animation arg0) {
-			}
-			@Override
-			public void onAnimationStart(Animation arg0) {
-				// Setting initial matrix with 0 rotation
-				Matrix mat = imageView.getImageMatrix();
-				mat.postRotate(0, hCenter, vCenter);
-				imageView.setScaleType(ScaleType.MATRIX);
-				imageView.setImageMatrix(mat);
-			}});
 
 		// Start animating the image
 		imageView.startAnimation(anim);

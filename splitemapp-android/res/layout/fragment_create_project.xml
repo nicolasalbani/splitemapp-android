@@ -7,15 +7,13 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/cp_appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true" >
+        android:layout_height="wrap_content" >
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:background="@color/seablue"
-            android:fitsSystemWindows="true"
             app:contentScrim="@color/seablue"
             app:expandedTitleMarginBottom="32dp"
             app:expandedTitleMarginEnd="64dp"
