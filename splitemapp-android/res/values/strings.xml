@@ -19,13 +19,13 @@
     <string name="ab_menu_description">Menu</string>
     
     <!-- Notifications -->
-    <string name="notification_new_project">has added you to project</string>
-    <string name="notification_new_expense">has added an expense for project</string>
-    <string name="notification_updated_project_cover">has updated cover for project</string>
+    <string name="notification_new_project">added you to</string>
+    <string name="notification_new_expense">added an expense for</string>
+    <string name="notification_updated_project_cover">updated cover for</string>
     
     <!-- Confirmations -->
     <string name="confirmation_logout">Are you sure you want to logout?</string>
-    <string name="confirmation_archive_project">Are you sure you want to archive this project?</string>
+    <string name="confirmation_archive_project">Are you sure you want to archive this list?</string>
     <string name="confirmation_archive_expense">Are you sure you want to archive this expense?</string>
     <string name="confirmation_positive_text">Yes</string>
     <string name="confirmation_negative_text">No</string>
@@ -36,7 +36,7 @@
     <string name="w_app_logo_description">Application Logo</string>
     
     <!-- Login Screen -->
-    <string name="li_username_hint">Username or Email</string>
+    <string name="li_username_hint">Email</string>
     <string name="li_password_hint">Password</string>
     <string name="li_forgot_password">Forgot your password?</string>
     <string name="li_password_reset">Password reset</string>
@@ -55,9 +55,9 @@
     <string name="s_profile">Profile</string>
     <string name="s_notifications">Notifications</string>
     <string name="s_help">Help</string>
-    <string name="s_new_project">New project created</string>
+    <string name="s_new_project">New list created</string>
     <string name="s_new_expense">New expense created</string>
-    <string name="s_updated_cover">Updated project cover</string>
+    <string name="s_updated_cover">Updated list cover</string>
     <string name="s_ask_a_question">Have a question?</string>
     <string name="s_account">Account</string>
     <string name="s_change_password">Change password</string>
@@ -88,7 +88,7 @@
     <string name="ca_cancel_action">Cancel</string>
     
     <!-- Home Screen -->
-    <string name="h_project_cover_description">ProjectIcon</string>
+    <string name="h_project_cover_description">ListIcon</string>
     <string name="h_project_title">Title</string>
     <string name="h_project_total">Total: $</string>
     <string name="h_project_total_value">200.5</string>
@@ -101,27 +101,27 @@
     <string name="h_logout">LOGOUT</string>
     <string name="h_settings">SETTINGS</string>
     <string name="h_synchronize">SYNCHRONIZE</string>
-    <string name="h_manage_contacts">MANAGE CONTACTS</string>
+    <string name="h_manage_contacts">CONTACTS</string>
     <string name="h_action_edit">Edit</string>
     <string name="h_action_archive">Archive</string>
-    <string name="h_empty_list_hint">You don\'t have any projects. Tap on the ADD button to start.</string>
+    <string name="h_empty_list_hint">You don\'t have any lists. Tap on the + button to start.</string>
 
     <!-- Home Screen Project Filter -->
-    <string name="hpf_filter_description">Project Filter</string>
-    <string name="hpf_title">Filter Projects</string>
-    <string name="hpf_project_status">Project Status</string>
-    <string name="hpf_project_type">Project Type</string>
-    <string name="hpf_show_active">Active projects</string>
-    <string name="hpf_show_archived">Archived projects</string>
-    <string name="hpf_show_monthly">Monthly projects</string>
-    <string name="hpf_show_one_time">One time projects</string>
+    <string name="hpf_filter_description">Filter lists</string>
+    <string name="hpf_title">Filter lists</string>
+    <string name="hpf_project_status">List Status</string>
+    <string name="hpf_project_type">List Type</string>
+    <string name="hpf_show_active">Active lists</string>
+    <string name="hpf_show_archived">Archived lists</string>
+    <string name="hpf_show_monthly">Monthly lists</string>
+    <string name="hpf_show_one_time">One time lists</string>
     
     <!-- Create Project Screen -->
     <string name="cp_new_title">New List</string>
     <string name="cp_edit_title">Edit List</string>
-    <string name="cp_project_name">List Name</string>
-    <string name="cp_project_type">List Type</string>
-    <string name="cp_project_budget">List budget</string>
+    <string name="cp_project_name">Name</string>
+    <string name="cp_project_type">Type</string>
+    <string name="cp_project_budget">Budget</string>
     <string name="cp_project_budget_optional">optional</string>
     <string name="cp_project_budget_value">0</string>
     <string name="cp_project_members_list">Member list</string>
@@ -144,7 +144,9 @@
     <!-- Project Screen -->
     <string name="p_add_expense_button">Add an expense</string>
     <string name="p_cover_image_description">Cover Image</string>
-    <string name="p_empty_list_hint">You don\'t have any spendings. Tap on the ADD button to start.</string>
+    <string name="p_cover_image">Cover</string>
+    <string name="p_contacts">Contacts</string>
+    <string name="p_empty_list_hint">You don\'t have any spendings. Tap on the + button to start.</string>
     <string name="p_arrow_description">Arrow Image</string>
     <string name="p_more_option_edit">Edit</string>
     <string name="p_more_option_change_cover">Change cover</string>
@@ -152,8 +154,8 @@
     <string name="p_more_option_archive">Archive</string>
     
     <!-- Project Screen Expense Filter -->
-    <string name="pef_filter_description">Filter</string>
-    <string name="pef_title">Filter Expenses</string>
+    <string name="pef_filter_description">Filter expenses</string>
+    <string name="pef_title">Filter expenses</string>
     <string name="pef_date">Date</string>
     <string name="pef_category">Category</string>
     
@@ -167,7 +169,7 @@
     <string name="e_initial_expense_amount">0</string>
     
     <!-- Project Contacts Screen -->
-    <string name="pc_title">Project Contacts</string>
+    <string name="pc_title">Contacts</string>
     <string name="pc_back_action">Back</string>
     <string name="pc_contacts">Contacts</string>
     <string name="pc_contact_fullname_placeholder">Full Name</string>
@@ -175,7 +177,7 @@
     <string name="pc_status_description">Contact Status Icon</string>
     
     <!-- Manage Contacts -->
-    <string name="mc_title">Manage Contacts</string>
+    <string name="mc_title">Contacts</string>
     <string name="mc_back_action">Back</string>
     <string name="mc_contacts">Contacts</string>
     <string name="mc_add_contact">Add Contact</string>

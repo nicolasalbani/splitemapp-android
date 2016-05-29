@@ -157,7 +157,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				mChangeButton.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						View changePassView = changePasswordDialog.findViewById(R.id.cp_change_password_button);
+						View changePassView = changePasswordDialog.findViewById(R.id.pc_password_change_view);
 						View successView = changePasswordDialog.findViewById(R.id.cp_change_success_view);
 
 						changePassword(mCurrentPasswordText.getText().toString(), mNewPasswordText.getText().toString(), changePassView, successView);
