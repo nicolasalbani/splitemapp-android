@@ -18,10 +18,10 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.screen.expense.ExpenseCategoryMapper;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.commons.domain.UserExpense;
 
@@ -129,7 +129,7 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 			public void onClick(View view) {
 				// Creating an intent to the ProjectActivity sending the information from the clicked project
 				Intent intent = new Intent(restfulFragment.getActivity(), ExpenseActivity.class);
-				Globals.setExpenseActivityExpenseId(mUserExpenseList.get(position).getId());
+				intent.putExtra(BaseTask.EXPENSE_ID_EXTRA, mUserExpenseList.get(position).getId());
 				restfulFragment.startActivity(intent);
 			}
 		});

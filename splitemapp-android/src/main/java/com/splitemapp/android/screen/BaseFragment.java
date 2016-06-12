@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -16,12 +15,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,7 +132,7 @@ public abstract class BaseFragment extends Fragment {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 		intent.setType("image/*");
 		intent.putExtra("crop", "true");
-		startActivityForResult(Intent.createChooser(intent,"Complete action using"), Constants.SELECT_PICTURE_REQUEST_CODE);
+		getActivity().startActivityForResult(Intent.createChooser(intent,"Complete action using"), Constants.SELECT_PICTURE_REQUEST_CODE);
 	}
 
 	/**

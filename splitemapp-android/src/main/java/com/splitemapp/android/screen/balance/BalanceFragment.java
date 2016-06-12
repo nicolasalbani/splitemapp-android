@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.widget.LinearLayoutManager;
 import com.splitemapp.commons.domain.Project;
 
@@ -30,6 +30,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private static final int DIVISION_PRESICION = 4;
 
 	private Project mCurrentProject;
+	private Long projectId;
 
 	private View mFragmentView;
 
@@ -59,10 +60,14 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Getting project ID
+		Bundle extras = getActivity().getIntent().getExtras();
+		projectId = extras.getLong(BaseTask.PROJECT_ID_EXTRA);
 
 		// We get the current user and project instances
 		try {
-			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(projectId);
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -260,7 +265,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private void updateFragment(){
 		try {
 			// Getting current project from database
-			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(mCurrentProject.getId());
 
 			// Updating the RecyclerView
 			mExpenseGroupAdapter.updateRecycler();

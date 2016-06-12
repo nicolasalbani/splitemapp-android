@@ -25,12 +25,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.balance.ProjectTypeMapper;
 import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
 import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.ImageUtils;
+import com.splitemapp.android.utils.Utils;
 import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.validator.EmptyValidator;
 import com.splitemapp.android.widget.CustomFloatingActionButton;
@@ -46,8 +47,9 @@ import com.splitemapp.commons.utils.TimeUtils;
 public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = CreateProjectFragment.class.getSimpleName();
-
+	
 	private User mCurrentUser;
+	private List<User> mUserList;
 	private byte[] mAvatarData;
 
 	private EditText mProjectTitle;
@@ -66,14 +68,18 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 	private AppBarLayout appBarLayout;
 	boolean showingProjectName = false;
 
+	private Long projectId;
 	private Project mProjectToEdit;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// We initialize a new user list
-		Globals.setCreateProjectActivityUserList(new ArrayList<User>());
+		
+		// Getting project ID
+		Bundle extras = getActivity().getIntent().getExtras();
+		if(extras != null && extras.containsKey(BaseTask.PROJECT_ID_EXTRA)){
+			projectId = extras.getLong(BaseTask.PROJECT_ID_EXTRA);
+		}
 
 		// We get the user and user contact data instances
 		try {
@@ -86,8 +92,9 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		mProjectBudgetFormat = new ExpenseAmountFormat();
 
 		if(isNewProject()){
-			// We only add the current user to the users list at first
-			Globals.getCreateProjectActivityUserList().add(mCurrentUser);
+			// Adding the current user to the list by default
+			mUserList = new ArrayList<User>();
+			mUserList.add(mCurrentUser);
 			
 			// Setting default validator booleans
 			mProjectTitleValid = false;
@@ -95,13 +102,10 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		} else {
 			try {
 				// Saving the project instance to edit
-				mProjectToEdit = getHelper().getProject(Globals.getCreateProjectActivityProjectId());
+				mProjectToEdit = getHelper().getProject(projectId);
 
 				// Getting the user list associated to that project
-				List<User> activeUsersByProjectId = getHelper().getActiveUsersByProjectId(Globals.getCreateProjectActivityProjectId());
-				for(User user:activeUsersByProjectId){
-					Globals.getCreateProjectActivityUserList().add(user);
-				}
+				mUserList = getHelper().getActiveUsersByProjectId(projectId);
 				
 				// Setting default validator booleans
 				mProjectTitleValid = true;
@@ -110,10 +114,6 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 				Log.e(TAG, "SQLException caught!", e);
 			}
 		}
-		
-		
-
-		Globals.setCreateProjectFragment(this);
 	}
 
 	@Override
@@ -173,7 +173,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		}
 
 		// Setting the global create list user list to the user adapter
-		mUsersAdapter = new ContactsAdapter(this);
+		mUsersAdapter = new ContactsAdapter(this, mUserList);
 
 		// Populating the list of members for this project
 		mMembersRecycler = (RecyclerView) v.findViewById(R.id.cp_users_recyclerView);
@@ -212,7 +212,9 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			public void onClick(View arg0) {
 				// Opening add people screen
 				Intent intent = new Intent(getActivity(), ProjectContactsActivity.class);
-				startActivity(intent);
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, projectId);
+				intent.putExtra(BaseTask.USER_ID_ARRAY_EXTRA, Utils.userListToIdArray(mUserList));
+				getActivity().startActivityForResult(intent, CreateProjectActivity.MANAGE_USERS_REQUEST);
 			}
 		});
 
@@ -270,19 +272,12 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			getHelper().persistProjectCoverImage(projectCoverImage);
 
 			// Saving user to project relationships
-			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			getHelper().updateProjectContacts(project, mUserList);
 
 			// Pushing the changes
 			pushProjects();
 			pushProjectCoverImages();
 			pushUserToProjects();
-
-			// Resetting the global create project - user list
-			Globals.setCreateProjectActivityUserList(new ArrayList<User>());
-
-			// Resetting the global create project - project id
-			Globals.setCreateProjectActivityProjectId(null);
-
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -310,31 +305,44 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			getHelper().updateProjectCoverImage(projectCoverImage);
 
 			// Updating user to project relationships
-			getHelper().updateProjectContacts(project, Globals.getCreateProjectActivityUserList());
+			getHelper().updateProjectContacts(project, mUserList);
 
 			// Pushing the changes
 			pushProjects();
 			pushProjectCoverImages();
 			pushUserToProjects();
-
-			// Resetting the global create project - user list
-			Globals.setCreateProjectActivityUserList(new ArrayList<User>());
-
-			// Resetting the global create project - project id
-			Globals.setCreateProjectActivityProjectId(null);
-
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
 	}
-
+	
+	/**
+	 * Updates the user list based on what was returned from the ProjectContactsActivity
+	 * @param data
+	 */
+	void updateUsersList(Intent data) {
+		mUserList.clear();
+		
+		long[] userIdArray = data.getLongArrayExtra(BaseTask.USER_ID_ARRAY_EXTRA);
+		
+		for(long userId:userIdArray){
+			try {
+				mUserList.add(getHelper().getUser(userId));
+			} catch (SQLException e) {
+				Log.e(TAG, "SQLException caught!", e);
+			}
+		}
+		
+		// Refreshing member list when coming back from the Add People fragment
+		mUsersAdapter.updateRecycler(); 
+	}
+	
 	/**
 	 * Returns boolean indicating whether this is a new project or we are editing one
 	 * @return
 	 */
 	private boolean isNewProject(){
-		Long createProjectActivityProjectId = Globals.getCreateProjectActivityProjectId();
-		if(createProjectActivityProjectId == null){
+		if(projectId == null){
 			return true;
 		} else {
 			return false;
@@ -343,6 +351,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 	@Override
 	public void onResume() {
+		//TODO Remove this unused code if app works without it
 		super.onResume();
 
 		// Refreshing member list when coming back from the Add People fragment

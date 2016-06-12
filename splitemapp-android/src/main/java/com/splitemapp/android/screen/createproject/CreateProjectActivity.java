@@ -1,30 +1,33 @@
 package com.splitemapp.android.screen.createproject;
 
 
-import java.util.ArrayList;
-
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.SingleFragmentActivity;
-import com.splitemapp.commons.domain.User;
 
 public class CreateProjectActivity extends SingleFragmentActivity {
+	
+	public static final int MANAGE_USERS_REQUEST = 0;
+	
+	private CreateProjectFragment createProjectFragment = null;
 
 	@Override
 	protected Fragment createFragment() {
-		return new CreateProjectFragment();
+		createProjectFragment = new CreateProjectFragment(); 
+		return createProjectFragment;
 	}
 
 	@Override
 	public void onBackPressed() {
-		// Resetting the global create project - user list
-		Globals.setCreateProjectActivityUserList(new ArrayList<User>());
-
-		// Resetting the global create project - project id
-		Globals.setCreateProjectActivityProjectId(null);
-
 		// We create an intent to the ProjectActivity sending the information from the clicked project
 		finish();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == MANAGE_USERS_REQUEST){
+			createProjectFragment.updateUsersList(data);
+		}
 	}
 }

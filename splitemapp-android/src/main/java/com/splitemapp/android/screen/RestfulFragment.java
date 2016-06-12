@@ -16,7 +16,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.R;
 import com.splitemapp.android.dialog.CustomProgressDialog;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.managecontacts.ManageContactsFragment;
 import com.splitemapp.android.screen.welcome.WelcomeActivity;
 import com.splitemapp.android.service.BaseIntentService;
@@ -50,6 +49,7 @@ import com.splitemapp.android.task.LoginRequestTask;
 import com.splitemapp.android.task.LogoutRequestTask;
 import com.splitemapp.android.task.PasswordResetTask;
 import com.splitemapp.android.task.QuestionsTask;
+import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
 import com.splitemapp.commons.utils.Utils;
@@ -344,7 +344,7 @@ public abstract class RestfulFragment extends BaseFragment {
 				syncContacts();
 
 				// Setting the global connected to server to true
-				Globals.setIsConnectedToServer(true);
+				getPrefsManager().setBoolean(PreferencesManager.IS_CONNECTED_TO_SERVER, true);
 			}
 			@Override
 			public void executeOnFail(String message) {

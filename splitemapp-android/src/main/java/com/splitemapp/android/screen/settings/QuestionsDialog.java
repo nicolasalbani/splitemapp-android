@@ -45,8 +45,8 @@ public abstract class QuestionsDialog {
 	/**
 	 * Hides this dialog from the screen
 	 */
-	public void hide(){
-		dialog.hide();
+	public void dismiss(){
+		dialog.dismiss();
 	}
 	
 	/**

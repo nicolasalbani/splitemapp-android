@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.commons.domain.User;
@@ -21,9 +20,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	private List<User> mUsers;
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ContactsAdapter(BaseFragment baseFragment) {
+	public ContactsAdapter(BaseFragment baseFragment, List<User> userList) {
 		this.baseFragment = baseFragment;
-		this.mUsers = Globals.getCreateProjectActivityUserList();
+		this.mUsers = userList;
 	}
 
 	// Create new views (invoked by the layout manager)
@@ -60,8 +59,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	 * @param project
 	 */
 	public void updateRecycler(){
-		// Updating users list and refreshing adapter
-		mUsers = Globals.getCreateProjectActivityUserList();
 		notifyDataSetChanged();
 	}
 

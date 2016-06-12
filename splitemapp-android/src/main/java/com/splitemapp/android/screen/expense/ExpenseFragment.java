@@ -23,9 +23,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.DatePickerFragment;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.validator.EmptyValidator;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.constants.TableFieldCod;
@@ -41,6 +41,9 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	private static final int EXPENSE_CATEGORY_COLUMNS = 3;
 
 	private static final String TAG = ExpenseFragment.class.getSimpleName();
+	
+	private Long projectId;
+	private Long expenseId;
 
 	private User mCurrentUser;
 	private Project mCurrentProject;
@@ -61,21 +64,26 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Getting project ID
+		Bundle extras = getActivity().getIntent().getExtras();
+		projectId = extras.getLong(BaseTask.PROJECT_ID_EXTRA);
+		expenseId = extras.getLong(BaseTask.EXPENSE_ID_EXTRA);
 
 		try{
 			// We get the current user and project instances
 			mCurrentUser = getHelper().getLoggedUser();
-			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
 
 			// Setting the expense amount format
 			mExpenseAmountFormat = new ExpenseAmountFormat();
 			
 			// If we got an expense id, we are meant to edit that expense
 			if(isNewExpense()){
+				mCurrentProject = getHelper().getProject(projectId);
 				mUserExpense = new UserExpense();
 				mUserExpense.setExpenseDate(TimeUtils.getUTCDate());
 			} else {
-				mUserExpense = getHelper().getUserExpenseById(Globals.getExpenseActivityExpenseId());
+				mUserExpense = getHelper().getUserExpenseById(expenseId);
 			}
 		} catch (SQLException e){
 			Log.e(TAG, "SQLException caught!", e);
@@ -238,8 +246,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	 * @return
 	 */
 	private boolean isNewExpense(){
-		Long expenseActivityExpenseId = Globals.getExpenseActivityExpenseId();
-		if(expenseActivityExpenseId == null){
+		if(expenseId == null || expenseId.equals(0l)){
 			return true;
 		} else {
 			return false;

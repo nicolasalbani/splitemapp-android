@@ -19,6 +19,8 @@ public class PreferencesManager {
 	public static final String SHOW_MONTHLY_PROJECTS = "SHOW_MONTHLY_PROJECTS";
 	public static final String SHOW_ONE_TIME_PROJECTS = "SHOW_ONE_TIME_PROJECTS";
 	
+	public static final String IS_CONNECTED_TO_SERVER = "IS_CONNECTED_TO_SERVER";
+	
 	private SharedPreferences settings;
 
 	public PreferencesManager(Context context){
@@ -33,6 +35,9 @@ public class PreferencesManager {
 			// Updating initialized status
 			setBoolean(SETTINGS_INITIALIZED, true);
 
+			// Initializing connection to server status
+			setBoolean(IS_CONNECTED_TO_SERVER, true);
+			
 			// Initializing notification settings 
 			setBoolean(NOTIFY_NEW_EXPENSE, true);
 			setBoolean(NOTIFY_NEW_PROJECT, true);

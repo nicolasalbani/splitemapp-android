@@ -12,6 +12,9 @@ import com.splitemapp.commons.constants.ServiceConstants;
 public abstract class BaseTask {
 	
 	public static final String TASK_NAME = "TASK_NAME";
+	public static final String PROJECT_ID_EXTRA = "PROJECT_ID_EXTRA";
+	public static final String EXPENSE_ID_EXTRA = "EXPENSE_ID_EXTRA";
+	public static final String USER_ID_ARRAY_EXTRA = "USER_ID_ARRAY_EXTRA";
 	public static final String START_ANIMATION = "start_animation";
 	public static final String STOP_ANIMATION = "stop_animation";
 	public static final String EXPENSES_PUSHED = "expenses_pushed";

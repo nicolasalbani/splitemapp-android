@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.android.screen.RestfulFragment;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.project.ProjectActivity;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
@@ -71,11 +71,9 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mSwipeLayout.getSurfaceView().setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				// Saving the project ID in a global variable
-				Globals.setExpenseActivityProjectId(mProjects.get(position).getId());
-
 				// Creating an intent to the ProjectActivity
 				Intent intent = new Intent(view.getContext(), ProjectActivity.class);
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, mProjects.get(position).getId());
 				view.getContext().startActivity(intent);
 			}
 		});
@@ -84,11 +82,9 @@ public class SwipeProjectsAdapter extends RecyclerSwipeAdapter<SwipeProjectsAdap
 		viewHolder.mActionEdit.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View view) {
-				// Saving the project ID in a global variable
-				Globals.setCreateProjectActivityProjectId(viewHolder.project.getId());
-
 				// Creating an intent to the Create Project activity
 				Intent intent = new Intent(view.getContext(), CreateProjectActivity.class);
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, viewHolder.project.getId());
 				view.getContext().startActivity(intent);
 			}});
 

@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.BaseFragment;
 import com.splitemapp.commons.domain.User;
 
@@ -25,22 +24,22 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	private BaseFragment baseFragment;
 	private User mCurrentUser;
-	private List<User> mContacts;
+	List<User> mAllContacts;
+	List<User> mListContacts;
 
 	// Provide a suitable constructor (depends on the kind of dataset)
-	public ContactsAdapter(BaseFragment baseFragment) {
+	public ContactsAdapter(BaseFragment baseFragment, List<User> listContacts) {
 		this.baseFragment = baseFragment;
 		
+		// We save the reference to the list of Contacts
+		mListContacts = listContacts;
+		
 		// We add all the users in the local user database (contacts)
-		List<User> allContacts = null;
+		mAllContacts = new ArrayList<User>();
 		try {
-			allContacts = baseFragment.getHelper().getAllUsers();
+			mAllContacts = baseFragment.getHelper().getAllUsers();
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
-		}
-		mContacts = new ArrayList<User>();
-		for(User user:allContacts){
-			mContacts.add(user);
 		}
 		
 		// We get the user and user contact data instances
@@ -63,20 +62,20 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	@Override
 	public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 		// Saving user object
-		viewHolder.user = mContacts.get(position);
+		viewHolder.user = mAllContacts.get(position);
 
 		// Gets element from the data set at this position
 		// Replaces the contents of the view with that element
-		viewHolder.mUserNameTextView.setText(mContacts.get(position).getFullName());
+		viewHolder.mUserNameTextView.setText(mAllContacts.get(position).getFullName());
 
 		//Setting the user status icon
-		updateUserStatusIcon(viewHolder.mUserAvatarImageView, mContacts.get(position));
+		updateUserStatusIcon(viewHolder.mUserAvatarImageView, mAllContacts.get(position));
 		
 		// Setting OnClickListener to the user row
 		viewHolder.mParentView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				User user = mContacts.get(position);
+				User user = mAllContacts.get(position);
 				
 				//Only users different to current user can be added or removed
 				if(!isCurrentUser(user)){
@@ -92,7 +91,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	@Override
 	public int getItemCount() {
-		return mContacts.size();
+		return mAllContacts.size();
 	}
 
 	/**
@@ -101,7 +100,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	 */
 	public void updateRecycler(){
 		// Updating users list and refreshing adapter
-		mContacts = Globals.getCreateProjectActivityUserList();
 		notifyDataSetChanged();
 	}
 
@@ -109,7 +107,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	 * Remove item from Recycler view
 	 */
 	public void removeItem(ViewHolder viewHolder){
-		mContacts.remove(viewHolder.user);
+		mAllContacts.remove(viewHolder.user);
 		notifyItemRemoved(viewHolder.getAdapterPosition());
 	}
 
@@ -140,7 +138,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	}
 
 	private void updateUserStatusIcon(ImageView userStatusIcon, User user){
-		if(Globals.getCreateProjectActivityUserList().contains(user)){
+		if(mListContacts.contains(user)){
 			userStatusIcon.setImageResource(R.drawable.ic_checkbox_marked_circle_48dp);
 		} else {
 			if(baseFragment.isUserHasAvatar(user)){
@@ -152,12 +150,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 	}
 
 	private boolean isUserInList(User user){
-		return Globals.getCreateProjectActivityUserList().contains(user);
+		return mListContacts.contains(user);
 	}
 
 	private void addUserToList(ImageView view, User user){
 		// Adding the user to the list
-		Globals.getCreateProjectActivityUserList().add(user);
+		mListContacts.add(user);
 
 		// Updating the status icon as active
 		updateUserStatusIcon(view, user);
@@ -165,7 +163,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	private void removeUserFromList(ImageView view, User user){
 		// Removing the user from the list
-		Globals.getCreateProjectActivityUserList().remove(user);
+		mListContacts.remove(user);
 
 		// Updating the status icon as active
 		updateUserStatusIcon(view, user);

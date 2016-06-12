@@ -21,12 +21,12 @@ import android.widget.TextView;
 
 import com.splitemapp.android.R;
 import com.splitemapp.android.animator.CustomItemAnimator;
-import com.splitemapp.android.globals.Globals;
 import com.splitemapp.android.screen.RestfulFragmentWithTransparentActionbar;
 import com.splitemapp.android.screen.balance.BalanceActivity;
 import com.splitemapp.android.screen.balance.MonthMapper;
 import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
+import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
@@ -65,7 +65,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 		// We get the current user and project instances
 		try {
-			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(getActivity().getIntent().getExtras().getLong(BaseTask.PROJECT_ID_EXTRA));
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -92,6 +92,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			public void onClick(View arg0) {
 				// Creating an intent to the Balance activity
 				Intent intent = new Intent(getContext(), BalanceActivity.class);
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, mCurrentProject.getId());
 				getContext().startActivity(intent);
 			}
 		});
@@ -175,7 +176,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 			public void onClick(View arg0) {
 				// Moving to the expense creation screen
 				Intent intent = new Intent(getActivity(), ExpenseActivity.class);
-				Globals.setExpenseActivityProjectId(mCurrentProject.getId());
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, mCurrentProject.getId());
 				startActivity(intent);
 			}
 		});
@@ -216,7 +217,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 	 */
 	private void updateFragment(){
 		try {
-			mCurrentProject = getHelper().getProject(Globals.getExpenseActivityProjectId());
+			mCurrentProject = getHelper().getProject(mCurrentProject.getId());
 		} catch (SQLException e) {
 			Log.e(TAG, "SQLException caught!", e);
 		}
@@ -292,8 +293,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_archive).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Hiding dialog
-				listAlertDialog.hide();
+				// Dismissing dialog
+				listAlertDialog.dismiss();
 				// Showing custom alert to let the user confirm action
 				new ConfirmationAlertDialog(getContext()) {
 					@Override
@@ -329,8 +330,8 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_change_cover).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Hiding dialog
-				listAlertDialog.hide();
+				// Dismissing dialog
+				listAlertDialog.dismiss();
 				// Opening image selector to choose a new cover
 				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
 			}
@@ -340,13 +341,12 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 		listAlertDialog.findViewById(R.id.p_option_edit).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// Hiding dialog
-				listAlertDialog.hide();
-				// Saving the project ID in a global variable
-				Globals.setCreateProjectActivityProjectId(mCurrentProject.getId());
+				// Dismissing dialog
+				listAlertDialog.dismiss();
 
 				// Creating an intent to the Create Project activity
 				Intent intent = new Intent(getContext(), CreateProjectActivity.class);
+				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, mCurrentProject.getId());
 				getContext().startActivity(intent);
 			}
 		});;
