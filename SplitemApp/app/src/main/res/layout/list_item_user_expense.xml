@@ -1,0 +1,114 @@
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.splitemapp.android"
+    android:id="@+id/ue_swipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <!-- A LinearLayout containing the bottom view with actions -->
+
+    <LinearLayout
+        android:id="@+id/ue_bottomView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@color/grey"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/ue_action_archive_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingStart="20dp"
+            android:contentDescription="@string/ue_action_archive"
+            android:src="@drawable/ic_archive_24dp" />
+    </LinearLayout>
+
+    <!-- A CardView containing the surface view -->
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/ue_icon_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/ue_icon_description"
+                android:padding="3dp"
+                android:src="@drawable/ic_checkbox_blank_circle_outline_24dp" />
+
+            <TextView
+                android:id="@+id/ue_category_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/ue_icon_imageView"
+                android:layout_toRightOf="@id/ue_icon_imageView"
+                android:text="@string/ue_category_placeholder"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/ue_date_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/ue_category_textView"
+                android:layout_alignStart="@id/ue_category_textView"
+                android:layout_below="@id/ue_category_textView"
+                android:text="@string/ue_date_placeholder"
+                android:textColor="@color/hard_grey"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignLeft="@id/ue_category_textView"
+                android:layout_alignStart="@id/ue_category_textView"
+                android:layout_below="@id/ue_date_textView"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/ue_dollar_sign_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="7dp"
+                android:layout_toLeftOf="@+id/ue_amount_textView"
+                android:layout_toStartOf="@+id/ue_amount_textView"
+                android:text="@string/ue_currency"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@id/ue_amount_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:padding="7dp"
+                android:text="@string/ue_amount_placeholder"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</com.daimajia.swipe.SwipeLayout>

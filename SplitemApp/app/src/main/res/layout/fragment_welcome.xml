@@ -1,0 +1,51 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/seablue"
+            android:padding="20dp" >
+
+            <View
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_circle" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/w_app_logo_description"
+                android:src="@drawable/ic_app_logo" />
+        </RelativeLayout>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/w_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/seablue"
+            app:tabIndicatorColor="@color/green"
+            app:tabIndicatorHeight="4dp"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/CustomTabTextAppearance"
+            app:tabTextColor="@color/darkblue" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/w_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="330dp"
+            android:background="@color/white" >
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+
+</ScrollView>

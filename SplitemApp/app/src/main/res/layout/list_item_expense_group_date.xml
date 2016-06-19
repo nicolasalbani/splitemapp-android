@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingEnd="0dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="0dp"
+    android:paddingStart="15dp" >
+
+    <RelativeLayout
+        android:id="@+id/b_icon_relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp" >
+
+        <View
+            android:id="@+id/b_circle_imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_ring" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/b_month_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/b_month_short_placeholder"
+                android:textColor="@color/barblue"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/b_year_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/b_year_placeholder"
+                android:textColor="@color/hard_grey"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
+        android:background="@color/middle_grey" />
+
+    <View
+        android:id="@+id/b_bar_view"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toEndOf="@id/b_icon_relativeLayout"
+        android:layout_toRightOf="@id/b_icon_relativeLayout"
+        android:background="@color/barblue" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/b_bar_view"
+        android:layout_toRightOf="@id/b_bar_view"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/b_amount_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/b_amount_placeholder"
+            android:textColor="@color/middle_grey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/b_balance_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/b_share_calc_placeholder"
+            android:textColor="@color/green"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</RelativeLayout>

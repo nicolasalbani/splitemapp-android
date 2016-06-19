@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.splitemapp.android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat">
+
+        <service
+            android:name="com.splitemapp.android.service.BaseIntentService">
+        </service>
+
+        <!-- Android GCM START -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.splitemapp.android.gcm" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.splitemapp.android.service.gcm.MyGcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.splitemapp.android.service.gcm.MyInstanceIDListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.splitemapp.android.service.gcm.RegistrationIntentService"
+            android:exported="false" >
+        </service>
+        <!-- Android GCM END -->
+
+        <activity
+            android:name="com.splitemapp.android.screen.welcome.WelcomeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.home.HomeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.createproject.CreateProjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.project.ProjectActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.expense.ExpenseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.balance.BalanceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.managecontacts.ManageContactsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+        <activity
+            android:name="com.splitemapp.android.screen.settings.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/NoActionBarTheme" >
+        </activity>
+    </application>
+
+</manifest>
