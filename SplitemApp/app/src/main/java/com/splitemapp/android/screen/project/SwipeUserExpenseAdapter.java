@@ -42,6 +42,7 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 		public UserExpense mUserExpense;
 		public ImageView mIconImageView;
 		public TextView mCategoryTextView;
+		public TextView mNotesTextView;
 		public TextView mDateTextView;
 		public TextView mAmountTextView;
 
@@ -55,6 +56,7 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 			super(view);
 			mIconImageView = (ImageView)view.findViewById(R.id.ue_icon_imageView);
 			mCategoryTextView = (TextView)view.findViewById(R.id.ue_category_textView);
+			mNotesTextView = (TextView)view.findViewById(R.id.ue_notes_textView);
 			mDateTextView = (TextView)view.findViewById(R.id.ue_date_textView);
 			mAmountTextView = (TextView)view.findViewById(R.id.ue_amount_textView);
 			mActionArchive = (ImageView)view.findViewById(R.id.ue_action_archive_imageView);
@@ -102,6 +104,13 @@ public class SwipeUserExpenseAdapter extends RecyclerSwipeAdapter<SwipeUserExpen
 		// Setting category title
 		Short expenseCategoryId = viewHolder.mUserExpense.getExpenseCategory().getId();
 		viewHolder.mCategoryTextView.setText(ExpenseCategoryMapper.values()[expenseCategoryId-1].getTitleId());
+
+		// Setting notes
+		if(viewHolder.mUserExpense.getNote() != null && !viewHolder.mUserExpense.getNote().isEmpty()){
+			viewHolder.mNotesTextView.setText("("+viewHolder.mUserExpense.getNote()+")");
+		} else {
+			viewHolder.mNotesTextView.setText("");
+		}
 
 		// Setting date
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();

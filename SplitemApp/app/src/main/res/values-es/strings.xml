@@ -134,6 +134,7 @@
     <!-- Add User Expense Screen -->
     <string name="ue_icon_description">Icono de Gastos</string>
     <string name="ue_category_placeholder">Categoria</string>
+    <string name="ue_notes_placeholder">Detalle</string>
     <string name="ue_date_placeholder">13 10 2014</string>
     <string name="ue_currency">$</string>
     <string name="ue_amount_placeholder">30,5%</string>
@@ -163,6 +164,7 @@
     <string name="e_new_title">Nuevo Gasto</string>
     <string name="e_edit_title">Editar Gasto</string>
     <string name="e_cancel_action">Cancelar</string>
+    <string name="e_notes_hint">Algún comentario?</string>
     <string name="e_save_action">Guardar</string>
     <string name="e_expenseamount_hint">Monto del gasto</string>
     <string name="e_currency">$</string>

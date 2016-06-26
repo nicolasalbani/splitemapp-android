@@ -51,6 +51,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	private short mSelectedCategory;
 
 	private EditText mExpenseAmount;
+	private EditText mExpenseNotes;
 	private ExpenseAmountFormat mExpenseAmountFormat;
 	private TextView mExpenseDateText;
 
@@ -153,10 +154,14 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 			}
 		});
 
+		// We inflate the expense notes object
+		mExpenseNotes = (EditText) v.findViewById(R.id.e_expense_note_editText);
+
 		// If we are editing the expense, we populate the values
 		if(!isNewExpense()){
 			mSelectedCategory = (short) (mUserExpense.getExpenseCategory().getId().shortValue()-1);
 			mExpenseAmount.setText(mExpenseAmountFormat.format(mUserExpense.getExpense()));
+			mExpenseNotes.setText(mUserExpense.getNote());
 			updateExpenseDateDisplay(mUserExpense);
 		}
 
@@ -189,6 +194,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 			// We save the user expense to the DB
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
+			mUserExpense.setNote(mExpenseNotes.getText().toString());
 			mUserExpense.setExpenseCategory(expenseCategory);
 			mUserExpense.setProject(mCurrentProject);
 			mUserExpense.setUser(mCurrentUser);
@@ -213,6 +219,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 
 			// We save the user expense to the DB
 			mUserExpense.setExpense(new BigDecimal(mExpenseAmount.getText().toString()));
+			mUserExpense.setNote(mExpenseNotes.getText().toString());
 			mUserExpense.setExpenseCategory(expenseCategory);
 
 			// TODO Only set the user if we are owning the expense
