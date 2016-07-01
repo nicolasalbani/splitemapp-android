@@ -69,7 +69,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		viewHolder.mUserNameTextView.setText(mAllContacts.get(position).getFullName());
 
 		//Setting the user status icon
-		updateUserStatusIcon(viewHolder.mUserAvatarImageView, mAllContacts.get(position));
+		updateUserStatusIcon(viewHolder.mUserAvatarImageView, viewHolder.mUserInitialsTextView, mAllContacts.get(position));
 		
 		// Setting OnClickListener to the user row
 		viewHolder.mParentView.setOnClickListener(new OnClickListener() {
@@ -80,9 +80,9 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 				//Only users different to current user can be added or removed
 				if(!isCurrentUser(user)){
 					if(isUserInList(user)){
-						removeUserFromList(viewHolder.mUserAvatarImageView, user);
+						removeUserFromList(viewHolder.mUserAvatarImageView, viewHolder.mUserInitialsTextView, user);
 					} else {
-						addUserToList(viewHolder.mUserAvatarImageView, user);
+						addUserToList(viewHolder.mUserAvatarImageView, viewHolder.mUserInitialsTextView, user);
 					}
 				}
 			}
@@ -96,7 +96,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	/**
 	 * Updates Recycler view adding any existing new items to the list
-	 * @param project
 	 */
 	public void updateRecycler(){
 		// Updating users list and refreshing adapter
@@ -120,6 +119,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 		// Declaring all the items in the surface view
 		ImageView mUserAvatarImageView;
+		TextView mUserInitialsTextView;
 		TextView mUserNameTextView;
 		RelativeLayout mParentView;
 
@@ -127,6 +127,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 			super(view);
 			// Getting instances for all surface items
 			mUserAvatarImageView = (ImageView)view.findViewById(R.id.pc_user_status_icon);
+			mUserInitialsTextView = (TextView)view.findViewById(R.id.pc_initials_textView);
 			mUserNameTextView = (TextView)view.findViewById(R.id.pc_user_full_name);
 			mParentView = (RelativeLayout)view.findViewById(R.id.ap_parentView);
 		}
@@ -137,15 +138,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		return user.getId() == mCurrentUser.getId();
 	}
 
-	private void updateUserStatusIcon(ImageView userStatusIcon, User user){
+	private void updateUserStatusIcon(ImageView userStatusIcon, TextView userInitialsTextView, User user){
 		if(mListContacts.contains(user)){
 			userStatusIcon.setImageResource(R.drawable.ic_checkbox_marked_circle_48dp);
+			userInitialsTextView.setText("");
 		} else {
-			if(baseFragment.isUserHasAvatar(user)){
-				baseFragment.setUsetAvatarToImageView(userStatusIcon, user, 40);
-			} else {
-				userStatusIcon.setImageResource(R.drawable.ic_checkbox_blank_circle_outline_48dp);
-			}
+			baseFragment.setUsetAvatarToImageView(userStatusIcon, userInitialsTextView, user, 40);
 		}
 	}
 
@@ -153,19 +151,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		return mListContacts.contains(user);
 	}
 
-	private void addUserToList(ImageView view, User user){
+	private void addUserToList(ImageView view, TextView userInitialsTextView, User user){
 		// Adding the user to the list
 		mListContacts.add(user);
 
 		// Updating the status icon as active
-		updateUserStatusIcon(view, user);
+		updateUserStatusIcon(view, userInitialsTextView, user);
 	}
 
-	private void removeUserFromList(ImageView view, User user){
+	private void removeUserFromList(ImageView view, TextView userInitialsTextView, User user){
 		// Removing the user from the list
 		mListContacts.remove(user);
 
 		// Updating the status icon as active
-		updateUserStatusIcon(view, user);
+		updateUserStatusIcon(view, userInitialsTextView, user);
 	}
 }

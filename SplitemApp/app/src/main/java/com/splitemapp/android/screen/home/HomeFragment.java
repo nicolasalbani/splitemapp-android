@@ -40,7 +40,9 @@ public class HomeFragment extends RestfulFragment {
 
 	private DrawerLayout mDrawerLayout;
 
+	private View mNavView;
 	private ImageView mNavAvatar;
+	private TextView mNavInitials;
 	private TextView mNavFullName;
 	private TextView mNavEmail;
 	private FloatingActionButton mFab;
@@ -87,14 +89,36 @@ public class HomeFragment extends RestfulFragment {
 		// We populate the first name in the navigation view
 		mNavFullName = (TextView) v.findViewById(R.id.h_nav_full_name_textView);
 		mNavFullName.setText(mCurrentUser.getFullName());
+		mNavFullName.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// Closing the drawer
+				mDrawerLayout.closeDrawers();
+				// Open settings window
+				startActivity( new Intent(getActivity(), SettingsActivity.class));
+			}
+		});
+
 
 		// We populate the email in the navigation view
 		mNavEmail = (TextView) v.findViewById(R.id.h_nav_email_textView);
 		mNavEmail.setText(mCurrentUser.getUsername());
 
+
 		// We set the user avatar in the navigation view
 		mNavAvatar = (ImageView) v.findViewById(R.id.h_nav_avatar_imageView);
-		setUsetAvatarToImageView(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		mNavAvatar.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				// Closing the drawer
+				mDrawerLayout.closeDrawers();
+				// Open settings window
+				startActivity( new Intent(getActivity(), SettingsActivity.class));
+			}
+		});
+		mNavInitials = (TextView) v.findViewById(R.id.h_nav_initials_textView);
+		setUsetAvatarToImageView(mNavAvatar, mNavInitials, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+
 
 		// Creating a projects adapter to be used in the recycler view
 		mProjectsAdapter = new SwipeProjectsAdapter(this);
@@ -125,6 +149,15 @@ public class HomeFragment extends RestfulFragment {
 			public void onClick(View arg0) {
 				// Opening the drawer
 				mDrawerLayout.openDrawer(Gravity.LEFT);
+			}
+		});
+
+		// Adding OnClickListener to the drawer so it catches the click event
+		mNavView = v.findViewById(R.id.h_nav_view);
+		mNavView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				// Do nothing when clicked
 			}
 		});
 
@@ -328,7 +361,7 @@ public class HomeFragment extends RestfulFragment {
 		mNavFullName.setText(mCurrentUser.getFullName());
 
 		// Updating the Avatar
-		setUsetAvatarToImageView(mNavAvatar, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		setUsetAvatarToImageView(mNavAvatar, mNavInitials, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 	}
 	
 	private void updateEmptyHint(){

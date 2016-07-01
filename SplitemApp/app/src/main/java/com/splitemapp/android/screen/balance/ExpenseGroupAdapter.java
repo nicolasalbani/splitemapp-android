@@ -408,7 +408,7 @@ public class ExpenseGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 					Drawable userAvatar =ImageUtils.byteArrayToCroppedDrawable(avatarData, ImageUtils.IMAGE_QUALITY_MAX, mBaseFragment.getResources());
 					expenseGroup.setDrawable(userAvatar);
 				} else {
-					expenseGroup.setDrawable(ContextCompat.getDrawable(mBaseFragment.getContext(), R.drawable.ic_avatar_placeholder_80dp));
+					expenseGroup.setDrawable(ContextCompat.getDrawable(mBaseFragment.getContext(), R.drawable.shape_circle_blue));
 				}
 
 				// Getting the userToProject relationship

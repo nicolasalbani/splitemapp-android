@@ -31,6 +31,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 	private User mCurrentUser;
 
 	private ImageView mAvatarImageView;
+	private TextView mUserInitialsTextView;
 	private EditText mFullNameEditText;
 	private TextView mEmailTextView;
 
@@ -73,7 +74,8 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 		// We set the user avatar in the navigation view
 		mAvatarImageView = (ImageView) v.findViewById(R.id.s_avatar_imageView);
-		setUsetAvatarToImageView(mAvatarImageView, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
+		mUserInitialsTextView = (TextView) v.findViewById(R.id.s_initials_textView);
+		setUsetAvatarToImageView(mAvatarImageView, mUserInitialsTextView, mCurrentUser, ImageUtils.IMAGE_QUALITY_MAX);
 		mAvatarImageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

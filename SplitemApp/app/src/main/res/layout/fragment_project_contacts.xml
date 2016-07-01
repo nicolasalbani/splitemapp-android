@@ -6,6 +6,11 @@
     android:background="@color/white" >
     
     <include layout="@layout/toolbar_blue"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/shape_toolbar_dropshadow" />
     
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pc_contacts_recyclerView"

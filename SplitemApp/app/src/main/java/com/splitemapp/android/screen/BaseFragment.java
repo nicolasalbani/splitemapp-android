@@ -182,11 +182,11 @@ public abstract class BaseFragment extends Fragment {
 
 	/**
 	 * Sets the user avatar image to the provided image view and the specified image quality
-	 * @param userAvatarResource
+	 * @param userAvatar
 	 * @param user
 	 * @param imageQuality
 	 */
-	public void setUsetAvatarToImageView(ImageView userAvatarResource, User user, int imageQuality){
+	public void setUsetAvatarToImageView(ImageView userAvatar, TextView userInitials, User user, int imageQuality){
 		//Getting the user avatar
 		byte[] avatar = null;
 		try {
@@ -197,7 +197,17 @@ public abstract class BaseFragment extends Fragment {
 
 		// Setting the avatar
 		if(avatar != null){
-			userAvatarResource.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,imageQuality)));
+			userAvatar.setImageBitmap(ImageUtils.getCroppedBitmap(ImageUtils.byteArrayToBitmap(avatar,imageQuality)));
+		} else {
+			// Setting blue background by default
+			userAvatar.setImageResource(R.drawable.shape_circle_blue);
+			// Getting initials from user
+			String[] tokens = user.getFullName().toUpperCase().split(" ");
+			String initials = tokens[0].substring(0,1);
+			if(tokens.length >= 2){
+				initials = initials + tokens[1].substring(0,1);
+			}
+			userInitials.setText(initials);
 		}
 	}
 
@@ -238,7 +248,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Sets the project avatar image to the provided image view and the specified image quality
 	 * @param projectAvatarResource
-	 * @param project
+	 * @param projectId
 	 * @param imageQuality
 	 */
 	public void setProjectAvatar(ImageView projectAvatarResource, Long projectId, int imageQuality){
@@ -259,7 +269,7 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Sets the project cover image to the provided image view and the specified image quality
 	 * @param projectAvatarResource
-	 * @param user
+	 * @param project
 	 * @param imageQuality
 	 */
 	public void setProjectCoverImage(ImageView projectAvatarResource, Project project, int imageQuality){

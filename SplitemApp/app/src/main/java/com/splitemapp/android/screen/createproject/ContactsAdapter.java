@@ -46,7 +46,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		viewHolder.mUserEmailTextView.setText(mUsers.get(position).getUsername());
 
 		// Setting the project image cover
-		baseFragment.setUsetAvatarToImageView(viewHolder.mUserAvatarImageView, mUsers.get(position), ImageUtils.IMAGE_QUALITY_MAX);
+		baseFragment.setUsetAvatarToImageView(viewHolder.mUserAvatarImageView, viewHolder.mUserInitialsTextView, mUsers.get(position), ImageUtils.IMAGE_QUALITY_MAX);
 	}
 
 	@Override
@@ -56,7 +56,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
 	/**
 	 * Updates Recycler view adding any existing new items to the list
-	 * @param project
 	 */
 	public void updateRecycler(){
 		notifyDataSetChanged();
@@ -81,6 +80,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 		ImageView mUserAvatarImageView;
 		TextView mUserNameTextView;
 		TextView mUserEmailTextView;
+		TextView mUserInitialsTextView;
 
 		public ViewHolder(View view) {
 			super(view);
@@ -88,6 +88,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 			mUserAvatarImageView = (ImageView)view.findViewById(R.id.cp_user_avatar);
 			mUserNameTextView = (TextView)view.findViewById(R.id.cp_user_name);
 			mUserEmailTextView = (TextView)view.findViewById(R.id.cp_user_email);
+			mUserInitialsTextView = (TextView)view.findViewById(R.id.cp_initials_textView);
 		}
 
 	}

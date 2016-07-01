@@ -97,23 +97,40 @@
     <!-- The navigation drawer -->
 
     <RelativeLayout
+        android:id="@+id/h_nav_view"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/grey" >
 
-        <ImageView
-            android:id="@+id/h_nav_avatar_imageView"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+        <RelativeLayout
+            android:id="@+id/h_nav_avatar_view"
+            android:layout_width="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="13dp"
             android:layout_marginStart="13dp"
             android:layout_marginTop="15dp"
-            android:contentDescription="@string/h_avatar_description"
-            android:src="@drawable/ic_avatar_placeholder_80dp" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/h_nav_avatar_imageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/h_avatar_description"
+                android:src="@drawable/shape_circle_blue" />
+
+            <TextView
+                android:id="@+id/h_nav_initials_textView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textSize="40dp"
+                android:textColor="@color/grey" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/h_nav_full_name_textView"
@@ -121,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/h_nav_avatar_imageView"
+            android:layout_below="@id/h_nav_avatar_view"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
             android:text="@string/h_name"
