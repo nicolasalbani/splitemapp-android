@@ -86,7 +86,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		// We populate the first name in the main view
 		mFullNameEditText = (EditText) v.findViewById(R.id.s_full_name_editText);
 		mFullNameEditText.setText(mCurrentUser.getFullName());
-		mFullNameEditText.addTextChangedListener(new EmptyValidator(mFullNameEditText, false) {
+		mFullNameEditText.addTextChangedListener(new EmptyValidator(mFullNameEditText, false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				if(isValid){
@@ -128,7 +128,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 				// Getting the current password
 				mCurrentPasswordText = (EditText) changePasswordDialog.findViewById(R.id.pc_current_password_editText);
-				mCurrentPasswordText.addTextChangedListener(new EmptyValidator(mCurrentPasswordText, true) {
+				mCurrentPasswordText.addTextChangedListener(new EmptyValidator(mCurrentPasswordText, true, getContext()) {
 					@Override
 					public void onValidationAction(boolean isValid) {
 						isCurrentPasswordValid = isValid;
@@ -139,14 +139,14 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 				// Getting the new password
 				mNewPasswordText = (EditText) changePasswordDialog.findViewById(R.id.pc_new_password_editText);
 				mNewPasswordConfirmationText = (EditText) changePasswordDialog.findViewById(R.id.pc_confirm_password_editText);
-				mNewPasswordText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true) {
+				mNewPasswordText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true, getContext()) {
 					@Override
 					public void onValidationAction(boolean isValid) {
 						isNewPasswordConfirmationValid = isValid;
 						updateChangePasswordButton();
 					}
 				});
-				mNewPasswordConfirmationText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true) {
+				mNewPasswordConfirmationText.addTextChangedListener(new PasswordConfirmValidator(mNewPasswordText, mNewPasswordConfirmationText, true, getContext()) {
 					@Override
 					public void onValidationAction(boolean isValid) {
 						isNewPasswordConfirmationValid = isValid;
@@ -186,7 +186,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 				// Getting the message
 				mMessageEditText = (EditText) questionsDialog.findViewById(R.id.aaq_message_EditText);
-				mMessageEditText.addTextChangedListener(new EmptyValidator(mMessageEditText, true, R.drawable.shape_bordered_rectangle) {
+				mMessageEditText.addTextChangedListener(new EmptyValidator(mMessageEditText, true, R.drawable.shape_bordered_rectangle, getContext()) {
 					@Override
 					public void onValidationAction(boolean isValid) {
 						mSendButton.setEnabled(isValid);

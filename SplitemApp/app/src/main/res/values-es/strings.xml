@@ -253,4 +253,10 @@
     <string name="e_category_home">Casa</string>
     <string name="e_category_gifts">Regalos</string>
     <string name="e_category_shopping">Compras</string>
+
+    <!-- Validation Messages -->
+    <string name="val_password">Tu contraseña debe tener entre 8 y 15 caracteres</string>
+    <string name="val_password_confirm">La contraseña y la confirmacion no coinciden</string>
+    <string name="val_empty">Este valor no puede estar vacio</string>
+    <string name="val_email">Debes usar una direccion de e-mail valida</string>
 </resources>

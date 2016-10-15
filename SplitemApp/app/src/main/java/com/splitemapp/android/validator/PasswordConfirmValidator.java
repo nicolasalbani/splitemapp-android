@@ -1,14 +1,17 @@
 package com.splitemapp.android.validator;
 
+import android.content.Context;
 import android.widget.TextView;
+
+import com.splitemapp.android.R;
 
 public abstract class PasswordConfirmValidator extends TextConfirmValidator {
 
 	static final int MIN_LENGTH = 8;
 	static final int MAX_LENGTH = 15;
 
-	public PasswordConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor) {
-		super(textView,textViewConfirm,showOkColor);
+	public PasswordConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor,Context resources) {
+		super(textView,textViewConfirm,showOkColor,resources);
 	}
 	
 	@Override
@@ -21,12 +24,8 @@ public abstract class PasswordConfirmValidator extends TextConfirmValidator {
 			}
 		}
 
-		if(isValid){
-			showValidColor(textView);
-			showValidColor(textViewConfirm);
-		} else {
-			showInvalidColor(textView);
-			showInvalidColor(textViewConfirm);
+		if(!isValid){
+			textView.setError(getResources().getString(R.string.val_password_confirm));
 		}
 		
 		onValidationAction(isValid);

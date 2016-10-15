@@ -131,7 +131,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		
 		// We get the project name field
 		mProjectTitle = (EditText) v.findViewById(R.id.cp_project_name_editText);
-		mProjectTitle.addTextChangedListener(new EmptyValidator(mProjectTitle, false) {
+		mProjectTitle.addTextChangedListener(new EmptyValidator(mProjectTitle, false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				mProjectTitleValid = isValid;
@@ -142,7 +142,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		// We get the project budget field
 		mProjectBudget = (EditText) v.findViewById(R.id.cp_budget_editText);
 		mProjectBudget.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
-		mProjectBudget.addTextChangedListener(new EmptyValidator(mProjectBudget, false) {
+		mProjectBudget.addTextChangedListener(new EmptyValidator(mProjectBudget, false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				mProjectBudgetValid = isValid;

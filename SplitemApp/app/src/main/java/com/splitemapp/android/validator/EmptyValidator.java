@@ -1,15 +1,18 @@
 package com.splitemapp.android.validator;
 
+import android.content.Context;
 import android.widget.TextView;
+
+import com.splitemapp.android.R;
 
 public abstract class EmptyValidator extends TextValidator {
 
-	public EmptyValidator(TextView textView, boolean showOkColor) {
-		super(textView,showOkColor);
+	public EmptyValidator(TextView textView, boolean showOkColor, Context resources) {
+		super(textView,showOkColor,resources);
 	}
 	
-	public EmptyValidator(TextView textView, boolean showOkColor, int okDrawableResource) {
-		super(textView,showOkColor,okDrawableResource);
+	public EmptyValidator(TextView textView, boolean showOkColor, int okDrawableResource,Context resources) {
+		super(textView,showOkColor,okDrawableResource,resources);
 	}
 
 	@Override
@@ -20,12 +23,10 @@ public abstract class EmptyValidator extends TextValidator {
 			isValid = true;
 		}
 
-		if(isValid){
-			showValidColor(textView);
-		} else {
-			showInvalidColor(textView);
+		if(!isValid){
+			textView.setError(getResources().getString(R.string.val_empty));
 		}
-		
+
 		onValidationAction(isValid);
 	}
 

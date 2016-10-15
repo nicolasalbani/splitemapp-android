@@ -46,7 +46,7 @@ public class CreateAccountFragment extends RestfulFragment {
 
 		// We assign a validator to the user name field
 		mUserName = (EditText) v.findViewById(R.id.ca_username_editText);
-		mUserName.addTextChangedListener(new EmptyValidator(mUserName, false) {
+		mUserName.addTextChangedListener(new EmptyValidator(mUserName, false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				mIsUserNameValid = isValid;
@@ -56,7 +56,7 @@ public class CreateAccountFragment extends RestfulFragment {
 		
 		// We assign a validator to the email field
 		mEmail = (EditText) v.findViewById(R.id.ca_email_editText);
-		mEmail.addTextChangedListener(new EmailValidator(mEmail, false) {
+		mEmail.addTextChangedListener(new EmailValidator(mEmail, false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				mIsEmailValid = isValid;
@@ -66,7 +66,7 @@ public class CreateAccountFragment extends RestfulFragment {
 		
 		// We assign a validator to the password field
 		mPassword = (EditText) v.findViewById(R.id.ca_password_editText);
-		mPassword.addTextChangedListener(new PasswordValidator(mPassword, false){
+		mPassword.addTextChangedListener(new PasswordValidator(mPassword, false, getContext()){
 			@Override
 			public void onValidationAction(boolean isValid) {
 				mIsPasswordValid = isValid;

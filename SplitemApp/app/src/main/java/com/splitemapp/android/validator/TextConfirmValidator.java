@@ -1,18 +1,19 @@
 package com.splitemapp.android.validator;
 
+import android.content.Context;
 import android.widget.TextView;
 
 public abstract class TextConfirmValidator extends TextValidator {
 	
 	private final TextView textViewConfirm;
 
-	public TextConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor) {
-		super(textView, showOkColor);
+	public TextConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor, Context resources) {
+		super(textView, showOkColor, resources);
 		this.textViewConfirm = textViewConfirm;
 	}
 	
-	public TextConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor, int okDrawableResource) {
-		super(textView, showOkColor, okDrawableResource);
+	public TextConfirmValidator(TextView textView, TextView textViewConfirm, boolean showOkColor, int okDrawableResource, Context resources) {
+		super(textView, showOkColor, okDrawableResource, resources);
 		this.textViewConfirm = textViewConfirm;
 	}
 

@@ -143,7 +143,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		// We inflate the expense amount object
 		mExpenseAmount = (EditText) v.findViewById(R.id.e_expense_amount_editText);
 		mExpenseAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(ExpenseAmountFormat.MAX_DIGITS_BEFORE_DECIMAL,ExpenseAmountFormat.MAX_DIGITS_AFTER_DECIMAL)});
-		mExpenseAmount.addTextChangedListener(new EmptyValidator(mExpenseAmount,false) {
+		mExpenseAmount.addTextChangedListener(new EmptyValidator(mExpenseAmount,false, getContext()) {
 			@Override
 			public void onValidationAction(boolean isValid) {
 				if(isValid){

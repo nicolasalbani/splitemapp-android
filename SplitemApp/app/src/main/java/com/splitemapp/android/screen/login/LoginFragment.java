@@ -91,7 +91,7 @@ public class LoginFragment extends RestfulFragment {
 
 				// Getting the email address
 				mEmailEditText = (EditText) addContactDialog.findViewById(R.id.fp_email_editText);
-				mEmailEditText.addTextChangedListener(new EmailValidator(mEmailEditText,  true, R.drawable.shape_bordered_rectangle) {
+				mEmailEditText.addTextChangedListener(new EmailValidator(mEmailEditText,  true, R.drawable.shape_bordered_rectangle, getContext()) {
 					@Override
 					public void onValidationAction(boolean isValid) {
 						mIsEmailValid = isValid;
