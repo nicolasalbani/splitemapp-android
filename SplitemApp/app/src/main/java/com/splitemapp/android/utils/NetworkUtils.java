@@ -47,8 +47,6 @@ public class NetworkUtils {
 	
 	/**
 	 * Checks for connection to server
-	 * @param url
-	 * @param timeout
 	 * @return
 	 */
 	public static boolean isConnectedToServer() {

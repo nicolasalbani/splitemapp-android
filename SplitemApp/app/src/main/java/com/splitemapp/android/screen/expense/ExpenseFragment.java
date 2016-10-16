@@ -253,7 +253,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	 * @return
 	 */
 	private boolean isNewExpense(){
-		if(expenseId == null || expenseId.equals(0l)){
+		if(expenseId == null || expenseId.equals(0L)){
 			return true;
 		} else {
 			return false;

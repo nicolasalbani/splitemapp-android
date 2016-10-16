@@ -259,4 +259,7 @@
     <string name="val_password_confirm">La contraseña y la confirmacion no coinciden</string>
     <string name="val_empty">Este valor no puede estar vacio</string>
     <string name="val_email">Debes usar una direccion de e-mail valida</string>
+
+    <!-- Permissions Messages -->
+    <string name="perm_contacts">Hasta que nos des permiso, no podremos sincronizar tus contactos</string>
 </resources>

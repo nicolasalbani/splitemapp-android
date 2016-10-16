@@ -23,6 +23,7 @@ android {
         pickFirst  'META-INF/spring.tooling'
         pickFirst  'META-INF/notice.txt'
         pickFirst  'META-INF/license.txt'
+        pickFirst  'META-INF/LICENSE'
     }
 }
 
