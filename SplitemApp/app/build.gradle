@@ -35,8 +35,8 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'com.daimajia.swipe:android-swipelayout:1.0.0'
-    compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.j256.ormlite:ormlite-core:5.0'
+    compile 'com.j256.ormlite:ormlite-android:5.0'
     compile ('com.splitemapp:splitemapp-commons:1.0.0-SNAPSHOT') {
         exclude module: 'junit'
         exclude module: 'commons-logging'
