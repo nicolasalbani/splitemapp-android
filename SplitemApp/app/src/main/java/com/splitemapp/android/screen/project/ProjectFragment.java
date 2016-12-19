@@ -333,7 +333,7 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 				// Dismissing dialog
 				listAlertDialog.dismiss();
 				// Opening image selector to choose a new cover
-				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
+				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight(), false);
 			}
 		});;
 

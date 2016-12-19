@@ -223,7 +223,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			@Override
 			public void onClick(View arg0) {
 				// Opening image selector
-				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight());
+				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight(), false);
 			}
 		});
 

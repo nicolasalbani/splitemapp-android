@@ -50,6 +50,11 @@
         </service>
         <!-- Android GCM END -->
 
+        <!-- Android Image Cropping -->
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
+
+        <!-- SplitemApp Activities -->
         <activity
             android:name="com.splitemapp.android.screen.welcome.WelcomeActivity"
             android:screenOrientation="portrait"

@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import android.content.Intent;
@@ -33,6 +34,10 @@ import com.splitemapp.commons.domain.Project;
 import com.splitemapp.commons.domain.User;
 import com.splitemapp.commons.domain.UserAvatar;
 import com.splitemapp.commons.domain.UserExpense;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import static android.app.Activity.RESULT_OK;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -123,16 +128,24 @@ public abstract class BaseFragment extends Fragment {
 	/**
 	 * Opens the image 
 	 */
-	public void openImageSelector(Integer imageWidth, Integer imageHeight){
+	public void openImageSelector(Integer imageWidth, Integer imageHeight, boolean isCircular){
 		// Setting image size
 		this.imageHeight = imageHeight;
 		this.imageWidth = imageWidth;
 
 		// Calling intent
-		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-		intent.setType("image/*");
-		intent.putExtra("crop", "true");
-		getActivity().startActivityForResult(Intent.createChooser(intent,"Complete action using"), Constants.SELECT_PICTURE_REQUEST_CODE);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        // Opening image selector
+        int requestCode;
+        if(isCircular){
+            requestCode = Constants.SELECT_CIRCULAR_PICTURE_REQUEST_CODE;
+        } else {
+            requestCode = Constants.SELECT_RECTANGULAR_PICTURE_REQUEST_CODE;
+        }
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
 	}
 
 	/**
@@ -288,14 +301,6 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	/**
-	 * Returns whether or not the image should be cropped to a circle. False if not overriden.
-	 * @return
-	 */
-	public boolean getCropImage(){
-		return false;
-	}
-
-	/**
 	 * Executes custom code upon picking an image
 	 */
 	public void executeOnImageSelection(Bitmap selectedBitmap){}
@@ -305,20 +310,34 @@ public abstract class BaseFragment extends Fragment {
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == Constants.SELECT_PICTURE_REQUEST_CODE  && null != data) {
-			// Getting the image bitmap
-			Bitmap bitmap = data.getExtras().getParcelable("data");
+		if (requestCode == Constants.SELECT_CIRCULAR_PICTURE_REQUEST_CODE  && null != data) {
+			Uri imageUri = data.getData();
 
-			// Cropping the image if required, otherwise scaling image
-			if(getCropImage()){
-				bitmap = ImageUtils.getCroppedBitmap(bitmap);
-			} else {
-				bitmap = Bitmap.createScaledBitmap(bitmap, this.imageWidth, this.imageHeight, true);
-			}
+            CropImage.activity(imageUri)
+                    .setAspectRatio(imageWidth, imageHeight)
+                    .setCropShape(CropImageView.CropShape.OVAL)
+                    .start(getContext(), this);
+		} else if (requestCode == Constants.SELECT_RECTANGULAR_PICTURE_REQUEST_CODE  && null != data) {
+            Uri imageUri = data.getData();
 
-			// Executing custom code upon picking an image
-			executeOnImageSelection(bitmap);
-		}
+            CropImage.activity(imageUri)
+                    .setAspectRatio(imageWidth, imageHeight)
+                    .setCropShape(CropImageView.CropShape.RECTANGLE)
+                    .start(getContext(), this);
+        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
+                    executeOnImageSelection(bitmap);
+                } catch (IOException e) {
+                    Log.e(getLoggingTag(), "Error when getting bitmap from URI", e);
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
 	}
 
 	/**

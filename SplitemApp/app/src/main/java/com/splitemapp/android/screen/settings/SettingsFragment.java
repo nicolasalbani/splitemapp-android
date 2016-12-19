@@ -79,7 +79,7 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 		mAvatarImageView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				openImageSelector(mAvatarImageView.getWidth(), mAvatarImageView.getHeight());
+				openImageSelector(mAvatarImageView.getWidth(), mAvatarImageView.getHeight(), true);
 			}
 		});
 
@@ -219,6 +219,9 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 	@Override
 	public void executeOnImageSelection(Bitmap selectedBitmap) {
+		// Cropping avatar image
+		selectedBitmap = ImageUtils.getCroppedBitmap(selectedBitmap);
+
 		// Updating change flag
 		avatarChanged = true;
 
@@ -227,11 +230,6 @@ public class SettingsFragment extends RestfulFragmentWithBlueActionbar {
 
 		// Updating project image on screen
 		mAvatarImageView.setImageBitmap(selectedBitmap);
-	}
-
-	@Override
-	public boolean getCropImage() {
-		return true;
 	}
 
 	@Override
