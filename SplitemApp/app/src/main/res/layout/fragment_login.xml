@@ -5,42 +5,78 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/li_username_hint" />
+    <LinearLayout
+        android:id="@+id/li_login_options_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <EditText
-        android:id="@+id/li_username_editText"
-        style="@style/CustomEditText"
-        android:inputType="textEmailAddress" />
+        <Button
+            android:id="@+id/li_account_login_button"
+            style="@style/Button"
+            android:layout_width="200dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="15dp"
+            android:text="@string/li_account_login_button" />
 
-    <View style="@style/BottomLine" />
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/li_facebook_login_button"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" />
 
-    <TextView
-        style="@style/CustomTextView"
-        android:text="@string/li_password_hint" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/li_password_editText"
-        style="@style/CustomEditText"
-        android:inputType="textPassword" />
+    <LinearLayout
+        android:id="@+id/li_account_login_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <View style="@style/BottomLine" />
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/li_username_hint" />
 
-    <Button
-        android:id="@+id/li_login_button"
-        style="@style/Button"
-        android:layout_marginTop="22dp"
-        android:layout_marginBottom="22dp"
-        android:text="@string/li_log_in_button" />
-    
-    <TextView
-        android:id="@+id/li_forgot_password"
-        android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/seablue"
-        android:text="@string/li_forgot_password" />
+        <EditText
+            android:id="@+id/li_username_editText"
+            style="@style/CustomEditText"
+            android:inputType="textEmailAddress" />
+
+        <View style="@style/BottomLine" />
+
+        <TextView
+            style="@style/CustomTextView"
+            android:text="@string/li_password_hint" />
+
+        <EditText
+            android:id="@+id/li_password_editText"
+            style="@style/CustomEditText"
+            android:inputType="textPassword" />
+
+        <View style="@style/BottomLine" />
+
+        <Button
+            android:id="@+id/li_login_button"
+            style="@style/Button"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"
+            android:text="@string/li_log_in_button" />
+
+        <TextView
+            android:id="@+id/li_forgot_password"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/seablue"
+            android:text="@string/li_forgot_password" />
+
+    </LinearLayout>
 
 </LinearLayout>

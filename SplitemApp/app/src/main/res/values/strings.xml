@@ -4,6 +4,7 @@
     <!-- GLOBAL -->
     <string name="app_name">SplitemApp</string>
     <string name="line_separator_description">Line Separator</string>
+    <string name="facebook_app_id">559494647572651</string>
 
     <!-- Messages -->
     <string name="network_error">Check your network connection</string>
@@ -42,6 +43,7 @@
     <string name="li_password_reset">Password reset</string>
     <string name="li_reset_password">Reset</string>
     <string name="li_log_in_button">Login</string>
+    <string name="li_account_login_button">SplitemApp Account</string>
     <string name="li_email_hint">Email address?</string>
     <string name="li_password_reset_sent">Reset request sent!</string>
     <string name="li_sign_up_question">Don\'t have an account?</string>

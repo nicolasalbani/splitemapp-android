@@ -11,9 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import com.facebook.FacebookSdk;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.createaccount.CreateAccountFragment;
 import com.splitemapp.android.screen.login.LoginFragment;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class WelcomeActivity extends FragmentActivity {
 
@@ -35,7 +38,7 @@ public class WelcomeActivity extends FragmentActivity {
 
 		mPager = (ViewPager)findViewById(R.id.w_viewPager);
 		mPager.setAdapter(mAdapter);
-		
+
 		mTabLayout = (TabLayout)findViewById(R.id.w_tabLayout);
 		mTabLayout.setTabsFromPagerAdapter(mAdapter);
 		mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -52,6 +55,9 @@ public class WelcomeActivity extends FragmentActivity {
 		});
 		
 		mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+
+		// Initializing Facebook SDK
+		FacebookSdk.sdkInitialize(getApplicationContext());
 	}
 	
 	@Override

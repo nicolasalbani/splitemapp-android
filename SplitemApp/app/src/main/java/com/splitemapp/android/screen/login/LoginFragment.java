@@ -22,9 +22,13 @@ public class LoginFragment extends RestfulFragment {
 	private static final String TAG = LoginFragment.class.getSimpleName();
 
 	private Button mLogin;
+	private Button mAccountLogin;
+    private Button mFacebookLogin;
 	private EditText mUserName;
 	private EditText mPassword;
 	private View mForgotPassword;
+	private View mLoginOptionsView;
+	private View mAccountLoginView;
 
 	private boolean mIsEmailValid;
 	private EditText mEmailEditText;
@@ -55,6 +59,14 @@ public class LoginFragment extends RestfulFragment {
 		// Otherwise, we inflate the login fragment
 		View v = inflater.inflate(R.layout.fragment_login, container, false);
 
+        // We get the reference to the login layouts
+        mLoginOptionsView = v.findViewById(R.id.li_login_options_view);
+        mAccountLoginView = v.findViewById(R.id.li_account_login_view);
+
+        // Set default visibility
+        mLoginOptionsView.setVisibility(View.VISIBLE);
+        mAccountLoginView.setVisibility(View.GONE);
+
 		// We get the references for the user name and password text boxes
 		mUserName = (EditText) v.findViewById(R.id.li_username_editText);
 		mPassword = (EditText) v.findViewById(R.id.li_password_editText);
@@ -72,6 +84,25 @@ public class LoginFragment extends RestfulFragment {
 				login(mUserName.getText().toString(), mPassword.getText().toString());
 			}
 		});
+
+		// We get the reference to the splitemapp account button and implement a OnClickListener
+		mAccountLogin = (Button) v.findViewById(R.id.li_account_login_button);
+		mAccountLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mLoginOptionsView.setVisibility(View.GONE);
+				mAccountLoginView.setVisibility(View.VISIBLE);
+			}
+		});
+
+        // We get the reference to the facebook account button and implement a OnClickListener
+        mFacebookLogin = (Button) v.findViewById(R.id.li_facebook_login_button);
+        mFacebookLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO IMPLEMENT FACEBOOK LOGIN
+            }
+        });
 
 		// We get the references for the forgot password view
 		mForgotPassword = v.findViewById(R.id.li_forgot_password);

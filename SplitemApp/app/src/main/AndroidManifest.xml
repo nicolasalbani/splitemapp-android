@@ -18,6 +18,11 @@
             android:name="com.splitemapp.android.service.BaseIntentService">
         </service>
 
+        <!-- Facebook Login -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
         <!-- Android GCM START -->
         <meta-data
             android:name="com.google.android.gms.version"
