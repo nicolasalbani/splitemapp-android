@@ -26,15 +26,15 @@ public abstract class CreateAccountRequestTask extends BaseAsyncTask<Void, Void,
 	private String email;
 	private String userName;
 	private String password;
-	private byte[] avatar;
+	private String avatarUrl;
 
-	public CreateAccountRequestTask(DatabaseHelper databaseHelper, String email, String userName, String password, byte[] avatar) {
+	public CreateAccountRequestTask(DatabaseHelper databaseHelper, String email, String userName, String password, String avatarUrl) {
 		super(databaseHelper);
 		
 		this.email = email;
 		this.userName = userName;
 		this.password = password;
-		this.avatar = avatar;
+		this.avatarUrl = avatarUrl;
 	}
 
 	String getLoggingTag(){
@@ -55,7 +55,7 @@ public abstract class CreateAccountRequestTask extends BaseAsyncTask<Void, Void,
 			createAccountRequest.setFullName(userName);
 			createAccountRequest.setPassword(Utils.hashPassword(password));
 			createAccountRequest.setIpAddress(NetworkUtils.getIpAddress());
-			createAccountRequest.setAvatar(avatar);
+			createAccountRequest.setAvatarUrl(avatarUrl);
 
 			// We call the rest service and send back the login response
 			return NetworkUtils.callRestService(ServiceConstants.CREATE_ACCOUNT_PATH, createAccountRequest, CreateAccountResponse.class);

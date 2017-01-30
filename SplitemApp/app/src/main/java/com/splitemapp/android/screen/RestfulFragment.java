@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import android.Manifest;
@@ -15,6 +16,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.splitemapp.android.R;
@@ -46,6 +48,7 @@ import com.splitemapp.android.service.sync.StopRefreshAnimationTask;
 import com.splitemapp.android.service.sync.SynchronizeContactsTask;
 import com.splitemapp.android.task.AddContactTask;
 import com.splitemapp.android.task.ChangePasswordTask;
+import com.splitemapp.android.task.CheckAccountTask;
 import com.splitemapp.android.task.CreateAccountRequestTask;
 import com.splitemapp.android.task.InviteTask;
 import com.splitemapp.android.task.LoginRequestTask;
@@ -55,6 +58,7 @@ import com.splitemapp.android.task.QuestionsTask;
 import com.splitemapp.android.utils.PreferencesManager;
 import com.splitemapp.commons.constants.Action;
 import com.splitemapp.commons.constants.ServiceConstants;
+import com.splitemapp.commons.domain.dto.response.CheckAccountResponse;
 import com.splitemapp.commons.utils.Utils;
 
 public abstract class RestfulFragment extends BaseFragment {
@@ -272,9 +276,9 @@ public abstract class RestfulFragment extends BaseFragment {
      * @param userName String containing the user name
      * @param password String containing the password
      */
-    public void createAccount(final String email, final String userName, final String password, final byte[] avatar){
+    public void createAccount(final String email, final String userName, final String password, final String avatarUrl){
         // Creating the CreateAccountRequestTask instance with a custom executeOnSuccess
-        CreateAccountRequestTask createAccountRequestTask = new CreateAccountRequestTask(getHelper(), email, userName, password, avatar){
+        CreateAccountRequestTask createAccountRequestTask = new CreateAccountRequestTask(getHelper(), email, userName, password, avatarUrl){
             @Override
             public void executeOnStart() {
                 showProgressIndicator();
@@ -306,6 +310,9 @@ public abstract class RestfulFragment extends BaseFragment {
             @Override
             public void executeOnSuccess() {
                 hideProgressIndicator();
+
+                // Logout from facebook
+                LoginManager.getInstance().logOut();
 
                 // We move to the welcome screen
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
@@ -357,6 +364,47 @@ public abstract class RestfulFragment extends BaseFragment {
             }
         };
         loginRequestTask.execute();
+    }
+
+    /**
+     * Checks whether an account exists or not
+     * @param userName String containing the user name
+     */
+    public void loginWithFacebook(final String email, final String name, final String id, final String pictureUrl){
+        // Creating the CheckAccountTask instance with a custom executeOnSuccess
+        CheckAccountTask checkAccountTask = new CheckAccountTask(getHelper(), email){
+            @Override
+            public void executeOnStart() {
+                showProgressIndicator();
+            }
+            @Override
+            public void executeOnSuccess() { }
+            @Override
+            public void executeOnFail(String message) {
+                hideProgressIndicator();
+                showToastForMessage(message);
+            }
+            @Override
+            public void onPostExecute(CheckAccountResponse response) {
+                boolean success = false;
+
+                // Validating the response
+                if(response != null){
+                    success = response.getSuccess();
+                } else {
+                    executeOnFail(ServiceConstants.ERROR_MESSAGE_NETWORK_ERROR);
+                    return;
+                }
+
+                // We login or create account as required
+                if(response.getExists()){
+                    login(email, com.splitemapp.android.utils.Utils.stringToHash(id));
+                } else {
+                    createAccount(email, name, com.splitemapp.android.utils.Utils.stringToHash(id), pictureUrl);
+                }
+            }
+        };
+        checkAccountTask.execute();
     }
 
     /**

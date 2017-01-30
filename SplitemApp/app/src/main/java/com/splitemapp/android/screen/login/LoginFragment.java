@@ -1,5 +1,6 @@
 package com.splitemapp.android.screen.login;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -13,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -49,7 +49,6 @@ public class LoginFragment extends RestfulFragment {
 	private Button mResetButton;
 
     private CallbackManager callbackManager;
-    private AccessToken accessToken;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -124,8 +123,6 @@ public class LoginFragment extends RestfulFragment {
         mFacebookLogin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                accessToken = loginResult.getAccessToken();
-
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                             @Override
@@ -134,20 +131,19 @@ public class LoginFragment extends RestfulFragment {
                                     // handle error
                                 } else {
                                     // Getting content from Facebook response
+                                    String id = me.optString("id");
                                     String email = me.optString("email");
                                     String name = me.optString("name");
                                     String pictureUrl = me.optJSONObject("picture").optJSONObject("data").optString("url");
-                                    //TODO Descargar imagen y enviarla en creacion de cuenta
 
-                                    // Creating SplitemApp account with facebook information
-                                    //TODO Chequear si existe una cuenta antes de intentar crearla
-                                    createAccount(email, name, accessToken.getToken(), null);
+                                    // Logging in with facebook
+                                    loginWithFacebook(email, name, id, pictureUrl);
                                 }
                             }
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,picture,link");
+                parameters.putString("fields", "id,name,email,picture.width(300).height(300),link");
                 request.setParameters(parameters);
                 request.executeAsync();
             }
