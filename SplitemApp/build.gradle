@@ -14,7 +14,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "file://Users/nicolas/.m2/repository" }
+        mavenLocal()
         mavenCentral()
         jcenter()
     }
