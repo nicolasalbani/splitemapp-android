@@ -106,21 +106,14 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 		}
 
 		// We inflate the expense date text view and load todays date by default
-		mExpenseDateText = (TextView) v.findViewById(R.id.e_expense_date_textView);
+        final ExpenseDatePickerFragment expenseDatePickerFragment = new ExpenseDatePickerFragment();
+        expenseDatePickerFragment.setmUserExpense(mUserExpense);
+        expenseDatePickerFragment.setmExpenseFragment(this);
+        mExpenseDateText = (TextView) v.findViewById(R.id.e_expense_date_textView);
 		mExpenseDateText.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DatePickerFragment fragment = new DatePickerFragment(){
-					@Override
-					public void onDateSet(DatePicker view, int year, int month, int day) {
-						Calendar cal = Calendar.getInstance();
-						cal.set(Calendar.YEAR, year);
-						cal.set(Calendar.MONTH, month);
-						cal.set(Calendar.DAY_OF_MONTH, day);
-						mUserExpense.setExpenseDate(cal.getTime());
-						updateExpenseDateDisplay(mUserExpense);
-					}};
-					fragment.show(getActivity().getSupportFragmentManager(), TAG);
+                expenseDatePickerFragment.show(getActivity().getSupportFragmentManager(), TAG);
 			}
 		});
 		updateExpenseDateDisplay(mUserExpense);
@@ -242,7 +235,7 @@ public class ExpenseFragment extends RestfulFragmentWithBlueActionbar {
 	 * Updates the expense date textView based on the content of the userExpense object
 	 * @param userExpense
 	 */
-	private void updateExpenseDateDisplay(UserExpense userExpense){
+	public void updateExpenseDateDisplay(UserExpense userExpense){
 		DateFormat dateFormat = SimpleDateFormat.getDateInstance();
 		Date date = userExpense.getExpenseDate();
 		mExpenseDateText.setText(dateFormat.format(date));
