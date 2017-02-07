@@ -10,8 +10,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -24,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.splitemapp.android.R;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.balance.ProjectTypeMapper;
@@ -32,9 +31,7 @@ import com.splitemapp.android.screen.projectcontacts.ProjectContactsActivity;
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.ImageUtils;
 import com.splitemapp.android.utils.Utils;
-import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.validator.EmptyValidator;
-import com.splitemapp.android.widget.CustomFloatingActionButton;
 import com.splitemapp.android.widget.DecimalDigitsInputFilter;
 import com.splitemapp.commons.constants.TableFieldCod;
 import com.splitemapp.commons.domain.Project;
@@ -56,7 +53,8 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 	private Spinner mProjectType;
 	private EditText mProjectBudget;
 	private ExpenseAmountFormat mProjectBudgetFormat;
-	private FloatingActionButton mFab;
+	private FloatingActionButton mFabCover;
+	private FloatingActionButton mFabContacts;
 	
 	private boolean mProjectTitleValid;
 	private boolean mProjectBudgetValid;
@@ -199,31 +197,24 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 			}});
 
 		// Adding action FABs to the main FAB
-		mFab = (FloatingActionButton) v.findViewById(R.id.cp_fab);
-		if(!ViewUtils.isOldVersion()){
-			CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFab.getLayoutParams();
-			layoutParams.setMargins(10, 20, 10, 10);
-		}
-		CustomFloatingActionButton customFloatingActionButton = new CustomFloatingActionButton(getActivity(), mFab);
-
-		// Adding add contact FAB
-		customFloatingActionButton.addActionFab(getActivity(), getResources().getString(R.string.p_contacts), R.drawable.action_fab_contacts, new OnClickListener() {
+		mFabCover = (FloatingActionButton) v.findViewById(R.id.cp_fab_cover);
+		mFabCover.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View view) {
+				// Opening image selector
+				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight(), false);
+			}
+		});
+
+		mFabContacts = (FloatingActionButton) v.findViewById(R.id.cp_fab_contacts);
+		mFabContacts.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
 				// Opening add people screen
 				Intent intent = new Intent(getActivity(), ProjectContactsActivity.class);
 				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, projectId);
 				intent.putExtra(BaseTask.USER_ID_ARRAY_EXTRA, Utils.userListToIdArray(mUserList));
 				getActivity().startActivityForResult(intent, CreateProjectActivity.MANAGE_USERS_REQUEST);
-			}
-		});
-
-		// Adding add image cover FAB
-		customFloatingActionButton.addActionFab(getActivity(), getResources().getString(R.string.p_cover_image), R.drawable.action_fab_camera, new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				// Opening image selector
-				openImageSelector(getProjectCoverImageWidth(), getProjectCoverImageHeight(), false);
 			}
 		});
 

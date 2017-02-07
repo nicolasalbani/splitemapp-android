@@ -1,5 +1,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -97,16 +98,52 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:background="@color/white" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/cp_fab"
-        style="@style/MainFAB"
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_anchor="@id/cp_users_recyclerView"
         app:layout_anchorGravity="bottom|right|end"
-        app:backgroundTint="@color/tfabblue"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
         android:src="@drawable/ic_plus_white_36dp"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
+        fab:menu_colorNormal="@color/seablue"
+        fab:menu_colorPressed="@color/blue"
+        fab:menu_colorRipple="@color/grey">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/cp_fab_cover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_camera_24dp"
+            fab:fab_colorNormal="@color/seablue"
+            fab:fab_colorPressed="@color/blue"
+            fab:fab_colorRipple="@color/grey"
+            fab:fab_size="mini"
+            fab:fab_label="Edit Cover"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/cp_fab_contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_account_plus_24dp"
+            fab:fab_colorNormal="@color/seablue"
+            fab:fab_colorPressed="@color/blue"
+            fab:fab_colorRipple="@color/grey"
+            fab:fab_size="mini"
+            fab:fab_label="Add Contacts"/>
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/cp_fab"-->
+        <!--style="@style/MainFAB"-->
+        <!--app:layout_anchor="@id/cp_users_recyclerView"-->
+        <!--app:layout_anchorGravity="bottom|right|end"-->
+        <!--app:backgroundTint="@color/tfabblue"-->
+        <!--android:src="@drawable/ic_plus_white_36dp"-->
+        <!--app:borderWidth="0dp"-->
+        <!--app:elevation="6dp"-->
+        <!--app:fabSize="normal"-->
+        <!--app:pressedTranslationZ="12dp" />-->
 
 </android.support.design.widget.CoordinatorLayout>
