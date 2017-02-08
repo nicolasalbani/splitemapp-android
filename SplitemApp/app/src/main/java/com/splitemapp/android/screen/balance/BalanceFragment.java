@@ -27,7 +27,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 	private static final String TAG = BalanceFragment.class.getSimpleName();
 
 	private static final String CURRENCY_SIGN = "$";
-	private static final int DIVISION_PRESICION = 4;
+	private static final int DIVISION_PRECISION = 4;
 
 	private Project mCurrentProject;
 	private Long projectId;
@@ -223,7 +223,7 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 				// Setting total expense or average in case of DATE balance mode
 				if(mExpenseGroupAdapter.getBalanceMode() == BalanceMode.DATE){
 					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, null);
-					totalExpenseValue = totalExpenseValue.divide(new BigDecimal(mExpenseGroupAdapter.getItemCount()), DIVISION_PRESICION,  RoundingMode.HALF_UP);
+					totalExpenseValue = totalExpenseValue.divide(new BigDecimal(mExpenseGroupAdapter.getItemCount()), DIVISION_PRECISION,  RoundingMode.HALF_UP);
 				} else {
 					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, mCalendar);
 				}
