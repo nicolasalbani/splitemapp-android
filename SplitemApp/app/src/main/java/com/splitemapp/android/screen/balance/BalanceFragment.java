@@ -223,7 +223,9 @@ public class BalanceFragment extends RestfulFragmentWithBlueActionbar {
 				// Setting total expense or average in case of DATE balance mode
 				if(mExpenseGroupAdapter.getBalanceMode() == BalanceMode.DATE){
 					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, null);
-					totalExpenseValue = totalExpenseValue.divide(new BigDecimal(mExpenseGroupAdapter.getItemCount()), DIVISION_PRECISION,  RoundingMode.HALF_UP);
+					if(mExpenseGroupAdapter.getItemCount() != 0){
+					    totalExpenseValue = totalExpenseValue.divide(new BigDecimal(mExpenseGroupAdapter.getItemCount()), DIVISION_PRECISION,  RoundingMode.HALF_UP);
+                    }
 				} else {
 					totalExpenseValue = getHelper().getTotalExpenseValueByProjectId(projectId, mCalendar);
 				}
