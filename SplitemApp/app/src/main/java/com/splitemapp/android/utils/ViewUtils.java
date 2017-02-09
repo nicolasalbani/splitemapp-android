@@ -27,17 +27,4 @@ public class ViewUtils {
             }
         }
     }
-
-    /**
-     * Indicates whether custom padding should be used to correctly show layouts for
-     * different Android versions
-     * @return
-     */
-    public static boolean isOldVersion(){
-    	if(Build.VERSION.SDK_INT > Constants.SDK_VERSION_THRESHOLD){
-    		return false;
-    	}
-    	
-    	return true;
-    }
 }

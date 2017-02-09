@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.splitemapp.android.R;
@@ -28,7 +27,6 @@ import com.splitemapp.android.screen.createproject.CreateProjectActivity;
 import com.splitemapp.android.screen.expense.ExpenseActivity;
 import com.splitemapp.android.service.BaseTask;
 import com.splitemapp.android.utils.ImageUtils;
-import com.splitemapp.android.utils.ViewUtils;
 import com.splitemapp.android.widget.ConfirmationAlertDialog;
 import com.splitemapp.android.widget.ListAlertDialog;
 import com.splitemapp.commons.domain.Project;
@@ -167,10 +165,6 @@ public class ProjectFragment extends RestfulFragmentWithTransparentActionbar {
 
 		// Adding FABs on click listener
 		mFab = (FloatingActionButton) v.findViewById(R.id.p_fab);
-		if(!ViewUtils.isOldVersion()){
-			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFab.getLayoutParams();
-			layoutParams.setMargins(10, 20, 10, 10);
-		}
 		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
