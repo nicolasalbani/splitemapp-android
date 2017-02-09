@@ -314,6 +314,13 @@ public abstract class RestfulFragment extends BaseFragment {
                 // Logout from facebook
                 LoginManager.getInstance().logOut();
 
+                // Removing all data from local database
+                try {
+                    databaseHelper.clearDatabase();
+                } catch (SQLException e) {
+                    Log.e(getLoggingTag(), "SQLException caught!", e);
+                }
+
                 // We move to the welcome screen
                 startActivity(new Intent(getActivity(), WelcomeActivity.class));
             }
