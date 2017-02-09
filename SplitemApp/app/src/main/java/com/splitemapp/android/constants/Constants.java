@@ -18,6 +18,7 @@ public class Constants {
 	// Request codes
 	public static final int SELECT_CIRCULAR_PICTURE_REQUEST_CODE = 1;
 	public static final int SELECT_RECTANGULAR_PICTURE_REQUEST_CODE = 2;
+	public static final int MANAGE_USERS_REQUEST = 3;
 	
 	// Parameters
 	public static final String IMAGE_WIDTH = "IMAGE_WIDTH";

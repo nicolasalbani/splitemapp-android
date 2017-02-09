@@ -24,6 +24,7 @@ import android.widget.Spinner;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.splitemapp.android.R;
+import com.splitemapp.android.constants.Constants;
 import com.splitemapp.android.screen.RestfulFragmentWithBlueActionbar;
 import com.splitemapp.android.screen.balance.ProjectTypeMapper;
 import com.splitemapp.android.screen.expense.ExpenseAmountFormat;
@@ -44,7 +45,7 @@ import com.splitemapp.commons.utils.TimeUtils;
 public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 
 	private static final String TAG = CreateProjectFragment.class.getSimpleName();
-	
+
 	private User mCurrentUser;
 	private List<User> mUserList;
 	private byte[] mAvatarData;
@@ -214,7 +215,7 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 				Intent intent = new Intent(getActivity(), ProjectContactsActivity.class);
 				intent.putExtra(BaseTask.PROJECT_ID_EXTRA, projectId);
 				intent.putExtra(BaseTask.USER_ID_ARRAY_EXTRA, Utils.userListToIdArray(mUserList));
-				getActivity().startActivityForResult(intent, CreateProjectActivity.MANAGE_USERS_REQUEST);
+				startActivityForResult(intent, Constants.MANAGE_USERS_REQUEST);
 			}
 		});
 
@@ -348,6 +349,15 @@ public class CreateProjectFragment extends RestfulFragmentWithBlueActionbar {
 		// Refreshing member list when coming back from the Add People fragment
 		mUsersAdapter.updateRecycler(); 
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Constants.MANAGE_USERS_REQUEST){
+            updateUsersList(data);
+        }
+    }
 
 	@Override
 	public String getLoggingTag() {
