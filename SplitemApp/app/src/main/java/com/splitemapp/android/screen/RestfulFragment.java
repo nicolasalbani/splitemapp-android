@@ -355,7 +355,7 @@ public abstract class RestfulFragment extends BaseFragment {
                 }
 
                 // Synchronizing all tables for the first time
-                pullAllTablesFirstTime();
+                syncAllTablesFirstTime();
 
                 // Synchronizing contacts
                 syncContacts();
@@ -447,27 +447,6 @@ public abstract class RestfulFragment extends BaseFragment {
         pushUserToProjects();
         pushUserInvites();
         pushUserExpenses();
-
-        // Calling all pull services
-        pullUsers();
-        pullUserAvatars();
-        pullUserContactDatas();
-        pullProjects();
-        pullProjectCoverImages();
-        pullUserToProjects();
-        pullUserInvites();
-        pullUserExpenses();
-
-        // Stopping refresh animation
-        triggerStopRefreshAnimation();
-    }
-
-    /**
-     * Executes a linked list of asynchronous pull requests
-     */
-    protected void pullAllTables(){
-        // Starting refresh animation
-        triggerStartRefreshAnimation();
 
         // Calling all pull services
         pullUsers();
@@ -673,7 +652,7 @@ public abstract class RestfulFragment extends BaseFragment {
     /**
      * Executes an asynchronous pull request and initializes the sync data
      */
-    protected void pullAllTablesFirstTime(){
+    protected void syncAllTablesFirstTime(){
         // Initializing the synchronization table
         try {
             getHelper().initializeSyncStatus();
@@ -682,7 +661,7 @@ public abstract class RestfulFragment extends BaseFragment {
         }
 
         // Pulling all tables
-        pullAllTables();
+        syncAllTables();
     }
 
     /**
