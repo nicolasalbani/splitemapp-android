@@ -1,0 +1,114 @@
+<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/h_swipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- A LinearLayout containing the bottom view with actions -->
+
+    <LinearLayout
+        android:id="@+id/h_bottomView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@color/grey"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/h_action_edit_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="@string/h_action_edit"
+            android:src="@drawable/ic_pencil_24dp" />
+
+        <ImageView
+            android:id="@+id/h_action_archive_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/h_action_archive"
+            android:src="@drawable/ic_archive_24dp" />
+    </LinearLayout>
+
+    <!-- A CardView containing the surface view -->
+
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/h_project_cover_imageView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:contentDescription="@string/h_project_cover_description"
+                android:src="@drawable/project_default_avatar" />
+
+            <TextView
+                android:id="@+id/h_project_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/h_project_cover_imageView"
+                android:layout_toRightOf="@id/h_project_cover_imageView"
+                android:text="@string/h_project_title"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/h_project_total_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/h_project_title"
+                android:layout_toEndOf="@id/h_project_cover_imageView"
+                android:layout_toRightOf="@id/h_project_cover_imageView"
+                android:text="@string/h_project_total"
+                android:textColor="@color/hard_grey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/h_project_total_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/h_project_title"
+                android:layout_toEndOf="@id/h_project_total_label"
+                android:layout_toRightOf="@id/h_project_total_label"
+                android:text="@string/h_project_total_value"
+                android:textColor="@color/hard_grey"
+                android:textSize="12sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toEndOf="@id/h_project_cover_imageView"
+                android:layout_toRightOf="@id/h_project_cover_imageView"
+                android:background="@color/grey" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</com.daimajia.swipe.SwipeLayout>

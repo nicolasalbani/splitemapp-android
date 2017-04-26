@@ -1,0 +1,112 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/cp_appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="@color/seablue"
+            app:contentScrim="@color/seablue"
+            app:expandedTitleMarginBottom="32dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="45dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/WhiteCustomTextView"
+                    android:text="@string/cp_project_name" />
+
+                <EditText
+                    android:id="@+id/cp_project_name_editText"
+                    style="@style/BlueCustomEditText"
+                    android:inputType="text" />
+
+                <View
+                    style="@style/WhiteBottomLine"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical" >
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:background="@drawable/shape_toolbar_dropshadow" />
+
+                    <TextView
+                        style="@style/CustomTextView"
+                        android:text="@string/cp_project_type" />
+
+                    <Spinner
+                        android:id="@+id/cp_project_type_spinner"
+                        style="@style/CreateProjectSpinner" />
+
+                    <View style="@style/BottomLine" />
+
+                    <TextView
+                        style="@style/CustomTextView"
+                        android:text="@string/cp_project_budget" />
+
+                    <EditText
+                        android:id="@+id/cp_budget_editText"
+                        style="@style/CustomEditText"
+                        android:drawableLeft="@drawable/ic_money_black_24dp"
+                        android:drawablePadding="5dp"
+                        android:drawableStart="@drawable/ic_money_black_24dp"
+                        android:inputType="numberDecimal"
+                        android:text="@string/cp_project_budget_value" />
+
+                    <View style="@style/BottomLine" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <TextView
+                        android:id="@+id/cp_project_members_textView"
+                        style="@style/CustomTextView"
+                        android:background="@color/grey"
+                        android:text="@string/cp_project_members_list"
+                        android:textColor="@color/hard_grey" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/toolbar_blue" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cp_users_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/white" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/cp_fab"
+        style="@style/MainFAB"
+        app:layout_anchor="@id/cp_users_recyclerView"
+        app:layout_anchorGravity="bottom|right|end"
+        app:backgroundTint="@color/fabblue"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp" />
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,247 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/h_drawerLayout"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <!-- The main content view -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/h_topLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="@color/seablue"
+                android:gravity="end"
+                android:paddingEnd="5dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="5dp"
+                android:paddingStart="0dp" >
+
+                <ImageView
+                    android:id="@+id/h_filter_imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/h_avatar_description"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_filter_white_18dp" />
+
+                <ImageView
+                    android:id="@+id/h_more_imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/h_avatar_description"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_more_vert_white_24dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/h_topLayoutShadow"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@id/h_topLayout"
+            android:background="@drawable/shape_toolbar_dropshadow" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/h_swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/h_topLayoutShadow" >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/h_projects_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/h_empty_list_hint_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/ic_list_add_48dp"
+            android:gravity="center_horizontal"
+            android:layout_centerInParent="true"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/h_empty_list_hint"
+            android:textColor="@color/hard_grey"
+            android:textSize="16sp" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/h_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_plus_white_36dp"
+            fab:fab_colorNormal="@color/seablue"
+            fab:fab_colorPressed="@color/blue"
+            fab:fab_colorRipple="@color/grey"/>
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+
+    <RelativeLayout
+        android:id="@+id/h_nav_view"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/grey" >
+
+        <RelativeLayout
+            android:id="@+id/h_nav_avatar_view"
+            android:layout_width="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/h_nav_avatar_imageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/h_avatar_description"
+                android:src="@drawable/shape_circle_blue" />
+
+            <TextView
+                android:id="@+id/h_nav_initials_textView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textSize="40dp"
+                android:textColor="@color/grey" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/h_nav_full_name_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/h_nav_avatar_view"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:text="@string/h_name"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/h_nav_email_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/h_nav_full_name_textView"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:text="@string/h_email"
+            android:textColor="@color/hard_grey"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/h_nav_email_textView"
+            android:background="@color/white"
+            android:gravity="bottom"
+            android:orientation="vertical" >
+
+            <include layout="@layout/line_separator" />
+
+            <TextView
+                android:id="@+id/h_manage_contacts_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_recycler_color"
+                android:drawableLeft="@drawable/ic_manage_contacts_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_manage_contacts_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_manage_contacts"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
+
+            <include layout="@layout/line_separator" />
+
+            <TextView
+                android:id="@+id/h_synchronize_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_recycler_color"
+                android:drawableLeft="@drawable/ic_synchronize_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_synchronize_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_synchronize"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
+
+            <include layout="@layout/line_separator" />
+
+            <TextView
+                android:id="@+id/h_settings_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_recycler_color"
+                android:drawableLeft="@drawable/ic_settings_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_settings_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_settings"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
+
+            <include layout="@layout/line_separator" />
+
+            <TextView
+                android:id="@+id/h_logout_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_recycler_color"
+                android:drawableLeft="@drawable/ic_logout_24dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_logout_24dp"
+                android:gravity="center_vertical|start"
+                android:padding="10dp"
+                android:text="@string/h_logout"
+                android:textColor="@color/hard_grey"
+                android:textStyle="bold" />
+
+            <include layout="@layout/line_separator" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="25dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.v4.widget.DrawerLayout>

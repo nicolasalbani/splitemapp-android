@@ -1,0 +1,222 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/toolbar_blue" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@drawable/shape_toolbar_dropshadow" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" >
+
+        <LinearLayout
+            style="@style/NoActionBarTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/CustomTextView"
+                android:text="@string/s_profile" />
+
+            <View style="@style/BottomLine" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp" >
+
+                <RelativeLayout
+                    android:id="@+id/s_avatar_view"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" >
+
+                    <ImageView
+                        android:id="@+id/s_avatar_imageView"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/h_avatar_description"
+                        android:src="@drawable/shape_circle_blue" />
+
+                    <TextView
+                        android:id="@+id/s_initials_textView"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:textSize="35dp"
+                        android:textColor="@color/grey" />
+                </RelativeLayout>
+
+
+                <EditText
+                    android:id="@+id/s_full_name_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toEndOf="@id/s_avatar_view"
+                    android:layout_toRightOf="@id/s_avatar_view"
+                    android:background="@color/white"
+                    android:inputType="textPersonName"
+                    android:padding="0dp"
+                    android:text="@string/s_name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/s_email_textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/s_full_name_editText"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/s_avatar_view"
+                    android:layout_toRightOf="@id/s_avatar_view"
+                    android:text="@string/s_email"
+                    android:textColor="@color/hard_grey"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/CustomTextView"
+                android:text="@string/s_notifications" />
+
+            <View style="@style/BottomLine" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/s_new_project"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/s_new_project_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/s_new_expense"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/s_new_expense_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerInParent="true"
+                    android:text="@string/s_updated_cover"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/s_updated_cover_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <TextView
+                style="@style/CustomTextView"
+                android:text="@string/s_account" />
+
+            <View style="@style/BottomLine" />
+
+            <Button
+                android:id="@+id/s_change_password_button"
+                style="@style/Button"
+                android:layout_marginTop="20dp"
+                android:text="@string/s_change_password" />
+
+            <TextView
+                style="@style/CustomTextView"
+                android:text="@string/s_help" />
+
+            <View style="@style/BottomLine" />
+
+            <Button
+                android:id="@+id/s_ask_a_question_button"
+                style="@style/Button"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/s_ask_a_question" />
+
+            <Button
+                android:id="@+id/s_splitemapp_faq_button"
+                style="@style/Button"
+                android:layout_marginBottom="20dp"
+                android:text="@string/s_splitemapp_faq"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

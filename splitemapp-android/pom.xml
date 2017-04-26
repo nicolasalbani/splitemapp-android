@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.splitemapp.android</groupId>
+	<artifactId>splitemapp-android</artifactId>
+	<version>1.0.0</version>
+	<name>splitemapp-android</name>
+	<packaging>apk</packaging>
+
+	<developers>
+		<developer>
+			<name>Diego Ghersi</name>
+			<email>diego@ghersi.com.ar</email>
+		</developer>
+		<developer>
+			<name>Nicolas Albani</name>
+			<email>nicolasalbani@gmail.com</email>
+		</developer>
+	</developers>
+
+	<properties>
+		<!-- Use UTF-8 for everything -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Source code version -->
+		<source.java.version>1.7</source.java.version>
+		<target.java.version>1.7</target.java.version>
+
+		<!-- Android SDK -->
+		<platform.version>4.1.1.4</platform.version>
+		<android-maven-plugin.version>3.9.0-rc.3</android-maven-plugin.version>
+		<android.platform.version>23</android.platform.version>
+		<android.support.version>23.0.0</android.support.version>
+		<google.play.version>8.4.0</google.play.version>
+		<android.swipelayout.version>1.0.0</android.swipelayout.version>
+		<android.sdk.path>${ANDROID_HOME}</android.sdk.path>
+
+		<!-- SplitemApp Common Domain Model -->
+		<commons.version>0.0.1-SNAPSHOT</commons.version>
+
+		<!-- Dependencies version -->
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<ormlite.version>4.48</ormlite.version>
+		<build-helper-maven-plugin.version>1.10</build-helper-maven-plugin.version>
+		<maven-jarsigner-plugin.version>1.4</maven-jarsigner-plugin.version>
+		<javax.persistence.version>1.0.2</javax.persistence.version>
+		<springframework.android.version>1.0.1.RELEASE</springframework.android.version>
+		<fasterxml.jackson.core.version>2.4.3</fasterxml.jackson.core.version>
+		<robolectric.version>2.4</robolectric.version>
+		<junit.version>4.11</junit.version>
+	</properties>
+
+	<dependencies>
+		<!-- android dependencies -->
+		<dependency>
+			<groupId>com.google.android</groupId>
+			<artifactId>android</artifactId>
+			<version>${platform.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>appcompat-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>gridlayout-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>cardview-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>recyclerview-v7</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>com.android.support</groupId>
+					<artifactId>support-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.android.support</groupId>
+			<artifactId>design</artifactId>
+			<version>${android.support.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.daimajia.swipe</groupId>
+			<artifactId>android-swipelayout</artifactId>
+			<version>${android.swipelayout.version}</version>
+			<type>aar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android.gms</groupId>
+			<artifactId>play-services-gcm</artifactId>
+			<version>${google.play.version}</version>
+			<type>aar</type>
+		</dependency>
+
+		<!-- ORM Lite dependencies -->
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-core</artifactId>
+			<version>${ormlite.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-android</artifactId>
+			<version>${ormlite.version}</version>
+		</dependency>
+
+		<!-- JPA Dependencies -->
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<version>${javax.persistence.version}</version>
+		</dependency>
+
+		<!-- Rest Service Dependencies -->
+		<dependency>
+			<groupId>org.springframework.android</groupId>
+			<artifactId>spring-android-rest-template</artifactId>
+			<version>${springframework.android.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${fasterxml.jackson.core.version}</version>
+		</dependency>
+
+		<!-- Testing framework -->
+		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>${robolectric.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Common Domain Model dependencies -->
+		<dependency>
+			<groupId>com.splitemapp</groupId>
+			<artifactId>splitemapp-commons</artifactId>
+			<version>${commons.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-context</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring-web</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.velocity</groupId>
+					<artifactId>velocity</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>${android-maven-plugin.version}</version>
+					<configuration>
+						<!-- <extractDuplicates>true</extractDuplicates> -->
+					</configuration>
+					<extensions>true</extensions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build-helper-maven-plugin.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jarsigner-plugin</artifactId>
+					<version>${maven-jarsigner-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<platform>${android.platform.version}</platform>
+					</sdk>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${source.java.version}</source>
+					<target>${target.java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

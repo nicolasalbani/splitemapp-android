@@ -1,0 +1,11 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Fixed dimensions to be referenced from anywhere in the application. -->
+    <dimen name="project_cover_image_height">180dp</dimen>
+    <dimen name="home_image_height">160dp</dimen>
+
+</resources>

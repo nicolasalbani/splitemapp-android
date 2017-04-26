@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/NoActionBarTheme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/CustomTextView"
+        android:text="@string/li_username_hint" />
+
+    <EditText
+        android:id="@+id/li_username_editText"
+        style="@style/CustomEditText"
+        android:inputType="textEmailAddress" />
+
+    <View style="@style/BottomLine" />
+
+    <TextView
+        style="@style/CustomTextView"
+        android:text="@string/li_password_hint" />
+
+    <EditText
+        android:id="@+id/li_password_editText"
+        style="@style/CustomEditText"
+        android:inputType="textPassword" />
+
+    <View style="@style/BottomLine" />
+
+    <Button
+        android:id="@+id/li_login_button"
+        style="@style/Button"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp"
+        android:text="@string/li_log_in_button" />
+    
+    <TextView
+        android:id="@+id/li_forgot_password"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/seablue"
+        android:text="@string/li_forgot_password" />
+
+</LinearLayout>

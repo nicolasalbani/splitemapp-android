@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- GLOBAL -->
+    <string name="app_name">SplitemApp</string>
+    <string name="line_separator_description">Separador</string>
+    
+    <!-- Messages -->
+    <string name="network_error">Verifica tu conexion de red</string>
+    <string name="generic_error">Oops! Detectamos un error generico</string>
+    <string name="login_failed">Nombre de usuario o clave invalidos</string>
+    <string name="account_exists">Esta cuenta ya existe</string>
+    <string name="server_error">Oops! Detectamos un error en el servidor</string>
+    
+    <!-- Action Bar -->
+    <string name="ab_title">Titulo</string>
+    <string name="ab_done">LISTO</string>
+    <string name="ab_back_description">Atras</string>
+    <string name="ab_menu_description">Menu</string>
+    
+    <!-- Notifications -->
+    <string name="notification_new_project">te agrego a</string>
+    <string name="notification_new_expense">agrego un gasto en</string>
+    <string name="notification_updated_project_cover">actualizo la portada de</string>
+    
+    <!-- Confirmations -->
+    <string name="confirmation_logout">Seguro quieres cerrar la sesion?</string>
+    <string name="confirmation_archive_project">Seguro quieres archivar la lista?</string>
+    <string name="confirmation_archive_expense">Seguro quieres archivar el gasto?</string>
+    <string name="confirmation_positive_text">Si</string>
+    <string name="confirmation_negative_text">No</string>
+    
+    <!-- Welcome Screen -->
+    <string name="w_login">INICIAR SESION</string>
+    <string name="w_create_account">CREAR CUENTA</string>
+    <string name="w_app_logo_description">Logo de Aplicacion</string>
+    
+    <!-- Login Screen -->
+    <string name="li_username_hint">Email</string>
+    <string name="li_password_hint">Clave</string>
+    <string name="li_forgot_password">Olvidaste tu clave?</string>
+    <string name="li_password_reset">Generar clave</string>
+    <string name="li_reset_password">Generar</string>
+    <string name="li_log_in_button">Iniciar sesion</string>
+    <string name="li_account_login_button">Cuenta SplitemApp</string>
+    <string name="li_email_hint">Direccion de email?</string>
+    <string name="li_password_reset_sent">Solicitud enviada!</string>
+    <string name="li_sign_up_question">No tienes una cuenta?</string>
+    <string name="li_sign_up_link">Registrate</string>
+    
+    <!-- Settings Screen -->
+    <string name="s_avatar_description">Avatar de Usuario</string>
+    <string name="s_name">Nombre</string>
+    <string name="s_email">Email</string>
+    <string name="s_title">Ajustes</string>
+    <string name="s_profile">Perfil</string>
+    <string name="s_notifications">Notificaciones</string>
+    <string name="s_help">Ayuda</string>
+    <string name="s_new_project">Nueva lista creado</string>
+    <string name="s_new_expense">Nuevo gasto creado</string>
+    <string name="s_updated_cover">Portada actualizada</string>
+    <string name="s_ask_a_question">Tienes una pregunta?</string>
+    <string name="s_account">Cuenta</string>
+    <string name="s_change_password">Cambiar clave</string>
+    <string name="s_current_password_hint">Clave actual</string>
+    <string name="s_new_password_hint">Nueva clave</string>
+    <string name="s_confirm_password_hint">Confirmar clave</string>
+    <string name="s_password_changed">Clave modificada!</string>
+    <string name="s_current_pass_invalid">Clave actual invalida</string>
+    <string name="s_splitemapp_faq">SplitemApp FAQ</string>
+    
+    <!-- Ask a Question -->
+    <string name="aaq_questions">Preguntas</string>
+    <string name="aaq_question_description">Icono de Preguntas</string>
+    <string name="aaq_send">Enviar</string>
+    <string name="aaq_question_hint">Que sucede?</string>
+    <string name="aaq_question_sent">Pregunta enviada!</string>
+    <string name="aaq_question_get_back">Te responderemos pronto :)</string>
+
+    <!-- Create Account Screen -->
+    <string name="ca_avatar_description">Avatar</string>
+    <string name="ca_name_hint">Nombre</string>
+    <string name="ca_email_hint">E-mail</string>
+    <string name="ca_password_hint">Clave</string>
+    <string name="ca_create_account_title">Crear Cuenta</string>
+    <string name="ca_create_account_button">Crear Cuenta</string>
+    <string name="ca_disclamer_1">Creando una cuenta aceptas nuestra</string>
+    <string name="ca_disclamer_2">Política de Privacidad y Terminos de Uso</string>
+    <string name="ca_cancel_action">Cancelar</string>
+    
+    <!-- Home Screen -->
+    <string name="h_project_cover_description">Icono de Lista</string>
+    <string name="h_project_title">Titulo</string>
+    <string name="h_project_total">Total: $</string>
+    <string name="h_project_total_value">200.5</string>
+    <string name="h_avatar_description">Avatar</string>
+    <string name="h_name">Nombre</string>
+    <string name="h_email">E-mail</string>
+    <string name="h_archive_project">Archivar</string>
+    <string name="h_edit_project">Editar</string>
+    <string name="h_new_list_button">Nueva lista de gastos</string>
+    <string name="h_logout">CERRAR SESION</string>
+    <string name="h_settings">AJUSTES</string>
+    <string name="h_synchronize">SINCRONIZAR</string>
+    <string name="h_manage_contacts">CONTACTOS</string>
+    <string name="h_action_edit">Editar</string>
+    <string name="h_action_archive">Archivar</string>
+    <string name="h_empty_list_hint">No tienes ninguna lista. Toca el boton + para comenzar.</string>
+
+    <!-- Home Screen Project Filter -->
+    <string name="hpf_filter_description">Filtrar listas</string>
+    <string name="hpf_title">Filtrar listas</string>
+    <string name="hpf_project_status">Estado de lista</string>
+    <string name="hpf_project_type">Tipo de lista</string>
+    <string name="hpf_show_active">Listas activas</string>
+    <string name="hpf_show_archived">Listas archivadas</string>
+    <string name="hpf_show_monthly">Listas mensuales</string>
+    <string name="hpf_show_one_time">Listas simples</string>
+    
+    <!-- Create Project Screen -->
+    <string name="cp_new_title">Nueva Lista</string>
+    <string name="cp_edit_title">Editar Lista</string>
+    <string name="cp_project_name">Nombre</string>
+    <string name="cp_project_type">Tipo</string>
+    <string name="cp_project_budget">Presupuesto</string>
+    <string name="cp_project_budget_optional">opcional</string>
+    <string name="cp_project_budget_value">0</string>
+    <string name="cp_project_members_list">Lista de miembros</string>
+    <string name="cp_project_add_people">Agregar personas</string>
+    <string name="cp_new_project_button">Crear lista</string>
+    <string name="cp_user_avatar_description">Avatar de Usuario</string>
+    <string name="cp_user_name_placeholder">Nombre de Usuario</string>
+    <string name="cp_user_email_placeholder">sample@splitemapp.com</string>
+    
+    <!-- Add User Expense Screen -->
+    <string name="ue_icon_description">Icono de Gastos</string>
+    <string name="ue_category_placeholder">Categoria</string>
+    <string name="ue_notes_placeholder">Detalle</string>
+    <string name="ue_date_placeholder">13 10 2014</string>
+    <string name="ue_currency">$</string>
+    <string name="ue_amount_placeholder">30,5%</string>
+    <string name="ue_fullName_placeholder">Nombre Completo</string>
+    <string name="ue_fullAmount_placeholder">405.50</string>
+    <string name="ue_action_archive">Archivar</string>
+    
+    <!-- Project Screen -->
+    <string name="p_add_expense_button">Agregar un gasto</string>
+    <string name="p_cover_image_description">Imagen de Portada</string>
+    <string name="p_cover_image">Portada</string>
+    <string name="p_contacts">Contactos</string>
+    <string name="p_empty_list_hint">No tienes ningún gasto. Toca el boton + para comenzar.</string>
+    <string name="p_arrow_description">Imagen de Flecha</string>
+    <string name="p_more_option_edit">Editar</string>
+    <string name="p_more_option_change_cover">Portada</string>
+    <string name="p_more_option_balance">Balance</string>
+    <string name="p_more_option_archive">Archivar</string>
+    
+    <!-- Project Screen Expense Filter -->
+    <string name="pef_filter_description">Filtrar gastos</string>
+    <string name="pef_title">Filtrar gastos</string>
+    <string name="pef_date">Fecha</string>
+    <string name="pef_category">Categoría</string>
+    
+    <!-- Expense Screen -->
+    <string name="e_new_title">Nuevo Gasto</string>
+    <string name="e_edit_title">Editar Gasto</string>
+    <string name="e_cancel_action">Cancelar</string>
+    <string name="e_notes_hint">Algún comentario?</string>
+    <string name="e_save_action">Guardar</string>
+    <string name="e_expenseamount_hint">Monto del gasto</string>
+    <string name="e_currency">$</string>
+    <string name="e_initial_expense_amount">0</string>
+    
+    <!-- Project Contacts Screen -->
+    <string name="pc_title">Contactos</string>
+    <string name="pc_back_action">Atras</string>
+    <string name="pc_contacts">Contactos</string>
+    <string name="pc_contact_fullname_placeholder">Nombre Completo</string>
+    <string name="pc_avatar_description">Avatar de Contacto</string>
+    <string name="pc_status_description">Icono de Estado de Contacto</string>
+    
+    <!-- Manage Contacts -->
+    <string name="mc_title">Contactos</string>
+    <string name="mc_back_action">Atras</string>
+    <string name="mc_contacts">Contactos</string>
+    <string name="mc_add_contact">Agregar Contacto</string>
+    <string name="mc_contact_added">Contacto agregado!</string>
+    <string name="mc_email_hint">Direccion de email?</string>
+    <string name="mc_search">Buscar</string>
+    <string name="mc_not_found">Usuario no encontrado. Quieres enviarle una invitacion?</string>
+    <string name="mc_invite">Invitar</string>
+    <string name="mc_invite_sent">Invitacion enviada!</string>
+    <string name="mc_synchronize_contacts_button">Sincronizar Contactos</string>
+    <string name="mc_avatar_description">Avatar de Contacto</string>
+    <string name="mc_add_contact_description">Agregar Contacto</string>
+    
+    <!-- Balance -->
+    <string name="b_title">Balance</string>
+    <string name="b_monthly">Mensual</string>
+    <string name="b_one_time">Simple</string>
+    <string name="b_average">PROMEDIO</string>
+    <string name="b_next_month">Proximo mes</string>
+    <string name="b_last_month">Mes anterior</string>
+    <string name="b_back_action">Atras</string>
+    <string name="b_percent_placeholder">30,5%</string>
+    <string name="b_amount_placeholder">$200.00</string>
+    <string name="b_share_calc_placeholder">$200.00</string>
+    <string name="b_total_placeholder">$18.000</string>
+    <string name="b_month_placeholder">Agosto</string>
+    <string name="b_month_short_placeholder">Ago</string>
+    <string name="b_year_placeholder">2016</string>
+    <string name="b_balance">Balance</string>
+    <string name="b_balance_placeholder">$2.000</string>
+    <string name="b_budget">Presupuesto</string>
+    <string name="b_budget_placeholder">$20.000</string>
+    <string name="b_percent">%</string>
+    <string name="b_category">CATEGORIA</string>
+    <string name="b_user">USUARIO</string>
+    <string name="b_date">FECHA</string>
+    <string name="b_icon_description">Icono de Grupo de Gastos</string>
+    <string name="b_month_january">Enero</string>
+    <string name="b_month_february">Febrero</string>
+    <string name="b_month_march">Marzo</string>
+    <string name="b_month_april">Abril</string>
+    <string name="b_month_may">Mayo</string>
+    <string name="b_month_june">Junio</string>
+    <string name="b_month_july">Julio</string>
+    <string name="b_month_august">Agosto</string>
+    <string name="b_month_september">Septiembre</string>
+    <string name="b_month_october">Octubre</string>
+    <string name="b_month_november">Noviembre</string>
+    <string name="b_month_december">Diciembre</string>
+    <string name="b_short_month_january">Ene</string>
+    <string name="b_short_month_february">Feb</string>
+    <string name="b_short_month_march">Mar</string>
+    <string name="b_short_month_april">Abr</string>
+    <string name="b_short_month_may">May</string>
+    <string name="b_short_month_june">Jun</string>
+    <string name="b_short_month_july">Jul</string>
+    <string name="b_short_month_august">Ago</string>
+    <string name="b_short_month_september">Sep</string>
+    <string name="b_short_month_october">Oct</string>
+    <string name="b_short_month_november">Nov</string>
+    <string name="b_short_month_december">Dic</string>
+    
+    <!-- Expense Categories -->
+    <string name="e_category_description">Imagen de Categoría</string>
+    <string name="e_category_car">Auto</string>
+    <string name="e_category_travel">Viajes</string>
+    <string name="e_category_food">Comida</string>
+    <string name="e_category_family">Familia</string>
+    <string name="e_category_bills">Cuentas</string>
+    <string name="e_category_entertainment">Entretenimiento</string>
+    <string name="e_category_home">Casa</string>
+    <string name="e_category_gifts">Regalos</string>
+    <string name="e_category_shopping">Compras</string>
+
+    <!-- Validation Messages -->
+    <string name="val_password">Tu contraseña debe tener entre 8 y 15 caracteres</string>
+    <string name="val_password_confirm">La contraseña y la confirmacion no coinciden</string>
+    <string name="val_empty">Este valor no puede estar vacio</string>
+    <string name="val_email">Debes usar una direccion de e-mail valida</string>
+
+    <!-- Permissions Messages -->
+    <string name="perm_contacts">Hasta que nos des permiso, no podremos sincronizar tus contactos</string>
+</resources>

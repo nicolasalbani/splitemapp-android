@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Theme.AppCompat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_recycler_color"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/cp_avatar_view"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp" >
+
+        <ImageView
+            android:id="@+id/cp_user_avatar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/h_avatar_description"
+            android:src="@drawable/shape_circle_blue" />
+
+        <TextView
+            android:id="@+id/cp_initials_textView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:textColor="@color/grey" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/cp_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="2dp"
+        android:layout_toEndOf="@id/cp_avatar_view"
+        android:layout_toRightOf="@id/cp_avatar_view"
+        android:gravity="center_vertical"
+        android:text="@string/cp_user_name_placeholder"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/cp_user_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="2dp"
+        android:layout_below="@id/cp_user_name"
+        android:layout_toEndOf="@id/cp_avatar_view"
+        android:layout_toRightOf="@id/cp_avatar_view"
+        android:text="@string/cp_user_email_placeholder"
+        android:textColor="@color/grey"
+        android:textSize="12sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="0dp"
+        android:paddingEnd="0dp"
+        android:layout_below="@id/cp_user_email"
+        android:layout_toEndOf="@id/cp_avatar_view"
+        android:layout_toRightOf="@id/cp_avatar_view"
+        android:background="@color/grey" />
+
+</RelativeLayout>

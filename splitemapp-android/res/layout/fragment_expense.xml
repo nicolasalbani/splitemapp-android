@@ -1,0 +1,80 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true" >
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/e_appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="@color/seablue"
+            app:contentScrim="@color/seablue"
+            app:expandedTitleMarginBottom="32dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="45dp"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/WhiteCustomTextView"
+                    android:text="@string/e_expenseamount_hint" />
+
+                <EditText
+                    android:id="@+id/e_expense_amount_editText"
+                    style="@style/BlueCustomEditText"
+                    android:drawableLeft="@drawable/ic_money_white_24dp"
+                    android:drawableStart="@drawable/ic_money_white_24dp"
+                    android:inputType="numberDecimal" />
+
+                <View
+                    style="@style/WhiteBottomLine"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical" >
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:background="@drawable/shape_toolbar_dropshadow" />
+
+                    <TextView
+                        android:id="@+id/e_expense_date_textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="10dp"
+                        android:drawableEnd="@drawable/ic_greater_sign_48dp"
+                        android:drawableRight="@drawable/ic_greater_sign_48dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:textColor="@color/black"
+                        android:textSize="23sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/toolbar_blue" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/e_expense_categories_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@color/white" />
+
+</android.support.design.widget.CoordinatorLayout>
