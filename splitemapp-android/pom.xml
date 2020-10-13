@@ -50,7 +50,7 @@
 		<springframework.android.version>1.0.1.RELEASE</springframework.android.version>
 		<fasterxml.jackson.core.version>2.4.3</fasterxml.jackson.core.version>
 		<robolectric.version>2.4</robolectric.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 	</properties>
 
 	<dependencies>
