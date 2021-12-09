@@ -48,7 +48,7 @@
 		<maven-jarsigner-plugin.version>1.4</maven-jarsigner-plugin.version>
 		<javax.persistence.version>1.0.2</javax.persistence.version>
 		<springframework.android.version>1.0.1.RELEASE</springframework.android.version>
-		<fasterxml.jackson.core.version>2.4.3</fasterxml.jackson.core.version>
+		<fasterxml.jackson.core.version>2.9.10.8</fasterxml.jackson.core.version>
 		<robolectric.version>2.4</robolectric.version>
 		<junit.version>4.11</junit.version>
 	</properties>
